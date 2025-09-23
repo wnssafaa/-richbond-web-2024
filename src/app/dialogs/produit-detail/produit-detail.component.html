@@ -1,0 +1,59 @@
+
+<mat-dialog-content class="file-card">
+  <div class="file-header">
+    <h2 mat-dialog-title class="file-title">Fiche Produit</h2>
+ 
+  </div>
+
+  <div class="file-content">
+    <div class="product-image-container">
+      <img [src]="'data:image/jpeg;base64,' + data.image" 
+           *ngIf="data.image; else noImage"
+           class="product-main-image">
+      <ng-template #noImage>
+        <div class="no-image-placeholder">
+          <mat-icon>image</mat-icon>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-row">
+        <span class="info-label">Marque</span>
+        <span class="info-value">{{ data.marque }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Référence</span>
+        <span class="info-value">{{ data.reference }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Catégorie</span>
+        <span class="info-value">{{ data.categorie }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Article</span>
+        <span class="info-value">{{ data.article }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Type</span>
+        <span class="info-value">{{ data.type }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Dimensions</span>
+        <span class="info-value">{{ data.dimensions }}</span>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button mat-dialog-close class="close-button">
+    <mat-icon>close</mat-icon> Fermer
+  </button>
+  <button mat-raised-button color="primary" (click)="printFile()" class="print-button">
+    <mat-icon>print</mat-icon> Imprimer
+  </button>
+  <!-- <button mat-raised-button color="accent" (click)="editProduit(data)" class="edit-button">
+    <mat-icon>edit</mat-icon> Modifier
+  </button> -->
+</mat-dialog-actions>

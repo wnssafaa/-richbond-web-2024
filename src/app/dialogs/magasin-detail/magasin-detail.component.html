@@ -1,0 +1,53 @@
+<mat-dialog-content class="file-card">
+  <div class="file-header">
+    <h2 mat-dialog-title class="file-title">Fiche du Magasin</h2>
+
+  </div>
+
+  <div class="file-content">
+    <div class="info-grid">
+      <div class="info-row">
+        <span class="info-label">Nom</span>
+        <span class="info-value">{{ data.nom }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Type</span>
+        <span class="info-value">{{ data.type }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Merchandiseur</span>
+        <span class="info-value">{{ data.merchandiseur?.nom }} {{ data.merchandiseur?.prenom }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Ville</span>
+        <span class="info-value">{{ data.ville }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Localisation</span>
+        <span class="info-value">{{ data.localisation }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Région</span>
+        <span class="info-value">{{ data.region }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Enseigne</span>
+        <span class="info-value">{{ data.enseigne }}</span>
+      </div>
+    </div>
+
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button mat-dialog-close class="close-button">
+    <mat-icon>close</mat-icon> Fermer
+  </button>
+  <button mat-raised-button color="primary" (click)="printFile()" class="print-button">
+    <mat-icon>print</mat-icon> Imprimer
+  </button>
+  <!-- <button mat-raised-button color="accent" (click)="openEditMagasinDialog(data)" class="edit-button">
+    <mat-icon>edit</mat-icon> Modifier
+  </button> -->
+</mat-dialog-actions>

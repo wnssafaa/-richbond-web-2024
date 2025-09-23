@@ -1,0 +1,638 @@
+<div class="header">
+  <img src="assets/logo.png" alt="Richbond Logo" class="logo" />
+  <div class="header-icons">
+    <mat-icon>notifications_none</mat-icon>
+
+    <!-- Bouton de changement de langue -->
+    <button mat-button [matMenuTriggerFor]="languageMenu" class="lang-button">
+      <img
+        [src]="'assets/' + (currentLanguage === 'fr' ? 'OIP.webp' : 'usa.png')"
+        alt="Language"
+        class="lang-icon"
+      />
+      <span>{{ currentLanguage | uppercase }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #languageMenu="matMenu">
+      <button mat-menu-item (click)="changeLanguage('fr')">
+        <img src="assets/OIP.webp" alt="Français" class="lang-option-icon" />
+        <span>FR</span>
+      </button>
+      <button mat-menu-item (click)="changeLanguage('en')">
+        <img src="assets/usa.png" alt="English" class="lang-option-icon" />
+        <span>EN</span>
+      </button>
+    </mat-menu>
+
+    <mat-icon>settings</mat-icon>
+  </div>
+</div>
+<div class="container">
+  <div class="example-container">
+    <!-- ✅ SIDEBAR NAVIGATION -->
+    <div class="sidebar" [class.sidebar-collapsed]="!menuOpen">
+      <div class="user-profile" [class.user-profile-collapsed]="!menuOpen">
+        <!-- Image dynamique : avatarUrl ou imagePath -->
+        <img
+          [src]="avatarUrl"
+          alt="Avatar"
+          width="100"
+          height="100"
+          style="border-radius: 50%"
+        />
+        <div class="user-info" [class.user-info-hidden]="!menuOpen">
+          <strong>{{ username }}</strong>
+          <p>{{ role }}</p>
+
+          <!-- Logo de l'entreprise dans la section utilisateur -->
+        </div>
+      </div>
+
+      <mat-nav-list [class.nav-list-collapsed]="!menuOpen">
+        <a
+          mat-list-item
+          routerLink="/Dashbord"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.DASHBOARD' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.DASHBOARD" | translate
+          }}</span>
+        </a>
+        <a
+          mat-list-item
+          routerLink="/login-history"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('LOGIN_HISTORY.TITLE' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>history</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "LOGIN_HISTORY.TITLE" | translate
+          }}</span>
+        </a>
+
+        <!-- <a mat-list-item (click)="userMenuOpen = !userMenuOpen" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.USERS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>people</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.USERS' | translate }}</span>
+          <mat-icon style="margin-left:auto;" [class.text-hidden]="!menuOpen">{{ userMenuOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </a> -->
+
+        <a
+          mat-list-item
+          routerLink="/users"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>group</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen"
+            >Tous les utilisateurs</span
+          >
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/merchendiseur"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.MERCHANDISERS' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>storefront</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.MERCHANDISERS" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/superviseur"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.SUPERVISORS' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>supervisor_account</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.SUPERVISORS" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/magasins"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.STORES' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>store</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.STORES" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/planification"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.PLANNING' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>event_note</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.PLANNING" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/gestion-visites"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.VISIT' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>location_on</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.VISIT" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/Produit"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.PRODUCTS' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>inventory</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.PRODUCTS" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/parametre"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.SETTINGS' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>settings</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.SETTINGS" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/help"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.HELP' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>help_outline</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.HELP" | translate
+          }}</span>
+        </a>
+        <a
+          mat-list-item
+          (click)="openLogoutDialog()"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('AUTH.LOGOUT' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon style="color: #ff0022">logout</mat-icon>
+          <span
+            matListItemTitle
+            style="color: #ff0022"
+            [class.text-hidden]="!menuOpen"
+            >{{ "AUTH.LOGOUT" | translate }}</span
+          >
+        </a>
+      </mat-nav-list>
+    </div>
+    <div class="content">
+      <div class="page-header">
+        <div class="page-header-left">
+          <button mat-icon-button (click)="toggleMenu()" class="menu-toggle">
+            <mat-icon *ngIf="!menuOpen" style="color: #333; margin-bottom: 15px"
+              >keyboard_arrow_left</mat-icon
+            >
+            <mat-icon *ngIf="menuOpen" style="color: #333; margin-bottom: 15px"
+              >keyboard_arrow_right</mat-icon
+            >
+          </button>
+          <h1>{{ "PRODUCTS.TITLE" | translate }}</h1>
+        </div>
+      </div>
+
+      <div class="all">
+        <!-- Ligne du haut : Barre principale avec actions (toujours visible) -->
+        <div class="main-toolbar">
+          <div class="main-toolbar-content">
+            <!-- Section gauche : Recherche et Filtre -->
+            <div class="left-controls">
+              <div class="custom-search-box">
+                <input
+                  type="text"
+                  [placeholder]="'ACTIONS.SEARCH' | translate"
+                  [(ngModel)]="searchText"
+                  (keyup)="applyFilter($event)"
+                />
+                <button>
+                  <span class="material-icons" style="font-weight: bold"
+                    >search</span
+                  >
+                </button>
+              </div>
+
+              <button
+                mat-stroked-button
+                class="filter-button-custom"
+                (click)="showFilters = !showFilters"
+              >
+                <mat-icon style="color: #8192a6; font-size: 18px"
+                  >filter_list</mat-icon
+                >
+                <span style="color: #8192a6">{{
+                  "ACTIONS.FILTER" | translate
+                }}</span>
+              </button>
+            </div>
+
+            <!-- Section droite : Boutons d'action -->
+            <div class="right-controls">
+              <button
+                mat-raised-button
+                class="export-button"
+                (click)="exportToExcel()"
+              >
+                <span>{{ "ACTIONS.EXPORT" | translate }}</span>
+                <mat-icon>file_download</mat-icon>
+              </button>
+
+              <button
+                mat-raised-button
+                class="add-user-button"
+                style="background-color: #0a2681; color: white"
+                (click)="ajouterProduit()"
+              >
+                {{ "PRODUCTS.ADD_PRODUCT" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) -->
+        <div *ngIf="showFilters" class="filters-toolbar">
+          <div class="filters-content">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ "PRODUCTS.BRAND" | translate }}</mat-label>
+              <mat-select
+                [(ngModel)]="filters.marque"
+                (selectionChange)="applyFilters()"
+              >
+                <mat-option [value]="">{{
+                  "ACTIONS.ALL" | translate
+                }}</mat-option>
+                <mat-option *ngFor="let marque of marques" [value]="marque">{{
+                  marque
+                }}</mat-option>
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="filters.marque = ''; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre marque"
+                *ngIf="filters.marque"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{ "PRODUCTS.CATEGORY" | translate }}</mat-label>
+              <mat-select
+                [(ngModel)]="filters.categorie"
+                (selectionChange)="applyFilters()"
+              >
+                <mat-option [value]="">{{
+                  "ACTIONS.ALL" | translate
+                }}</mat-option>
+                <mat-option *ngFor="let cat of categories" [value]="cat">{{
+                  cat
+                }}</mat-option>
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="filters.categorie = ''; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre catégorie"
+                *ngIf="filters.categorie"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Famille</mat-label>
+              <mat-select
+                [(ngModel)]="filters.famille"
+                (selectionChange)="applyFilters()"
+              >
+                <mat-option [value]="">{{
+                  "ACTIONS.ALL" | translate
+                }}</mat-option>
+                <mat-option
+                  *ngFor="let famille of familles"
+                  [value]="famille"
+                  >{{ famille }}</mat-option
+                >
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="filters.famille = ''; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre famille"
+                *ngIf="filters.famille"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{ "PRODUCTS.ARTICLE" | translate }}</mat-label>
+              <mat-select
+                [(ngModel)]="filters.article"
+                (selectionChange)="applyFilters()"
+              >
+                <mat-option [value]="">{{
+                  "ACTIONS.ALL" | translate
+                }}</mat-option>
+                <mat-option
+                  *ngFor="let article of articles"
+                  [value]="article"
+                  >{{ article }}</mat-option
+                >
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="filters.article = ''; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre article"
+                *ngIf="filters.article"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <button
+              mat-button
+              (click)="showFilters = false"
+              class="close-filters"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          matSort
+          class="mat-elevation-z8 full-table"
+        >
+          <!-- Checkbox Column -->
+          <!-- <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef style="background-color: #F2F2F2;">
+              <mat-checkbox color="accent" 
+                            (change)="masterToggle()" 
+                            [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox color="accent" 
+                          (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container> -->
+
+          <!-- Product Columns -->
+          <ng-container matColumnDef="marque">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "PRODUCTS.BRAND" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let produit">{{ produit.marque }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="reference">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "PRODUCTS.NAME" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let produit">{{ produit.reference }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="categorie">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "PRODUCTS.CATEGORY" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let produit">{{ produit.categorie }}</td>
+          </ng-container>
+          <ng-container matColumnDef="prix">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              Prix
+            </th>
+            <td mat-cell *matCellDef="let produit">{{ produit.prix }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="image">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "PRODUCTS.IMAGE" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let produit">
+              <img
+                [src]="'data:image/jpeg;base64,' + produit.image"
+                *ngIf="produit.image; else noImage"
+                class="product-image"
+              />
+              <ng-template #noImage>
+                <div class="no-image-placeholder">
+                  <mat-icon>image</mat-icon>
+                </div>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="article">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "PRODUCTS.ARTICLE" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let produit">{{ produit.article }}</td>
+          </ng-container>
+          <!--   
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">{{ 'PRODUCTS.TYPE' | translate }}</th>
+            <td mat-cell *matCellDef="let produit">{{produit.type}}</td>
+          </ng-container> -->
+
+          <ng-container matColumnDef="dimensions">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "PRODUCTS.DIMENSIONS" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let produit">{{ produit.dimensions }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="famille">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              Famille
+            </th>
+            <td mat-cell *matCellDef="let produit">{{ produit.famille }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="sousMarques">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              Sous-marques
+            </th>
+            <td mat-cell *matCellDef="let produit">
+              {{ produit.sousMarques }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="codeEAN">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              Code EAN
+            </th>
+            <td mat-cell *matCellDef="let produit">{{ produit.codeEAN }}</td>
+          </ng-container>
+          <!-- 
+          <ng-container matColumnDef="designationArticle">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">Désignation</th>
+            <td mat-cell *matCellDef="let produit">{{produit.designationArticle}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="disponible">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">Disponible</th>
+            <td mat-cell *matCellDef="let produit">
+              <span [class]="produit.disponible ? 'status-available' : 'status-unavailable'">
+                {{ produit.disponible ? 'Oui' : 'Non' }}
+              </span>
+            </td>
+          </ng-container> -->
+
+          <ng-container matColumnDef="actions">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              style="background-color: #f2f2f2"
+            >
+              {{ "USERS.ACTIONS" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let produit">
+              <button
+                mat-icon-button
+                (click)="editProduit(produit); $event.stopPropagation()"
+              >
+                <mat-icon style="color: blue">edite</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                (click)="deleteProduit(produit); $event.stopPropagation()"
+              >
+                <mat-icon style="color: black">delete</mat-icon>
+              </button>
+              <button mat-icon-button>
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="onRowClick($event, row)"
+            class="hoverable"
+          ></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons />
+      </div>
+    </div>
+  </div>
+</div>

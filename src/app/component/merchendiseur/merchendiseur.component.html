@@ -1,0 +1,693 @@
+<div class="header">
+  <img src="assets/logo.png" alt="Richbond Logo" class="logo" />
+  <div class="header-icons">
+    <mat-icon>notifications_none</mat-icon>
+
+    <!-- Bouton de changement de langue -->
+    <button mat-button [matMenuTriggerFor]="languageMenu" class="lang-button">
+      <img
+        [src]="'assets/' + (currentLanguage === 'fr' ? 'OIP.webp' : 'usa.png')"
+        alt="Language"
+        class="lang-icon"
+      />
+      <span>{{ currentLanguage | uppercase }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #languageMenu="matMenu">
+      <button mat-menu-item (click)="changeLanguage('fr')">
+        <img src="assets/OIP.webp" alt="Français" class="lang-option-icon" />
+        <span>FR</span>
+      </button>
+      <button mat-menu-item (click)="changeLanguage('en')">
+        <img src="assets/usa.png" alt="English" class="lang-option-icon" />
+        <span>EN</span>
+      </button>
+    </mat-menu>
+
+    <mat-icon>settings</mat-icon>
+  </div>
+</div>
+<div class="container">
+  <div class="example-container">
+    <!-- ✅ SIDEBAR NAVIGATION -->
+    <div class="sidebar" [class.sidebar-collapsed]="!menuOpen">
+      <div class="user-profile" [class.user-profile-collapsed]="!menuOpen">
+        <!-- Image dynamique : avatarUrl ou imagePath -->
+        <img
+          [src]="avatarUrl"
+          alt="Avatar"
+          width="100"
+          height="100"
+          style="border-radius: 50%"
+        />
+        <div class="user-info" [class.user-info-hidden]="!menuOpen">
+          <strong>{{ username }}</strong>
+          <p>{{ role }}</p>
+
+          <!-- Logo de l'entreprise dans la section utilisateur -->
+        </div>
+      </div>
+
+      <mat-nav-list [class.nav-list-collapsed]="!menuOpen">
+        <a
+          mat-list-item
+          routerLink="/Dashbord"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.DASHBOARD' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.DASHBOARD" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/users"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>group</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen"
+            >Tous les utilisateurs</span
+          >
+        </a>
+   <a mat-list-item routerLink="/login-history" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('LOGIN_HISTORY.TITLE' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>history</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'LOGIN_HISTORY.TITLE' | translate }}</span>
+        </a>
+        <a
+          mat-list-item
+          routerLink="/merchendiseur"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.MERCHANDISERS' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>storefront</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.MERCHANDISERS" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/superviseur"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.SUPERVISORS' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>supervisor_account</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.SUPERVISORS" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/magasins"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.STORES' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>store</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.STORES" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/planification"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.PLANNING' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>event_note</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.PLANNING" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/gestion-visites"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.VISIT' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>location_on</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.VISIT" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/Produit"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.PRODUCTS' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>inventory</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.PRODUCTS" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/parametre"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.SETTINGS' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>settings</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.SETTINGS" | translate
+          }}</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/help"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.HELP' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>help_outline</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.HELP" | translate
+          }}</span>
+        </a>
+        <a
+          mat-list-item
+          (click)="openLogoutDialog()"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('AUTH.LOGOUT' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon style="color: #ff0022">logout</mat-icon>
+          <span
+            matListItemTitle
+            style="color: #ff0022"
+            [class.text-hidden]="!menuOpen"
+            >{{ "AUTH.LOGOUT" | translate }}</span
+          >
+        </a>
+      </mat-nav-list>
+    </div>
+    <div class="content">
+      <div class="page-header">
+        <div class="page-header-left">
+          <button mat-icon-button (click)="toggleMenu()" class="menu-toggle">
+            <mat-icon *ngIf="!menuOpen" style="color: #333; margin-bottom: 15px"
+              >keyboard_arrow_left</mat-icon
+            >
+            <mat-icon *ngIf="menuOpen" style="color: #333; margin-bottom: 15px"
+              >keyboard_arrow_right</mat-icon
+            >
+          </button>
+          <h1>{{ "COMMON.MERCHANDISERS" | translate }}</h1>
+        </div>
+      </div>
+
+      <div class="all">
+        <!-- Ligne du haut : Barre principale avec actions (toujours visible) -->
+        <div class="main-toolbar">
+          <div class="main-toolbar-content">
+            <!-- Section gauche : Recherche et Filtre -->
+            <div class="left-controls">
+              <div class="custom-search-box">
+                <input
+                  type="text"
+                  placeholder="{{ 'ACTIONS.SEARCH' | translate }}"
+                  [(ngModel)]="searchText"
+                  (keyup)="applyFilter($event)"
+                />
+                <button>
+                  <span class="material-icons" style="font-weight: bold"
+                    >search</span
+                  >
+                </button>
+              </div>
+
+              <button
+                mat-stroked-button
+                class="filter-button-custom"
+                (click)="showFilters = !showFilters"
+              >
+                <mat-icon style="color: #8192a6; font-size: 18px"
+                  >filter_list</mat-icon
+                >
+                <span style="color: #8192a6">{{
+                  "ACTIONS.FILTER" | translate
+                }}</span>
+              </button>
+            </div>
+
+            <!-- Section droite : Boutons d'action -->
+            <div class="right-controls">
+              <button
+                mat-raised-button
+                class="export-button"
+                (click)="exportToExcel()"
+              >
+                <span>{{ "ACTIONS.EXPORT" | translate }}</span>
+                <mat-icon>file_download</mat-icon>
+              </button>
+
+              <button
+                mat-raised-button
+                class="add-user-button"
+                style="background-color: #0a2681; color: white"
+                (click)="openAddUserDialog()"
+              >
+                {{ "MERCHANDISERS.ADD_MERCH" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) -->
+        <div *ngIf="showFilters" class="filters-toolbar">
+          <div class="filters-content">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Région</mat-label>
+                    <mat-select
+                      [(ngModel)]="selectedRegion"
+                      (selectionChange)="applyFilters()"
+                      (selectionChange)="onRegionChange($event.value)"
+                    >
+                      <mat-option
+                        *ngFor="let region of regions"
+                        [value]="region"
+                      >
+                        {{ region }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedRegion = ''; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      aria-label="Effacer le filtre région"
+                      *ngIf="selectedRegion"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Ville</mat-label>
+                    <mat-select
+                      [(ngModel)]="selectedVille"
+                      (selectionChange)="applyFilters()"
+                    >
+                      <mat-option *ngFor="let ville of villes" [value]="ville">
+                        {{ ville }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedVille = ''; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      aria-label="Effacer le filtre ville"
+                      *ngIf="selectedVille"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Enseigne</mat-label>
+                    <mat-select
+                      [(ngModel)]="selectedEnseigne"
+                      (selectionChange)="applyFilters()"
+                    >
+                      <mat-option
+                        *ngFor="let enseigne of enseignes"
+                        [value]="enseigne"
+                      >
+                        {{ enseigne }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedEnseigne = ''; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      aria-label="Effacer le filtre enseigne"
+                      *ngIf="selectedEnseigne"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Magasin</mat-label>
+                    <mat-select
+                      [(ngModel)]="selectedMagasin"
+                      (selectionChange)="applyFilters()"
+                    >
+                      <mat-option
+                        *ngFor="let magasin of magasinNames"
+                        [value]="magasin"
+                      >
+                        {{ magasin }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedMagasin = ''; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      aria-label="Effacer le filtre magasin"
+                      *ngIf="selectedMagasin"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Marque</mat-label>
+                    <mat-select
+                      [(ngModel)]="selectedMarque"
+                      (selectionChange)="applyFilters()"
+                    >
+                      <mat-option
+                        *ngFor="let marque of marques"
+                        [value]="marque"
+                      >
+                        {{ marque }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedMarque = ''; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      aria-label="Effacer le filtre marque"
+                      *ngIf="selectedMarque"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Rôle</mat-label>
+                    <mat-select
+                      [(ngModel)]="selectedProfil"
+                      (selectionChange)="applyFilters()"
+                    >
+                      <mat-option
+                        *ngFor="let profil of profils"
+                        [value]="profil"
+                      >
+                        {{ profil }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedProfil = ''; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      aria-label="Effacer le filtre profil"
+                      *ngIf="selectedProfil"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Superviseur</mat-label>
+                    <mat-select
+                      [(ngModel)]="selectedSuperviseur"
+                      (selectionChange)="applyFilters()"
+                    >
+                      <mat-option
+                        *ngFor="let superviseur of superviseurNames"
+                        [value]="superviseur"
+                      >
+                        {{ superviseur }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedSuperviseur = ''; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      aria-label="Effacer le filtre superviseur"
+                      *ngIf="selectedSuperviseur"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+
+            <button
+              mat-button
+              (click)="showFilters = false"
+              class="close-filters"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          matSort
+          class="full-width-table"
+        >
+          <ng-container matColumnDef="nom">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "MERCHANDISERS.NAME" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let m">{{ m.nom }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="prenom">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              Prénom
+            </th>
+            <td mat-cell *matCellDef="let m">{{ m.prenom }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="region">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "DASHBOARD.FILTERS.REGION" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let m">{{ m.region }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="ville">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "STORES.CITY" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let m">{{ m.ville }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="marques">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "PRODUCTS.BRAND" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let m">{{ m.marques }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="dateIntegration">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              Date Integration
+            </th>
+            <td mat-cell *matCellDef="let m">
+              {{ m.dateDebutIntegration | date : "dd/MM/yyyy" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Profil">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "USERS.ROLE" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let m">{{ m.role }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="superviseur">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "COMMON.SUPERVISORS" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let m">
+              <span *ngIf="m.superviseur; else noSupervisor">
+                {{ m.superviseur.nom }} {{ m.superviseur.prenom }}
+              </span>
+              <ng-template #noSupervisor>
+                <span style="color: #999; font-style: italic;">Non assigné</span>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dateSortie">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              Date Sortie
+            </th>
+            <td mat-cell *matCellDef="let m">
+              {{ m.dateSortie | date : "dd/MM/yyyy" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="telephone">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "SUPERVISORS.PHONE" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let m">{{ m.telephone }}</td>
+          </ng-container>
+
+          <!-- <ng-container matColumnDef="magasin">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">{{ 'COMMON.STORES' | translate }}</th>
+            <td mat-cell *matCellDef="let m"> {{ m.magasinIds }} </td>
+          </ng-container> -->
+
+          <ng-container matColumnDef="actions">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              style="background-color: #f2f2f2; display: flex; align-items: center; justify-content: space-between;"
+            >
+              <span>{{ "USERS.ACTIONS" | translate }}</span>
+              <button
+                mat-icon-button
+                matTooltip="Personnaliser les colonnes"
+                (click)="openColumnCustomizationPanel()"
+                style="margin-left: 8px;"
+              >
+                <mat-icon style="font-size: 18px;">view_column</mat-icon>
+              </button>
+            </th>
+            <td mat-cell *matCellDef="let m">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="editUser(m); $event.stopPropagation()"
+              >
+                <mat-icon style="color: blue">edit</mat-icon>
+              </button>
+              <br>
+              <button
+                mat-icon-button
+                (click)="viewMerchendiseur(m); $event.stopPropagation()"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <br>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteMerchendiseur(m.id!); $event.stopPropagation()"
+              >
+                <mat-icon style="color: black">delete</mat-icon>
+              </button>
+              <br>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="onRowClick($event, row)"
+            class="hoverable"
+          ></tr>
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+        ></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay pour fermer le panneau en cliquant à l'extérieur -->
+<div 
+  class="panel-overlay" 
+  [class.visible]="isColumnCustomizationOpen"
+  (click)="closeColumnCustomizationPanel()"
+></div>
+
+<!-- Panneau de personnalisation des colonnes -->
+<app-column-customization-panel
+  [isOpen]="isColumnCustomizationOpen"
+  [columnConfig]="columnConfig"
+  (close)="closeColumnCustomizationPanel()"
+  (save)="onColumnCustomizationSave($event)"
+></app-column-customization-panel>

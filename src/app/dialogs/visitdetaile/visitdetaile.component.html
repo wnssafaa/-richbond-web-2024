@@ -1,0 +1,188 @@
+<mat-dialog-content class="file-card">
+  <div class="file-header">
+    <h2 mat-dialog-title class="file-title">
+      <mat-icon class="header-icon">assignment</mat-icon>
+      Fiche Visite #{{ data.id }}
+    </h2>
+    <div class="visit-status">
+      <span class="status-badge" [class.photo-taken]="data.photoPrise">
+        {{ data.photoPrise ? 'Photo prise' : 'Photo non prise' }}
+      </span>
+    </div>
+  </div>
+
+  <div class="file-content">
+    <!-- Section Images -->
+    <div class="visit-images-section">
+      <h3 class="section-title">
+        <mat-icon>photo_library</mat-icon>
+        Photos de la visite ({{ getImageCount() }})
+      </h3>
+    <div class="visit-images-container">
+        <ng-container *ngIf="hasImages(); else noImage">
+          <div class="images-grid">
+            <div *ngFor="let image of data.images; let i = index" class="image-item">
+              <img [src]="getImageUrl(image)" 
+                   class="visit-image"
+                   alt="Photo de la visite {{ i + 1 }}"
+                   (error)="onImageError($event)">
+            </div>
+          </div>
+      </ng-container>
+      <ng-template #noImage>
+        <div class="no-image-placeholder">
+            <mat-icon>image_not_supported</mat-icon>
+            <p>Aucune photo disponible</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Section Informations de base -->
+    <div class="info-section">
+      <h3 class="section-title">
+        <mat-icon>info</mat-icon>
+        Informations générales
+      </h3>
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">ID Visite</span>
+          <span class="info-value">{{ data.id }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Heure d'arrivée</span>
+          <span class="info-value">{{ data.heureArrivee | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Heure de départ</span>
+          <span class="info-value">{{ data.heureDepart | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Durée de visite</span>
+          <span class="info-value">{{ getVisitDuration() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Produits -->
+    <div class="info-section" *ngIf="data.produits?.length">
+      <h3 class="section-title">
+        <mat-icon>inventory</mat-icon>
+        Produits visités
+      </h3>
+      <div class="products-grid">
+        <div *ngFor="let produit of data.produits" class="product-card">
+          <div class="product-info">
+            <h4>{{ produit.nom }}</h4>
+            <p>{{ produit.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Facings et Prix -->
+    <div class="info-section">
+      <h3 class="section-title">
+        <mat-icon>storefront</mat-icon>
+        Détails merchandising
+      </h3>
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">Nombre de facings</span>
+          <span class="info-value">{{ data.nombreFacings }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Facings total</span>
+          <span class="info-value">{{ data.nombreFacingsTotal }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Prix normal</span>
+          <span class="info-value price">{{ data.prixNormal }} MAD</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Prix promotionnel</span>
+          <span class="info-value price promo">{{ data.prixPromotionnel }} MAD</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Niveau de stock</span>
+          <span class="info-value stock-level" [class]="getStockLevelClass()">{{ data.niveauStock }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Nouveautés -->
+    <div class="info-section" *ngIf="data.nouveauteConcurrente">
+      <h3 class="section-title">
+        <mat-icon>new_releases</mat-icon>
+        Nouveautés concurrentes
+      </h3>
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">Nouveauté</span>
+          <span class="info-value">{{ data.nouveauteConcurrente }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Prix nouveauté</span>
+          <span class="info-value price">{{ data.prixNouveaute }} MAD</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Localisation -->
+    <div class="info-section">
+      <h3 class="section-title">
+        <mat-icon>location_on</mat-icon>
+        Localisation
+      </h3>
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">Latitude</span>
+          <span class="info-value">{{ data.latitude | number:'1.6-6' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Longitude</span>
+          <span class="info-value">{{ data.longitude | number:'1.6-6' }}</span>
+        </div>
+      </div>
+      <div class="map-placeholder" *ngIf="data.latitude && data.longitude">
+        <mat-icon>map</mat-icon>
+        <p>Coordonnées GPS enregistrées</p>
+      </div>
+    </div>
+
+    <!-- Section Planification -->
+    <div class="info-section" *ngIf="data.planning">
+      <h3 class="section-title">
+        <mat-icon>schedule</mat-icon>
+        Informations de planification
+      </h3>
+    <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">ID Planning</span>
+          <span class="info-value">{{ data.planningId }}</span>
+        </div>
+        <div class="info-row" *ngIf="data.planning?.magasin">
+          <span class="info-label">Magasin</span>
+          <span class="info-value">{{ data.planning.magasin.nom }}</span>
+        </div>
+        <div class="info-row" *ngIf="data.planning?.merchandiser">
+          <span class="info-label">Merchandiseur</span>
+          <span class="info-value">{{ data.planning.merchandiser.nom }} {{ data.planning.merchandiser.prenom }}</span>
+        </div>
+        <div class="info-row" *ngIf="data.planning?.dateVisite">
+          <span class="info-label">Date planifiée</span>
+          <span class="info-value">{{ data.planning.dateVisite | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button mat-dialog-close class="close-button">
+    <mat-icon>close</mat-icon> Fermer
+  </button>
+  <button mat-raised-button color="primary" (click)="printFile()" class="print-button">
+    <mat-icon>print</mat-icon> Imprimer
+  </button>
+</mat-dialog-actions>

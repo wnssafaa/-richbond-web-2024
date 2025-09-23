@@ -1,0 +1,178 @@
+/* user-form.component.scss */
+
+.user-form-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 16px;
+  }
+  
+  mat-card {
+    padding: 24px;
+    box-shadow: none !important;
+    border-radius: 8px;
+  }
+  
+  mat-card-header {
+    padding-bottom: 16px;
+  }
+  
+  mat-card-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+    color: #3949AB;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  
+  mat-form-field {
+    flex: 1;
+    min-width: 280px;
+  }
+  
+  /* Styles unifiés pour les champs */
+  ::ng-deep {
+    .mat-mdc-form-field-appearance-outline {
+      .mat-mdc-text-field-wrapper {
+        border-radius: 8px !important;
+        background-color: #f9f9f9;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+  
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-width: 0.5px !important;
+        border-color: #e0e0e0 !important;
+      }
+  
+      &.mat-focused .mdc-notched-outline__leading,
+      &.mat-focused .mdc-notched-outline__notch,
+      &.mat-focused .mdc-notched-outline__trailing {
+        border-color: #3f51b5 !important;
+      }
+  
+      .mat-mdc-form-field-flex {
+        height: 42px;
+        padding: 0 12px !important;
+      }
+  
+      .mat-mdc-form-field-infix {
+        padding: 6px 0 !important;
+        min-height: auto !important;
+      }
+    }
+  
+    .mat-mdc-select-trigger {
+      height: 42px;
+      display: flex;
+      align-items: center;
+    }
+  
+    .mat-mdc-select-panel {
+      border-radius: 8px !important;
+    }
+  
+    .mat-mdc-form-field-required-marker {
+      color: red;
+    }
+  }
+  
+  .form-actions {
+    margin-top: 32px;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  
+    button[type="submit"] {
+      background-color: #0A2681;
+      color: white;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 250px;
+      height: 48px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+  
+    button[type="reset"] {
+      display: none;
+    }
+  }
+  
+  mat-label {
+    color: #666;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  
+  .mdc-text-field--outlined {
+    --mdc-outlined-text-field-container-shape: 28px !important;
+  }
+  :host ::ng-deep .mdc-text-field--outlined {
+    --mdc-outlined-text-field-container-shape: 28px;
+  }
+  .cancel-button {
+    color: #959595; /* rouge Material */
+    border: 1px solid #e5dedd;
+    background-color: white;
+    transition: all 0.3s ease;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 250px;
+    height: 48px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .phone-prefix {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 10px;
+   
+  
+    .flag-icon {
+      width: 24px;
+      height: 16px;
+      object-fit: cover;
+      border-radius: 2px;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    }
+  
+    span {
+      font-size: 14px;
+      color: #555;
+      font-weight: 500;
+    }
+  }
+  
+  .scrollable-content {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 8px;
+    margin-right: -8px;
+    max-height: calc(100vh - 200px); /* Ajuste selon la hauteur de ta zone */
+  }
+  .visit-form-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 16px;
+    height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+  }
+  mat-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+  }

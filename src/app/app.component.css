@@ -1,0 +1,34 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 10px 20px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2%;
+  }
+  
+  .header-icons img {
+    width: 32px; /* Ajustez la largeur de l'image */
+    height: 32px; /* Assurez une hauteur égale pour une forme carrée */
+    border-radius: 50%; /* Rend l'image circulaire */
+    object-fit: cover; /* Ajuste l'image pour qu'elle s'adapte au cercle sans déformation */
+    border: 2px solid #ccc;
+    /* Optionnel : Ajoutez une bordure */
+  }
+  
+  .header-icons {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .header-icons mat-icon {
+    font-size: 24px;
+    color: #0E6AF4; /* Vous pouvez ajuster la couleur */
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .header-icons mat-icon:hover {
+    color: #304FFE; /* Couleur au survol */
+  }

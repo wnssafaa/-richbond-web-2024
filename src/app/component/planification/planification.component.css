@@ -1,0 +1,3628 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+
+.leaflet-marker-icon {
+  transition: all 0.3s ease;
+}
+
+.leaflet-marker-icon:hover {
+  transform: scale(1.1);
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #fff;
+}
+
+.header-icons img {
+  width: 32px;
+  height: 32px; 
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  
+}
+
+.header-icons {
+  display: flex;
+  gap: 20px;
+}
+
+.header-icons mat-icon {
+  font-size: 24px;
+  color: #0A2681; /* Vous pouvez ajuster la couleur */
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.header-icons mat-icon:hover {
+  color: #0A2681; /* Couleur au survol */
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+  width: 120px;
+  margin-left: 29px;
+}
+
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #0E6AF4;
+}
+
+.lang-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #0E6AF4;
+}
+
+.lang-icon {
+  width: 24px;
+  height: 24px;
+  color: #0E6AF4;
+}
+
+.icon {
+  cursor: pointer;
+  color: #0E6AF4;
+}
+
+  .container {
+  /* Espacement */
+  padding: 20px;
+    margin: 12px;
+  
+  /* Bordures réduites */
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+  
+  /* Arrière-plan */
+  background-color: #ffffff;
+  
+  /* Ombre portée légère */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  
+  /* Dimensions */
+  min-height: calc(100vh - 24px);
+  box-sizing: border-box;
+  
+  /* Disposition des enfants */
+  display: flex;
+  flex-direction: column;
+  }
+  
+  /* Sidebar styles */
+  .sidebar {
+    flex-shrink: 0;
+    width: 250px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 24px);
+    transition: width 0.3s ease;
+    position: relative;
+    z-index: 1;
+    background-color: #ffffff;
+  }
+  .example-container {
+    display: flex;
+    height: 100vh;
+    gap: 0;
+  }
+  .user-profile {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .user-profile img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    margin-right: 12px;
+  }
+  
+  .user-profile strong {
+    display: block;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .user-profile p {
+    margin: 0;
+    font-size: 13px;
+    color: #6c757d;
+  }
+  
+  /* Collapsible sidebar styles */
+  .sidebar-collapsed {
+    width: 70px !important;
+  }
+
+  .user-profile-collapsed {
+    justify-content: center;
+    padding: 16px 8px;
+  }
+
+  .user-info-hidden {
+    display: none;
+  }
+
+  .text-hidden {
+    display: none;
+  }
+
+  .nav-list-collapsed {
+    padding: 0;
+  }
+
+  .nav-item-collapsed {
+    justify-content: center;
+    padding: 12px 8px;
+  }
+
+  .nav-item-collapsed::after {
+    display: none;
+  }
+
+  .nav-item-collapsed *:not(mat-icon[matListItemIcon]) {
+    display: none;
+  }
+
+  .nav-item-collapsed .mat-list-item-content {
+    display: none;
+  }
+
+  .nav-item-collapsed span {
+    display: none;
+  }
+
+  .nav-item-collapsed mat-icon:not([matListItemIcon]) {
+    display: none;
+  }
+
+  .bottom-actions-collapsed {
+    padding: 8px;
+  }
+
+  /* Navigation icons spacing */
+  mat-nav-list mat-icon[matListItemIcon] {
+    color: #0A2681;
+    font-size: 20px;
+    margin-right: 16px;
+  }
+
+  /* Active navigation link */
+  .mat-nav-list a.mat-list-item.active {
+    background-color: #e3eaff !important;
+    color: #007bff !important;
+    font-weight: 600;
+    border-radius: 8px;
+  }
+
+  /* Hover effects */
+  .mat-nav-list a.mat-list-item:hover {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
+
+  /* Help and Logout button styling */
+  .mat-nav-list .help-button,
+  .mat-nav-list .logout-button {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .mat-nav-list .logout-button mat-icon[matListItemIcon] {
+    color: #f44336;
+  }
+
+  .mat-nav-list .logout-button span[matListItemTitle] {
+    color: #f44336;
+  }
+
+  /* Logo styling */
+  .logo {
+    height: 60px;
+    width: 120px;
+    object-fit: contain;
+    margin-right: 12px;
+  }
+
+  /* Responsive logo */
+  @media (max-width: 768px) {
+    .logo {
+      height: 50px;
+      width: 100px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .logo {
+      height: 40px;
+      width: 80px;
+    }
+  }
+
+  /* Page header styling */
+  .page-header {
+    background: transparent;
+    color: #333;
+  }
+
+  .page-header h1 {
+    color: #333;
+  }
+
+  .page-header {
+    background-color: transparent;
+    color: #333;
+  }
+
+  .page-header  {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Page header styles to match dashboard */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* padding: 44px; */
+    gap: 32px;
+    width: 100%;
+    background: transparent;
+    color: #333;
+  }
+
+  .page-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .page-header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .page-header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    margin: 0;
+    color: #333;
+  }
+
+  .menu-toggle {
+    margin-right: 10px;
+    flex-shrink: 0;  
+    background-color: #0A2681;
+    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .page-header .menu-toggle {
+    margin-right: 10px;
+    flex-shrink: 0;  
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+  }
+
+  .page-header .menu-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+
+  /* Sidebar collapsed state */
+  .sidebar-collapsed {
+    width: 70px !important;
+    min-width: 70px;
+    max-width: 70px;
+  }
+
+  /* User profile collapsed */
+  .user-profile-collapsed {
+    justify-content: center;
+    padding: 16px 8px;
+  }
+
+  .user-profile-collapsed img {
+    width: 35px;
+    height: 35px;
+    margin-right: 0;
+  }
+
+  .user-info-hidden {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+  }
+
+  /* Text hidden for collapsed state */
+  .text-hidden {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  /* Navigation collapsed */
+  .nav-list-collapsed {
+    padding: 0 8px;
+  }
+
+  .nav-item-collapsed {
+    justify-content: center !important;
+    padding: 12px 8px !important;
+    min-height: 48px;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .nav-item-collapsed mat-icon[matListItemIcon] {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    margin: 0 auto !important;
+  }
+
+  /* Hide three dots in collapsed mode */
+  .nav-item-collapsed::after {
+    display: none !important;
+  }
+
+  .nav-item-collapsed {
+    position: relative;
+  }
+
+  .nav-item-collapsed *:not(mat-icon[matListItemIcon]) {
+    display: none !important;
+  }
+
+  .nav-item-collapsed .mat-list-item-content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+  }
+
+  .nav-item-collapsed .mat-list-item-content > *:not(mat-icon[matListItemIcon]) {
+    display: none !important;
+  }
+
+  .nav-item-collapsed span {
+    display: none !important;
+  }
+
+  .nav-item-collapsed mat-icon:not([matListItemIcon]) {
+    display: none !important;
+  }
+
+  /* Navigation icons styling */
+  mat-nav-list mat-icon[matListItemIcon] {
+    color: #0A2681;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    margin-right: 16px;
+    transition: color 0.3s ease;
+  }
+
+  mat-nav-list a.active mat-icon[matListItemIcon] {
+    color: #0A2681 !important;
+  }
+
+  mat-nav-list span[matListItemTitle] {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  mat-nav-list a.active span[matListItemTitle] {
+    color: #3f51b5 !important;
+    font-weight: 600;
+  }
+
+  mat-nav-list a:hover mat-icon[matListItemIcon] {
+    color: #0E6AF4;
+    transform: scale(1.1);
+  }
+
+  mat-nav-list a:hover span[matListItemTitle] {
+    color: #0E6AF4;
+  }
+
+  /* Logout button styling */
+  mat-nav-list a[mat-list-item] mat-icon[matListItemIcon][style*="color: #ff0022"] {
+    color: #ff0022 !important;
+  }
+
+  mat-nav-list a[mat-list-item] span[matListItemTitle][style*="color: #ff0022"] {
+    color: #ff0022 !important;
+  }
+  
+
+  
+  /* Content area */
+  .content {
+    flex: 1;
+    padding: 24px;
+    background-color: #ffffff; 
+    border-radius: 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    margin-left: 0;
+  }
+  
+  h1 {
+    margin-top: 0;
+    margin-left: 2%;
+    font-weight: bold;
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+
+  
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .full-table {
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .mat-elevation-z8 {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  }
+  
+  th.mat-header-cell {
+    background-color: #f9fafb;
+    color: #6c757d;
+    font-size: 9px;
+    font-weight: 500;
+    padding: 16px !important;
+    text-transform: uppercase;
+  }
+  
+  td.mat-cell {
+    color: #000000;
+    font-size: 14px;
+    padding: 16px !important;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  tr.mat-row:hover {
+    background-color: #f9fafb;
+  }
+  
+  /* Button styles */
+  button[mat-raised-button] {
+    height: 40px;
+    border-radius: 6px;
+    font-weight: 500;
+    text-transform: none;
+    box-shadow: none;
+  }
+  
+  button[mat-raised-button][color="primary"] {
+    background-color: #3f51b5;
+  }
+  
+  /* Filter button */
+  .filter-button {
+    border: 1px solid #e0e0e0;
+    border-radius: 66px;
+    padding: 10px 16px;
+    background-color: white;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    width: 20%;
+    border-color: #000;
+  }
+  
+  /* Action buttons */
+  button[mat-icon-button] {
+    color: #6c757d;
+  }
+  
+  button[mat-icon-button] mat-icon.warn {
+    color: #f44336;
+  }
+  
+  /* Checkboxes */
+  .mat-checkbox-checked .mat-checkbox-background {
+    background-color: #3f51b5 !important;
+  }
+  
+
+  .export-button {
+    background-color: #313743;
+    color: white;
+    border-radius: 6px;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .export-button {
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .add-user-button {
+    background: #071659;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 8px 20px;
+    border-radius: 6px;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+  }
+  
+  .mat-icon {
+    vertical-align: middle;
+  }
+
+  
+ 
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+  }
+  
+
+  
+  .export-button {
+    background: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+ 
+  
+  .mat-icon {
+    vertical-align: middle;
+    color: #555;
+  }
+  .footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding: 20px 0;
+    position: sticky;
+    z-index: 10;
+    width: 100%;
+    margin-left: 1%;
+    margin-inline-end: 10%;
+  }
+  
+  .footer-actions .export-button {
+    background-color: #000;
+    color: white;
+    border-radius: 20px;
+    text-transform: none;
+  }
+  
+  .footer-actions .add-user-button {
+    border-radius: 20px;
+    text-transform: none;
+    font-weight: bold;
+  }
+  .controls-container {
+  width: 95%;
+  padding: 10px 10px;
+}
+
+.search-filter-container-custom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+}
+
+.search-field-custom {
+  flex: 1;
+  max-width: 362.79px;
+  height: 51.12px;
+  border-radius: 37.36px;
+  /* background-color: #e4e6ea; */
+}
+
+.filter-button-custom {
+  border-radius: 70px; /* Valeur plus standard */
+  padding: 26px 10px; /* Padding plus proportionné */
+  display: inline-flex;
+  align-items: center; /* Centrage vertical */
+  justify-content: center; /* Centrage horizontal */
+  gap: 8px; /* Espacement entre les éléments */
+  transition: all 0.3s ease;
+  font-weight: 800;
+  font-size: 18px;
+  cursor: pointer;
+  width: auto; /* Largeur automatique selon le contenu */
+  min-width: 140px;
+ 
+}
+
+.dashboard-toggle-wrapper-custom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  background-color: #667085;
+  border-radius: 40px;
+  padding: 10px 14px; /* push to the end */
+}
+
+.dashboard-icon {
+  color: #ffffff;
+}
+
+.dashboard-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.dashboard-toggle-switch {
+  transform: scale(1.1);
+}
+
+
+.custom-search-box {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  padding: 18px 22px;
+  width: 400px; /* ou ce que tu veux */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-weight: bold;
+}
+
+.custom-search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  font-weight: bold;
+}
+
+.custom-search-box button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-search-box button .material-icons {
+  font-size: 20px;
+}
+.all {
+  background-color: white;
+  border-radius: 20px;
+  padding: 30px;
+  margin: 20px;
+ 
+  border: 1px solid #e0e0e0;
+
+height: 60%; border-radius: 20px; 
+padding: auto;/* ajustable selon le contenu */
+}
+
+
+.btn-active {
+  background-color: #D6F5D6 !important;
+  color: #00A000 !important;
+  border-radius: 5px;
+  padding: 4px 12px;
+  font-weight: 600;
+  border: none;
+  width: 80%;
+  text-transform: uppercase;
+}
+
+.btn-inactive {
+  background-color: #FFD6D6 !important;
+  color: #E10000 !important;
+  border-radius: 5px;
+  padding: 4px 12px;
+  font-weight: 600;
+  border: none;
+  width: 80%;
+  text-transform: uppercase;
+}
+tr.mat-mdc-row:hover {
+  background-color: #f5f5f5;
+}
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* padding: 44px; */
+  gap: 32px;
+  width: 100%;
+  background: transparent;
+  color: #333;
+}
+
+
+.page-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.page-header h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}
+
+:host ::ng-deep .mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 28px;
+}
+.active-filters-section {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 60%;
+}
+
+.filter-controls mat-form-field {
+  flex: 1 1 30%;
+  min-width: 270px;
+}
+
+.close-filters {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.mat-nav-list a.mat-list-item.active {
+  background-color: #e3eaff !important; /* Couleur de fond active */
+  color: #007bff !important;           /* Couleur du texte actif */
+  font-weight: 600;                    /* Plus visible */
+  border-radius: 8px;                  /* Coin arrondi comme sur la maquette */
+}
+.active-link {
+    background-color: #e0f7fa; /* Remplacez cette couleur par celle que vous souhaitez */
+    color: #00796b; /* Couleur du texte */
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-icons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.header-icons img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+/* FullCalendar Style Custom */
+::ng-deep .fc {
+  height: 100%;
+  min-height: 600px;
+}
+
+::ng-deep .fc-event {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin: 2px 0;
+  border: none;
+}
+
+::ng-deep .fc-event:hover {
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
+}
+
+::ng-deep .fc-toolbar {
+  background-color: #f5f5f5;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 16px !important;
+}
+
+::ng-deep .fc-button {
+  background-color: #071659 !important;
+  border-color: #071659 !important;
+  padding: 8px 16px !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+}
+
+::ng-deep .fc-button:hover {
+  background-color: #0a1f7a !important;
+  border-color: #0a1f7a !important;
+}
+
+::ng-deep .fc-button-primary:not(:disabled).fc-button-active {
+  background-color: #0a1f7a !important;
+  border-color: #0a1f7a !important;
+}
+
+::ng-deep .fc-event-title {
+  font-weight: 500;
+}
+
+::ng-deep .fc-event-time {
+  font-size: 0.85em;
+  opacity: 0.8;
+}
+
+/* Styles pour les différents états des événements */
+::ng-deep .event-planifie {
+  background-color: #2196F3 !important;
+  border-color: #2196F3 !important;
+}
+
+::ng-deep .event-en-cours {
+  background-color: #4CAF50 !important;
+  border-color: #4CAF50 !important;
+}
+
+::ng-deep .event-non-effectue {
+  background-color: #F44336 !important;
+  border-color: #F44336 !important;
+}
+
+::ng-deep .event-reprogramme {
+  background-color: #FF9800 !important;
+  border-color: #FF9800 !important;
+}
+
+/* Styles pour les cellules du calendrier */
+::ng-deep .fc-daygrid-day {
+  border: 1px solid #e0e0e0;
+}
+
+::ng-deep .fc-daygrid-day:hover {
+  background-color: #f8f9fa;
+}
+
+::ng-deep .fc-day-today {
+  background-color: #e3f2fd !important;
+}
+
+::ng-deep .fc-daygrid-day-number {
+  padding: 8px;
+  color: #071659;
+  font-weight: 500;
+}
+
+/* Styles pour l'en-tête du calendrier */
+::ng-deep .fc-col-header-cell {
+  background-color: #f5f5f5;
+  padding: 8px;
+  font-weight: 500;
+  color: #071659;
+}
+
+/* Styles pour la barre d'outils */
+::ng-deep .fc-toolbar-title {
+  font-size: 1.5em !important;
+  color: #071659;
+  font-weight: 600;
+}
+
+/* Styles pour les boutons de navigation */
+::ng-deep .fc-prev-button,
+::ng-deep .fc-next-button {
+  padding: 6px 12px !important;
+}
+
+/* Styles pour le bouton d'exportation ICS */
+::ng-deep .fc-exportIcs-button {
+  background-color: #071659 !important;
+  border-color: #071659 !important;
+  color: white !important;
+  padding: 8px 16px !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+}
+
+::ng-deep .fc-exportIcs-button:hover {
+  background-color: #0a1f7a !important;
+  border-color: #0a1f7a !important;
+}
+
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      margin-left: 250px;
+      margin-top: 64px;
+    }
+    
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .dashboard-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #333;
+    }
+    
+    /* Filters */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .filter-select {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+    
+    .filter-select select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 25px;
+      background-color: white;
+      appearance: none;
+      font-size: 14px;
+      color: #555;
+      cursor: pointer;
+    }
+    
+    .filter-select:after {
+      content: '\25BC';
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+      font-size: 12px;
+      pointer-events: none;
+    }
+    
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background-color: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .stat-card .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #e3eaff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    
+    .stat-card .icon i {
+      color: #0E6AF4;
+      font-size: 20px;
+    }
+    
+    .stat-card .title {
+      font-size: 14px;
+      color: #6c757d;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    
+    .stat-card .value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #333;
+    }
+    
+    /* Section styles */
+    .section {
+      background-color: white;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .section-header h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    /* Table styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    thead th {
+      text-align: left;
+      padding: 15px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #6c757d;
+      background-color: #f9fafb;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    tbody td {
+      padding: 15px;
+      font-size: 14px;
+      border-bottom: 1px solid #f0f0f0;
+      color: #333;
+    }
+    
+    tbody tr:hover {
+      background-color: #f9fafb;
+    }
+    
+    /* Status badges */
+    .status-badge {
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+    
+    .status-active {
+      background-color: #D6F5D6;
+      color: #00A000;
+    }
+    
+    .status-inactive {
+      background-color: #FFD6D6;
+      color: #E10000;
+    }
+    
+    /* Progress bar */
+    .progress-bar {
+      height: 6px;
+      background-color: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background-color: #0E6AF4;
+    }
+    
+    /* Store cards */
+    .store-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    
+    .store-card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .store-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .store-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .store-card-badge {
+      font-size: 12px;
+      color: #6c757d;
+      background-color: #f0f0f0;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    
+    /* Calendar */
+    .calendar-container {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+    }
+    
+    .calendar-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+    
+    .calendar-day-header {
+      text-align: center;
+      font-weight: 600;
+      font-size: 13px;
+      color: #555;
+      padding: 10px 0;
+    }
+    
+    .calendar-date {
+      text-align: center;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .calendar-date:hover {
+      background-color: #f0f2fa;
+    }
+    
+    .calendar-date.current {
+      background-color: #0E6AF4;
+      color: white;
+    }
+    
+    .calendar-date.other-month {
+      color: #ccc;
+    }
+    
+    /* Checkbox styling */
+    .checkbox-container {
+      display: block;
+      position: relative;
+      padding-left: 30px;
+      cursor: pointer;
+      user-select: none;
+    }
+    
+    .checkbox-container input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+    
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 20px;
+      width: 20px;
+      background-color: #fff;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+    }
+    
+    .checkbox-container input:checked ~ .checkmark {
+      background-color: #0E6AF4;
+      border-color: #0E6AF4;
+    }
+    
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+    
+    .checkbox-container input:checked ~ .checkmark:after {
+      display: block;
+    }
+    
+    .checkbox-container .checkmark:after {
+      left: 7px;
+      top: 3px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    
+    /* Used for member icons */
+    .member-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #0E6AF4;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: -10px;
+      border: 2px solid white;
+    }
+    
+    .member-container {
+      display: flex;
+      align-items: center;
+    }
+    
+    /* Media queries */
+    @media (max-width: 1024px) {
+      .filters {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+      
+      .header {
+        left: 0;
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .filters {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+/* ============================================================================
+   STYLES RESPONSIVES POUR LE CALENDRIER DE PLANIFICATION
+   Basé sur l'image de référence avec grille moderne
+============================================================================ */
+
+/* 🎨 Styles modernes pour le calendrier */
+::ng-deep .fc {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid #e9ecef;
+  height: 100%;
+  min-height: 600px;
+}
+
+/* 🎯 Responsive Design Principal */
+@media (max-width: 1200px) {
+  .container {
+    width: 98vw !important;
+    margin-left: 1% !important;
+  }
+  
+  .sidebar {
+    width: 220px !important;
+  }
+  
+  .content {
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    width: 100vw !important;
+    margin-left: 0 !important;
+    border-radius: 0 !important;
+  }
+  
+  .sidebar {
+    width: 200px !important;
+  }
+  
+  .page-header {
+    padding: 20px !important;
+    margin-right: 0 !important;
+  }
+  
+  .page-header h1 {
+    font-size: 1.5rem !important;
+    margin-right: 0 !important;
+  }
+  
+  .filters {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  
+  .filter-field {
+    min-width: 100% !important;
+  }
+  
+  .separator {
+    display: none !important;
+  }
+  
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+  
+  .stat-card {
+    padding: 16px !important;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem !important;
+  }
+  
+  .stat-icon {
+    font-size: 1.8rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100% !important;
+    position: fixed !important;
+    z-index: 1000 !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s ease !important;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0) !important;
+  }
+  
+  .content {
+    margin-left: 0 !important;
+    padding: 12px !important;
+  }
+  
+  .page-header {
+    flex-direction: column !important;
+    gap: 16px !important;
+    padding: 16px !important;
+  }
+  
+  .planif-header {
+    text-align: center !important;
+  }
+  
+  .page-header h1 {
+    font-size: 1.25rem !important;
+    text-align: center !important;
+  }
+  
+  .filters-container {
+    padding: 16px !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .filters {
+    gap: 8px !important;
+  }
+  
+  .filter-field {
+    margin-bottom: 8px !important;
+  }
+  
+  .add-user-button {
+    width: 100% !important;
+    margin-top: 8px !important;
+  }
+  
+  .stats-container {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  
+  .stat-card {
+    padding: 12px !important;
+  }
+  
+  .stat-value {
+    font-size: 1.25rem !important;
+  }
+  
+  .stat-icon {
+    font-size: 1.5rem !important;
+  }
+  
+  .calendar-stats {
+    padding: 16px !important;
+    margin: 16px 0 !important;
+  }
+  
+  .stats-title {
+    font-size: 1.125rem !important;
+  }
+  
+  .planif-tab-btn {
+    margin-left: 0 !important;
+    width: 100% !important;
+    margin-bottom: 16px !important;
+    padding: 12px 24px !important;
+    font-size: 1rem !important;
+  }
+  
+  .calendar-wrapper {
+    padding: 12px !important;
+    margin: 16px 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 8px 12px !important;
+  }
+  
+  .header-icons {
+    gap: 12px !important;
+  }
+  
+  .header-icons img {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  .page-header {
+    padding: 12px !important;
+  }
+  
+  .page-header h1 {
+    font-size: 1.125rem !important;
+  }
+  
+  
+  .filters-container {
+    padding: 12px !important;
+  }
+  
+  .filters {
+    gap: 6px !important;
+  }
+  
+  .filter-field {
+    margin-bottom: 6px !important;
+  }
+  
+  .stats-container {
+    gap: 8px !important;
+  }
+  
+  .stat-card {
+    padding: 8px !important;
+  }
+  
+  .stat-value {
+    font-size: 1.125rem !important;
+  }
+  
+  .stat-icon {
+    font-size: 1.25rem !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem !important;
+  }
+  
+  .calendar-stats {
+    padding: 12px !important;
+  }
+  
+  .stats-title {
+    font-size: 1rem !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .calendar-wrapper {
+    padding: 8px !important;
+  }
+  
+  .planif-tab-btn {
+    padding: 10px 20px !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+/* 🎨 Styles spécifiques pour la grille du calendrier responsive */
+@media (max-width: 768px) {
+  ::ng-deep .fc {
+    border-radius: 12px !important;
+    min-height: 400px !important;
+  }
+  
+  ::ng-deep .fc-toolbar {
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 12px !important;
+  }
+  
+  ::ng-deep .fc-toolbar-title {
+    font-size: 1.125rem !important;
+    text-align: center !important;
+  }
+  
+  ::ng-deep .fc-button {
+    padding: 8px 12px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  ::ng-deep .fc-col-header-cell {
+    padding: 8px 4px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  ::ng-deep .fc-daygrid-day-number {
+    padding: 6px 8px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  ::ng-deep .fc-event {
+    margin: 1px 2px !important;
+    border-radius: 6px !important;
+  }
+  
+  ::ng-deep .fc-event-main {
+    padding: 4px 6px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  ::ng-deep .fc-event-title {
+    font-size: 0.75rem !important;
+  }
+  
+  ::ng-deep .fc-event-time {
+    font-size: 0.625rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  ::ng-deep .fc {
+    min-height: 300px !important;
+  }
+  
+  ::ng-deep .fc-toolbar {
+    padding: 8px !important;
+  }
+  
+  ::ng-deep .fc-toolbar-title {
+    font-size: 1rem !important;
+  }
+  
+  ::ng-deep .fc-button {
+    padding: 6px 10px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  ::ng-deep .fc-col-header-cell {
+    padding: 6px 2px !important;
+    font-size: 0.625rem !important;
+  }
+  
+  ::ng-deep .fc-daygrid-day-number {
+    padding: 4px 6px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  ::ng-deep .fc-event {
+    margin: 1px !important;
+  }
+  
+  ::ng-deep .fc-event-main {
+    padding: 2px 4px !important;
+    font-size: 0.625rem !important;
+  }
+  
+  ::ng-deep .fc-event-title {
+    font-size: 0.625rem !important;
+  }
+  
+  ::ng-deep .fc-event-time {
+    font-size: 0.5rem !important;
+  }
+}
+
+/* 🎨 Styles pour les filtres responsive */
+@media (max-width: 768px) {
+  .filters-container {
+    border-radius: 12px !important;
+  }
+  
+  .filter-field {
+    margin-bottom: 8px !important;
+  }
+  
+  ::ng-deep .mat-form-field-appearance-outline .mat-form-field-wrapper {
+    margin-bottom: 0 !important;
+  }
+  
+  ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    border-radius: 8px !important;
+  }
+}
+
+/* 🎨 Styles pour les statistiques responsive */
+@media (max-width: 768px) {
+  .calendar-stats {
+    border-radius: 12px !important;
+  }
+  
+  .stat-card {
+    border-radius: 12px !important;
+  }
+  
+  .stat-card::before {
+    height: 3px !important;
+  }
+}
+
+/* 🎨 Styles pour les boutons responsive */
+@media (max-width: 768px) {
+  .planif-tab-btn {
+    border-radius: 25px !important;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+  }
+  
+  .planif-tab-btn:hover {
+    transform: translateY(-1px) scale(1.02) !important;
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4) !important;
+  }
+  
+  .add-user-button {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
+  }
+  
+  .add-user-button:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+  }
+  
+}
+
+/* 🎨 Styles pour les animations responsive */
+@media (max-width: 768px) {
+  .stat-card {
+    animation: cardEntrance 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-4px) scale(1.01) !important;
+  }
+  
+  /* .filters-container:hover {
+    transform: translateY(-2px) !important;
+  } */
+  
+  .planif-tab-btn:hover {
+    transform: translateY(-1px) scale(1.02) !important;
+  }
+}
+
+/* 🎨 Styles pour les ombres responsive */
+@media (max-width: 768px) {
+  /* .filters-container {
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  } */
+  
+  .calendar-stats {
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  }
+  
+  .stat-card {
+    box-shadow: 
+      0 2px 4px -1px rgba(0, 0, 0, 0.1),
+      0 1px 2px -1px rgba(0, 0, 0, 0.06) !important;
+  }
+  
+  .calendar-wrapper {
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  }
+}
+
+/* 🎨 Styles pour les transitions responsive */
+@media (max-width: 768px) {
+  .stat-card,
+  /* .filters-container, */
+  .calendar-wrapper,
+  .planif-tab-btn,
+  .add-user-button {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+}
+
+/* 🎨 Styles pour les états de focus responsive */
+@media (max-width: 768px) {
+  .planif-tab-btn:focus,
+  .add-user-button:focus
+ {
+    box-shadow: 
+      0 0 0 2px rgba(102, 126, 234, 0.3),
+      0 4px 8px rgba(102, 126, 234, 0.2) !important;
+  }
+}
+
+/* 🎨 Styles pour les états actifs responsive */
+@media (max-width: 768px) {
+  .planif-tab-btn:active,
+  .add-user-button:active {
+    transform: translateY(0) scale(0.98) !important;
+    transition: all 0.1s ease !important;
+  }
+}
+
+/* 🎨 Styles améliorés pour les événements du calendrier */
+::ng-deep .fc-event {
+  border: none !important;
+  border-radius: 16px !important;
+  margin: 3px 6px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #ffffff !important;
+  border: 1px solid #e9ecef !important;
+  min-height: 120px !important;
+}
+
+::ng-deep .fc-event:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+::ng-deep .fc-event-main {
+  padding: 0 !important;
+  height: 100% !important;
+}
+
+::ng-deep .fc-event-main-frame {
+  height: 100% !important;
+}
+
+::ng-deep .fc-event-title {
+  display: none !important;
+}
+
+::ng-deep .fc-event-time {
+  display: none !important;
+}
+
+/* 🎨 Styles responsive pour les événements */
+@media (max-width: 768px) {
+  ::ng-deep .fc-event {
+    min-height: 100px !important;
+    margin: 2px 4px !important;
+  }
+  
+  ::ng-deep .fc-event-main {
+    font-size: 11px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  ::ng-deep .fc-event {
+    min-height: 80px !important;
+    margin: 1px !important;
+  }
+  
+  ::ng-deep .fc-event-main {
+    font-size: 10px !important;
+  }
+}
+
+/* 🕒 Styles pour les créneaux horaires du calendrier */
+::ng-deep .fc-timegrid-slot {
+  height: 80px !important; /* Hauteur augmentée pour plus d'espace */
+  border-bottom: 1px solid #e9ecef !important;
+}
+
+::ng-deep .fc-timegrid-slot-label {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #495057 !important;
+  padding: 8px 12px !important;
+  background: #f8f9fa !important;
+  border-right: 1px solid #e9ecef !important;
+}
+
+::ng-deep .fc-timegrid-slot-lane {
+  border-right: 1px solid #e9ecef !important;
+}
+
+::ng-deep .fc-timegrid-axis {
+  background: #f8f9fa !important;
+  border-right: 2px solid #dee2e6 !important;
+}
+
+::ng-deep .fc-timegrid-col-header {
+  background: #ffffff !important;
+  border-bottom: 2px solid #dee2e6 !important;
+}
+
+::ng-deep .fc-col-header-cell {
+  padding: 12px 8px !important;
+  font-weight: 600 !important;
+  color: #495057 !important;
+  background: #f8f9fa !important;
+  border-right: 1px solid #e9ecef !important;
+}
+
+/* 🎨 Espacement alterné pour les créneaux */
+::ng-deep .fc-timegrid-slot:nth-child(even) {
+  background: rgba(248, 249, 250, 0.3) !important;
+}
+
+::ng-deep .fc-timegrid-slot:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* 🕒 Styles responsive pour les créneaux horaires */
+@media (max-width: 768px) {
+  ::ng-deep .fc-timegrid-slot {
+    height: 60px !important;
+  }
+  
+  ::ng-deep .fc-timegrid-slot-label {
+    font-size: 10px !important;
+    padding: 4px 8px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  ::ng-deep .fc-timegrid-slot {
+    height: 50px !important;
+  }
+  
+  ::ng-deep .fc-timegrid-slot-label {
+    font-size: 9px !important;
+    padding: 2px 6px !important;
+  }
+}
+
+/* 🎯 Barre d'outils moderne */
+::ng-deep .fc-toolbar {
+  background: linear-gradient(135deg, #0A2681 0%, #1a4ba3 100%);
+  padding: 20px 24px;
+  border-radius: 20px 20px 0 0;
+  margin-bottom: 0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+::ng-deep .fc-toolbar-title {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.025em;
+}
+
+/* 🎛️ Boutons de navigation modernes */
+::ng-deep .fc-button {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+  padding: 12px 20px !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: none !important;
+  font-size: 14px !important;
+}
+
+::ng-deep .fc-button:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .fc-button:active {
+  transform: translateY(0);
+}
+
+/* 📅 En-tête des jours */
+::ng-deep .fc-col-header {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  border-bottom: 2px solid #e2e8f0;
+}
+
+::ng-deep .fc-col-header-cell {
+  padding: 16px 8px !important;
+  font-weight: 700 !important;
+  color: #475569 !important;
+  font-size: 14px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em;
+  border-right: 1px solid #e2e8f0;
+}
+
+::ng-deep .fc-col-header-cell:last-child {
+  border-right: none;
+}
+
+/* 📆 Cellules des jours */
+::ng-deep .fc-daygrid-day {
+  border: 1px solid #e2e8f0 !important;
+  background: #ffffff;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+::ng-deep .fc-daygrid-day:hover {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  transform: scale(1.02);
+  z-index: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 🎯 Jour actuel */
+::ng-deep .fc-day-today {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+  position: relative;
+}
+
+::ng-deep .fc-day-today::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 0 0 8px 8px;
+}
+
+/* 📅 Numéros des jours */
+::ng-deep .fc-daygrid-day-number {
+  padding: 12px 16px !important;
+  color: #1e293b !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  transition: all 0.3s ease;
+}
+
+::ng-deep .fc-daygrid-day:hover .fc-daygrid-day-number {
+  color: #3b82f6 !important;
+  transform: scale(1.1);
+}
+
+/* 🎨 Événements modernes */
+::ng-deep .fc-event {
+  border: none !important;
+  border-radius: 16px !important;
+  margin: 3px 6px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #ffffff !important;
+  border: 1px solid #e9ecef !important;
+  min-height: 120px !important;
+}
+
+::ng-deep .fc-event:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+::ng-deep .fc-event-main {
+  padding: 0 !important;
+  height: 100% !important;
+}
+
+::ng-deep .fc-event-main-frame {
+  height: 100% !important;
+}
+
+::ng-deep .fc-event-title {
+  display: none !important;
+}
+
+::ng-deep .fc-event-time {
+  display: none !important;
+}
+
+::ng-deep .fc-event::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+}
+
+::ng-deep .fc-event:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* 🎯 Contenu des événements */
+::ng-deep .fc-event-main {
+  padding: 8px 12px !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+}
+
+::ng-deep .fc-event-title {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+::ng-deep .fc-event-time {
+  color: #64748b !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  margin-bottom: 4px !important;
+}
+
+/* 🎨 Couleurs des statuts */
+::ng-deep .status-planifiee {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+  color: #1e40af !important;
+}
+
+::ng-deep .status-en_cours {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
+  color: #166534 !important;
+}
+
+::ng-deep .status-effectuee {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+  color: #065f46 !important;
+}
+
+::ng-deep .status-reprogrammee {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+  color: #92400e !important;
+}
+
+::ng-deep .status-non_accomplie {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+  color: #991b1b !important;
+}
+
+/* 🎯 Weekends */
+::ng-deep .fc-day-sun,
+::ng-deep .fc-day-sat {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+}
+
+::ng-deep .fc-day-sun .fc-daygrid-day-number,
+::ng-deep .fc-day-sat .fc-daygrid-day-number {
+  color: #94a3b8 !important;
+}
+
+/* 🎨 Scrollbar personnalisée */
+::ng-deep .fc-scroller {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+::ng-deep .fc-scroller::-webkit-scrollbar {
+  width: 8px;
+}
+
+::ng-deep .fc-scroller::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::ng-deep .fc-scroller::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::ng-deep .fc-scroller::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* 🎯 Responsive */
+@media (max-width: 768px) {
+  ::ng-deep .fc-toolbar {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  ::ng-deep .fc-toolbar-title {
+    font-size: 1.25rem !important;
+  }
+  
+  ::ng-deep .fc-button {
+    padding: 8px 16px !important;
+    font-size: 12px !important;
+  }
+  
+  ::ng-deep .fc-daygrid-day-number {
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* 🎨 Animation d'entrée */
+@keyframes calendarFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+::ng-deep .fc {
+  animation: calendarFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🎯 Effet de focus */
+::ng-deep .fc-event:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* 🎨 Badges de statut dans les événements */
+::ng-deep .fc-event .status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+/* 🎯 Indicateur de progression */
+::ng-deep .fc-event .progress-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #10b981, #3b82f6);
+  border-radius: 0 0 12px 12px;
+  transition: width 0.3s ease;
+}
+
+/* 🎨 Tooltip personnalisé */
+::ng-deep .fc-event-tooltip {
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+/* 🎯 États de chargement */
+::ng-deep .fc-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+::ng-deep .fc-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* 🎨 Styles pour les filtres modernes */
+/* .filters-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2e8f0;
+} */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.filter-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+
+
+.add-user-button:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -3px rgba(10, 38, 129, 0.4);
+}
+
+.add-user-button:active {
+  transform: translateY(0);
+}
+
+/* 🎨 Statistiques modernes */
+.calendar-stats {
+  /* background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); */
+  border-radius: 20px;
+  padding: 32px;
+  margin: 24px 0;
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  /* border: 1px solid #e2e8f0; */
+}
+
+.stats-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 24px;
+  text-align: center;
+  position: relative;
+}
+
+.stats-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  /* background: linear-gradient(90deg, #3b82f6, #8b5cf6); */
+  border-radius: 2px;
+}
+
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  color: #3b82f6;
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 8px 0;
+  line-height: 1;
+}
+
+.stat-value.positive {
+  color: #059669;
+}
+
+.stat-value.negative {
+  color: #dc2626;
+}
+
+.stat-value.neutral {
+  color: #6b7280;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* 🎯 Animation des statistiques */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stat-card {
+  animation: countUp 0.6s ease-out forwards;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+.stat-card:nth-child(5) { animation-delay: 0.5s; }
+.stat-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* 🎨 Wrapper du calendrier */
+.calendar-wrapper {
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  margin: 24px 0;
+}
+
+/* 🎯 Responsive pour les statistiques */
+@media (max-width: 768px) {
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .stat-card {
+    padding: 20px;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+  
+  .stat-icon {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .calendar-stats {
+    padding: 20px;
+  }
+  
+  .stats-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* ============================================================================
+   STYLES MODERNES POUR LES BOUTONS, OMBRES ET ANIMATIONS
+============================================================================ */
+
+/* 🎨 Bouton Map moderne */
+.planif-tab-btn {
+  background: linear-gradient(135deg, #0A2681 0%, #1a4ba3 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 16px 32px !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  border-radius: 50px !important;
+  cursor: pointer !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 
+    0 10px 20px -5px rgba(102, 126, 234, 0.4),
+    0 4px 8px -2px rgba(0, 0, 0, 0.1) !important;
+  position: relative !important;
+  /* overflow: hidden !important; */
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  margin-left: 90% !important;
+  margin-bottom: 20px !important;
+}
+
+.planif-tab-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.planif-tab-btn:hover {
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 
+    0 20px 40px -10px rgba(102, 126, 234, 0.6),
+    0 8px 16px -4px rgba(0, 0, 0, 0.15) !important;
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%) !important;
+}
+
+.planif-tab-btn:hover::before {
+  left: 100%;
+}
+
+.planif-tab-btn:active {
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow: 
+    0 15px 30px -8px rgba(102, 126, 234, 0.5),
+    0 6px 12px -3px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* 🎨 Bouton retour moderne */
+
+
+button[mat-icon-button]::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+}
+
+button[mat-icon-button]:hover {
+  transform: translateY(-2px) scale(1.1) !important;
+  box-shadow: 
+    0 16px 32px -8px rgba(59, 130, 246, 0.6),
+    0 8px 16px -4px rgba(0, 0, 0, 0.15) !important;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+}
+
+button[mat-icon-button]:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+button[mat-icon-button]:active {
+  transform: translateY(0) scale(1.05) !important;
+}
+
+
+/* 🎨 Ombres et animations pour les conteneurs */
+/* .filters-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border-radius: 20px !important;
+  padding: 24px !important;
+  margin-bottom: 24px !important;
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid #e2e8f0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+} */
+
+.filters-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  /* background: linear-gradient(90deg, #0A2681, #1a4ba3, #0A2681); */
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+/* .filters-container:hover {
+  
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.15),
+    0 15px 30px -5px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+} */
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* 🎨 Animations pour les champs de formulaire */
+.filter-field {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.filter-field:hover {
+  transform: translateY(-2px) !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  transition: all 0.3s ease !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline:hover .mat-form-field-outline {
+  color: #0A2681 !important;
+  box-shadow: 0 4px 12px rgba(10, 38, 129, 0.2) !important;
+}
+
+/* 🎨 Séparateurs animés */
+.separator {
+  width: 2px !important;
+  height: 40px !important;
+  background: linear-gradient(180deg, transparent, #cbd5e1, transparent) !important;
+  margin: 0 16px !important;
+  border-radius: 1px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.separator::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, #0A2681, transparent);
+  animation: separatorGlow 2s ease-in-out infinite;
+}
+
+@keyframes separatorGlow {
+  0%, 100% { top: -100%; }
+  50% { top: 100%; }
+}
+
+/* 🎨 Animations pour les statistiques */
+.stat-card {
+  position: relative !important;
+  overflow: hidden !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border-radius: 20px !important;
+  padding: 24px !important;
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #0A2681, #1a4ba3, #0A2681);
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px) scale(1.02) !important;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.15),
+    0 15px 30px -5px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+}
+
+.stat-card:hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* 🎨 Icônes des statistiques animées */
+.stat-icon {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.2) rotate(5deg) !important;
+  color: #0A2681 !important;
+}
+
+.stat-icon::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+}
+
+.stat-card:hover .stat-icon::before {
+  width: 60px;
+  height: 60px;
+}
+
+/* 🎨 Valeurs des statistiques animées */
+.stat-value {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+}
+
+.stat-card:hover .stat-value {
+  transform: scale(1.1) !important;
+  color: #1e293b !important;
+}
+
+/* 🎨 Labels des statistiques */
+.stat-label {
+  transition: all 0.3s ease !important;
+}
+
+.stat-card:hover .stat-label {
+  color: #475569 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 🎨 Animation d'entrée pour les cartes */
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.stat-card {
+  animation: cardEntrance 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+.stat-card:nth-child(5) { animation-delay: 0.5s; }
+.stat-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* 🎨 Effet de pulsation pour les valeurs importantes */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.stat-value.positive {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* 🎨 Effet de brillance pour les boutons */
+@keyframes shine {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.planif-tab-btn,
+.add-user-button {
+  background-size: 200% 200% !important;
+}
+
+.planif-tab-btn:hover,
+.add-user-button:hover {
+  animation: shine 1.5s ease-in-out infinite !important;
+}
+
+/* 🎨 Effet de flottement pour les éléments */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.stat-card:hover {
+  animation: float 3s ease-in-out infinite !important;
+}
+
+/* 🎨 Responsive pour les animations */
+@media (max-width: 768px) {
+  .planif-tab-btn {
+    margin-left: 50% !important;
+    transform: translateX(-50%) !important;
+    padding: 12px 24px !important;
+    font-size: 1rem !important;
+  }
+  
+  .planif-tab-btn:hover {
+    transform: translateX(-50%) translateY(-2px) scale(1.03) !important;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-4px) scale(1.01) !important;
+  }
+  
+  /* .filters-container:hover {
+    transform: translateY(-2px) !important;
+  } */
+}
+
+/* 🎨 Effet de néon pour les éléments importants */
+@keyframes neonGlow {
+  0%, 100% {
+    box-shadow: 
+      0 0 5px rgba(102, 126, 234, 0.5),
+      0 0 10px rgba(102, 126, 234, 0.3),
+      0 0 15px rgba(102, 126, 234, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 10px rgba(102, 126, 234, 0.8),
+      0 0 20px rgba(102, 126, 234, 0.5),
+      0 0 30px rgba(102, 126, 234, 0.3);
+  }
+}
+
+.planif-tab-btn:hover,
+.add-user-button:hover {
+  animation: neonGlow 2s ease-in-out infinite !important;
+}
+
+/* 🎨 Effet de particules pour les boutons */
+@keyframes particle {
+  0% {
+    transform: translateY(0) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(1);
+    opacity: 0;
+  }
+}
+
+.planif-tab-btn::after,
+.add-user-button::after {
+  content: '✨';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  animation: particle 1s ease-out;
+}
+
+.planif-tab-btn:active::after,
+.add-user-button:active::after {
+  animation: particle 0.5s ease-out;
+}
+
+/* 🎨 Effet de morphing pour les icônes */
+@keyframes morph {
+  0%, 100% {
+    border-radius: 50%;
+  }
+  50% {
+    border-radius: 30%;
+  }
+}
+
+.stat-card:hover .stat-icon {
+  animation: morph 2s ease-in-out infinite !important;
+}
+
+/* 🎨 Effet de vague pour les conteneurs */
+@keyframes wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.filters-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  /* background: linear-gradient(90deg, transparent, #0A2681, transparent); */
+  animation: wave 3s ease-in-out infinite;
+}
+
+/* 🎨 Effet de focus amélioré */
+.planif-tab-btn:focus,
+.add-user-button:focus {
+  outline: none !important;
+  box-shadow: 
+    0 0 0 3px rgba(102, 126, 234, 0.3),
+    0 10px 20px -5px rgba(102, 126, 234, 0.4) !important;
+}
+
+/* 🎨 Effet de pression pour les boutons */
+.planif-tab-btn:active,
+.add-user-button:active{
+  transform: translateY(1px) scale(0.98) !important;
+  transition: all 0.1s ease !important;
+}
+
+/* 🎨 Effet de glitch pour les éléments en erreur */
+@keyframes glitch {
+  0%, 100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+}
+
+.stat-value.negative {
+  animation: glitch 0.3s ease-in-out infinite;
+}
+
+/* 🎨 Effet de rotation pour les icônes de chargement */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-icon {
+  animation: spin 1s linear infinite;
+}
+
+/* 🎨 Effet de zoom pour les éléments interactifs */
+.interactive-element {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.interactive-element:hover {
+  transform: scale(1.05) !important;
+}
+
+.interactive-element:active {
+  transform: scale(0.95) !important;
+}
+
+/* ============================================================================
+   STYLES RESPONSIVES POUR LE CALENDRIER DE PLANIFICATION
+   Basé sur l'image de référence avec grille moderne
+============================================================================ */
+
+/* 🎯 Responsive Design Principal */
+@media (max-width: 1200px) {
+  .container {
+    width: 98vw !important;
+    margin-left: 1% !important;
+  }
+  
+  .sidebar {
+    width: 220px !important;
+  }
+  
+  .content {
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    width: 100vw !important;
+    margin-left: 0 !important;
+    border-radius: 0 !important;
+  }
+  
+  .sidebar {
+    width: 200px !important;
+  }
+  
+  .page-header {
+    padding: 20px !important;
+    margin-right: 0 !important;
+  }
+  
+  .page-header h1 {
+    font-size: 1.5rem !important;
+    margin-right: 0 !important;
+  }
+  
+  .filters {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  
+  .filter-field {
+    min-width: 100% !important;
+  }
+  
+  .separator {
+    display: none !important;
+  }
+  
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+  
+  .stat-card {
+    padding: 16px !important;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem !important;
+  }
+  
+  .stat-icon {
+    font-size: 1.8rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100% !important;
+    position: fixed !important;
+    z-index: 1000 !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s ease !important;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0) !important;
+  }
+  
+  .content {
+    margin-left: 0 !important;
+    padding: 12px !important;
+  }
+  
+  .page-header {
+    flex-direction: column !important;
+    gap: 16px !important;
+    padding: 16px !important;
+  }
+  
+  .planif-header {
+    text-align: center !important;
+  }
+  
+
+  
+  .filters-container {
+    padding: 16px !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .filters {
+    gap: 8px !important;
+  }
+  
+  .filter-field {
+    margin-bottom: 8px !important;
+  }
+  
+  .add-user-button {
+    width: 100% !important;
+    margin-top: 8px !important;
+  }
+  
+  .stats-container {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  
+  .stat-card {
+    padding: 12px !important;
+  }
+  
+  .stat-value {
+    font-size: 1.25rem !important;
+  }
+  
+  .stat-icon {
+    font-size: 1.5rem !important;
+  }
+  
+  .calendar-stats {
+    padding: 16px !important;
+    margin: 16px 0 !important;
+  }
+  
+  .stats-title {
+    font-size: 1.125rem !important;
+  }
+  
+  .planif-tab-btn {
+    margin-left: 0 !important;
+    width: 100% !important;
+    margin-bottom: 16px !important;
+    padding: 12px 24px !important;
+    font-size: 1rem !important;
+  }
+  
+  .calendar-wrapper {
+    padding: 12px !important;
+    margin: 16px 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 8px 12px !important;
+  }
+  
+  .header-icons {
+    gap: 12px !important;
+  }
+  
+  .header-icons img {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  .page-header {
+    padding: 12px !important;
+  }
+  
+  .page-header h1 {
+    font-size: 1.125rem !important;
+  }
+  
+  
+  .filters-container {
+    padding: 12px !important;
+  }
+  
+  .filters {
+    gap: 6px !important;
+  }
+  
+  .filter-field {
+    margin-bottom: 6px !important;
+  }
+  
+  .stats-container {
+    gap: 8px !important;
+  }
+  
+  .stat-card {
+    padding: 8px !important;
+  }
+  
+  .stat-value {
+    font-size: 1.125rem !important;
+  }
+  
+  .stat-icon {
+    font-size: 1.25rem !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem !important;
+  }
+  
+  .calendar-stats {
+    padding: 12px !important;
+  }
+  
+  .stats-title {
+    font-size: 1rem !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .calendar-wrapper {
+    padding: 8px !important;
+  }
+  
+  .planif-tab-btn {
+    padding: 10px 20px !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+/* 🎨 Styles spécifiques pour la grille du calendrier responsive */
+@media (max-width: 768px) {
+  ::ng-deep .fc {
+    border-radius: 12px !important;
+    min-height: 400px !important;
+  }
+  
+  ::ng-deep .fc-toolbar {
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 12px !important;
+  }
+  
+  ::ng-deep .fc-toolbar-title {
+    font-size: 1.125rem !important;
+    text-align: center !important;
+  }
+  
+  ::ng-deep .fc-button {
+    padding: 8px 12px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  ::ng-deep .fc-col-header-cell {
+    padding: 8px 4px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  ::ng-deep .fc-daygrid-day-number {
+    padding: 6px 8px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  ::ng-deep .fc-event {
+    margin: 1px 2px !important;
+    border-radius: 6px !important;
+  }
+  
+  ::ng-deep .fc-event-main {
+    padding: 4px 6px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  ::ng-deep .fc-event-title {
+    font-size: 0.75rem !important;
+  }
+  
+  ::ng-deep .fc-event-time {
+    font-size: 0.625rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  ::ng-deep .fc {
+    min-height: 300px !important;
+  }
+  
+  ::ng-deep .fc-toolbar {
+    padding: 8px !important;
+  }
+  
+  ::ng-deep .fc-toolbar-title {
+    font-size: 1rem !important;
+  }
+  
+  ::ng-deep .fc-button {
+    padding: 6px 10px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  ::ng-deep .fc-col-header-cell {
+    padding: 6px 2px !important;
+    font-size: 0.625rem !important;
+  }
+  
+  ::ng-deep .fc-daygrid-day-number {
+    padding: 4px 6px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  ::ng-deep .fc-event {
+    margin: 1px !important;
+  }
+  
+  ::ng-deep .fc-event-main {
+    padding: 2px 4px !important;
+    font-size: 0.625rem !important;
+  }
+  
+  ::ng-deep .fc-event-title {
+    font-size: 0.625rem !important;
+  }
+  
+  ::ng-deep .fc-event-time {
+    font-size: 0.5rem !important;
+  }
+}
+
+/* 🎨 Styles pour les filtres responsive */
+@media (max-width: 768px) {
+  .filters-container {
+    border-radius: 12px !important;
+  }
+  
+  .filter-field {
+    margin-bottom: 8px !important;
+  }
+  
+  ::ng-deep .mat-form-field-appearance-outline .mat-form-field-wrapper {
+    margin-bottom: 0 !important;
+  }
+  
+  ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    border-radius: 8px !important;
+  }
+}
+
+/* 🎨 Styles pour les statistiques responsive */
+@media (max-width: 768px) {
+  .calendar-stats {
+    border-radius: 12px !important;
+  }
+  
+  .stat-card {
+    border-radius: 12px !important;
+  }
+  
+  .stat-card::before {
+    height: 3px !important;
+  }
+}
+
+/* 🎨 Styles pour les boutons responsive */
+@media (max-width: 768px) {
+  .planif-tab-btn {
+    border-radius: 25px !important;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+  }
+  
+  .planif-tab-btn:hover {
+    transform: translateY(-1px) scale(1.02) !important;
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4) !important;
+  }
+  
+  .add-user-button {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
+  }
+  
+  .add-user-button:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+  }
+  
+  /* .menu-toggle {
+    /* border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 43, 127, 0.3) !important;
+  } */
+  
+ 
+}
+
+/* 🎨 Styles pour les animations responsive */
+@media (max-width: 768px) {
+  .stat-card {
+    animation: cardEntrance 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-4px) scale(1.01) !important;
+  }
+  
+  /* .filters-container:hover {
+    transform: translateY(-2px) !important;
+  } */
+  
+  .planif-tab-btn:hover {
+    transform: translateY(-1px) scale(1.02) !important;
+  }
+}
+
+/* 🎨 Styles pour les ombres responsive */
+@media (max-width: 768px) {
+  .filters-container {
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  }
+  
+  .calendar-stats {
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  }
+  
+  .stat-card {
+    box-shadow: 
+      0 2px 4px -1px rgba(0, 0, 0, 0.1),
+      0 1px 2px -1px rgba(0, 0, 0, 0.06) !important;
+  }
+  
+  .calendar-wrapper {
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  }
+}
+
+/* 🎨 Styles pour les transitions responsive */
+@media (max-width: 768px) {
+  .stat-card,
+  /* .filters-container, */
+  .calendar-wrapper,
+  .planif-tab-btn,
+  .add-user-button {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+}
+
+/* 🎨 Styles pour les états de focus responsive */
+@media (max-width: 768px) {
+  .planif-tab-btn:focus,
+  .add-user-button:focus {
+    box-shadow: 
+      0 0 0 2px rgba(102, 126, 234, 0.3),
+      0 4px 8px rgba(102, 126, 234, 0.2) !important;
+  }
+}
+
+/* 🎨 Styles pour les états actifs responsive */
+@media (max-width: 768px) {
+  .planif-tab-btn:active,
+  .add-user-button:active {
+    transform: translateY(0) scale(0.98) !important;
+    transition: all 0.1s ease !important;
+  }
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espace entre bouton et h1 */
+}
+.page-header > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+  .page-header-left h1:hover {
+    color: #1e3a8a;
+  }
+  
+  .page-header-left h1 .title-icon {
+    font-size: 1.5rem;
+    color: #002B7F;
+    transition: color 0.2s ease;
+  }
+  .page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* padding: 44px; */
+  gap: 32px;
+
+  width: 100%;
+  background: transparent;
+  color: #333;
+}
+
+.planif-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tab-navigation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tab-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-toggle {
+  margin-right: 10px;
+  flex-shrink: 0;  
+  background-color: #0A2681;
+  border-radius: 8px;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  transition: background-color 0.3s ease;
+}
+
+.page-header .menu-toggle {
+  margin-right: 10px;
+  flex-shrink: 0;  
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.page-header .menu-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-header h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}

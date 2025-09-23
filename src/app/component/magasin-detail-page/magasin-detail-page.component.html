@@ -1,0 +1,281 @@
+<!-- Header principal -->
+<div class="header">
+  <img src="assets/logo.png" alt="Richbond Logo" class="logo" />
+  <div class="header-icons">
+    <mat-icon>notifications_none</mat-icon>
+    
+    <!-- Bouton de changement de langue -->
+    <button mat-button [matMenuTriggerFor]="languageMenu" class="lang-button">
+      <img [src]="'assets/' + (currentLanguage === 'fr' ? 'OIP.webp' : 'usa.png')" 
+           alt="Language" 
+           class="lang-icon" />
+      <span>{{ currentLanguage | uppercase }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    
+    <mat-menu #languageMenu="matMenu">
+      <button mat-menu-item (click)="changeLanguage('fr')">
+        <img src="assets/OIP.webp" alt="Français" class="lang-option-icon">
+        <span>FR</span>
+      </button>
+      <button mat-menu-item (click)="changeLanguage('en')">
+        <img src="assets/usa.png" alt="English" class="lang-option-icon">
+        <span>EN</span>
+      </button>
+    </mat-menu>
+    
+    <mat-icon>settings</mat-icon>
+  </div>
+</div>
+
+<div class="container" style="padding: 20px;
+    margin: 12px;
+   
+    border-radius: 12px;
+   
+    background-color: #ffffff;
+    
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    min-height: calc(100vh - 24px);
+    box-sizing: border-box;
+    
+    /* Disposition des enfants */
+    display: flex;
+    flex-direction: column;">
+  <div class="example-container">
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" [class.sidebar-collapsed]="!menuOpen">
+      <div class="user-profile" [class.user-profile-collapsed]="!menuOpen">
+        <img 
+          [src]="avatarUrl" 
+          alt="Avatar" 
+          width="100" 
+          height="100" 
+          style="border-radius:50%;" />
+        <div class="user-info" [class.user-info-hidden]="!menuOpen">
+          <strong>{{ username }}</strong>
+          <p>{{ role }}</p>
+        </div>
+      </div>
+
+      <mat-nav-list [class.nav-list-collapsed]="!menuOpen">
+        <a mat-list-item routerLink="/Dashbord" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen" 
+           [matTooltip]="!menuOpen ? ('COMMON.DASHBOARD' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.DASHBOARD' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/users" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>group</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">Tous les utilisateurs</span>
+        </a>
+           <a mat-list-item routerLink="/login-history" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('LOGIN_HISTORY.TITLE' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>history</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'LOGIN_HISTORY.TITLE' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/merchendiseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.MERCHANDISERS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>storefront</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.MERCHANDISERS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/superviseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.SUPERVISORS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>supervisor_account</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SUPERVISORS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/magasins" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.STORES' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>store</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.STORES' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/planification" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.PLANNING' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>event_note</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PLANNING' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/gestion-visites" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.VISIT' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>location_on</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.VISIT' | translate}}</span>
+        </a>
+
+        <a mat-list-item routerLink="/Produit" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.PRODUCTS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>inventory</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PRODUCTS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/parametre" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.SETTINGS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>settings</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SETTINGS' | translate }}</span>
+        </a>
+
+        <a mat-list-item routerLink="/help" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.HELP' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>help_outline</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.HELP' | translate }}</span>
+        </a>
+        
+        <a mat-list-item (click)="openLogoutDialog()" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('AUTH.LOGOUT' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon style="color: #ff0022;">logout</mat-icon>
+          <span matListItemTitle style="color: #ff0022;" [class.text-hidden]="!menuOpen">{{ 'AUTH.LOGOUT' | translate }}</span>
+        </a>
+      </mat-nav-list>
+    </div>
+    <div class="content">
+      <div class="page-header">
+        <div class="page-header-left">
+          <button mat-icon-button (click)="toggleMenu()" class="menu-toggle">
+            <mat-icon *ngIf="!menuOpen">keyboard_arrow_left</mat-icon>
+            <mat-icon *ngIf="menuOpen">keyboard_arrow_right</mat-icon>
+          </button>
+          <h1 (click)="goBack()">
+            Détail du Magasin
+          </h1>
+        </div>
+      </div>
+
+      <!-- Contenu principal -->
+      <div class="all" style="background:white">
+        <!-- Superviseur details -->
+        <div *ngIf="magasin && !loading" class="superviseur-detail-container" style="background:white">
+          <!-- Carte de détail du superviseur -->
+          <div class="superviseur-detail-card" style="background:white">
+            <div class="superviseur-header">
+               <div class="profile-header">
+               <div class="profile-picture-container">
+ <div class="store-icon-container">
+  <mat-icon class="store-icon">
+    storefront
+  </mat-icon>
+  <h1>{{ magasin.nom || 'Non spécifié' }}</h1>
+</div>
+</div>
+           
+              </div>
+              <div class="footer-actions">
+                <button mat-raised-button class="export-button" (click)="goBack()" > 
+      <span>Retour</span>
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+                <!-- <button mat-raised-button class="export-button" (click)="printPage()" > 
+                  <span>Imprimer</span>
+                  <mat-icon>print</mat-icon>
+                </button> -->
+                <button
+                  mat-raised-button
+                  class="add-user-button"
+                  (click)="editMagasin()"
+                  *ngIf="magasin"
+                  style="color:white"
+                >
+                  Modifier le Magasin
+                </button>
+              </div>
+            </div>
+
+            <div class="superviseur-content" style="background:white;margin-bottom:30%;">
+              <!-- Section Profile Header -->
+            
+
+              <!-- Section Informations -->
+              <div class="info-section">
+                <div class="info-grid">
+                  <div class="info-row">
+                    <div class="info-field">
+                      <label class="field-label">Nom du Magasin</label>
+                      <div class="field-value">{{ magasin.nom || 'Non spécifié' }}</div>
+                    </div>
+                    
+                    <div class="info-field">
+                      <label class="field-label">Type de Magasin</label>
+                      <div class="field-value">{{ magasin.type || 'Non spécifié' }}</div>
+                    </div>
+                  </div>
+
+                  <div class="info-row">
+                    <div class="info-field">
+                      <label class="field-label">Enseigne</label>
+                      <div class="field-value">{{ magasin.enseigne || 'Non spécifiée' }}</div>
+                    </div>
+                    
+                
+
+               
+                    <div class="info-field">
+                      <label class="field-label">Région</label>
+                      <div class="field-value">{{ magasin.region || 'Non spécifiée' }}</div>
+                    </div>
+                    
+                   
+           
+             
+                  </div>
+                 <div class="info-row">
+                     <div class="info-field">
+                      <label class="field-label">Ville</label>
+                      <div class="field-value">{{ magasin.ville || 'Non spécifiée' }}</div>
+                    </div>
+                    <div class="info-field ">
+                      <label class="field-label">Localisation</label>
+                      <div class="field-value">{{ magasin.localisation || 'Non spécifiée' }}</div>
+                    </div>
+                  </div>
+               </div>
+
+             
+
+               <!-- Section Merchandiseur Assigné -->
+               <div class="info-section" *ngIf="magasin.merchandiseur">
+                 <h2 class="section-title">Merchandiseur Assigné</h2>
+                 <div class="info-grid">
+                   <div class="info-row">
+                     <div class="info-field">
+                       <label class="field-label">Nom Complet</label>
+                       <div class="field-value">{{ magasin.merchandiseur.nom }} {{ magasin.merchandiseur.prenom }}</div>
+                     </div>
+                     
+                     <div class="info-field">
+                       <label class="field-label">ID Merchandiseur</label>
+                       <div class="field-value">{{ magasin.merchandiseur.id }}</div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+             </div>
+           </div>
+         </div>
+
+        <!-- États de chargement et d'erreur -->
+        <div *ngIf="loading" class="loading-container">
+          <mat-spinner></mat-spinner>
+          <p>Chargement des détails du magasin...</p>
+        </div>
+
+        <div *ngIf="error" class="error-container">
+          <mat-icon class="error-icon">error</mat-icon>
+          <h3>Erreur</h3>
+          <p>{{ error }}</p>
+          <button mat-raised-button color="primary" (click)="goBack()">
+            Retour à la liste
+          </button>
+        </div>
+      </div>
+
+      <!-- Contenu principal -->
+    
+    </div>
+  </div>
+</div>
+</div>

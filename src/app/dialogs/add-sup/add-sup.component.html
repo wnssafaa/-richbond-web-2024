@@ -1,0 +1,129 @@
+<div class="user-form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ isEditMode ? 'Modifier le superviseur' : 'Ajouter un nouveau superviseur' }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="superviseurForm" #form="ngForm">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nom</mat-label>
+            <input matInput formControlName="nom" placeholder="Nom du superviseur">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Prénom</mat-label>
+            <input matInput formControlName="prenom" placeholder="Prénom du superviseur">
+          </mat-form-field>
+        </div>
+        <div class="form-row">
+  <mat-form-field appearance="outline" class="full-width">
+  <mat-label>Date d'intégration</mat-label>
+  <input matInput [matDatepicker]="integrationPicker" formControlName="dateDebutIntegration">
+  <mat-datepicker-toggle matSuffix [for]="integrationPicker"></mat-datepicker-toggle>
+  <mat-datepicker #integrationPicker></mat-datepicker>
+</mat-form-field>
+
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>Date de sortie</mat-label>
+  <input matInput [matDatepicker]="sortiePicker" formControlName="dateSortie">
+  <mat-datepicker-toggle matSuffix [for]="sortiePicker"></mat-datepicker-toggle>
+  <mat-datepicker #sortiePicker></mat-datepicker>
+</mat-form-field>
+        </div>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="phone-input">
+            <mat-label>Téléphone</mat-label>
+            <div matPrefix class="phone-prefix">
+              <img src="assets/3840661.webp" alt="MA" class="flag-icon">
+              <span>+212</span>
+            </div>
+            <input matInput type="tel" formControlName="telephone" placeholder="6XXXXXXXX" maxlength="9">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="Email">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Région</mat-label>
+            <mat-select formControlName="region">
+              <mat-option *ngFor="let region of regions" [value]="region.valueOf()">
+                {{ region }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ville</mat-label>
+            <mat-select formControlName="ville">
+              <mat-option *ngFor="let ville of villesDisponibles" [value]="ville">
+                {{ ville }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+  <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Marchandiseurs affectés</mat-label>
+            <mat-select formControlName="merchendiseurIds" multiple>
+              <div class="search-container">
+                <input matInput 
+                      placeholder="Rechercher un marchandiseur..." 
+                      (input)="filterMerchandiseurs($event)"
+                      class="search-input">
+              </div>
+              
+              <mat-option *ngFor="let m of filteredMerchandiseurs" [value]="m.id">
+                {{ m.nom }} {{ m.prenom }}
+              </mat-option>
+              
+              <mat-option *ngIf="filteredMerchandiseurs.length === 0" disabled>
+                Aucun résultat trouvé
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+<div class="form-row" *ngIf="!isEditMode">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Username</mat-label>
+    <input matInput formControlName="username" placeholder="Nom d'utilisateur" required>
+    <mat-error *ngIf="superviseurForm.get('username')?.hasError('required')">
+      Le nom d'utilisateur est obligatoire
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Mot de passe</mat-label>
+    <input matInput formControlName="password" type="password" placeholder="Mot de passe" required>
+    <mat-error *ngIf="superviseurForm.get('password')?.hasError('required')">
+      Le mot de passe est obligatoire
+    </mat-error>
+  </mat-form-field>
+</div>
+
+       <div class="form-actions">
+    <button mat-raised-button 
+            color="primary" 
+            type="button"
+            [disabled]="isSubmitting || submitInProgress || submissionCompleted || superviseurForm.invalid"
+            (click)="onSubmit($event)">
+      <mat-spinner diameter="20" *ngIf="isSubmitting"></mat-spinner>
+      {{ isSubmitting ? 'Traitement...' : submissionCompleted ? 'Terminé' : (isEditMode ? 'Modifier' : 'Ajouter') }}
+    </button>
+  <button mat-button 
+          type="button" 
+          (click)="onCancel()" 
+          class="cancel-button"
+          [disabled]="isSubmitting">
+    Annuler
+  </button>
+</div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

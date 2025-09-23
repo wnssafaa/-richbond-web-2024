@@ -1,0 +1,1868 @@
+/* Styles copiés du dashboard pour maintenir la cohérence */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  height: 40px;
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.lang-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lang-button:hover {
+  background: #f5f5f5;
+}
+
+.lang-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.lang-option-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.container {
+  display: flex;
+  min-height: calc(100vh - 80px);
+}
+
+.example-container {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 280px;
+  background: #f8f9fa;
+  border-right: 1px solid #e0e0e0;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.sidebar-collapsed {
+  width: 80px;
+}
+
+.user-profile {
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.user-profile-collapsed {
+  padding: 1rem 0.5rem;
+}
+
+.user-profile img {
+  margin-bottom: 1rem;
+  border: 3px solid #0E6AF4;
+}
+
+.user-info {
+  transition: opacity 0.3s ease;
+}
+
+.user-info-hidden {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.user-info strong {
+  display: block;
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.user-info p {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.nav-list-collapsed {
+  padding: 0;
+}
+
+.nav-item-collapsed {
+  justify-content: center;
+  padding: 0.75rem 1rem;
+}
+
+.text-hidden {
+  display: none;
+}
+
+mat-nav-list {
+  padding: 0;
+}
+
+mat-list-item {
+  margin: 0.25rem 0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+mat-list-item:hover {
+  background: #e3f2fd;
+}
+
+mat-list-item.active-link {
+  background: #0E6AF4;
+  color: white;
+}
+
+mat-list-item.active-link mat-icon {
+  color: white;
+}
+
+mat-list-item mat-icon {
+  color: #666;
+  margin-right: 1rem;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+  background: #f5f5f5;
+  overflow-y: auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menu-toggle {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.menu-toggle:hover {
+  background: #f5f5f5;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: -280px;
+    top: 0;
+    height: 100vh;
+    z-index: 1001;
+    transition: left 0.3s ease;
+  }
+  
+  .sidebar.menu-open {
+    left: 0;
+  }
+  
+  .content {
+    padding: 1rem;
+  }
+  
+  .header {
+    padding: 1rem;
+  }
+  
+  .header-icons {
+    gap: 0.5rem;
+  }
+  
+  .lang-button {
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .lang-button span {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .user-profile {
+    padding: 1rem;
+  }
+  
+  .user-profile img {
+    width: 60px;
+    height: 60px;
+  }
+}
+/* Styles pour le header et les éléments de base */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #fff;
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+  width: 120px;
+  margin-left: 29px;
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #0E6AF4 !important;
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-header > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lang-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #0E6AF4! important;
+}
+
+.lang-icon {
+  width: 24px;
+  height: 24px;
+  color: #0E6AF4;
+}
+
+.icon {
+  cursor: pointer;
+  color: #0E6AF4;
+}
+
+/* Version mobile */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.5rem;
+  }
+  
+  .logo {
+    height: 45px;
+    width: 90px;
+  }
+  
+  .lang-text {
+    display: none;
+  }
+  
+  .header-icons {
+    gap: 0.75rem;
+  }
+}
+
+/* Version très petits écrans */
+@media (max-width: 480px) {
+  .logo {
+    height: 35px;
+    width: 70px;
+  }
+  
+  .lang-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .icon {
+    font-size: 20px;
+  }
+}
+
+/* Ajout des styles pour la sidebar collapsible à la fin du fichier existant */
+
+/* ============================================================================
+   STYLES POUR SIDEBAR COLLAPSIBLE (copiés du composant magasins)
+============================================================================ */
+
+/* Layout flexbox pour sidebar et contenu */
+.example-container {
+  display: flex;
+  height: 100vh;
+  gap: 0;
+}
+
+/* Sidebar - largeur fixe */
+.sidebar {
+  flex-shrink: 0;
+  width: 250px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 24px);
+  transition: width 0.3s ease;
+  position: relative;
+  z-index: 1;
+  background-color: #ffffff;
+}
+
+/* Mode collapsed - icônes seulement */
+.sidebar-collapsed {
+  width: 70px !important;
+  min-width: 70px;
+  max-width: 70px;
+}
+
+/* Contenu principal - prend tout l'espace restant */
+.content {
+  flex: 1;
+  padding: 24px;
+  background-color: #ffffff; 
+  border-radius: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  box-sizing: border-box;
+  overflow-x: auto;
+  margin-left: 0;
+}
+
+/* ============================================================================
+   2. PROFIL UTILISATEUR (haut de la sidebar)
+============================================================================ */
+.user-profile {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.user-profile img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  margin-right: 12px;
+  transition: all 0.3s ease;
+}
+
+.user-profile strong {
+  display: block;
+  font-size: 16px;
+  color: #333;
+  transition: opacity 0.3s ease;
+}
+
+.user-profile p {
+  margin: 0;
+  font-size: 13px;
+  color: #6c757d;
+  transition: opacity 0.3s ease;
+}
+
+/* Mode collapsed pour le profil */
+.user-profile-collapsed {
+  justify-content: center;
+  padding: 16px 8px;
+}
+
+.user-profile-collapsed img {
+  width: 35px;
+  height: 35px;
+  margin-right: 0;
+}
+
+.user-info-hidden {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+/* ============================================================================
+   3. LISTE DE NAVIGATION (liens mat-nav-list)
+============================================================================ */
+mat-nav-list a.active {
+  background-color: #f0f4ff !important;
+  color: #3f51b5 !important;
+  font-weight: 500;
+}
+
+/* Style pour les icônes de navigation */
+mat-nav-list mat-icon[matListItemIcon] {
+  color: #0A2681;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  margin-right: 16px;
+  transition: color 0.3s ease;
+}
+
+/* Style pour les liens actifs avec icônes */
+mat-nav-list a.active mat-icon[matListItemIcon] {
+  color: #0A2681 !important;
+}
+
+/* Style pour les titres des éléments de navigation */
+mat-nav-list span[matListItemTitle] {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Style pour les liens actifs */
+mat-nav-list a.active span[matListItemTitle] {
+  color: #3f51b5 !important;
+  font-weight: 600;
+}
+
+/* Hover effect pour les éléments de navigation */
+mat-nav-list a:hover mat-icon[matListItemIcon] {
+  color: #0A2681;
+  transform: scale(1.1);
+}
+
+mat-nav-list a:hover span[matListItemTitle] {
+  color: #0E6AF4;
+}
+
+/* Style spécial pour le bouton de déconnexion */
+mat-nav-list a[mat-list-item] mat-icon[matListItemIcon][style*="color: #ff0022"] {
+  color: #ff0022 !important;
+}
+
+mat-nav-list a[mat-list-item] span[matListItemTitle][style*="color: #ff0022"] {
+  color: #ff0022 !important;
+}
+
+/* Hover effect pour le bouton de déconnexion */
+mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) mat-icon[matListItemIcon] {
+  color: #ff0022 !important;
+}
+
+mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matListItemTitle] {
+  color: #ff0022 !important;
+}
+
+/* ============================================================================
+   MODE COLLAPSED - ICÔNES SEULEMENT
+============================================================================ */
+
+/* Masquer le texte en mode collapsed */
+.text-hidden {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Navigation en mode collapsed */
+.nav-list-collapsed {
+  padding: 0 8px;
+}
+
+.nav-item-collapsed {
+  justify-content: center !important;
+  padding: 12px 8px !important;
+  min-height: 48px;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.nav-item-collapsed mat-icon[matListItemIcon] {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  margin: 0 auto !important;
+}
+
+/* Masquer les trois points (dots) en mode collapsed */
+.nav-item-collapsed::after {
+  display: none !important;
+}
+
+/* S'assurer qu'aucun contenu supplémentaire ne s'affiche */
+.nav-item-collapsed {
+  position: relative;
+}
+
+.nav-item-collapsed *:not(mat-icon[matListItemIcon]) {
+  display: none !important;
+}
+
+/* Masquer spécifiquement les éléments Material Design qui causent les trois points */
+.nav-item-collapsed .mat-list-item-content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+.nav-item-collapsed .mat-list-item-content > *:not(mat-icon[matListItemIcon]) {
+  display: none !important;
+}
+
+/* Masquer les spans et autres éléments de texte */
+.nav-item-collapsed span {
+  display: none !important;
+}
+
+/* Masquer les icônes de flèche */
+.nav-item-collapsed mat-icon:not([matListItemIcon]) {
+  display: none !important;
+}
+
+/* ============================================================================
+   4. BOUTONS DU BAS (Aide + Déconnexion)
+============================================================================ */
+.mat-nav-list .bottom-actions {
+  margin-top: auto;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 16px;
+}
+
+/* ============================================================================
+   5. RESPONSIVE DESIGN
+============================================================================ */
+@media (max-width: 768px) {
+  .example-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    border-radius: 0;
+    box-shadow: none;
+    overflow-x: auto;
+    min-height: auto;
+  }
+
+  .user-profile {
+    display: none;
+  }
+
+  .mat-nav-list {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .mat-nav-list a {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    flex-direction: column;
+  }
+
+  /* Styles pour les icônes en mode mobile */
+  .mat-nav-list mat-icon[matListItemIcon] {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 0;
+    margin-bottom: 4px;
+  }
+
+  .mat-nav-list span[matListItemTitle] {
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .logout-button,
+  .help-button {
+    font-size: 14px;
+    gap: 6px;
+  }
+
+  .logout-icon::before {
+    content: 'logout';
+  }
+
+  .content {
+    padding: 12px;
+    min-height: auto;
+  }
+}
+
+/* Styles pour le header de la page */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;         
+  white-space: nowrap;       
+  gap: 10px;
+  color: #333;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: transparent;
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+ 
+  margin: 0;
+  flex-shrink: 0;
+  color: #333;
+}
+
+.page-header .menu-toggle {
+  margin-right: 10px;
+  flex-shrink: 0;  
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.page-header .menu-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #fff; /* Adaptez la couleur */
+
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px; /* Taille augmentée */
+  width: 120px;
+  margin-left: 29px;
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #0E6AF4 !important;
+}
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espace entre bouton et h1 */
+}
+.page-header > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.lang-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #0E6AF4! important;
+}
+
+.lang-icon {
+  width: 24px;
+  height: 24px;
+  color: #0E6AF4;
+}
+
+.icon {
+  cursor: pointer;
+  color: #0E6AF4;
+}
+
+/* Version mobile */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.5rem;
+  }
+  
+  .logo {
+    height: 45px; /* Taille réduite pour mobile mais plus grande qu'avant */
+    width: 90px;
+  }
+  
+  .lang-text {
+    display: none; /* Cache le texte de la langue sur mobile */
+  }
+  
+  .header-icons {
+    gap: 0.75rem;
+  }
+}
+
+/* Version très petits écrans */
+@media (max-width: 480px) {
+  .logo {
+    height: 35px; /* Taille augmentée même sur très petits écrans */
+    width: 70px;
+  }
+  
+  .lang-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .icon {
+    font-size: 20px;
+  }
+}
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Style pour le bouton de langue */
+.lang-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.lang-button:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Style pour les icônes de langue */
+.lang-icon, .lang-option-icon {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Style pour les options du menu */
+.mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Ajustement pour l'icône de flèche */
+.mat-icon[matSuffix] {
+  margin-left: 4px;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+.container {
+  /* Espacement */
+  padding: 20px;
+  margin: 12px;
+  
+  /* Bordures réduites */
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  
+  /* Arrière-plan */
+  background-color: #ffffff;
+  
+  /* Ombre portée légère */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  
+  /* Dimensions */
+  min-height: calc(100vh - 24px);
+  box-sizing: border-box;
+  
+  /* Disposition des enfants */
+  display: flex;
+  flex-direction: column;
+}
+/* ============================================================================
+   1. SIDEBAR (structure globale)
+============================================================================ */
+
+/* Layout flexbox pour sidebar et contenu */
+.example-container {
+  display: flex;
+  height: 100vh;
+  gap: 0;
+}
+
+/* Sidebar - largeur fixe */
+.sidebar {
+  flex-shrink: 0;
+  width: 250px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 24px);
+  transition: width 0.3s ease;
+  position: relative;
+  z-index: 1;
+  background-color: #ffffff;
+}
+
+/* Mode collapsed - icônes seulement */
+.sidebar-collapsed {
+  width: 70px !important;
+  min-width: 70px;
+  max-width: 70px;
+}
+
+/* Contenu principal - prend tout l'espace restant */
+.content {
+  flex: 1;
+  padding: 24px;
+  background-color: #ffffff; 
+  border-radius: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  box-sizing: border-box;
+  overflow-x: auto;
+  margin-left: 0;
+}
+
+/* ============================================================================
+   2. PROFIL UTILISATEUR (haut de la sidebar)
+============================================================================ */
+.user-profile {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.user-profile img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  margin-right: 12px;
+  transition: all 0.3s ease;
+}
+
+.user-profile strong {
+  display: block;
+  font-size: 16px;
+  color: #333;
+  transition: opacity 0.3s ease;
+}
+
+.user-profile p {
+  margin: 0;
+  font-size: 13px;
+  color: #6c757d;
+  transition: opacity 0.3s ease;
+}
+
+/* Mode collapsed pour le profil */
+.user-profile-collapsed {
+  justify-content: center;
+  padding: 16px 8px;
+}
+
+.user-profile-collapsed img {
+  width: 35px;
+  height: 35px;
+  margin-right: 0;
+}
+
+.user-info-hidden {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+/* Logo de l'entreprise dans la section utilisateur */
+.company-logo {
+  margin-top: 12px;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.company-logo .logo-image {
+  height: 25px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+}
+
+/* ============================================================================
+   3. LISTE DE NAVIGATION (liens mat-nav-list)
+============================================================================ */
+mat-nav-list a.active {
+  background-color: #f0f4ff !important;
+  color: #3f51b5 !important;
+  font-weight: 500;
+}
+
+/* Style pour les icônes de navigation */
+mat-nav-list mat-icon[matListItemIcon] {
+  color: #0A2681;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  margin-right: 16px;
+  transition: color 0.3s ease;
+}
+
+/* Style pour les liens actifs avec icônes */
+mat-nav-list a.active mat-icon[matListItemIcon] {
+  color: #0A2681 !important;
+}
+
+/* Style pour les titres des éléments de navigation */
+mat-nav-list span[matListItemTitle] {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Style pour les liens actifs */
+mat-nav-list a.active span[matListItemTitle] {
+  color: #0A2681 !important;
+  font-weight: 600;
+}
+
+/* Hover effect pour les éléments de navigation */
+mat-nav-list a:hover mat-icon[matListItemIcon] {
+  color: #0A2681;
+  transform: scale(1.1);
+}
+
+mat-nav-list a:hover span[matListItemTitle] {
+  color: #0E6AF4;
+}
+
+/* Style spécial pour le bouton de déconnexion */
+mat-nav-list a[mat-list-item] mat-icon[matListItemIcon][style*="color: #ff0022"] {
+  color: #ff0022 !important;
+}
+
+mat-nav-list a[mat-list-item] span[matListItemTitle][style*="color: #ff0022"] {
+  color: #ff0022 !important;
+}
+
+/* Hover effect pour le bouton de déconnexion */
+mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) mat-icon[matListItemIcon] {
+  color: #ff0022 !important;
+}
+
+mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matListItemTitle] {
+  color: #ff0022 !important;
+}
+
+
+/* ============================================================================
+   MODE COLLAPSED - ICÔNES SEULEMENT
+============================================================================ */
+
+/* Masquer le texte en mode collapsed */
+.text-hidden {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Navigation en mode collapsed */
+.nav-list-collapsed {
+  padding: 0 8px;
+}
+
+.nav-item-collapsed {
+  justify-content: center !important;
+  padding: 12px 8px !important;
+  min-height: 48px;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.nav-item-collapsed mat-icon[matListItemIcon] {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  margin: 0 auto !important;
+}
+
+/* Masquer les trois points (dots) en mode collapsed */
+.nav-item-collapsed::after {
+  display: none !important;
+}
+
+/* S'assurer qu'aucun contenu supplémentaire ne s'affiche */
+.nav-item-collapsed {
+  position: relative;
+}
+
+.nav-item-collapsed *:not(mat-icon[matListItemIcon]) {
+  display: none !important;
+}
+
+/* Masquer spécifiquement les éléments Material Design qui causent les trois points */
+.nav-item-collapsed .mat-list-item-content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+.nav-item-collapsed .mat-list-item-content > *:not(mat-icon[matListItemIcon]) {
+  display: none !important;
+}
+
+/* Masquer les spans et autres éléments de texte */
+.nav-item-collapsed span {
+  display: none !important;
+}
+
+/* Masquer les icônes de flèche */
+.nav-item-collapsed mat-icon:not([matListItemIcon]) {
+  display: none !important;
+}
+
+
+
+
+/* ============================================================================
+   4. BOUTONS DU BAS (Aide + Déconnexion)
+============================================================================ */
+.mat-nav-list .bottom-actions {
+  margin-top: auto;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 16px;
+}
+
+
+.logout-icon {
+  color: #ff0022;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+}
+
+/* Icône personnalisée avec Material Icons */
+.logout-icon::before {
+  content: 'arrow_forward';
+  font-family: 'Material Icons';
+}
+
+/* ============================================================================
+   5. RESPONSIVE DESIGN
+============================================================================ */
+@media (max-width: 768px) {
+  .example-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    border-radius: 0;
+    box-shadow: none;
+    overflow-x: auto;
+    min-height: auto;
+  }
+
+  .user-profile {
+    display: none;
+  }
+
+  .mat-nav-list {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .mat-nav-list a {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    flex-direction: column;
+  }
+
+  /* Styles pour les icônes en mode mobile */
+  .mat-nav-list mat-icon[matListItemIcon] {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 0;
+    margin-bottom: 4px;
+  }
+
+  .mat-nav-list span[matListItemTitle] {
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .logout-button,
+  .help-button {
+    font-size: 14px;
+    gap: 6px;
+  }
+
+  .logout-icon::before {
+    content: 'logout';
+  }
+
+  .content {
+    padding: 12px;
+    min-height: auto;
+  }
+}
+/* Styles pour le header de la page */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;         
+  white-space: nowrap;       
+  gap: 10px;
+  color: #333;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: transparent;
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  
+  margin: 0;
+  flex-shrink: 0;
+  color: #333;
+}
+
+.page-header .menu-toggle {
+  margin-right: 10px;
+  flex-shrink: 0;  
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.page-header .menu-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+  
+  .export-button {
+    background-color: #313743;
+    color: white;
+    border-radius: 6px;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .export-button {
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .add-user-button {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    
+  }
+  
+  .mat-icon {
+    vertical-align: middle;
+  }
+
+  
+ 
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+  }
+  
+
+  
+  .export-button {
+    background: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  .add-user-button {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+  }
+  
+  .mat-icon {
+    vertical-align: middle;
+    color: #555;
+  }
+      .footer-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-shrink: 0;
+      justify-content: flex-end;
+      margin-right: 0;
+    }
+    
+    .footer-actions .export-button {
+      background-color: #000;
+      color: white;
+      border-radius: 20px;
+      text-transform: none;
+    }
+    
+    .footer-actions .add-user-button {
+      border-radius: 20px;
+      text-transform: none;
+      font-weight: bold;
+    }
+  .controls-container {
+  width: 100%;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: nowrap;
+  margin-bottom: 20px;
+}
+
+.search-filter-container-custom {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.search-field-custom {
+  flex: 1;
+  max-width: 162.79px;
+  height: 51.12px;
+  border-radius: 37.36px;
+  /* background-color: #e4e6ea; */
+}
+
+.filter-button-custom {
+  border-radius: 70px; /* Valeur plus standard */
+ padding: 8px 20px; /* Padding plus proportionné */
+  display: inline-flex;
+  align-items: center; /* Centrage vertical */
+  justify-content: center; /* Centrage horizontal */
+  gap: 8px; /* Espacement entre les éléments */
+  transition: all 0.3s ease;
+  font-weight: 800;
+  font-size: 18px;
+  cursor: pointer;
+  width: auto; /* Largeur automatique selon le contenu */
+  min-width: 140px;
+ 
+}
+:host ::ng-deep .mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 28px;
+}
+.dashboard-toggle-wrapper-custom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  background-color: #667085;
+  border-radius: 40px;
+  padding: 10px 14px; /* push to the end */
+}
+
+.dashboard-icon {
+  color: #ffffff;
+}
+
+.dashboard-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.dashboard-toggle-switch {
+  transform: scale(1.1);
+}
+
+.custom-search-box {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+ padding: 8px 20px;
+  width: 400px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-weight: bold;
+  margin-left: 0;
+}
+
+.custom-search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  font-weight: bold;
+}
+
+.custom-search-box button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-search-box button .material-icons {
+  font-size: 20px;
+}
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.filter-controls mat-form-field {
+  flex: 1 1 210px; /* minimum 200px, s'adapte si y'a plus d'espace */
+}
+
+.filter-controls .close-filters {
+  align-self: center;
+  height: 40px;
+  margin-bottom: 20px;
+}
+/* === Conteneur principal des filtres === */
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 10px 0;
+}
+
+/* === Formulaires de sélection === */
+.filter-controls mat-form-field {
+  flex: 1 1 200px; /* min 200px, s'étend selon l'espace */
+  min-width: 180px;
+}
+
+/* === Bouton pour fermer les filtres === */
+.filter-controls .close-filters {
+  align-self: center;
+  height: 40px;
+  margin-bottom: 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #0E6AF4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === Responsive Design : tablettes et mobiles === */
+@media (max-width: 1024px) {
+  .filter-controls mat-form-field {
+    flex: 1 1 45%; /* deux par ligne si possible */
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-controls {
+    justify-content: center;
+  }
+
+  .filter-controls mat-form-field {
+    flex: 1 1 100%; /* 1 par ligne */
+  }
+
+  .filter-controls .close-filters {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+}
+
+/* Très petits écrans (téléphones) */
+@media (max-width: 480px) {
+  .filter-controls {
+    padding: 0.5rem;
+  }
+
+  .filter-controls mat-form-field {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .filter-controls .close-filters {
+    height: 36px;
+    font-size: 14px;
+  }
+}
+/* === Style général du tableau === */
+table.mat-table {
+  width: 100%;
+  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* === Cellules de l'en-tête === */
+.mat-header-cell {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+  padding: 12px;
+  background-color: #F2F2F2;
+  white-space: nowrap;
+}
+
+/* === Cellules du contenu === */
+.mat-cell {
+  font-size: 13px;
+  color: #555;
+  padding: 10px 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Alignement parfait avec les contrôles */
+table.mat-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Première colonne alignée avec la recherche */
+.mat-header-cell:first-child,
+.mat-cell:first-child {
+  padding-left: 12px;
+}
+
+/* Dernière colonne alignée avec les boutons */
+.mat-header-cell:last-child,
+.mat-cell:last-child {
+  padding-right: 12px;
+  text-align: right;
+}
+
+/* === Lignes survolées === */
+.hoverable:hover {
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* === Style des boutons d'action === */
+.mat-icon-button {
+  margin: 0 4px;
+}
+
+/* === Responsive : petits écrans (tablettes & téléphones) === */
+@media (max-width: 1024px) {
+  .mat-header-cell,
+  .mat-cell {
+    padding: 8px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  table.mat-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mat-header-row,
+  .mat-row {
+    display: table;
+    width: max-content; /* Permet un scroll horizontal */
+    table-layout: auto;
+  }
+
+  .mat-header-cell,
+  .mat-cell {
+    min-width: 120px;
+    white-space: nowrap;
+  }
+
+  .mat-icon-button {
+    padding: 6px;
+  }
+}
+
+/* === Responsive très petits écrans (téléphones < 480px) === */
+@media (max-width: 480px) {
+  .mat-header-cell,
+  .mat-cell {
+    min-width: 100px;
+    font-size: 11px;
+    padding: 6px;
+  }
+
+  .mat-icon-button mat-icon {
+    font-size: 18px;
+  }
+}
+/* 📦 Wrapper du tableau + pagination */
+.table-wrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+/* 🌐 Table responsive */
+table.mat-table {
+  width: 100%;
+  min-width: 1000px; /* facultatif pour scroll horizontal si trop de colonnes */
+}
+
+/* 📄 Cellules d'en-tête */
+.mat-header-cell {
+  font-weight: bold;
+  font-size: 14px;
+  background-color: #F2F2F2;
+  white-space: nowrap;
+}
+
+/* 📦 Cellules normales */
+.mat-cell {
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 🧾 Pagination stylée */
+mat-paginator {
+  width: 100%;
+  margin-top: 12px;
+  background: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+/* 📱 Responsive (petits écrans) */
+@media (max-width: 768px) {
+  .table-wrapper {
+    padding: 8px;
+  }
+
+  .mat-header-cell, .mat-cell {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  table.mat-table {
+    min-width: unset;
+  }
+}
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espace entre bouton et h1 */
+}
+.page-header > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+@media (max-width: 768px) {
+  .content {
+    padding: 12px;
+
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+
+      h1 {
+        font-size: 20px;
+      }
+    }
+
+    .filters-container {
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-field {
+        width: 100%;
+      }
+
+      .separator {
+        display: none;
+      }
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .planification-card {
+      width: 100% !important;
+      margin-bottom: 20px;
+
+      .plan-title {
+        font-size: 18px;
+      }
+    }
+
+    .status-legend {
+      flex-wrap: wrap;
+    }
+  }
+}
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espace entre bouton et h1 */
+}
+.page-header > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espace entre bouton et h1 */
+}
+.page-header > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+  .page-header-left h1:hover {
+    color: #1e3a8a;
+  }
+  
+.page-header-left h1 .title-icon {
+  font-size: 1.5rem;
+  color: #002B7F;
+  transition: color 0.2s ease;
+}
+
+/* Styles pour les colonnes magasins et enseignes */
+.magasins-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 200px;
+}
+
+.magasin-chip {
+  color: #1976D2;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background-color: #E3F2FD;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.no-magasins {
+  color: #9E9E9E;
+  font-weight: 400;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background-color: #F5F5F5;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.enseignes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 200px;
+}
+
+.enseigne-chip {
+  color: #4CAF50;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background-color: #E8F5E8;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.no-enseignes {
+  color: #9E9E9E;
+  font-weight: 400;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background-color: #F5F5F5;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Style pour les merchandiseurs sans superviseur */
+.no-supervisor {
+  color: #FF9800;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background-color: #FFF3E0;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Styles pour la colonne magasins */
+.magasins-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 200px;
+}
+
+.magasin-chip {
+  color: #1976D2;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background-color: #E3F2FD;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.no-magasins {
+  color: #9E9E9E;
+  font-weight: 400;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background-color: #F5F5F5;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Styles pour la colonne enseignes */
+.enseignes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 200px;
+}
+
+.enseigne-chip {
+  color: #4CAF50;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background-color: #E8F5E8;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.no-enseignes {
+  color: #9E9E9E;
+  font-weight: 400;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background-color: #F5F5F5;
+  font-size: 12px;
+  font-style: italic;
+

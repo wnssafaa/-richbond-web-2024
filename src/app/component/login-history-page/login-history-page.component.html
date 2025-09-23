@@ -1,0 +1,149 @@
+<div class="header">
+  <img src="assets/logo.png" alt="Richbond Logo" class="logo" />
+  <div class="header-icons">
+    <mat-icon style=" color: #0E6AF4 !important;">notifications_none</mat-icon>
+    
+    <!-- Bouton de changement de langue -->
+    <button mat-button [matMenuTriggerFor]="languageMenu" class="lang-button">
+      <img [src]="'assets/' + (currentLanguage === 'fr' ? 'OIP.webp' : 'usa.png')" 
+           alt="Language" 
+           class="lang-icon" />
+      <span>{{ currentLanguage | uppercase }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    
+    <mat-menu #languageMenu="matMenu">
+      <button mat-menu-item (click)="changeLanguage('fr')">
+        <img src="assets/OIP.webp" alt="Français" class="lang-option-icon">
+        <span>FR</span>
+      </button>
+      <button mat-menu-item (click)="changeLanguage('en')">
+        <img src="assets/usa.png" alt="English" class="lang-option-icon">
+        <span>EN</span>
+      </button>
+    </mat-menu>
+    
+    <mat-icon style=" color: #0E6AF4 !important;">settings</mat-icon>
+  </div>
+</div>
+<div class="container">
+    <div class="example-container">
+    <!-- ✅ SIDEBAR NAVIGATION -->
+      <div class="sidebar" [class.sidebar-collapsed]="!menuOpen">
+      <div class="user-profile" [class.user-profile-collapsed]="!menuOpen">
+  <!-- Image dynamique : avatarUrl ou imagePath -->
+  <img 
+    [src]="avatarUrl" 
+    alt="Avatar" 
+    width="100" 
+    height="100" 
+    style="border-radius:50%;" />
+  <div class="user-info" [class.user-info-hidden]="!menuOpen">
+    <strong>{{ username }}</strong>
+    <p>{{ role }}</p>
+    
+    <!-- Logo de l'entreprise dans la section utilisateur -->
+
+  </div>
+</div>
+
+      <mat-nav-list [class.nav-list-collapsed]="!menuOpen">
+        <a mat-list-item routerLink="/Dashbord" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen" 
+           [matTooltip]="!menuOpen ? ('COMMON.DASHBOARD' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.DASHBOARD' | translate }}</span>
+        </a>
+        
+        <!-- <a mat-list-item (click)="userMenuOpen = !userMenuOpen" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.USERS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>people</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.USERS' | translate }}</span>
+          <mat-icon style="margin-left:auto;" [class.text-hidden]="!menuOpen">{{ userMenuOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </a> -->
+        
+        <a  mat-list-item routerLink="/users" routerLinkActive="active-link"  [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>group</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">Tous les utilisateurs</span>
+        </a>
+        
+        <a mat-list-item routerLink="/login-history" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('LOGIN_HISTORY.TITLE' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>history</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'LOGIN_HISTORY.TITLE' | translate }}</span>
+        </a>
+        
+        <a  mat-list-item routerLink="/merchendiseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.MERCHANDISERS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>storefront</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.MERCHANDISERS' | translate }}</span>
+        </a>
+        
+        <a  mat-list-item routerLink="/superviseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.SUPERVISORS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>supervisor_account</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SUPERVISORS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/magasins" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.STORES' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>store</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.STORES' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/planification" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.PLANNING' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>event_note</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PLANNING' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/gestion-visites" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.VISIT' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>location_on</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.VISIT' | translate}}</span>
+        </a>
+
+        <a mat-list-item routerLink="/Produit" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.PRODUCTS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>inventory</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PRODUCTS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/parametre" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.SETTINGS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>settings</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SETTINGS' | translate }}</span>
+        </a>
+
+ 
+
+      
+          <a mat-list-item routerLink="/help" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+             [matTooltip]="!menuOpen ? ('COMMON.HELP' | translate) : ''" matTooltipPosition="right">
+            <mat-icon matListItemIcon>help_outline</mat-icon>
+            <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.HELP' | translate }}</span>
+          </a>
+          <a mat-list-item (click)="openLogoutDialog()" [class.nav-item-collapsed]="!menuOpen"
+             [matTooltip]="!menuOpen ? ('AUTH.LOGOUT' | translate) : ''" matTooltipPosition="right">
+            <mat-icon matListItemIcon style="color: #ff0022;">logout</mat-icon>
+            <span matListItemTitle style="color: #ff0022;" [class.text-hidden]="!menuOpen">{{ 'AUTH.LOGOUT' | translate }}</span>
+          </a>
+        
+      </mat-nav-list>
+        </div><div class="content">
+      <div class="page-header">
+        <div class="page-header-left">
+          <button mat-icon-button (click)="toggleMenu()" class="menu-toggle">
+            <mat-icon *ngIf="!menuOpen" style="color: #333;margin-bottom: 15px;">keyboard_arrow_left</mat-icon>
+            <mat-icon *ngIf="menuOpen" style="color: #333;margin-bottom: 15px;">keyboard_arrow_right</mat-icon>
+          </button>
+          <h1>{{ 'LOGIN_HISTORY.TITLE' | translate }}</h1>
+        </div>
+      </div>
+
+      <!-- Utilisation du composant login-history -->
+      <app-login-history></app-login-history>
+    </div>
+  </div>
+</div>
+

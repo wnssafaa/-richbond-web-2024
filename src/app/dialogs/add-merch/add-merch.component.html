@@ -1,0 +1,161 @@
+<div class="user-form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ isEditMode ? 'Modifier le merchandiseur' : 'Ajouter un nouveau merchandiseur' }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content class="scrollable-content">
+      <form [formGroup]="merchForm" (ngSubmit)="onSubmit()">
+        <!-- Le contenu existant du formulaire reste inchangé -->
+        <!-- NOM & PRÉNOM -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Prénom</mat-label>
+            <input matInput formControlName="prenom" placeholder="Prénom" required>
+            <mat-error *ngIf="merchForm.get('prenom')?.hasError('required')">Le prénom est obligatoire</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nom</mat-label>
+            <input matInput formControlName="nom" placeholder="Nom" required>
+            <mat-error *ngIf="merchForm.get('nom')?.hasError('required')">Le nom est obligatoire</mat-error>
+          </mat-form-field>
+          
+        </div>
+        <div class="form-row">
+  <mat-form-field appearance="outline" class="full-width">
+  <mat-label>Date d'intégration</mat-label>
+  <input matInput [matDatepicker]="integrationPicker" formControlName="dateDebutIntegration">
+  <mat-datepicker-toggle matSuffix [for]="integrationPicker"></mat-datepicker-toggle>
+  <mat-datepicker #integrationPicker></mat-datepicker>
+</mat-form-field>
+
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>Date de sortie</mat-label>
+  <input matInput [matDatepicker]="sortiePicker" formControlName="dateSortie">
+  <mat-datepicker-toggle matSuffix [for]="sortiePicker"></mat-datepicker-toggle>
+  <mat-datepicker #sortiePicker></mat-datepicker>
+</mat-form-field>
+        </div>
+        <div class="form-row">
+          <!-- Région -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Région</mat-label>
+            <mat-select formControlName="region">
+              <mat-option *ngFor="let region of Region" [value]="region.valueOf()">
+                {{ region }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Ville dépendante de la région -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ville</mat-label>
+            <mat-select formControlName="ville">
+              <mat-option *ngFor="let ville of villesDisponibles" [value]="ville">
+                {{ ville }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- EMAIL & MAGASIN -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="phone-input">
+            <mat-label>Téléphone</mat-label>
+            <div matPrefix class="phone-prefix">
+              <img src="assets/3840661.webp" alt="MA" class="flag-icon">
+              <span>+212</span>
+            </div>
+            <input matInput type="tel" formControlName="telephone" placeholder="6XXXXXXXX" maxlength="9">
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" placeholder="Email" required>
+            <mat-error *ngIf="merchForm.get('email')?.hasError('required')">L'email est obligatoire</mat-error>
+            <mat-error *ngIf="merchForm.get('email')?.hasError('email')">Format d'email invalide</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Superviseur</mat-label>
+            <mat-select formControlName="superviseurId" required>
+              <mat-option *ngFor="let sup of superviseurs" [value]="sup.id">
+                {{ sup.nom }} {{ sup.prenom }} ({{ sup.email }})
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="merchForm.get('superviseurId')?.hasError('required')">Le superviseur est obligatoire</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Marque Couverte</mat-label>
+            <mat-select formControlName="marques" multiple required>
+              <mat-option *ngFor="let marque of marques" [value]="marque">{{ marque }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="merchForm.get('marqueCouverte')?.hasError('required')">La marque couverte est obligatoire</mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Magasins</mat-label>
+            <mat-select formControlName="magasinIds" multiple>
+              <mat-option *ngFor="let magasin of magasins" [value]="magasin.id">
+                {{ magasin.nom }} ({{ magasin.ville }})
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="merchForm.get('magasinIds')?.hasError('required')">
+              La sélection des magasins est obligatoire
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- MARQUES -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>enseignes</mat-label>
+            <mat-select formControlName="enseignes" multiple>
+              <mat-option *ngFor="let enseigne of enseignes" [value]="enseigne">{{ enseigne }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="merchForm.get('enseignes')?.hasError('required')">Les enseignes sont obligatoires</mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Profil</mat-label>
+            <mat-select formControlName="role">
+              <mat-option *ngFor="let r of Role" [value]="r.value">{{ r.label }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+<div class="form-row" *ngIf="!isEditMode">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Username</mat-label>
+    <input matInput formControlName="username" placeholder="Nom d'utilisateur" required>
+    <mat-error *ngIf="merchForm.get('username')?.hasError('required')">
+      Le nom d'utilisateur est obligatoire
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Mot de passe</mat-label>
+    <input matInput formControlName="password" type="password" placeholder="Mot de passe" required>
+    <mat-error *ngIf="merchForm.get('password')?.hasError('required')">
+      Le mot de passe est obligatoire
+    </mat-error>
+  </mat-form-field>
+</div>
+        <!-- BUTTONS -->
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit">
+            {{ isEditMode ? 'Modifier' : 'Ajouter' }}
+          </button>
+
+          <button mat-button type="button" (click)="onCancel()" class="cancel-button">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

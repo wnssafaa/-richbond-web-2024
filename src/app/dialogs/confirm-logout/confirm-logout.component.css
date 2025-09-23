@@ -1,0 +1,34 @@
+.dialog-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #0D47A1; 
+  margin-bottom: 10px;
+}
+
+.dialog-content {
+  font-size: 16px;
+  color: #37474F; 
+  margin-bottom: 20px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 10px;
+}
+
+button[mat-stroked-button] {
+  border: 1px solid #0A2681;
+  color: #0A2681;
+}
+
+
+.logout-btn {
+  background-color: #0A2681;
+  color: #fff;
+
+  &:hover {
+    background-color: #0A2681;
+  }
+}

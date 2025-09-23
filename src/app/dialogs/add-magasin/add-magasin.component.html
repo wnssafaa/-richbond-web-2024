@@ -1,0 +1,106 @@
+<div class="user-form-container">
+    <mat-card>
+    <mat-card-header>
+        <mat-card-title>{{ isEditMode ? 'Modifier le magasin' : 'Ajouter un nouveau magasin' }}</mat-card-title>
+      </mat-card-header>
+  
+      <mat-card-content>
+
+    <form [formGroup]="magasinForm" (ngSubmit)="onSubmit()">
+    
+      <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="nom" required>
+      </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Région</mat-label>
+        <mat-select formControlName="region" required>
+          <mat-option *ngFor="let region of regions" [value]="region">
+            {{ region }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+    </div>
+    <div class="form-row">
+  
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ville</mat-label>
+        <mat-select formControlName="ville" required>
+          <mat-option *ngFor="let ville of villes" [value]="ville">
+            {{ ville }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Localisation</mat-label>
+        <input matInput formControlName="localisation" required 
+               placeholder="Saisissez une adresse ou utilisez Google Maps">
+        <div matSuffix style="display: flex; gap: 5px;">
+         
+          <button mat-icon-button type="button" aria-label="Choisir sur Google Maps" 
+                  (click)="openMapDialog()" matTooltip="Choisir sur Google Maps">
+            <mat-icon>map</mat-icon>
+          </button>
+        </div>
+      </mat-form-field>
+      
+    
+      </div>
+      <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type" required>
+          <mat-option *ngFor="let t of types" [value]="t">{{ t }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Enseigne</mat-label>
+        <mat-select formControlName="enseigne" required>
+          <mat-option *ngFor="let enseigne of enseignes" [value]="enseigne">{{ enseigne }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+<mat-form-field appearance="outline">
+  <mat-label>Merchandiseur</mat-label>
+  <mat-select formControlName="merchandiseur" >
+    <mat-option *ngFor="let merch of merchandiseurs" [value]="merch.id">
+      {{ merch.nom }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+
+      </div>
+      
+      <!-- Champs cachés pour les coordonnées -->
+      <div style="display: none;">
+        <input formControlName="latitude">
+        <input formControlName="longitude">
+      </div>
+      
+      <!-- Affichage des coordonnées si disponibles -->
+      <div *ngIf="magasinForm.get('latitude')?.value && magasinForm.get('longitude')?.value" 
+           style="margin-top: 10px; padding: 10px; background: #f0f8ff; border-radius: 5px; font-size: 12px;">
+        <strong>📍 Coordonnées GPS :</strong><br>
+        Latitude: {{ magasinForm.get('latitude')?.value | number:'1.6-6' }}<br>
+        Longitude: {{ magasinForm.get('longitude')?.value | number:'1.6-6' }}
+      </div>
+      
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit">
+          {{ isEditMode ? 'Modifier' : 'Ajouter' }}
+        </button>
+
+        <button mat-button type="button" (click)="onCancel()" class="cancel-button">
+          Annuler
+        </button>
+      </div>
+    </form>
+    </mat-card-content>
+  </mat-card>
+</div>

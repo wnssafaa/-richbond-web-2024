@@ -1,0 +1,57 @@
+<div class="profile-container" @fadeIn>
+  <div class="profile-avatar">
+    <img 
+      [src]="profileForm.value.imagePath || 'assets/default-avatar.png'" 
+      alt="Avatar" 
+      width="100" 
+      height="100" 
+      style="border-radius:50%; object-fit:cover; border:2px solid #ccc;"
+    />
+    <br>
+    <div style="margin-top:8px;">
+      <button mat-icon-button style="color: #002b7f;" (click)="fileInput.click()" aria-label="Changer la photo">
+        <mat-icon>photo_camera</mat-icon>
+      </button>
+      <input #fileInput type="file" (change)="onImageSelected($event)" accept="image/*" style="display:none;" />
+    </div>
+  </div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" style="width:100%;">
+    <div *ngIf="loading">Chargement...</div>
+   
+
+    <div class="profile-row">
+      <mat-form-field appearance="outline" style="width:100%;">
+        <mat-label>ID</mat-label>
+        <mat-icon matPrefix style="color: #002b7f;">badge</mat-icon>
+        <input matInput formControlName="id" />
+      </mat-form-field>
+   
+        <mat-form-field appearance="outline" style="width:100%;">
+        <mat-label>Rôle</mat-label>
+        <mat-icon matPrefix style="color: #002b7f;">verified_user</mat-icon>
+        <input matInput formControlName="role" />
+      </mat-form-field>
+    </div>
+
+    <div class="profile-row">
+           <mat-form-field appearance="outline" style="width:100%;">
+        <mat-label>Nom d'utilisateur</mat-label>
+        <mat-icon matPrefix style="color: #002b7f;">person</mat-icon>
+        <input matInput formControlName="username" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width:100%;">
+        <mat-label>Email</mat-label>
+        <mat-icon matPrefix style="color: #002b7f;">email</mat-icon>
+        <input matInput formControlName="email" />
+      </mat-form-field>
+    
+    </div>
+
+    <div class="profile-btn-wrapper">
+      <button mat-raised-button type="submit" [disabled]="loading || profileForm.invalid" class="profile-btn">
+        Modifier
+      </button>
+    </div>
+  </form>
+</div>

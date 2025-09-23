@@ -1,0 +1,132 @@
+<div class="user-form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        {{ isEditMode ? 'Modifier la planification' : 'Ajouter une nouvelle planification' }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="planifForm" (ngSubmit)="onSubmit()">
+
+        <!-- 🗓️ Dates et Heure de début -->
+        <div class="form-row" *ngFor="let dateCtrl of dateControls.controls; let i = index">
+          <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" [formControl]="asFormControl(dateCtrl)" required [matDatepickerFilter]="dateFilter" (dateChange)="onDateChange($event, i)">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <button mat-icon-button color="primary" type="button" (click)="removeDate(i)" *ngIf="dateControls.length > 1">
+            <mat-icon>remove</mat-icon>
+          </button>
+        </div>
+        <button mat-stroked-button color="primary" type="button" (click)="addDate()" class="add-date-btn">
+          <mat-icon class="add-icon">add</mat-icon>
+          Ajouter une date
+        </button>
+
+        <div class="form-row">
+          <!-- Heure de début -->
+          <mat-form-field appearance="outline">
+            <mat-label>Heure de début</mat-label>
+            <mat-select formControlName="heureDebut" required>
+              <mat-option *ngFor="let heure of heuresDisponibles" [value]="heure">
+                {{ heure }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="planifForm.get('heureDebut')?.hasError('required')">
+              L'heure de début est obligatoire
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <!-- Heure de fin -->
+          <mat-form-field appearance="outline">
+            <mat-label>Heure de fin</mat-label>
+            <mat-select formControlName="heureFin" required>
+              <mat-option *ngFor="let heure of heuresDisponibles" [value]="heure">
+                {{ heure }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="planifForm.get('heureFin')?.hasError('required')">
+              L'heure de fin est obligatoire
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Statut -->
+          <mat-form-field appearance="outline">
+            <mat-label>Statut</mat-label>
+            <mat-select formControlName="statut" required>
+              <mat-option *ngFor="let status of statutOptions" [value]="status">
+                {{ status }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="planifForm.get('statut')?.hasError('required')">
+              Le statut est obligatoire
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <!-- Merchandiseur sans autocomplete -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Merchandiseur</mat-label>
+            <mat-select formControlName="merchendiseurCtrl" required>
+              <mat-option *ngFor="let merch of merchendiseurs" [value]="merch">
+                {{ merch.prenom }} {{ merch.nom }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="planifForm.get('merchendiseurCtrl')?.hasError('required')">
+              Le merchandiseur est obligatoire
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Magasin sans autocomplete -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Magasin</mat-label>
+            <mat-select formControlName="magasinId" required>
+              <mat-option *ngFor="let magasin of magasins" [value]="magasin.id">
+                {{ magasin.nom }} ({{ magasin.ville }})
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="planifForm.get('magasinId')?.hasError('required')">
+              Le magasin est obligatoire
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Champ de récurrence -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Récurrence</mat-label>
+            <mat-select formControlName="recurrence" (selectionChange)="onRecurrenceChange($event.value)">
+              <mat-option value="none">Aucune</mat-option>
+              <mat-option value="weekly">Chaque semaine</mat-option>
+              <mat-option value="monthly">Chaque mois</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-row" *ngIf="showDateFin">
+          <mat-form-field appearance="outline">
+            <mat-label>Date de fin</mat-label>
+            <input matInput [matDatepicker]="pickerFin" formControlName="dateFin">
+            <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+            <mat-datepicker #pickerFin></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <!-- 🎯 Actions -->
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit">
+            {{ isEditMode ? 'Modifier' : 'Ajouter' }}
+          </button>
+          <button mat-button type="button" (click)="onCancel()" class="cancel-button">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

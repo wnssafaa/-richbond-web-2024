@@ -1,0 +1,48 @@
+@import "leaflet/dist/leaflet.css";/* You can add global styles to this file, and also import other style files */
+body{
+    font-family: 'Roboto', sans-serif;
+    background-image: url(assets/back.png);  
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    width: 100%;
+}/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Style global pour tous les boutons menu-toggle */
+.menu-toggle {
+  background-color: #002B7F !important;
+  color: white !important;
+  border-radius: 30% !important;
+  width: 56px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  transition: background-color 0.3s ease;
+}
+
+.menu-toggle mat-icon {
+  color: white !important;
+  margin-right: 5%;
+}
+
+.menu-toggle:hover {
+  background-color: #001f5c !important;
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
+.menu-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 43, 127, 0.3);
+}
+
+.menu-toggle:active {
+  transform: scale(0.95);
+}

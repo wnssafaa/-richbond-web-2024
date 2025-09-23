@@ -1,0 +1,578 @@
+<div class="header">
+  <img src="assets/logo.png" alt="Richbond Logo" class="logo" />
+  <div class="header-icons">
+    <mat-icon style=" color: #0E6AF4 !important;">notifications_none</mat-icon>
+    
+    <!-- Bouton de changement de langue -->
+    <button mat-button [matMenuTriggerFor]="languageMenu" class="lang-button">
+      <img [src]="'assets/' + (currentLanguage === 'fr' ? 'OIP.webp' : 'usa.png')" 
+           alt="Language" 
+           class="lang-icon" />
+      <span>{{ currentLanguage | uppercase }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    
+    <mat-menu #languageMenu="matMenu">
+      <button mat-menu-item (click)="changeLanguage('fr')">
+        <img src="assets/OIP.webp" alt="Français" class="lang-option-icon">
+        <span>FR</span>
+      </button>
+      <button mat-menu-item (click)="changeLanguage('en')">
+        <img src="assets/usa.png" alt="English" class="lang-option-icon">
+        <span>EN</span>
+      </button>
+    </mat-menu>
+    
+    <mat-icon style=" color: #0E6AF4 !important;">settings</mat-icon>
+  </div>
+</div>
+<div class="container">
+    <div class="example-container">
+    <!-- ✅ SIDEBAR NAVIGATION -->
+      <div class="sidebar" [class.sidebar-collapsed]="!menuOpen">
+      <div class="user-profile" [class.user-profile-collapsed]="!menuOpen">
+  <!-- Image dynamique : avatarUrl ou imagePath -->
+  <img 
+    [src]="avatarUrl" 
+    alt="Avatar" 
+    width="100" 
+    height="100" 
+    style="border-radius:50%;" />
+  <div class="user-info" [class.user-info-hidden]="!menuOpen">
+    <strong>{{ username }}</strong>
+    <p>{{ role }}</p>
+    
+    <!-- Logo de l'entreprise dans la section utilisateur -->
+
+  </div>
+</div>
+
+      <mat-nav-list [class.nav-list-collapsed]="!menuOpen">
+        <a mat-list-item routerLink="/Dashbord" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen" 
+           [matTooltip]="!menuOpen ? ('COMMON.DASHBOARD' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.DASHBOARD' | translate }}</span>
+        </a>
+        
+        <a  mat-list-item routerLink="/users" routerLinkActive="active-link"  [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>group</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">Tous les utilisateurs</span>
+        </a>
+           <a mat-list-item routerLink="/login-history" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('LOGIN_HISTORY.TITLE' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>history</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'LOGIN_HISTORY.TITLE' | translate }}</span>
+        </a>
+        <a  mat-list-item routerLink="/merchendiseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.MERCHANDISERS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>storefront</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.MERCHANDISERS' | translate }}</span>
+        </a>
+        
+        <a  mat-list-item routerLink="/superviseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.SUPERVISORS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>supervisor_account</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SUPERVISORS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/magasins" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.STORES' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>store</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.STORES' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/planification" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.PLANNING' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>event_note</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PLANNING' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/gestion-visites" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.VISIT' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>location_on</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.VISIT' | translate}}</span>
+        </a>
+
+        <a mat-list-item routerLink="/Produit" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.PRODUCTS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>inventory</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PRODUCTS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/parametre" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.SETTINGS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>settings</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SETTINGS' | translate }}</span>
+        </a>
+
+        <a mat-list-item routerLink="/help" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.HELP' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>help_outline</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.HELP' | translate }}</span>
+        </a>
+        <a mat-list-item (click)="openLogoutDialog()" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('AUTH.LOGOUT' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon style="color: #ff0022;">logout</mat-icon>
+          <span matListItemTitle style="color: #ff0022;" [class.text-hidden]="!menuOpen">{{ 'AUTH.LOGOUT' | translate }}</span>
+        </a>
+        
+      </mat-nav-list>
+        </div>
+    <div class="content">
+      <div class="page-header">
+        <div class="page-header-left">
+         <button mat-icon-button (click)="toggleMenu(); drawer.toggle()" class="menu-toggle" style="border-radius: 50px; ">
+          <mat-icon *ngIf="!menuOpen" style="color: white;">keyboard_arrow_left</mat-icon>
+          <mat-icon *ngIf="menuOpen">keyboard_arrow_right</mat-icon>
+          </button>
+        
+          <h1>{{ 'COMMON.PLANNING' | translate }}</h1>
+        </div>
+      
+        <div class="tab-navigation" >
+          <button mat-icon-button *ngIf="selectedTab === 'map'" (click)="onTabChange('planification')" class="menu-toggle">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <button mat-icon-button *ngIf="selectedTab === 'planification'" (click)="onTabChange('table')" class="menu-toggle">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          
+          <div *ngIf="selectedTab === 'table'" class="tab-buttons">
+            <button mat-icon-button class="menu-toggle" (click)="onTabChange('map')" matTooltip="Voir la carte">
+              <mat-icon>map</mat-icon>
+            </button>
+            <button mat-icon-button class="menu-toggle" (click)="onTabChange('planification')" matTooltip="Gestion des planifications">
+              <mat-icon>table_view</mat-icon>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      
+      <div *ngIf="selectedTab === 'planification'">
+         <div class="filters-container">
+          <div class="filters flex items-center p-3 bg-white rounded-lg shadow-sm">
+            <!-- Filtre par semaine avec calendrier -->
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Sélectionner une semaine</mat-label>
+              <input matInput [matDatepicker]="weekPicker" 
+                     [(ngModel)]="selectedWeekDate" 
+                     (dateChange)="onWeekDateChange()"
+                     [placeholder]="getWeekPlaceholder()"
+                     readonly>
+              <mat-datepicker-toggle matSuffix [for]="weekPicker"></mat-datepicker-toggle>
+              <mat-datepicker #weekPicker 
+                              (selectedChange)="onWeekDateChange()"
+                              [startAt]="selectedWeekDate || today">
+              </mat-datepicker>
+            </mat-form-field>
+            
+          
+
+            
+
+            <!-- Filtre par statut -->
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Statut</mat-label>
+              <mat-select panelClass="filter-select" [(value)]="selectedStatut" (selectionChange)="filterByStatut()">
+                <mat-option *ngFor="let statut of statutOptions" [value]="statut.value">{{ statut.label }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+          
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>{{ 'STORES.TITLE' | translate }}</mat-label>
+              <mat-select panelClass="filter-select" [(value)]="selectedMagasin" (selectionChange)="filterByMagasin()">
+                <mat-option [value]="null">Tous les magasins</mat-option>
+                <mat-option *ngFor="let magasin of magasinsOptions" [value]="magasin.value">{{ magasin.label }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+           
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>{{ 'COMMON.MERCHANDISERS' | translate }}</mat-label>
+              <mat-select panelClass="filter-select" [(value)]="selectedMerchandiseur" (selectionChange)="filterMerchandiseurs()">
+                <mat-option [value]="null">Tous les merchandiseurs</mat-option>
+                <mat-option *ngFor="let merch of merchandiseursOptions" [value]="merch.value">{{ merch.label }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            
+            <button mat-raised-button class="add-user-button" (click)="openAddvisitDialog()" matTooltip="Ajouter une nouvelle planification"
+                    style="background-color: #0A2681; color: white; border-radius: 50px; padding: 10px 28px; font-weight: 700; box-shadow: 0 6px 12px rgba(10, 38, 129, 0.4); border: none; text-transform: none; font-size: 16px; margin-left: 16px; min-height: 56px;margin-bottom:20px">
+              <mat-icon style="margin-right: 12px; font-size: 22px;">add</mat-icon>
+              Ajouter une visite
+            </button>
+          </div>
+
+          <!-- Calendrier de sélection de date (affiché conditionnellement) -->
+          <div *ngIf="showDatePicker" class="date-picker-container" 
+               style="background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 10px; padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h4 style="margin: 0; color: #333;">Sélectionner une plage de dates</h4>
+              
+            </div>
+            
+            <div style="display: flex; gap: 20px; align-items: center;">
+              <mat-form-field appearance="outline">
+                <mat-label>Date de début</mat-label>
+                <input matInput [matDatepicker]="startPicker" [(ngModel)]="selectedDateRange.start" 
+                       (dateChange)="onDateRangeChange()">
+                <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Date de fin</mat-label>
+                <input matInput [matDatepicker]="endPicker" [(ngModel)]="selectedDateRange.end" 
+                       (dateChange)="onDateRangeChange()">
+                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+              </mat-form-field>
+
+              <button mat-raised-button color="primary" (click)="selectWeekFromCalendar()" 
+                      [disabled]="!selectedDateRange.start || !selectedDateRange.end">
+                <mat-icon>check</mat-icon>
+                Appliquer
+              </button>
+            </div>
+            
+            <div *ngIf="selectedDateRange.start && selectedDateRange.end" 
+                 style="margin-top: 15px; padding: 10px; background: #f5f5f5; border-radius: 8px; font-size: 14px; color: #666;">
+              <strong>Période sélectionnée :</strong> 
+              {{ selectedDateRange.start | date:'dd/MM/yyyy' }} - {{ selectedDateRange.end | date:'dd/MM/yyyy' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="calendar-stats">
+          <h2 class="stats-title">
+            {{ 'DASHBOARD.STATISTICS' | translate }}
+            <span *ngIf="selectedSemaine">de la {{selectedSemaine.toLowerCase()}}</span>
+            <span *ngIf="!selectedSemaine">de la semaine actuelle</span>
+          </h2>
+
+          <div class="stats-container">
+            <div class="stat-card" [@fadeIn]>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">bar_chart</mat-icon>
+              </div>
+              <p class="stat-value" [@countUp]="totalVisites">{{ totalVisites }}</p>
+              <p class="stat-label">VISITES PLANIFIÉES</p>
+            </div>
+
+            <div class="stat-card" [@fadeIn]>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">local_shipping</mat-icon>
+              </div>
+              <p class="stat-value" [@countUp]="totalMagasins">{{ totalMagasins }}</p>
+              <p class="stat-label">GESTION MAGASINS</p>
+            </div>
+
+            <div class="stat-card" [@fadeIn]>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">group</mat-icon>
+              </div>
+              <p class="stat-value" [@countUp]="totalMerch">{{ totalMerch }}</p>
+              <p class="stat-label">GESTION MERCHANDISEURS</p>
+            </div>
+
+            <div class="stat-card" [@fadeIn]>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">show_chart</mat-icon>
+              </div>
+              <p class="stat-value" [@countUp]="progressGlobal">{{ progressGlobal }}%</p>
+              <p class="stat-label">PROGRESSION GLOBALE</p>
+            </div>
+
+            <div class="stat-card" [@fadeIn]>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">keyboard_arrow_up</mat-icon>
+              </div>
+              <p class="stat-value">
+                <span [ngClass]="{
+                  'positive': differenceVisites > 0,
+                  'negative': differenceVisites < 0,
+                  'neutral': differenceVisites === 0
+                }" [@countUp]="differenceVisites">
+                  {{ differenceVisites >= 0 ? '+' : '' }}{{ differenceVisites }}
+                </span>
+              </p>
+              <p class="stat-label">VS SEM. PRÉCÉDENTE</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <full-calendar #calendar [options]="calendarOptions" class="animated-calendar"></full-calendar>
+        </div>
+      </div>
+
+      <div *ngIf="selectedTab === 'map'">
+        <div class="map-section">
+                     <div class="map-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+             <h3 style="margin: 0; color: #333;">Carte des magasins</h3>
+             <div style="display: flex; gap: 10px;">
+               <button mat-icon-button matTooltip="Recharger la carte et les magasins" 
+                       class="menu-toggle" (click)="refreshMap()">
+                 <mat-icon>refresh</mat-icon>
+               </button>
+               <button mat-icon-button matTooltip="Afficher tous les magasins sur la carte" 
+                       class="menu-toggle" (click)="forceShowAllMagasins()">
+                 <mat-icon>store</mat-icon>
+               </button>
+               <button mat-icon-button matTooltip="Afficher les magasins avec coordonnées espacées (test)" 
+                       class="menu-toggle" (click)="showMagasinsWithSpacedCoords()">
+                 <mat-icon>grid_on</mat-icon>
+               </button>
+               <button mat-icon-button matTooltip="Afficher avec coordonnées réelles (logique par défaut)" 
+                       class="menu-toggle" (click)="testShowMagasinsWithRealCoords()">
+                 <mat-icon>location_on</mat-icon>
+               </button>
+               <button mat-icon-button matTooltip="Utiliser l'ancienne logique de marqueurs" 
+                       class="menu-toggle" (click)="updateMapMarkers()">
+                 <mat-icon>restore</mat-icon>
+               </button>
+               <button mat-icon-button matTooltip="Cliquez sur les marqueurs pour voir les détails des magasins" 
+                       class="menu-toggle">
+                 <mat-icon>help_outline</mat-icon>
+               </button>
+             </div>
+           </div>
+          <div id="maroc-map" style="width: 100%; height: 60vh; border-radius: 16px; box-shadow: 0 2px 8px #0001;"></div>
+          <div class="map-legend" style="margin-top: 10px; padding: 10px; background: #f5f5f5; border-radius: 8px; font-size: 12px;">
+            <strong>Légende :</strong> 
+            <ul style="margin: 5px 0; padding-left: 20px;">
+              <li>📍 <strong>Marqueurs :</strong> Représentent vos magasins</li>
+              <li>💡 <strong>Cliquez</strong> sur un marqueur pour voir les détails du magasin</li>
+            </ul>
+            <small style="color: #666;">💡 Pour ajouter des coordonnées GPS à vos magasins, utilisez la carte lors de la création/modification des magasins.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vue Tableau -->
+      <div *ngIf="selectedTab === 'table'">
+     
+
+        <!-- Filtres pour le tableau -->
+        <div class="filters-container">
+          <div class="filters flex items-center p-3 bg-white rounded-lg shadow-sm">
+            <!-- Filtre par semaine avec calendrier -->
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Sélectionner une semaine</mat-label>
+              <input matInput [matDatepicker]="weekPicker" 
+                     [(ngModel)]="selectedWeekDate" 
+                     (dateChange)="onWeekDateChange()"
+                     [placeholder]="getWeekPlaceholder()"
+                     readonly>
+              <mat-datepicker-toggle matSuffix [for]="weekPicker"></mat-datepicker-toggle>
+              <mat-datepicker #weekPicker 
+                              (selectedChange)="onWeekDateChange()"
+                              [startAt]="selectedWeekDate || today">
+              </mat-datepicker>
+            </mat-form-field>
+            
+          
+
+       
+
+            <!-- Filtre par statut -->
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Statut</mat-label>
+              <mat-select panelClass="filter-select" [(value)]="selectedStatut" (selectionChange)="filterByStatut()">
+                <mat-option *ngFor="let statut of statutOptions" [value]="statut.value">{{ statut.label }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>{{ 'STORES.TITLE' | translate }}</mat-label>
+              <mat-select panelClass="filter-select" [(value)]="selectedMagasin" (selectionChange)="filterByMagasin()">
+                <mat-option [value]="null">Tous les magasins</mat-option>
+                <mat-option *ngFor="let magasin of magasinsOptions" [value]="magasin.value">{{ magasin.label }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>{{ 'COMMON.MERCHANDISERS' | translate }}</mat-label>
+              <mat-select panelClass="filter-select" [(value)]="selectedMerchandiseur" (selectionChange)="filterMerchandiseurs()">
+                <mat-option [value]="null">Tous les merchandiseurs</mat-option>
+                <mat-option *ngFor="let merch of merchandiseursOptions" [value]="merch.value">{{ merch.label }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            
+            <button mat-raised-button class="add-user-button" (click)="openAddvisitDialog()" matTooltip="Ajouter une nouvelle planification"
+                    style="background-color: #0A2681; color: white; border-radius: 50px; padding: 10px 28px; font-weight: 700; box-shadow: 0 6px 12px rgba(10, 38, 129, 0.4); border: none; text-transform: none; font-size: 16px; margin-left: 16px; min-height: 56px;margin-bottom:20px">
+              <mat-icon style="margin-right: 12px; font-size: 22px;">add</mat-icon>
+              Ajouter une visite
+            </button>
+          </div>
+
+          <!-- Calendrier de sélection de date (affiché conditionnellement) -->
+          <div *ngIf="showDatePicker" class="date-picker-container" 
+               style="background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 10px; padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h4 style="margin: 0; color: #333;">Sélectionner une plage de dates</h4>
+              
+            </div>
+            
+            <div style="display: flex; gap: 20px; align-items: center;">
+              <mat-form-field appearance="outline">
+                <mat-label>Date de début</mat-label>
+                <input matInput [matDatepicker]="startPicker" [(ngModel)]="selectedDateRange.start" 
+                       (dateChange)="onDateRangeChange()">
+                <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Date de fin</mat-label>
+                <input matInput [matDatepicker]="endPicker" [(ngModel)]="selectedDateRange.end" 
+                       (dateChange)="onDateRangeChange()">
+                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+              </mat-form-field>
+
+              <button mat-raised-button color="primary" (click)="selectWeekFromCalendar()" 
+                      [disabled]="!selectedDateRange.start || !selectedDateRange.end">
+                <mat-icon>check</mat-icon>
+                Appliquer
+              </button>
+            </div>
+            
+            <div *ngIf="selectedDateRange.start && selectedDateRange.end" 
+                 style="margin-top: 15px; padding: 10px; background: #f5f5f5; border-radius: 8px; font-size: 14px; color: #666;">
+              <strong>Période sélectionnée :</strong> 
+              {{ selectedDateRange.start | date:'dd/MM/yyyy' }} - {{ selectedDateRange.end | date:'dd/MM/yyyy' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Tableau des planifications -->
+        <div class="table-container" style="background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
+          <table mat-table [dataSource]="dataSource" class="planification-table" style="width: 100%;">
+            
+            <!-- Colonne Date de visite -->
+            <ng-container matColumnDef="dateVisite">
+              <th mat-header-cell *matHeaderCellDef>Date & Heure</th>
+              <td mat-cell *matCellDef="let element">
+                <div style="display: flex; flex-direction: column;">
+                  <span style="font-weight: 600; color: #333;">{{ element.dateVisite | date:'dd/MM/yyyy' }}</span>
+                  <span style="font-size: 12px; color: #666;">{{ element.dateVisite | date:'HH:mm' }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Colonne Magasin -->
+            <ng-container matColumnDef="magasin">
+              <th mat-header-cell *matHeaderCellDef>Magasin</th>
+              <td mat-cell *matCellDef="let element">
+                <div style="display: flex; flex-direction: column;">
+                  <span style="font-weight: 600; color: #333;">{{ element.magasin?.nom || 'N/A' }}</span>
+                  <span style="font-size: 12px; color: #666;">{{ element.magasin?.ville || '' }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Colonne Merchandiseur -->
+            <ng-container matColumnDef="merchandiser">
+              <th mat-header-cell *matHeaderCellDef>Merchandiseur</th>
+              <td mat-cell *matCellDef="let element">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <img [src]="element.merchandiser?.imagePath ? 
+                    (element.merchandiser.imagePath.startsWith('data:image') ? element.merchandiser.imagePath : 'http://localhost:8080/uploads/' + element.merchandiser.imagePath) : 
+                    'assets/default-avatar.png'" 
+                    alt="Avatar" 
+                    style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;"
+                    onerror="this.src='assets/default-avatar.png'">
+                  <div>
+                    <div style="font-weight: 600; color: #333;">{{ element.merchandiser?.nom || 'N/A' }} {{ element.merchandiser?.prenom || '' }}</div>
+                    <div style="font-size: 12px; color: #666;">{{ element.merchandiser?.telephone || '' }}</div>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Colonne Statut -->
+            <ng-container matColumnDef="statut">
+              <th mat-header-cell *matHeaderCellDef>Statut</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="status-badge" 
+                      [style.background-color]="getStatusColor(element.statut)"
+                      style="padding: 4px 12px; border-radius: 20px; color: white; font-size: 12px; font-weight: 600; text-transform: uppercase;">
+                  {{ getStatusText(element.statut) }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Colonne Durée -->
+            <ng-container matColumnDef="dureeVisite">
+              <th mat-header-cell *matHeaderCellDef>Durée</th>
+              <td mat-cell *matCellDef="let element">
+                <span style="color: #666;">{{ element.dureeVisite || 2 }}h</span>
+              </td>
+            </ng-container>
+
+            <!-- Colonne Commentaire -->
+            <ng-container matColumnDef="commentaire">
+              <th mat-header-cell *matHeaderCellDef>Commentaire</th>
+              <td mat-cell *matCellDef="let element">
+                <span [matTooltip]="element.commentaire || 'Aucun commentaire'" 
+                      matTooltipPosition="above"
+                      style="color: #666; max-width: 200px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: help;">
+                  {{ element.commentaire || 'Aucun commentaire' }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Colonne Actions -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let element">
+                <div style="display: flex; gap: 8px;">
+                  <button mat-icon-button (click)="editPlanification(element)" matTooltip="Modifier" style="color: #0A2681;">
+                    <mat-icon >edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="deletePlanificationFromTable(element)" matTooltip="Supprimer" style="color: #f44336;">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+                style="border-bottom: 1px solid #f0f0f0; transition: background-color 0.2s;"
+               ></tr>
+          </table>
+          <mat-paginator 
+            #paginator
+            [pageSizeOptions]="[5, 10, 20]" 
+            showFirstLastButtons
+            [pageSize]="10">
+          </mat-paginator>
+
+          <!-- Message si aucune donnée -->
+          <div *ngIf="dataSource.data.length === 0" style="text-align: center; padding: 40px; color: #666;">
+            <mat-icon style="font-size: 48px; color: #ccc; margin-bottom: 16px;">event_busy</mat-icon>
+            <h3>Aucune planification trouvée</h3>
+            <p>Essayez de modifier vos filtres ou ajoutez une nouvelle planification.</p>
+            <button mat-button color="primary" (click)="openAddvisitDialog()" style="margin-top: 16px;">
+              <mat-icon>add</mat-icon>
+              Ajouter une planification
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

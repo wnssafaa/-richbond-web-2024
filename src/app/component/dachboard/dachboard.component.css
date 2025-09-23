@@ -1,0 +1,1649 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #fff; /* Adaptez la couleur */
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+  width: 120px;
+  margin-left: 29px;
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #0e6af4;
+}
+
+.lang-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #0e6af4;
+}
+
+.lang-icon {
+  width: 24px;
+  height: 24px;
+  color: #0e6af4;
+}
+
+.icon {
+  cursor: pointer;
+  color: #0e6af4;
+}
+
+/* Style pour les boutons de suppression de filtre à l'intérieur du champ */
+.clear-filter-btn {
+  background-color: #f5f5f5 !important;
+  border: 1px solid #ddd !important;
+  border-radius: 50% !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  color: #666 !important;
+  margin-right: 8px !important; /* Adjusted for matSuffix */
+  transition: all 0.2s ease !important;
+  box-shadow: none !important;
+}
+.clear-filter-btn:hover {
+  background-color: #e0e0e0 !important;
+  color: #333 !important;
+  transform: scale(1.1) !important;
+  box-shadow: none !important;
+}
+.clear-filter-btn mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 6px;
+  line-height: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: -6px;
+  padding: 0;
+}
+
+/* Version mobile */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.5rem;
+  }
+
+  .logo {
+    height: 30px; /* Taille réduite pour mobile */
+  }
+
+  .lang-text {
+    display: none; /* Cache le texte de la langue sur mobile */
+  }
+
+  .header-icons {
+    gap: 0.75rem;
+  }
+}
+
+/* Version très petits écrans */
+@media (max-width: 480px) {
+  .logo {
+    height: 25px;
+  }
+
+  .lang-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .icon {
+    font-size: 20px;
+  }
+}
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Style pour le bouton de langue */
+.lang-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.lang-button:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Style pour les icônes de langue */
+.lang-icon,
+.lang-option-icon {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Style pour les options du menu */
+.mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Ajustement pour l'icône de flèche */
+.mat-icon[matSuffix] {
+  margin-left: 4px;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+.container {
+  /* Espacement */
+  padding: 20px;
+  margin: 12px;
+
+  /* Bordures réduites */
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+
+  /* Arrière-plan */
+  background-color: #ffffff;
+
+  /* Ombre portée légère */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  /* Dimensions */
+  min-height: calc(100vh - 24px);
+  box-sizing: border-box;
+
+  /* Disposition des enfants */
+  display: flex;
+  flex-direction: column;
+}
+/* ============================================================================
+   1. SIDEBAR (structure globale)
+============================================================================ */
+.sidebar {
+  width: 250px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 24px);
+}
+
+/* ============================================================================
+   2. PROFIL UTILISATEUR (haut de la sidebar)
+============================================================================ */
+.user-profile {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.user-profile img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.user-profile strong {
+  display: block;
+  font-size: 16px;
+  color: #333;
+}
+
+.user-profile p {
+  margin: 0;
+  font-size: 13px;
+  color: #6c757d;
+}
+
+/* ============================================================================
+   3. LISTE DE NAVIGATION (liens mat-nav-list)
+============================================================================ */
+mat-nav-list a.active {
+  background-color: #f0f4ff !important;
+  color: #3f51b5 !important;
+  font-weight: 500;
+}
+
+/* ============================================================================
+   4. BOUTONS DU BAS (Aide + Déconnexion)
+============================================================================ */
+.mat-nav-list .bottom-actions {
+  margin-top: auto;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 16px;
+}
+
+/* Aide */
+.mat-nav-list .help-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #555;
+}
+
+.mat-nav-list .help-button mat-icon {
+  color: #555;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+}
+
+/* Déconnexion */
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+  color: #ff0022 !important;
+}
+
+.logout-icon {
+  color: #ff0022;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+}
+
+/* Icône personnalisée avec Material Icons */
+.logout-icon::before {
+  content: "arrow_forward";
+  font-family: "Material Icons";
+}
+
+/* ============================================================================
+   5. RESPONSIVE DESIGN
+============================================================================ */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    border-radius: 0;
+    box-shadow: none;
+    overflow-x: auto;
+  }
+
+  .user-profile {
+    display: none;
+  }
+
+  .mat-nav-list {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .mat-nav-list a {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .logout-button,
+  .help-button {
+    font-size: 14px;
+    gap: 6px;
+  }
+
+  .logout-icon::before {
+    content: "logout";
+  }
+}
+.content {
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  box-sizing: border-box;
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    gap: 10px;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+
+    h1 {
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    .menu-toggle {
+      margin-right: 10px;
+      flex-shrink: 0;
+      background-color: #0a2681;
+    }
+  }
+}
+
+.filters-container {
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: flex-start;
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+    .filter-field {
+      min-width: 200px;
+      flex: 1;
+    }
+
+    .separator {
+      height: 30px;
+      width: 1px;
+      background-color: #ccc;
+    }
+
+    .custom-icon-button {
+      margin-left: auto;
+    }
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  border-radius: 15px;
+
+  box-shadow: 0 15px 16px rgba(0, 0, 0, 0.05);
+  .stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.05);
+
+    .text-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .stat-icon {
+        font-size: 27px;
+        color: #0a2681;
+        margin-bottom: 10px;
+      }
+
+      .stat-label {
+        font-size: 18px;
+        color: #6c757d;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+    }
+  }
+}
+
+.planification-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+  margin-left: 20%;
+
+  table {
+    width: 100%;
+  }
+
+  .mat-card-header h1 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #0a2681;
+  }
+
+  .plan-title {
+    /* font-size: 20px; */
+    color: #0a2681;
+  }
+}
+
+.status-legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #333;
+  font-weight: 600;
+
+  .circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .event-planned {
+    background-color: #1f1f5e;
+  }
+  .event-in-progress {
+    background-color: #ff9800;
+  }
+  .event-done {
+    background-color: #4caf50;
+  }
+  .event-rescheduled {
+    background-color: #ffc107;
+  }
+  .event-not-done {
+    background-color: #f44336;
+  }
+}
+
+/* -------------------- */
+/* RESPONSIVE ADAPTATION */
+/* -------------------- */
+
+@media (max-width: 768px) {
+  .content {
+    padding: 12px;
+
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+
+      h1 {
+        font-size: 20px;
+      }
+    }
+
+    .filters-container {
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-field {
+        width: 100%;
+      }
+
+      .separator {
+        display: none;
+      }
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .planification-card {
+      width: 100% !important;
+      margin-bottom: 20px;
+
+      .plan-title {
+        font-size: 18px;
+      }
+    }
+
+    .status-legend {
+      flex-wrap: wrap;
+    }
+  }
+}
+:host ::ng-deep .mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 28px;
+}
+.custom-icon-button {
+  background-color: transparent;
+  border: 2px solid #a0a0a0; /* contour très clair comme sur l’image */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  margin-bottom: 25px;
+}
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espace entre bouton et h1 */
+}
+.page-header > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.event-planned {
+  background-color: #1f1f5e;
+  color: white !important;
+}
+.event-in-progress {
+  background-color: #ff9800;
+  color: white !important;
+}
+.event-done {
+  background-color: #4caf50;
+  color: white !important;
+}
+.event-rescheduled {
+  background-color: #beab71;
+  color: white !important;
+}
+.event-not-done {
+  background-color: #f44336;
+  color: white !important;
+}
+.planning-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* Réduit l'espace entre les cartes */
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.card {
+  padding: 24px;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.merch-table {
+  /* flex: 1 1 100px; */
+  max-width: 750px;
+}
+
+.calendar {
+  /* flex: 1 1 400px; */
+  max-width: 600px;
+}
+
+.card-title {
+  color: #0a2681;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.calendar-filters {
+  display: flex;
+  gap: 12px;
+}
+
+.filter-select {
+  width: 120px;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  margin-left: 16px;
+}
+
+.status-legend {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  gap: 6px;
+}
+
+.circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+@media (max-width: 900px) {
+  .planning-container {
+    flex-direction: column;
+    gap: 12px; /* Espacement vertical sur mobile */
+    align-items: stretch;
+  }
+
+  /* .calendar {
+    max-width: 100%;
+    width: 100%;
+  } */
+}
+.tables-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.card-table {
+  flex: 1 1 48%;
+  min-width: 350px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+}
+
+.header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.card-title {
+  color: #0a2681;
+  font-weight: 600;
+  font-size: 20px;
+  margin: 0;
+}
+
+.region-filter {
+  width: 200px;
+}
+
+.btn-active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.btn-inactive {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+@media (max-width: 900px) {
+  .tables-container {
+    flex-direction: column;
+  }
+
+  .card-table {
+    width: 100%;
+  }
+}
+/* ========== ANIMATIONS GÉNÉRALES ========== */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ========== ANIMATION ET SHADOW SUR LES CARTES ========== */
+.card,
+.card-table,
+.planification-card,
+.mat-card {
+  animation: fade-in 0.6s ease;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); /* soft shadow */
+}
+
+.card:hover,
+.card-table:hover,
+.planification-card:hover,
+.mat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* hover lift effect */
+}
+
+/* ========== TABLE ========== */
+table.mat-table {
+  animation: scale-in 0.4s ease-in-out;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* ========== HEADER FLEX & TITRES ========== */
+.header-flex,
+.card-header {
+  animation: fade-in 0.5s ease-in-out;
+  transition: background-color 0.3s ease;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ========== Paginator animation ========== */
+mat-paginator {
+  animation: fade-in 0.6s ease;
+}
+
+/* ========== ICONES ET BOUTONS ========== */
+.icon,
+.lang-button,
+.custom-icon-button,
+button.mat-button {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.icon:hover,
+.custom-icon-button:hover,
+button.mat-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* ========== STATUS BUTTONS (ACTIVE / INACTIVE) ========== */
+.btn-active,
+.btn-inactive {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.btn-active:hover,
+.btn-inactive:hover {
+  transform: scale(1.03);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ========== Chips légende (status-legend) ========== */
+.status-legend {
+  animation: fade-in 0.7s ease-in-out;
+  transition: background-color 0.3s ease;
+}
+
+.status-legend:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 6px;
+  padding: 4px 6px;
+}
+/* ========== ANIMATIONS DE BASE ========== */
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseShadow {
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(21, 87, 36, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(21, 87, 36, 1);
+  }
+}
+
+/* ========== HEADERS, CARTES, SECTIONS ========== */
+.card,
+.card-table,
+.planification-card,
+.mat-card,
+.header-flex,
+.card-header,
+.status-legend,
+table.mat-table {
+  animation: fadeSlideIn 0.6s ease forwards;
+  transition: box-shadow 0.4s ease, transform 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+}
+
+.card:hover,
+.card-table:hover,
+.planification-card:hover,
+.mat-card:hover,
+table.mat-table:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* ========== BOUTONS & ICONES INTERACTIFS ========== */
+.icon,
+button.mat-button {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(14, 106, 244, 0.25);
+  border-radius: 6px;
+}
+
+.icon:hover,
+.custom-icon-button:hover,
+button.mat-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(14, 106, 244, 0.4);
+}
+
+/* ========== BOUTON ACTIF PULSE ========== */
+.btn-active {
+  background-color: #d4edda;
+  color: #155724;
+  animation: pulseShadow 2.5s infinite ease-in-out;
+}
+
+/* ========== LÉGENDE DES STATUTS ========== */
+.status-legend {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  gap: 6px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+
+.status-legend:hover {
+  background-color: rgba(14, 106, 244, 0.1);
+  box-shadow: 0 4px 15px rgba(14, 106, 244, 0.3);
+}
+
+/* ========== TABLE STYLE ========== */
+table.mat-table {
+  animation: fadeSlideIn 0.4s ease-in-out;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+/* ========== HEADER FLEX & TITRES ========== */
+.header-flex,
+.card-header {
+  animation: fadeSlideIn 0.5s ease-in-out;
+  transition: background-color 0.3s ease;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ========== PAGINATOR ========== */
+mat-paginator {
+  animation: fadeSlideIn 0.6s ease;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .card,
+  .card-table,
+  .planification-card,
+  .mat-card {
+    transform: none !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .icon:hover,
+  .lang-button:hover,
+  .custom-icon-button:hover {
+    transform: scale(1.05);
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filters-container .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-field {
+    width: 100%;
+  }
+
+  .separator {
+    display: none;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .planification-card {
+    width: 100% !important;
+    margin-bottom: 20px;
+  }
+
+  .status-legend {
+    flex-wrap: wrap;
+  }
+
+  .tables-container {
+    flex-direction: column;
+  }
+
+  .card-table {
+    width: 100%;
+  }
+}
+/* Animation de fade-slide */
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Grid contenant les statistiques */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  animation: fadeSlideIn 0.8s ease forwards;
+}
+
+/* Carte statistique animée */
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeSlideIn 0.7s ease;
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenu centré */
+.text-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeSlideIn 1s ease;
+}
+
+/* Icône */
+.stat-icon {
+  font-size: 21px;
+  color: #0a2681;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.2) rotate(5deg);
+}
+
+/* Texte */
+.stat-label {
+  font-size: 16px;
+  color: #6c757d;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.stat-card h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+}
+/* Espace vertical entre les éléments de navigation */
+.nav-item {
+  margin-bottom: 20px; /* ou 12px pour plus d’espace */
+}
+
+/* Optionnel : éviter marge sur le dernier élément */
+.nav-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Pour les sous-liens du dropdown */
+.dropdown-content a.mat-list-item {
+  margin-bottom: 20px;
+}
+
+/* Ajoute un peu de marge aussi autour du menu utilisateur */
+.dropdown-menu {
+  margin-bottom: 20px;
+}
+/* Animation d'apparition */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Container des statistiques */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+/* Style + animation + shadow des cartes */
+.stat-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeUp 0.6s ease both;
+}
+
+/* Effet hover (zoom + shadow renforcé) */
+.stat-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Contenu centré */
+.text-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Icône */
+.stat-icon {
+  font-size: 30px;
+  color: #0a2681;
+  transition: transform 0.3s ease;
+}
+
+/* Zoom léger de l’icône au survol */
+.stat-card:hover .stat-icon {
+  transform: scale(1.2) rotate(2deg);
+}
+
+/* Titre */
+.stat-label {
+  font-size: 16px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Chiffre */
+.stat-card h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+}
+/* ========== BASE ANIMATIONS ========== */
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseShadow {
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(21, 87, 36, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(21, 87, 36, 0.5);
+  }
+}
+
+/* ========== ANIMATION D'APPARITION GÉNÉRALE ========== */
+.fade-in {
+  animation: fadeSlideIn 0.6s ease-in-out;
+}
+
+/* Animation d’entrée avec délai automatique (optionnel) */
+[data-animate] {
+  animation: fadeSlideIn 0.6s ease forwards;
+  opacity: 0;
+}
+
+[data-animate-delay="100"] {
+  animation-delay: 0.1s;
+}
+[data-animate-delay="200"] {
+  animation-delay: 0.2s;
+}
+[data-animate-delay="300"] {
+  animation-delay: 0.3s;
+}
+[data-animate-delay="400"] {
+  animation-delay: 0.4s;
+}
+[data-animate-delay="500"] {
+  animation-delay: 0.5s;
+}
+[data-animate-delay="600"] {
+  animation-delay: 0.6s;
+}
+
+/* ============================================================================
+   STYLES POUR SIDEBAR COLLAPSIBLE (ajoutés du composant superviseurs)
+============================================================================ */
+
+/* Layout flexbox pour sidebar et contenu */
+.example-container {
+  display: flex;
+  height: 100vh;
+  gap: 0;
+}
+
+/* Sidebar - largeur fixe */
+.sidebar {
+  flex-shrink: 0;
+  width: 250px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 24px);
+  transition: width 0.3s ease;
+  position: relative;
+  z-index: 1;
+  background-color: #ffffff;
+}
+
+/* Mode collapsed - icônes seulement */
+.sidebar-collapsed {
+  width: 70px !important;
+  min-width: 70px;
+  max-width: 70px;
+}
+
+/* Contenu principal - prend tout l'espace restant */
+.content {
+  flex: 1;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  box-sizing: border-box;
+  overflow-x: auto;
+  margin-left: 0;
+}
+
+/* ============================================================================
+   PROFIL UTILISATEUR (haut de la sidebar)
+============================================================================ */
+.user-profile {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.user-profile img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  margin-right: 12px;
+  transition: all 0.3s ease;
+}
+
+.user-profile strong {
+  display: block;
+  font-size: 16px;
+  color: #333;
+  transition: opacity 0.3s ease;
+}
+
+.user-profile p {
+  margin: 0;
+  font-size: 13px;
+  color: #6c757d;
+  transition: opacity 0.3s ease;
+}
+
+/* Mode collapsed pour le profil */
+.user-profile-collapsed {
+  justify-content: center;
+  padding: 16px 8px;
+}
+
+.user-profile-collapsed img {
+  width: 35px;
+  height: 35px;
+  margin-right: 0;
+}
+
+.user-info-hidden {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+/* ============================================================================
+   LISTE DE NAVIGATION (liens mat-nav-list)
+============================================================================ */
+mat-nav-list a.active {
+  background-color: #f0f4ff !important;
+  color: #3f51b5 !important;
+  font-weight: 500;
+}
+
+/* Style pour les icônes de navigation */
+mat-nav-list mat-icon[matListItemIcon] {
+  color: #0a2681;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  margin-right: 16px;
+  transition: color 0.3s ease;
+}
+
+/* Style pour les liens actifs avec icônes */
+mat-nav-list a.active mat-icon[matListItemIcon] {
+  color: #0a2681 !important;
+}
+
+/* Style pour les titres des éléments de navigation */
+mat-nav-list span[matListItemTitle] {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Style pour les liens actifs */
+mat-nav-list a.active span[matListItemTitle] {
+  color: #3f51b5 !important;
+  font-weight: 600;
+}
+
+/* Hover effect pour les éléments de navigation */
+mat-nav-list a:hover mat-icon[matListItemIcon] {
+  color: #0e6af4;
+  transform: scale(1.1);
+}
+
+mat-nav-list a:hover span[matListItemTitle] {
+  color: #0e6af4;
+}
+
+/* Style spécial pour le bouton de déconnexion */
+mat-nav-list
+  a[mat-list-item]
+  mat-icon[matListItemIcon][style*="color: #ff0022"] {
+  color: #ff0022 !important;
+}
+
+mat-nav-list a[mat-list-item] span[matListItemTitle][style*="color: #ff0022"] {
+  color: #ff0022 !important;
+}
+
+/* Hover effect pour le bouton de déconnexion */
+mat-nav-list
+  a[mat-list-item]:has(mat-icon[style*="color: #ff0022"])
+  mat-icon[matListItemIcon] {
+  color: #ff0022 !important;
+}
+
+mat-nav-list
+  a[mat-list-item]:has(mat-icon[style*="color: #ff0022"])
+  span[matListItemTitle] {
+  color: #ff0022 !important;
+}
+
+/* ============================================================================
+   MODE COLLAPSED - ICÔNES SEULEMENT
+============================================================================ */
+
+/* Masquer le texte en mode collapsed */
+.text-hidden {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Navigation en mode collapsed */
+.nav-list-collapsed {
+  padding: 0 8px;
+}
+
+.nav-item-collapsed {
+  justify-content: center !important;
+  padding: 12px 8px !important;
+  min-height: 48px;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.nav-item-collapsed mat-icon[matListItemIcon] {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  margin: 0 auto !important;
+}
+
+/* Masquer les trois points (dots) en mode collapsed */
+.nav-item-collapsed::after {
+  display: none !important;
+}
+
+/* S'assurer qu'aucun contenu supplémentaire ne s'affiche */
+.nav-item-collapsed {
+  position: relative;
+}
+
+.nav-item-collapsed *:not(mat-icon[matListItemIcon]) {
+  display: none !important;
+}
+
+/* Masquer spécifiquement les éléments Material Design qui causent les trois points */
+.nav-item-collapsed .mat-list-item-content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+.nav-item-collapsed .mat-list-item-content > *:not(mat-icon[matListItemIcon]) {
+  display: none !important;
+}
+
+/* Masquer les spans et autres éléments de texte */
+.nav-item-collapsed span {
+  display: none !important;
+}
+
+/* Masquer les icônes de flèche */
+.nav-item-collapsed mat-icon:not([matListItemIcon]) {
+  display: none !important;
+}
+
+/* ============================================================================
+   BOUTONS DU BAS (Aide + Déconnexion)
+============================================================================ */
+.mat-nav-list .bottom-actions {
+  margin-top: auto;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 16px;
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN
+============================================================================ */
+@media (max-width: 768px) {
+  .example-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    border-radius: 0;
+    box-shadow: none;
+    overflow-x: auto;
+    min-height: auto;
+  }
+
+  .user-profile {
+    display: none;
+  }
+
+  .mat-nav-list {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .mat-nav-list a {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    flex-direction: column;
+  }
+
+  /* Styles pour les icônes en mode mobile */
+  .mat-nav-list mat-icon[matListItemIcon] {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 0;
+    margin-bottom: 4px;
+  }
+
+  .mat-nav-list span[matListItemTitle] {
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .logout-button,
+  .help-button {
+    font-size: 14px;
+    gap: 6px;
+  }
+
+  .logout-icon::before {
+    content: "logout";
+  }
+
+  .content {
+    padding: 12px;
+    min-height: auto;
+  }
+}
+
+/* Styles pour le header de la page */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  gap: 10px;
+  color: #333;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: transparent;
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  margin: 0;
+  flex-shrink: 0;
+  color: #333;
+}
+
+.page-header .menu-toggle {
+  margin-right: 10px;
+  flex-shrink: 0;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.page-header .menu-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espace entre bouton et h1 */
+}
+.page-header > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.page-header-left h1:hover {
+  color: #1e3a8a;
+}
+
+.page-header-left h1 .title-icon {
+  font-size: 1.5rem;
+  color: #002b7f;
+  transition: color 0.2s ease;
+}
+
+/* Styles pour les graphiques */
+.charts-container {
+  margin: 2rem 0;
+  padding: 0 1rem;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.chart-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.chart-card mat-card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem;
+  margin: 0;
+}
+
+.chart-card mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.chart-card mat-card-title mat-icon {
+  font-size: 1.3rem;
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.chart-card mat-card-content {
+  padding: 1.5rem;
+}
+
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-container canvas {
+  max-height: 100%;
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+/* Responsive pour les graphiques */
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+
+  .chart-card mat-card-content {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .charts-container {
+    padding: 0 0.5rem;
+  }
+
+  .chart-container {
+    height: 200px;
+  }
+}

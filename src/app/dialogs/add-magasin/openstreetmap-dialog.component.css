@@ -1,0 +1,195 @@
+/* Container principal */
+.dialog-container {
+  padding: 0;
+  max-width: 1000px;
+  width: 100%;
+  height: 80vh;
+}
+
+/* Carte moderne */
+.modern-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  overflow: hidden;
+  background: linear-gradient(135deg, #0A2681 0%, #1a4ba3 100%);
+}
+
+/* Header moderne */
+.modern-header {
+  background: linear-gradient(135deg, #0A2681 0%, #1a4ba3 100%);
+  color: white;
+  padding: 24px;
+  text-align: center;
+}
+
+.modern-title {
+  color: white !important;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.title-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.modern-subtitle {
+  color: rgba(255,255,255,0.9) !important;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+/* Contenu moderne */
+.modern-content {
+  flex: 1;
+  padding: 24px;
+  background: #f8f9fa;
+  overflow-y: auto;
+}
+
+/* Barre de recherche moderne */
+.search-container {
+  margin-bottom: 24px;
+}
+
+.search-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.search-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.search-btn {
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #0A2681 0%, #1a4ba3 100%) !important;
+  color: white !important;
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(10, 38, 129, 0.4);
+}
+
+.accent-btn {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+  color: white !important;
+}
+
+.accent-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+}
+
+/* Container de carte moderne */
+.map-container {
+  margin-bottom: 24px;
+}
+
+.map {
+  width: 100%;
+  height: 450px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  background: white;
+}
+
+/* Informations de localisation */
+.location-info {
+  margin-bottom: 24px;
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+.location-info h4 {
+  color: #0A2681;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.location-info p {
+  margin: 8px 0;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.location-info strong {
+  color: #0A2681;
+  font-weight: 700;
+}
+
+/* Actions modernes */
+.modern-actions {
+  padding: 24px;
+  background: white;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Marqueur personnalisé */
+.custom-marker {
+  position: absolute;
+  font-size: 24px;
+  pointer-events: none;
+  z-index: 1000;
+  transform: translate(-50%, -100%);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .dialog-container {
+    height: 90vh;
+  }
+  
+  .modern-content {
+    padding: 16px;
+  }
+  
+  .search-buttons {
+    flex-direction: column;
+  }
+  
+  .search-btn {
+    width: 100%;
+  }
+  
+  .modern-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .map {
+    height: 350px;
+  }
+}

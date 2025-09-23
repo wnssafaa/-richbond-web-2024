@@ -1,0 +1,7 @@
+export enum Role {
+    // ADMIN = 'ADMIN',
+    SUPERVISEUR = 'SUPERVISEUR',
+    MERCHANDISEUR_MONO = 'MERCHANDISEUR_MONO',
+    MERCHANDISEUR_MULTI = 'MERCHANDISEUR_MULTI',
+    Admin = "Admin"
+  }

@@ -1,0 +1,10 @@
+<h2 mat-dialog-title class="dialog-title">Confirmation de Déconnexion</h2>
+
+<mat-dialog-content class="dialog-content">
+  <p>Êtes-vous sûr de vouloir vous déconnecter ?</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-stroked-button color="primary" (click)="onCancel()">Annuler</button>
+  <button mat-raised-button class="logout-btn" (click)="onConfirm()">Déconnexion</button>
+</mat-dialog-actions>

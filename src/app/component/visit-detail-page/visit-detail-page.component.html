@@ -1,0 +1,432 @@
+<div class="header">
+  <img src="assets/logo.png" alt="Richbond Logo" class="logo" />
+  <div class="header-icons">
+    <mat-icon style=" color: #0E6AF4 !important;">notifications_none</mat-icon>
+    
+    <!-- Bouton de changement de langue -->
+    <button mat-button [matMenuTriggerFor]="languageMenu" class="lang-button">
+      <img [src]="'assets/' + (currentLanguage === 'fr' ? 'OIP.webp' : 'usa.png')" 
+           alt="Language" 
+           class="lang-icon" />
+      <span>{{ currentLanguage | uppercase }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    
+    <mat-menu #languageMenu="matMenu">
+      <button mat-menu-item (click)="changeLanguage('fr')">
+        <img src="assets/OIP.webp" alt="Français" class="lang-option-icon">
+        <span>FR</span>
+      </button>
+      <button mat-menu-item (click)="changeLanguage('en')">
+        <img src="assets/usa.png" alt="English" class="lang-option-icon">
+        <span>EN</span>
+      </button>
+    </mat-menu>
+    
+    <mat-icon style=" color: #0E6AF4 !important;">settings</mat-icon>
+  </div>
+</div>
+
+<div class="container">
+  <div class="example-container">
+    
+    <div class="sidebar" [class.sidebar-collapsed]="!menuOpen">
+      <div class="user-profile" [class.user-profile-collapsed]="!menuOpen">
+        <img 
+          [src]="avatarUrl" 
+          alt="Avatar" 
+          width="100" 
+          height="100" 
+          style="border-radius:50%;" />
+        <div class="user-info" [class.user-info-hidden]="!menuOpen">
+          <strong>{{ username }}</strong>
+          <p>{{ role }}</p>
+        </div>
+      </div>
+
+      <mat-nav-list [class.nav-list-collapsed]="!menuOpen">
+        <a mat-list-item routerLink="/Dashbord" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen" 
+           [matTooltip]="!menuOpen ? ('COMMON.DASHBOARD' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.DASHBOARD' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/users" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>group</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">Tous les utilisateurs</span>
+        </a>
+        
+        <a mat-list-item routerLink="/merchendiseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.MERCHANDISERS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>storefront</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.MERCHANDISERS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/superviseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.SUPERVISORS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>supervisor_account</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SUPERVISORS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/magasins" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.STORES' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>store</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.STORES' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/planification" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.PLANNING' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>event_note</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PLANNING' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/gestion-visites" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.VISIT' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>location_on</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.VISIT' | translate}}</span>
+        </a>
+
+        <a mat-list-item routerLink="/Produit" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.PRODUCTS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>inventory</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PRODUCTS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/parametre" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.SETTINGS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>settings</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SETTINGS' | translate }}</span>
+        </a>
+
+        <a mat-list-item routerLink="/help" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.HELP' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>help_outline</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.HELP' | translate }}</span>
+        </a>
+        
+        <a mat-list-item (click)="openLogoutDialog()" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('AUTH.LOGOUT' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon style="color: #ff0022;">logout</mat-icon>
+          <span matListItemTitle style="color: #ff0022;" [class.text-hidden]="!menuOpen">{{ 'AUTH.LOGOUT' | translate }}</span>
+        </a>
+      </mat-nav-list>
+    </div>
+
+    <div class="content">
+      <!-- Page header avec navigation -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <button mat-icon-button (click)="toggleMenu()" class="menu-toggle">
+            <mat-icon *ngIf="!menuOpen" style="color: #333;margin-bottom: 15px;">keyboard_arrow_left</mat-icon>
+            <mat-icon *ngIf="menuOpen" style="color: #333;margin-bottom: 15px;">keyboard_arrow_right</mat-icon>
+          </button>
+          <h1 (click)="goBack()">
+            Détail de la Visite
+          </h1>
+        </div>
+      </div>
+
+      <!-- Contenu principal -->
+      <div class="all" style="background:white">
+        <!-- Visit details -->
+        <div *ngIf="visit && !loading" class="visit-detail-container" style="background:white">
+          <!-- Carte de détail de la visite -->
+          <div class="visit-detail-card" style="background:white">
+            <!-- Header de la visite -->
+            <div class="visit-header">
+               <!-- <div class="profile-header">
+                <div class="profile-picture-section">
+                  <div class="profile-picture-container">
+                    <img [src]="getMerchandiserImageUrl() || getDefaultAvatar()" 
+                         *ngIf="visit.planning?.merchandiser?.imagePath; else noImage"
+                         class="profile-picture"
+                         (error)="onImageError($event)">
+                    <ng-template #noImage>
+                      <div class="no-image-placeholder">
+                        <mat-icon>person</mat-icon>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+                
+                <div class="profile-info">
+                  <h1 class="profile-name">Visite #{{ visit.id }}</h1>
+                  <p class="profile-email">{{ visit.planning?.merchandiser?.nom || 'N/A' }} {{ visit.planning?.merchandiser?.prenom || '' }}</p>
+                </div>
+                
+               
+              </div> -->
+              <div class="footer-actions">
+                     <button mat-raised-button class="export-button" (click)="goBack()" > 
+      <span>Retour</span>
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+                <button
+                  mat-raised-button
+                  class="add-user-button"
+                  style="background-color: #0A2681; color: white;"
+                  (click)="printPage()"
+                  *ngIf="visit"
+                >
+                  Imprimer le rapport
+                </button>
+              </div>
+            </div>
+
+            <!-- Contenu de la visite -->
+            <div class="visit-content" style="background:white;margin-bottom:30%;">
+              <!-- Section Informations -->
+              <div class="info-section">
+                <div class="info-grid">
+                  <div class="info-row">
+                    <div class="info-field">
+                      <label class="field-label">ID Visite</label>
+                      <div class="field-value">{{ visit.id }}</div>
+                    </div>
+                    
+                    <div class="info-field">
+                      <label class="field-label">Statut</label>
+                      <div class="field-value status-badge" [class]="'status-' + (visit.planning?.statut?.toLowerCase() || 'pending')">
+                        {{ visit.planning?.statut || 'N/A' }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="info-row">
+                    <div class="info-field">
+                      <label class="field-label">Heure d'arrivée</label>
+                      <div class="field-value">{{ formatDate(visit?.heureArrivee) }}</div>
+                    </div>
+                    
+                    <div class="info-field">
+                      <label class="field-label">Heure de départ</label>
+                      <div class="field-value">{{ formatDate(visit?.heureDepart) }}</div>
+                    </div>
+                  </div>
+
+                  <div class="info-row">
+                    <div class="info-field">
+                      <label class="field-label">Durée</label>
+                      <div class="field-value">{{ calculateDuration(visit.heureArrivee, visit.heureDepart) }}</div>
+                    </div>
+                    
+                    <div class="info-field">
+                      <label class="field-label">Date de visite</label>
+                      <div class="field-value">{{ formatDate(visit.planning?.dateVisite) }}</div>
+                    </div>
+                  </div>
+
+                  <div class="info-row">
+                    <div class="info-field">
+                      <label class="field-label">Nombre de facings</label>
+                      <div class="field-value">{{ visit.nombreFacings }}</div>
+                    </div>
+                    
+                    <div class="info-field">
+                      <label class="field-label">Niveau de stock</label>
+                      <div class="field-value">{{ visit.niveauStock }}%</div>
+                    </div>
+                  </div>
+
+                  <div class="info-row">
+                    <div class="info-field">
+                      <label class="field-label">Prix normal</label>
+                      <div class="field-value">{{ formatPrice(visit.prixNormal) }}</div>
+                    </div>
+                    
+                    <div class="info-field">
+                      <label class="field-label">Prix promotionnel</label>
+                      <div class="field-value">{{ formatPrice(visit.prixPromotionnel) }}</div>
+                    </div>
+                  </div>
+
+                  <div class="info-row">
+                    <div class="info-field">
+                      <label class="field-label">Photo prise</label>
+                      <div class="field-value status-badge" [class]="visit.photoPrise ? 'status-active' : 'status-inactive'">
+                        {{ visit.photoPrise ? 'Oui' : 'Non' }}
+                      </div>
+                    </div>
+                    
+                    <div class="info-field">
+                      <label class="field-label">Nouveauté concurrente</label>
+                      <div class="field-value">{{ visit.nouveauteConcurrente || 'Aucune' }}</div>
+                    </div>
+                  </div>
+                 </div>
+               </div>
+
+               <!-- Section Merchandiseur -->
+               <div class="merchandiseurs-section" *ngIf="visit.planning?.merchandiser">
+                 <div class="section-title">
+                   <mat-icon class="section-icon">person</mat-icon>
+                   <span>Merchandiseur</span>
+                 </div>
+                 
+                 <div class="merchandiseurs-grid">
+                   <div class="merchandiseur-card">
+                     <div class="merchandiseur-header">
+                       <div class="merchandiseur-avatar">
+                         <img [src]="getMerchandiserImageUrl() || getDefaultAvatar()" 
+                              *ngIf="visit.planning?.merchandiser?.imagePath; else noMerchImage"
+                              class="merchandiseur-image"
+                              (error)="onMerchandiseurImageError($event)">
+                         <ng-template #noMerchImage>
+                           <div class="no-merch-image-placeholder">
+                             <mat-icon>person</mat-icon>
+                           </div>
+                         </ng-template>
+                       </div>
+                       
+                       <div class="merchandiseur-info">
+                         <h3 class="merchandiseur-name">{{ visit.planning?.merchandiser?.nom || 'N/A' }} {{ visit.planning?.merchandiser?.prenom || '' }}</h3>
+                         <p class="merchandiseur-email">{{ visit.planning?.merchandiser?.email || 'Email non disponible' }}</p>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+               <!-- Section Magasin -->
+               <div class="merchandiseurs-section" *ngIf="visit.planning?.magasin">
+                 <div class="section-title">
+                   <mat-icon class="section-icon">store</mat-icon>
+                   <span>Magasin</span>
+                 </div>
+                 
+                 <div class="merchandiseurs-grid">
+                   <div class="merchandiseur-card">
+                     <div class="merchandiseur-header">
+                       <div class="merchandiseur-avatar">
+                         <div class="no-merch-image-placeholder">
+                           <mat-icon>store</mat-icon>
+                         </div>
+                       </div>
+                       
+                       <div class="merchandiseur-info">
+                         <h3 class="merchandiseur-name">{{ visit.planning?.magasin?.nom || 'N/A' }}</h3>
+                         <p class="merchandiseur-email">{{ visit.planning?.magasin?.adresse || 'Adresse non disponible' }}</p>
+                       </div>
+                     </div>
+                     
+                     <div class="merchandiseur-details">
+                       <div class="detail-row">
+                         <div class="detail-field">
+                           <label class="detail-label">Ville</label>
+                           <div class="detail-value">{{ visit.planning?.magasin?.ville || 'Non spécifiée' }}</div>
+                         </div>
+                         <div class="detail-field">
+                           <label class="detail-label">Région</label>
+                           <div class="detail-value">{{ visit.planning?.magasin?.region || 'Non spécifiée' }}</div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+               <!-- Section Images -->
+               <div class="merchandiseurs-section" *ngIf="visit.images && visit.images.length > 0">
+                 <div class="section-title">
+                   <mat-icon class="section-icon">photo_library</mat-icon>
+                   <span>Photos de la Visite ({{ visit.images.length }})</span>
+                 </div>
+                 
+                 <div class="images-gallery">
+                   <div class="image-item" *ngFor="let image of visit.images; let i = index">
+                     <img 
+                       [src]="image.imageData" 
+                       [alt]="'Photo ' + (i + 1)"
+                       class="visit-image"
+                       (click)="openImageModal(image.imageData)">
+                     <div class="image-info">
+                       <span class="image-name">{{ image.fileName || 'Photo ' + (i + 1) }}</span>
+                       <span class="image-date" *ngIf="image.uploadDate">
+                         {{ formatDate(image.uploadDate.toString()) }}
+                       </span>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+               <!-- Section Produits -->
+               <div class="merchandiseurs-section" *ngIf="visit.produits && visit.produits.length > 0">
+                 <div class="section-title">
+                   <mat-icon class="section-icon">inventory</mat-icon>
+                   <span>Produits Visités ({{ visit.produits.length }})</span>
+                 </div>
+                 
+                 <div class="products-list">
+                   <div class="product-item" *ngFor="let produit of visit.produits">
+                     <div class="product-info">
+                       <h4>{{ produit.nom }}</h4>
+                       <p *ngIf="produit.description">{{ produit.description }}</p>
+                       <div class="product-details">
+                         <span *ngIf="produit.prix" class="product-price">
+                           {{ formatPrice(produit.prix) }}
+                         </span>
+                         <span *ngIf="produit.categorie" class="product-category">
+                           {{ produit.categorie }}
+                         </span>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+               <!-- Section GPS -->
+               <div class="merchandiseurs-section" *ngIf="visit.latitude && visit.longitude">
+                 <div class="section-title">
+                   <mat-icon class="section-icon">my_location</mat-icon>
+                   <span>Localisation GPS</span>
+                 </div>
+                 
+                 <div class="merchandiseurs-grid">
+                   <div class="merchandiseur-card">
+                     <div class="merchandiseur-details">
+                       <div class="detail-row">
+                         <div class="detail-field">
+                           <label class="detail-label">Latitude</label>
+                           <div class="detail-value">{{ visit.latitude }}</div>
+                         </div>
+                         <div class="detail-field">
+                           <label class="detail-label">Longitude</label>
+                           <div class="detail-value">{{ visit.longitude }}</div>
+                         </div>
+                       </div>
+                       
+                       <div class="detail-row">
+                         <div class="detail-field full-width">
+                           <button mat-stroked-button color="primary" (click)="openInMaps()" class="maps-button">
+                             <mat-icon>map</mat-icon>
+                             Voir sur la carte
+                           </button>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+
+        <!-- États de chargement et d'erreur -->
+        <div *ngIf="loading" class="loading-container">
+          <mat-spinner></mat-spinner>
+          <p>Chargement des détails de la visite...</p>
+        </div>
+
+        <div *ngIf="error" class="error-container">
+          <mat-icon class="error-icon">error</mat-icon>
+          <h3>Erreur</h3>
+          <p>{{ error }}</p>
+          <button mat-raised-button color="primary" (click)="goBack()">
+            Retour à la liste
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

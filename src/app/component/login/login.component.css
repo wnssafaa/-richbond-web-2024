@@ -1,0 +1,384 @@
+/* ============================================================================
+   1. IMPORTS
+============================================================================ */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+/* ============================================================================
+   2. LAYOUT GLOBAL
+============================================================================ */
+.login-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================================
+   3. PANELS ET IMAGE DE FOND
+============================================================================ */
+.left-panel {
+  height: 100vh;
+  width: 100%;
+  background: rgba(0, 26, 114, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(0 0, 100% 0, 65% 100%, 0% 100%);
+  z-index: 2;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.background-image img {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  object-position: left bottom;
+}
+
+/* ============================================================================
+   4. FORMULAIRE DE CONNEXION (PANEL DROIT)
+============================================================================ */
+.login-right-panel {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 250px;
+  width: 90%;
+  height: 40%;
+  /* padding-left: 20px; */
+  margin-right: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form-container {
+  width: 90%;
+  /* padding-left: 5px; */
+  margin-right: 20px;
+  padding-top: 130px;
+}
+
+.login-title {
+  color: #071659;
+  font-size: 30px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: left;
+}
+
+/* ============================================================================
+   5. CHAMPS DE FORMULAIRE
+============================================================================ */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* margin-left: 1px; */
+}
+
+.form-control {
+  width: 98%;
+  padding: 10px 10px 10px 90px;
+  border: 1px solid #ddd;
+  border-radius: 50px;
+  font-size: 26px;
+  border-left: 1.14px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s;
+
+  &:focus {
+    border-color: #071659;
+  }
+}
+
+.mobile-label {
+  margin-bottom: 4px;
+  font-size: 14px;
+  padding-left: 2px;
+}
+
+.hideLabel {
+  display: none;
+}
+
+/* ============================================================================
+   6. ICONES ET MOT DE PASSE
+============================================================================ */
+.material-icon {
+  position: absolute;
+  left: 5px;
+  font-family: 'Material Icons';
+  font-size: 30px;
+  color: #777;
+  border-right: 1px solid #ccc;
+  padding-right: 10px;
+  margin-left: 10px;
+}
+
+.material-icon.no-border {
+  border-right: none;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  .material-icon {
+    position: static;
+    color: #777;
+  }
+}
+
+/* ============================================================================
+   7. ACTIONS (CONNEXION / MDP OUBLIÉ)
+============================================================================ */
+.login-actions {
+  text-align: right;
+  margin-bottom: 30px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 10px 10px 10px 10px;
+  margin-top: 50px;
+  background-color: #071659;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.forgot-password {
+  color: #071659;
+  text-decoration: underline;
+  font-size: 20px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ============================================================================
+   8. POPUP MOT DE PASSE OUBLIÉ
+============================================================================ */
+.forgot-password-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 10px;
+}
+
+.popup-content {
+  background: #ffffff;
+  padding: 50px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 760px;
+  height: 45%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.popup-content h2 {
+  margin-bottom: 20px;
+  color: #071659;
+  font-size: 40px;
+}
+
+.popup-content .form-group {
+  margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content input[type='email'] {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 35px;
+  border: 1px solid #ccc;
+  border-radius: 50px;
+  outline: none;
+  transition: border-color 0.3s;
+
+  &:focus {
+    border-color: #071659;
+  }
+}
+
+.popup-content .submit-button,
+.popup-content .close-button {
+  display: block;
+  width: 100%;
+  font-size: 35px;
+  margin-top: 26px;
+  padding: 22px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.popup-content .submit-button {
+  background-color: #071659;
+  color: #fff;
+}
+
+.popup-content .close-button {
+  background-color: #ccc;
+  color: #071659;
+}
+
+.popup-content .submit-button:hover,
+.popup-content .close-button:hover {
+  opacity: 0.9;
+}
+
+/* ============================================================================
+   9. MESSAGES DE SUCCÈS
+============================================================================ */
+.success-message {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #e8f5e9;
+  border-radius: 12px;
+  color: #2e7d32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  animation: fadeIn 0.3s ease-in;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #a5d6a7;
+}
+
+.success-icon {
+  color: #2e7d32;
+  font-size: 30px;
+}
+
+.success-message span {
+  font-weight: 500;
+  font-size: 28px;
+}
+
+/* ============================================================================
+   10. MOBILE LOGO
+============================================================================ */
+.mobile-logo {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.mobile-logo img {
+  width: 120px;
+  height: auto;
+}
+
+/* ============================================================================
+   11. RESPONSIVE DESIGN
+============================================================================ */
+@media (max-width: 768px) {
+  .background-image img {
+    content: url('/assets/mobint.png');
+    object-position: center;
+  }
+
+  .login-container {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .left-panel {
+    display: none;
+  }
+
+  .login-right-panel {
+    padding: 0 20px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .login-form-container {
+    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .loginTitle {
+    font-size: 24px;
+    margin-top: 60px;
+    color: #000;
+  }
+
+  .hide-mobile-bg img {
+    content: url('/assets/mob2.png');
+    object-position: center;
+  }
+
+  .material-icon {
+    display: none;
+  }
+
+  .form-control {
+    padding-left: 15px !important;
+    margin-top: 15px;
+    font-size: 20px;
+  }
+
+  .login-actions {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    text-align: left;
+  }
+
+  .popup-content {
+    padding: 20px 15px;
+  }
+
+  .popup-content h2 {
+    font-size: 18px;
+  }
+
+  .popup-content input[type='email'] {
+    font-size: 15px;
+    padding: 12px 16px;
+  }
+
+  .popup-content .submit-button,
+  .popup-content .close-button {
+    padding: 10px;
+    font-size: 15px;
+  }
+}

@@ -1,0 +1,1141 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 10px 20px;
+  /* box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); */
+  margin-bottom: 2%;
+}
+
+.header-icons img {
+  width: 32px; /* Ajustez la largeur de l'image */
+  height: 32px; /* Assurez une hauteur égale pour une forme carrée */
+  border-radius: 50%; /* Rend l'image circulaire */
+  object-fit: cover; /* Ajuste l'image pour qu'elle s'adapte au cercle sans déformation */
+  border: 2px solid #ccc;
+  /* Optionnel : Ajoutez une bordure */
+}
+
+.header-icons {
+  display: flex;
+  gap: 20px;
+}
+
+.header-icons mat-icon {
+  font-size: 24px;
+  color: #0E6AF4; /* Vous pouvez ajuster la couleur */
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.header-icons mat-icon:hover {
+  color: #304FFE; /* Couleur au survol */
+}
+
+  .container {
+    height: 85vh;
+    width: 95%;
+    margin: 12px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Sidebar styles */
+  .sidebar {
+    width: 250px;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    height: 100%;
+    border-radius: 12px;
+  }
+  .example-container {
+    background-color: white;
+    height: 100%;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+  }
+  .user-profile {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .user-profile img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    margin-right: 12px;
+  }
+  
+  .user-profile strong {
+    display: block;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .user-profile p {
+    margin: 0;
+    font-size: 13px;
+    color: #6c757d;
+  }
+  
+
+  
+  /* Content area */
+  .content {
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  h1 {
+    margin-top: 0;
+    margin-left: 2%;
+    font-weight: bold;
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+
+  
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .full-table {
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .mat-elevation-z8 {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  }
+  
+  th.mat-header-cell {
+    background-color: #f9fafb;
+    color: #6c757d;
+    font-size: 9px;
+    font-weight: 500;
+    padding: 16px !important;
+    text-transform: uppercase;
+  }
+  
+  td.mat-cell {
+    color: #000000;
+    font-size: 14px;
+    padding: 16px !important;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  tr.mat-row:hover {
+    background-color: #f9fafb;
+  }
+  
+  /* Button styles */
+  button[mat-raised-button] {
+    height: 40px;
+    border-radius: 6px;
+    font-weight: 500;
+    text-transform: none;
+    box-shadow: none;
+  }
+  
+  button[mat-raised-button][color="primary"] {
+    background-color: #3f51b5;
+  }
+  
+  /* Filter button */
+  .filter-button {
+    border: 1px solid #e0e0e0;
+    border-radius: 66px;
+    padding: 10px 16px;
+    background-color: white;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    width: 20%;
+    border-color: #000;
+  }
+  
+  /* Action buttons */
+  button[mat-icon-button] {
+    color: #6c757d;
+  }
+  
+  button[mat-icon-button] mat-icon.warn {
+    color: #f44336;
+  }
+  
+  /* Checkboxes */
+  .mat-checkbox-checked .mat-checkbox-background {
+    background-color: #3f51b5 !important;
+  }
+  
+
+  .export-button {
+    background-color: #313743;
+    color: white;
+    border-radius: 6px;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .export-button {
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .add-user-button {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    
+  }
+  
+  .mat-icon {
+    vertical-align: middle;
+  }
+
+  
+ 
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+  }
+  
+
+  
+  .export-button {
+    background: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  .add-user-button {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+  }
+  
+  .mat-icon {
+    vertical-align: middle;
+    color: #555;
+  }
+  .footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding: 20px 0;
+    position: sticky;
+    z-index: 10;
+    width: 100%;
+    margin-left: 1%;
+    margin-inline-end: 10%;
+  }
+  
+  .footer-actions .export-button {
+    background-color: #000;
+    color: white;
+    border-radius: 20px;
+    text-transform: none;
+  }
+  
+  .footer-actions .add-user-button {
+    border-radius: 20px;
+    text-transform: none;
+    font-weight: bold;
+  }
+  .controls-container {
+  width: 95%;
+  padding: 10px 10px;
+}
+
+.search-filter-container-custom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+}
+
+.search-field-custom {
+  flex: 1;
+  max-width: 362.79px;
+  height: 51.12px;
+  border-radius: 37.36px;
+  /* background-color: #e4e6ea; */
+}
+
+.filter-button-custom {
+  border-radius: 70px; /* Valeur plus standard */
+  padding: 26px 10px; /* Padding plus proportionné */
+  display: inline-flex;
+  align-items: center; /* Centrage vertical */
+  justify-content: center; /* Centrage horizontal */
+  gap: 8px; /* Espacement entre les éléments */
+  transition: all 0.3s ease;
+  font-weight: 800;
+  font-size: 18px;
+  cursor: pointer;
+  width: auto; /* Largeur automatique selon le contenu */
+  min-width: 140px;
+ 
+}
+
+.dashboard-toggle-wrapper-custom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  background-color: #667085;
+  border-radius: 40px;
+  padding: 10px 14px; /* push to the end */
+}
+
+.dashboard-icon {
+  color: #ffffff;
+}
+
+.dashboard-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.dashboard-toggle-switch {
+  transform: scale(1.1);
+}
+
+
+.custom-search-box {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  padding: 18px 22px;
+  width: 400px; /* ou ce que tu veux */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-weight: bold;
+}
+
+.custom-search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  font-weight: bold;
+}
+
+.custom-search-box button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-search-box button .material-icons {
+  font-size: 20px;
+}
+.all {
+  background-color: white;
+  border-radius: 20px;
+  padding: 30px;
+  margin: 20px;
+ 
+  border: 1px solid #e0e0e0;
+
+height: 60%; border-radius: 20px; 
+padding: auto;/* ajustable selon le contenu */
+}
+/* Styles globaux pour la navigation */
+.mat-nav-list {
+  background-color: #f5f7ff;
+  height: 100vh;
+  width: 250px;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+}
+
+/* Style pour tous les éléments de la liste */
+.mat-nav-list a.mat-list-item {
+  height: auto;
+  padding: 12px 16px;
+  margin: 4px 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  transition: background-color 0.3s;
+}
+
+/* Style pour l'élément actif */
+.mat-nav-list a.mat-list-item.active {
+  background-color: #e8edff;
+  color: #304FFE;
+  font-weight: 500;
+}
+
+/* Style pour le hover */
+.mat-nav-list a.mat-list-item:hover:not(.active) {
+  background-color: #f0f2fa;
+}
+
+/* Espacements */
+.mat-nav-list .spacer {
+  flex-grow: 1;
+}
+
+/* Section des boutons du bas */
+.mat-nav-list .bottom-actions {
+  margin-top: auto;
+}
+.spacer {
+  min-height: 28vh;
+  flex-grow: 1; /* Crée un espace vertical important */
+}
+
+/* Section des boutons du bas */
+.mat-nav-list .bottom-actions {
+  margin-top: auto;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  padding-top: 16px;
+}
+
+.mat-nav-list .help-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #555;
+}
+
+.mat-nav-list .help-button mat-icon {
+  color: #555;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+  color: #ff0022 !important; /* Modification ici */
+}
+
+ .logout-icon {
+  color: #ff0022;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+}
+
+/* Alternative avec l'icône correcte comme dans l'image */
+.logout-icon::before {
+  content: 'arrow_forward';
+  font-family: 'Material Icons';
+}
+mat-nav-list a.active {
+  background-color: #f0f4ff !important;
+  color: #3f51b5 !important;
+  font-weight: 500;
+
+  font-weight: bold;
+}
+
+.btn-active {
+  background-color: #D6F5D6 !important;
+  color: #00A000 !important;
+  border-radius: 5px;
+  padding: 4px 12px;
+  font-weight: 600;
+  border: none;
+  width: 80%;
+  text-transform: uppercase;
+}
+
+.btn-inactive {
+  background-color: #FFD6D6 !important;
+  color: #E10000 !important;
+  border-radius: 5px;
+  padding: 4px 12px;
+  font-weight: 600;
+  border: none;
+  width: 80%;
+  text-transform: uppercase;
+}
+tr.mat-mdc-row:hover {
+  background-color: #f5f5f5;
+}
+.page-header {
+  display: flex;
+  align-items: center;
+  padding: 44px;
+  gap: 32px;
+  width: 100vw;
+  margin-right: 30%;
+}
+
+.page-header h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+   margin-right: 10%;
+  margin: 0;
+  color: #2c2c2c;
+}
+
+.menu-toggle {
+  background-color: #002B7F !important;
+  color: white !important;
+  border-radius: 30% !important;
+  width: 56px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ 
+  box-shadow: none;
+  transition: background-color 0.3s ease;
+}
+
+.menu-toggle mat-icon {
+  color: white !important;
+  margin-right: 5%;
+
+}
+:host ::ng-deep .mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 28px;
+}
+.active-filters-section {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 60%;
+}
+
+.filter-controls mat-form-field {
+  flex: 1 1 30%;
+  min-width: 270px;
+}
+
+.close-filters {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.mat-nav-list a.mat-list-item.active {
+  background-color: #e3eaff !important; /* Couleur de fond active */
+  color: #007bff !important;           /* Couleur du texte actif */
+  font-weight: 600;                    /* Plus visible */
+  border-radius: 8px;                  /* Coin arrondi comme sur la maquette */
+}
+.active-link {
+    background-color: #e0f7fa; /* Remplacez cette couleur par celle que vous souhaitez */
+    color: #00796b; /* Couleur du texte */
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-icons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.header-icons img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+.help-container {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.faq-section {
+  width: 100%;
+}
+
+.faq-card {
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.faq-icon {
+  margin-right: 0.5rem;
+}
+
+.faq-question {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.faq-description {
+  margin: 1rem 0;
+  color: #666;
+}
+
+.faq-step {
+  margin-left: 0.5rem;
+}
+/* Style pour le conteneur des icônes */
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Style pour le bouton de langue */
+.lang-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.lang-button:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Style pour les icônes de langue */
+.lang-icon, .lang-option-icon {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Style pour les options du menu */
+.mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Ajustement pour l'icône de flèche */
+.mat-icon[matSuffix] {
+  margin-left: 4px;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+.search-field-custom {
+  flex: 1;
+  max-width: 362.79px;
+  height: 51.12px;
+  border-radius: 37.36px;
+  /* background-color: #e4e6ea; */
+}
+
+.filter-button-custom {
+  border-radius: 70px; /* Valeur plus standard */
+  padding: 26px 10px; /* Padding plus proportionné */
+  display: inline-flex;
+  align-items: center; /* Centrage vertical */
+  justify-content: center; /* Centrage horizontal */
+  gap: 8px; /* Espacement entre les éléments */
+  transition: all 0.3s ease;
+  font-weight: 800;
+  font-size: 18px;
+  cursor: pointer;
+  width: auto; /* Largeur automatique selon le contenu */
+  min-width: 140px;
+ 
+}
+
+.dashboard-toggle-wrapper-custom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  background-color: #667085;
+  border-radius: 40px;
+  padding: 10px 14px; /* push to the end */
+}
+
+.dashboard-icon {
+  color: #ffffff;
+}
+
+.dashboard-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.dashboard-toggle-switch {
+  transform: scale(1.1);
+}
+
+
+.custom-search-box {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  padding: 18px 22px;
+  width: 400px; /* ou ce que tu veux */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-weight: bold;
+}
+
+.custom-search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  font-weight: bold;
+}
+
+.custom-search-box button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-search-box button .material-icons {
+  font-size: 20px;
+}
+.all {
+  background-color: white;
+  border-radius: 20px;
+  padding: 30px;
+  margin: 20px;
+ 
+  border: 1px solid #e0e0e0;
+
+height: 80%; border-radius: 20px; 
+padding: auto;/* ajustable selon le contenu */
+}
+/* Styles globaux pour la navigation */
+.mat-nav-list {
+  background-color: #f5f7ff;
+  height: 100vh;
+  width: 250px;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+}
+
+/* Style pour tous les éléments de la liste */
+.mat-nav-list a.mat-list-item {
+  height: auto;
+  padding: 12px 16px;
+  margin: 4px 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  transition: background-color 0.3s;
+}
+
+/* Style pour l'élément actif */
+.mat-nav-list a.mat-list-item.active {
+  background-color: #e8edff;
+  color: #304FFE;
+  font-weight: 500;
+}
+
+/* Style pour le hover */
+.mat-nav-list a.mat-list-item:hover:not(.active) {
+  background-color: #f0f2fa;
+}
+
+/* Espacements */
+.mat-nav-list .spacer {
+  flex-grow: 1;
+}
+
+/* Section des boutons du bas */
+.mat-nav-list .bottom-actions {
+  margin-top: auto;
+}
+.spacer {
+  min-height: 28vh;
+  flex-grow: 1; /* Crée un espace vertical important */
+}
+
+/* Section des boutons du bas */
+.mat-nav-list .bottom-actions {
+  margin-top: auto;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  padding-top: 16px;
+}
+
+.mat-nav-list .help-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #555;
+}
+
+.mat-nav-list .help-button mat-icon {
+  color: #555;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+  color: #ff0022 !important; /* Modification ici */
+}
+
+ .logout-icon {
+  color: #ff0022;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+}
+
+/* Alternative avec l'icône correcte comme dans l'image */
+.logout-icon::before {
+  content: 'arrow_forward';
+  font-family: 'Material Icons';
+}
+mat-nav-list a.active {
+  background-color: #f0f4ff !important;
+  color: #3f51b5 !important;
+  font-weight: 500;
+
+  font-weight: bold;
+}
+
+.btn-active {
+  background-color: #D6F5D6 !important;
+  color: #00A000 !important;
+  border-radius: 5px;
+  padding: 4px 12px;
+  font-weight: 600;
+  border: none;
+  width: 80%;
+  text-transform: uppercase;
+}
+
+.btn-inactive {
+  background-color: #FFD6D6 !important;
+  color: #E10000 !important;
+  border-radius: 5px;
+  padding: 4px 12px;
+  font-weight: 600;
+  border: none;
+  width: 80%;
+  text-transform: uppercase;
+}
+tr.mat-mdc-row:hover {
+  background-color: #f5f5f5;
+}
+.page-header {
+  display: flex;
+  align-items: center;
+  padding: 44px;
+  gap: 32px;
+  width: 100vw;
+  margin-right: 30%;
+}
+
+.page-header h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+   margin-right: 10%;
+  margin: 0;
+  color: #2c2c2c;
+}
+
+.menu-toggle {
+  background-color: #002B7F !important;
+  color: white !important;
+  border-radius: 30% !important;
+  width: 56px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ 
+  box-shadow: none;
+  transition: background-color 0.3s ease;
+}
+
+.menu-toggle mat-icon {
+  color: white !important;
+  margin-right: 5%;
+
+}
+:host ::ng-deep .mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 28px;
+}
+.active-filters-section {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 60%;
+}
+
+.filter-controls mat-form-field {
+  flex: 1 1 30%;
+  min-width: 270px;
+}
+
+.close-filters {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.mat-nav-list a.mat-list-item.active {
+  background-color: #e3eaff !important; /* Couleur de fond active */
+  color: #007bff !important;           /* Couleur du texte actif */
+  font-weight: 600;                    /* Plus visible */
+  border-radius: 8px;                  /* Coin arrondi comme sur la maquette */
+}
+.active-link {
+    background-color: #e0f7fa; /* Remplacez cette couleur par celle que vous souhaitez */
+    color: #00796b; /* Couleur du texte */
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-icons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Animation à l'apparition des lignes */
+@keyframes fadeInRow {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Style des lignes du tableau */
+tr.mat-row {
+  animation: fadeInRow 0.3s ease-in-out;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover sur une ligne */
+tr.mat-row:hover {
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  position: relative;
+}
+
+/* Ombre sur le tableau entier */
+.mat-elevation-z8 {
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.12) !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+th.mat-header-cell {
+  background-color: #F9FAFB !important;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+}
+/* Hover global pour tous les boutons mat */
+button.mat-button:hover,
+button.mat-raised-button:hover,
+button.mat-icon-button:hover,
+button.mat-stroked-button:hover {
+  background-color: #e3f2fd !important; /* bleu clair */
+  color: #1976d2 !important;            /* bleu principal */
+  transform: scale(1.03);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease-in-out;
+  border-radius: 6px;
+}
+
+/* Icônes cliquables */
+button.mat-icon-button:hover mat-icon {
+  color: #1976d2 !important;
+}
+
+/* Effet particulier pour bouton "Déconnexion" */
+.logout-button:hover {
+  background-color: #ffe5e5 !important;
+  transform: scale(1.02);
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.2);
+}
+
+/* Effet hover sur bouton de filtre */
+.filter-button-custom:hover {
+  background-color: #f0f0f0;
+  border-color: #1976d2;
+  color: #1976d2;
+  transform: scale(1.02);
+}
+
+/* Amélioration des effets sur les boutons "Export" et "Ajouter utilisateur" */
+.export-button:hover,
+.add-user-button:hover {
+  filter: brightness(1.1);
+  transform: scale(1.03);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+/* Effet hover sur tous les mat-icon dans les boutons */
+button:hover mat-icon,
+.mat-icon-button:hover mat-icon {
+  color: #1976d2 !important; /* Bleu */
+  transform: scale(1.3);
+  transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* Effet hover sur mat-icon tout seul (hors bouton) */
+mat-icon:hover {
+  color: #1976d2 !important;
+  transform: scale(1.3);
+  transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+/* Icônes spécifiques (logout, settings, dashboard...) */
+.logout-button mat-icon:hover {
+  color: red !important;
+  transform: scale(1.3);
+}
+
+/* Icône filtre */
+.filter-button-custom mat-icon:hover {
+  color: #00bcd4 !important; /* cyan */
+  transform: rotate(10deg) scale(1.2);
+}
+
+/* Icône dashboard */
+.dashboard-icon:hover {
+  color: #4caf50 !important;
+  transform: scale(1.2);
+}
+.lang-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.lang-button:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Style pour les icônes de langue */
+.lang-icon, .lang-option-icon {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Style pour les options du menu */
+.mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Ajustement pour l'icône de flèche */
+.mat-icon[matSuffix] {
+  margin-left: 4px;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}

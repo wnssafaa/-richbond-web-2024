@@ -1,0 +1,174 @@
+<div class="user-form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ isEditMode ? 'Modifier le produit' : 'Ajouter un nouveau produit' }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="produitForm" (ngSubmit)="onSubmit()">
+        <!-- Première ligne -->
+        <div class="form-row">
+                 <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>marque</mat-label>
+         <mat-select formControlName="marque">
+ 
+  <mat-option *ngFor="let marque of marques" [value]="marque">
+    {{ marque }}
+  </mat-option>
+</mat-select>
+</mat-form-field>
+  <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Catégorie</mat-label>
+            <mat-select formControlName="categorie">
+              <mat-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="produitForm.get('categorie')?.hasError('required')">
+              Ce champ est obligatoire
+            </mat-error>
+          </mat-form-field>
+          <!-- <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Référence</mat-label>
+            <input matInput formControlName="reference" placeholder="Référence du produit">
+            <mat-error *ngIf="produitForm.get('reference')?.hasError('required')">
+              Ce champ est obligatoire
+            </mat-error>
+          </mat-form-field> -->
+        </div>
+
+        <!-- Deuxième ligne -->
+        <div class="form-row">
+      
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Article</mat-label>
+            <input matInput formControlName="article" placeholder="Nom de l'article">
+            <mat-error *ngIf="produitForm.get('article')?.hasError('required')">
+              Ce champ est obligatoire
+            </mat-error>
+          </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Dimensions (ex: 190×140)</mat-label>
+            <input matInput formControlName="dimensions" placeholder="Dimensions du produit">
+            <mat-error *ngIf="produitForm.get('dimensions')?.hasError('required')">
+              Ce champ est obligatoire
+            </mat-error>
+            <mat-error *ngIf="produitForm.get('dimensions')?.hasError('pattern')">
+              Format invalide (ex: 190×140)
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Troisième ligne -->
+     
+
+        <!-- Quatrième ligne -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Prix</mat-label>
+            <input matInput type="number" formControlName="prix" placeholder="Prix du produit">
+            <mat-error *ngIf="produitForm.get('prix')?.hasError('required')">
+              Ce champ est obligatoire
+            </mat-error>
+            <mat-error *ngIf="produitForm.get('prix')?.hasError('min')">
+              Le prix doit être supérieur à 0
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Famille</mat-label>
+            <mat-select formControlName="famille">
+              <mat-option *ngFor="let famille of familles" [value]="famille">{{ famille }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="produitForm.get('famille')?.hasError('required')">
+              Ce champ est obligatoire
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Cinquième ligne -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Sous-marques</mat-label>
+            <mat-select formControlName="sousMarques">
+              <mat-option *ngFor="let sousMarque of sousMarques" [value]="sousMarque">{{ sousMarque }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="produitForm.get('sousMarques')?.hasError('required')">
+              Ce champ est obligatoire
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Code EAN</mat-label>
+            <input matInput formControlName="codeEAN" placeholder="ex: 6111250526067">
+            <mat-error *ngIf="produitForm.get('codeEAN')?.hasError('required')">
+              Ce champ est obligatoire
+            </mat-error>
+            <mat-error *ngIf="produitForm.get('codeEAN')?.hasError('pattern')">
+              Le code EAN doit contenir uniquement des chiffres
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Sixième ligne -->
+        <!-- <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Désignation Article</mat-label>
+            <input matInput formControlName="designationArticle" placeholder="ex: R VITAL 190X090">
+            <mat-error *ngIf="produitForm.get('designationArticle')?.hasError('required')">
+              Ce champ est obligatoire
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Disponible</mat-label>
+            <mat-select formControlName="disponible">
+              <mat-option [value]="true">Disponible</mat-option>
+              <mat-option [value]="false">Non disponible</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div> -->
+
+        <!-- Upload d'image -->
+        <div class="form-row">
+          <div class="full-width file-upload-section">
+            <!-- Input fichier caché -->
+            <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden #fileUpload>
+
+            <!-- Bouton personnalisé -->
+            <button mat-raised-button type="button" (click)="fileUpload.click()" class="full-width">
+              <mat-icon>upload</mat-icon>
+              {{ selectedFile ? 'Changer l\'image' : 'Ajouter une image' }}
+            </button>
+
+            <!-- Info fichier sélectionné -->
+            <div *ngIf="selectedFile" class="file-info">
+              <span>{{ selectedFile.name }}</span>
+              <mat-icon (click)="clearFile()" class="clear-icon" style="cursor:pointer;">close</mat-icon>
+            </div>
+
+            <!-- Aperçu de l'image -->
+            <div *ngIf="produitForm.get('image')?.value" class="image-preview">
+              <img [src]="'data:image/jpeg;base64,' + produitForm.get('image')?.value" alt="Aperçu image" width="150">
+            </div>
+
+            <!-- Erreur image requise -->
+            <mat-error *ngIf="produitForm.get('image')?.hasError('required') && !isEditMode">
+              L'image est obligatoire
+            </mat-error>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="produitForm.invalid">
+            {{ isEditMode ? 'Modifier' : 'Ajouter' }}
+          </button>
+
+          <button mat-button type="button" (click)="onCancel()" class="cancel-button">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

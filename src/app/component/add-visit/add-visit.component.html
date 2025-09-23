@@ -1,0 +1,143 @@
+<div class="visit-form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        {{ isEditMode ? 'Modifier la visite' : 'Ajouter une nouvelle visite' }}
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="scrollable-content">
+      <form [formGroup]="visitForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+        <!-- Ligne 1 -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Planification</mat-label>
+            <mat-select formControlName="planningId" required>
+              <mat-option *ngFor="let plan of planifications" [value]="plan.id">
+                {{ plan.magasin?.nom }} - {{ plan.merchandiser?.nom }} ({{ plan.dateVisite | date:'short' }})
+              </mat-option>
+            </mat-select> 
+            <mat-error *ngIf="visitForm.get('planningId')?.hasError('required')">
+              La planification est obligatoire
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Ligne 2 -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Heure d'arrivée</mat-label>
+            <input matInput type="datetime-local" formControlName="heureArrivee" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Heure de départ</mat-label>
+            <input matInput type="datetime-local" formControlName="heureDepart" required>
+          </mat-form-field>
+        </div>
+
+        <!-- Ligne 3 -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre de facings</mat-label>
+            <input matInput type="number" formControlName="nombreFacings" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre de facings total</mat-label>
+            <input matInput type="number" formControlName="nombreFacingsTotal" required>
+          </mat-form-field>
+        </div>
+
+        <!-- Ligne 4 -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Prix normal</mat-label>
+            <input matInput type="number" formControlName="prixNormal" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Prix promotionnel</mat-label>
+            <input matInput type="number" formControlName="prixPromotionnel" required>
+          </mat-form-field>
+        </div>
+
+        <!-- Ligne 5 -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Niveau de stock</mat-label>
+            <input matInput type="number" formControlName="niveauStock" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nouveauté concurrente</mat-label>
+            <input matInput formControlName="nouveauteConcurrente">
+          </mat-form-field>
+        </div>
+
+        <!-- Ligne 6 -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Prix nouveauté</mat-label>
+            <input matInput type="number" formControlName="prixNouveaute">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Latitude</mat-label>
+            <input matInput type="number" formControlName="latitude" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Longitude</mat-label>
+            <input matInput type="number" formControlName="longitude" required>
+          </mat-form-field>
+        </div>
+
+        <!-- Ligne 7 -->
+        <div class="form-row">
+          <mat-checkbox formControlName="photoPrise">Photo prise</mat-checkbox>
+        </div>
+
+        <!-- Ligne 8 : Images -->
+        <div class="form-row">
+          <div class="image-upload-section full-width">
+            <h3>Ajouter des photos</h3>
+            <input #fileInput type="file" id="imageUpload" multiple accept="image/*" 
+              (change)="onFileSelected($event)" style="display: none;">
+            <button mat-raised-button type="button" color="primary"
+              (click)="triggerFileInput()">
+              <mat-icon>add_photo_alternate</mat-icon>
+              Sélectionner des images
+            </button>
+            <div class="image-previews" *ngIf="imagePreviews.length > 0">
+              <div class="image-preview" *ngFor="let preview of imagePreviews; let i = index">
+                <img [src]="preview" alt="Preview">
+                <button 
+                  mat-icon-button 
+                  color="warn" 
+                  class="remove-image-btn"
+                  (click)="removeImage(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+            <mat-progress-spinner 
+              *ngIf="isUploading"
+              mode="determinate" 
+              [value]="uploadProgress">
+            </mat-progress-spinner>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="isUploading">
+            <span *ngIf="!isUploading">{{ isEditMode ? 'Modifier' : 'Ajouter' }}</span>
+            <span *ngIf="isUploading">Envoi en cours...</span>
+          </button>
+          <button 
+            mat-button 
+            type="button" 
+            (click)="onCancel()" 
+            class="cancel-button"
+            [disabled]="isUploading">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,112 @@
+<div class="login-container">
+  <!-- Partie gauche avec le logo -->
+  <div class="left-panel" >
+    <div class="logo-strip" style="width: 900%;">
+      <img src="/assets/logo_richbond.png" alt="Logo Richbond" style="width: 100%;">
+    </div>
+  </div>
+
+  <!-- Image de fond -->
+  <div>
+    <div class="background-image" [ngClass]="{'hide-mobile-bg': !showBack}">
+      <img src="/assets/Login.png" alt="Image de fond">
+    </div>
+  </div>
+
+ <!-- Partie droite du formulaire -->
+<div
+  class="login-right-panel"
+  [ngClass]="{ 'hidden-right-panel': !loginRightPanelVisible }"
+>
+  <!-- ✅ Formulaire de Connexion -->
+  <div class="login-form-container" *ngIf="!showForgotPasswordPopup">
+    <h1 class="login-title">{{ loginTitle }}</h1>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <!-- Champ Email/Login -->
+      <div class="form-group">
+        <label class="mobile-label" [ngClass]="{ hideLabel: !showLabel }">Email</label>
+        <div class="input-with-icon">
+          <span class="material-icon">person</span>
+          <input
+            type="text"
+            formControlName="username"
+            [placeholder]="loginPlaceholder"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <!-- Champ Mot de passe -->
+      <div class="form-group">
+        <div [ngClass]="{ hideLabel: !showLabel }">
+          <label class="mobile-label">Mot de passe</label>
+        </div>
+        <div class="input-with-icon">
+          <span class="material-icon">lock</span>
+          <input
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            [placeholder]="passwordPlaceholder"
+            class="form-control"
+          />
+          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+            <span class="material-icon no-border">{{
+              hidePassword ? 'visibility_off' : 'visibility'
+            }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Actions : Mot de passe oublié + Connexion -->
+      <div class="login-actions">
+        <a href="javascript:void(0)" (click)="forgotPassword()" class="forgot-password">
+          Mot de passe oublié ?
+        </a>
+        <button type="submit" class="login-button" [disabled]="loginForm.invalid">
+          {{ connexionButton }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ✅ Formulaire Mot de Passe Oublié -->
+  <div class="login-form-container" *ngIf="showForgotPasswordPopup">
+    <h1 class="login-title">Réinitialiser le mot de passe</h1>
+
+    <form [formGroup]="resetPasswordForm" (ngSubmit)="onResetPassword()">
+      <div class="form-group">
+        <div class="input-with-icon">
+          <span class="material-icon">email</span>
+          <input
+            type="email"
+            placeholder="Entrez votre email"
+            class="form-control"
+            formControlName="email"
+          />
+        </div>
+      </div>
+
+      <div class="login-actions">
+        <button
+          type="submit"
+          class="login-button"
+          [disabled]="resetPasswordForm.invalid || isLoading"
+        >
+          <span *ngIf="!isLoading">Envoyer le lien</span>
+          <div *ngIf="isLoading" class="loading-spinner">
+            <div class="spinner"></div>
+            <span>Envoi en cours...</span>
+          </div>
+        </button>
+
+        <a type="button" (click)="closePopup()"  class="forgot-password">Retour à la connexion</a>
+      </div>
+    </form>
+
+      <div *ngIf="showSuccessMessage" class="success-message" [@fadeInOut]>
+          <i class="material-icons success-icon">check_circle</i>
+          <span>L'email a été envoyé avec succès !</span>
+        </div>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export interface Magasin {
+  id?: number;
+  nom: string;
+  localisation: string;
+  latitude?: number;
+  longitude?: number;
+  region: string;
+  ville: string;
+  type: string;
+  enseigne: string;
+  adresse?: string;
+  telephone?: string;
+  email?: string;
+  status?: string;
+  produits: any[]; // ou Produit[]
+   merchandiseur?: {
+    id: number;
+    nom: string;
+    prenom: string;
+    superviseur?: {
+      id: number;
+      nom: string;
+      prenom: string;
+    };
+  };
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class MagasinService {
+  private apiUrl = 'http://localhost:8080/api/magasins';
+
+  constructor(private http: HttpClient) {}
+
+  // Créer un magasin (POST /create)
+  addMagasin(magasin: Magasin): Observable<Magasin> {
+    return this.http.post<Magasin>(`${this.apiUrl}/create`, magasin);
+  }
+
+  // Récupérer tous les magasins (GET /all)
+  getAllMagasins(): Observable<Magasin[]> {
+    return this.http.get<Magasin[]>(`${this.apiUrl}/all`);
+  }
+
+  // Récupérer un magasin par ID (GET /{id})
+  getMagasinById(id: number): Observable<Magasin> {
+    return this.http.get<Magasin>(`${this.apiUrl}/${id}`);
+  }
+
+  // Mettre à jour un magasin (PUT /update/{id})
+  updateMagasin(id: number, magasin: Magasin): Observable<Magasin> {
+    return this.http.put<Magasin>(`${this.apiUrl}/update/${id}`, magasin);
+  }
+
+  // Supprimer un magasin (DELETE /delete/{id})
+  deleteMagasin(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
+  }
+
+  // Récupérer les magasins par ville (GET /ville/{ville})
+  getMagasinsByVille(ville: string): Observable<Magasin[]> {
+    return this.http.get<Magasin[]>(`${this.apiUrl}/ville/${ville}`);
+  }
+
+  // Récupérer les magasins par région (GET /region/{region})
+  getMagasinsByRegion(region: string): Observable<Magasin[]> {
+    return this.http.get<Magasin[]>(`${this.apiUrl}/region/${region}`);
+  }
+}

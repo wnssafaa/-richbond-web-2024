@@ -1,0 +1,461 @@
+/* 🎨 Styles modernes pour le dialogue de détail des visites */
+.file-card {
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e8eaed;
+}
+
+/* 🎯 Header moderne */
+.file-header {
+  background: linear-gradient(135deg, #0A2681 0%, #1a4ba3 100%);
+  color: white;
+  padding: 30px;
+  text-align: center;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.file-title {
+  margin: 0;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icon {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.visit-status {
+  display: flex;
+  align-items: center;
+}
+
+.status-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.status-badge.photo-taken {
+  background: rgba(76, 175, 80, 0.3);
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+/* 📄 Contenu principal */
+.file-content {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* 🎨 Sections d'information */
+.info-section {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.info-section:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #0A2681;
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.section-title mat-icon {
+  color: #0A2681;
+  font-size: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* 🖼️ Section des images */
+.visit-images-section {
+  background: #ffffff;
+  border: 2px dashed #e2e8f0;
+}
+
+.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.image-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.image-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.visit-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+.no-image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: #f8fafc;
+  border-radius: 12px;
+  color: #64748b;
+  text-align: center;
+}
+
+.no-image-placeholder mat-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 16px;
+  color: #cbd5e1;
+}
+
+.no-image-placeholder p {
+  margin: 0;
+  font-size: 1rem;
+  color: #64748b;
+}
+
+/* 📊 Grille d'informations */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+}
+
+.info-row:hover {
+  background: rgba(10, 38, 129, 0.02);
+  border-radius: 8px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.info-label {
+  font-weight: 600;
+  min-width: 160px;
+  color: #374151;
+  font-size: 0.95rem;
+  padding-right: 16px;
+}
+
+.info-value {
+  flex: 1;
+  color: #1f2937;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* 💰 Styles pour les prix */
+.info-value.price {
+  color: #059669;
+  font-weight: 600;
+}
+
+.info-value.price.promo {
+  color: #dc2626;
+}
+
+/* 📦 Styles pour le niveau de stock */
+.stock-level {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.stock-high {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.stock-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.stock-low {
+  background: #fed7aa;
+  color: #c2410c;
+}
+
+.stock-critical {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* 🗺️ Placeholder pour la carte */
+.map-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  margin-top: 16px;
+  color: #64748b;
+  text-align: center;
+}
+
+.map-placeholder mat-icon {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 8px;
+  color: #0A2681;
+}
+
+.map-placeholder p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* 📦 Grille des produits */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.product-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.product-info h4 {
+  margin: 0 0 8px 0;
+  color: #0A2681;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.product-info p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* 🎯 Actions du dialogue */
+.dialog-actions {
+  padding: 20px 30px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.close-button {
+  color: #64748b;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.close-button:hover {
+  background-color: #e2e8f0;
+  color: #374151;
+}
+
+.print-button {
+  background: linear-gradient(135deg, #0A2681 0%, #1a4ba3 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(10, 38, 129, 0.3);
+}
+
+.print-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(10, 38, 129, 0.4);
+}
+
+.close-button, .print-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+/* 🎬 Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 768px) {
+  .file-card {
+    margin: 10px;
+    border-radius: 16px;
+  }
+
+  .file-header {
+    padding: 20px;
+    flex-direction: column;
+    gap: 16px;
+    border-radius: 20px;
+  }
+
+  .file-title {
+    font-size: 1.5rem;
+  }
+
+  .file-content {
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .info-label {
+    min-width: auto;
+    padding-right: 0;
+  }
+
+  .images-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dialog-actions {
+    padding: 16px 20px;
+    flex-direction: column;
+  }
+
+  .close-button, .print-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .file-header {
+    padding: 16px;
+  }
+
+  .file-title {
+    font-size: 1.3rem;
+  }
+
+  .file-content {
+    padding: 16px;
+  }
+
+  .info-section {
+    padding: 16px;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* 🖨️ Styles d'impression */
+@media print {
+  .file-card {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+
+  .dialog-actions {
+    display: none;
+  }
+
+  .file-content {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .image-overlay {
+    display: none;
+  }
+}

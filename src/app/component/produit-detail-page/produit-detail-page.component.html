@@ -1,0 +1,310 @@
+<!-- Header principal -->
+<div class="header">
+  <img src="assets/logo.png" alt="Richbond Logo" class="logo" />
+  <div class="header-icons">
+    <mat-icon>notifications_none</mat-icon>
+    
+    <!-- Bouton de changement de langue -->
+    <button mat-button [matMenuTriggerFor]="languageMenu" class="lang-button">
+      <img [src]="'assets/' + (currentLanguage === 'fr' ? 'OIP.webp' : 'usa.png')" 
+           alt="Language" 
+           class="lang-icon" />
+      <span>{{ currentLanguage | uppercase }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    
+    <mat-menu #languageMenu="matMenu">
+      <button mat-menu-item (click)="changeLanguage('fr')">
+        <img src="assets/OIP.webp" alt="Français" class="lang-option-icon">
+        <span>FR</span>
+      </button>
+      <button mat-menu-item (click)="changeLanguage('en')">
+        <img src="assets/usa.png" alt="English" class="lang-option-icon">
+        <span>EN</span>
+      </button>
+    </mat-menu>
+    
+    <mat-icon>settings</mat-icon>
+  </div>
+</div>
+
+<div class="container">
+  <div class="example-container">
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" [class.sidebar-collapsed]="!menuOpen">
+      <div class="user-profile" [class.user-profile-collapsed]="!menuOpen">
+        <img 
+          [src]="avatarUrl" 
+          alt="Avatar" 
+          width="100" 
+          height="100" 
+          style="border-radius:50%;" />
+        <div class="user-info" [class.user-info-hidden]="!menuOpen">
+          <strong>{{ username }}</strong>
+          <p>{{ role }}</p>
+        </div>
+      </div>
+
+      <mat-nav-list [class.nav-list-collapsed]="!menuOpen">
+        <a mat-list-item routerLink="/Dashbord" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen" 
+           [matTooltip]="!menuOpen ? ('COMMON.DASHBOARD' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.DASHBOARD' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/users" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>group</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">Tous les utilisateurs</span>
+        </a>
+        
+        <a mat-list-item routerLink="/merchendiseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.MERCHANDISERS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>storefront</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.MERCHANDISERS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/superviseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.SUPERVISORS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>supervisor_account</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SUPERVISORS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/magasins" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.STORES' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>store</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.STORES' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/planification" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.PLANNING' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>event_note</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PLANNING' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/gestion-visites" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.VISIT' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>location_on</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.VISIT' | translate}}</span>
+        </a>
+
+        <a mat-list-item routerLink="/Produit" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.PRODUCTS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>inventory</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PRODUCTS' | translate }}</span>
+        </a>
+        
+        <a mat-list-item routerLink="/parametre" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.SETTINGS' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>settings</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SETTINGS' | translate }}</span>
+        </a>
+
+        <a mat-list-item routerLink="/help" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('COMMON.HELP' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon>help_outline</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.HELP' | translate }}</span>
+        </a>
+        
+        <a mat-list-item (click)="openLogoutDialog()" [class.nav-item-collapsed]="!menuOpen"
+           [matTooltip]="!menuOpen ? ('AUTH.LOGOUT' | translate) : ''" matTooltipPosition="right">
+          <mat-icon matListItemIcon style="color: #ff0022;">logout</mat-icon>
+          <span matListItemTitle style="color: #ff0022;" [class.text-hidden]="!menuOpen">{{ 'AUTH.LOGOUT' | translate }}</span>
+        </a>
+      </mat-nav-list>
+    </div>
+
+    <div class="content">
+       <!-- Page header avec navigation -->
+       <div class="page-header">
+         <div class="page-header-left">
+           <button mat-icon-button (click)="toggleMenu()" class="menu-toggle">
+             <mat-icon *ngIf="!menuOpen" style="color: #333;margin-bottom: 15px;">keyboard_arrow_left</mat-icon>
+             <mat-icon *ngIf="menuOpen" style="color: #333;margin-bottom: 15px;">keyboard_arrow_right</mat-icon>
+           </button>
+           <h1 (click)="goBack()">
+            
+             Détail du Produit
+           </h1>
+         </div>
+       </div>
+
+    
+   
+       <!-- Carte de détail du produit -->
+       <div class="produit-detail-card" *ngIf="produit && !loading" >
+         <!-- Header du produit -->
+         <div class="produit-header">
+        
+             <h1 class="produit-title">
+               <!-- <mat-icon>info</mat-icon>
+               Informations du Produit -->
+             </h1>
+           <div class="footer-actions">
+            <button mat-raised-button class="export-button" (click)="goBack()" > 
+      <span>Retour</span>
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+           <button 
+             mat-raised-button 
+             class="add-user-button" 
+             style="background-color: #0A2681; color: white;" 
+             (click)="editProduit()"
+             *ngIf="produit"
+           >
+             Modifier le produit
+           </button>
+         </div>
+         </div>
+
+         <!-- Contenu du produit -->
+         <div class="produit-content" style="background:white">
+           <!-- Section Image -->
+           <div class="image-section">
+             <div class="image-container">
+               <img [src]="'data:image/jpeg;base64,' + produit.image" 
+                    *ngIf="produit.image; else noImage"
+                    class="produit-image">
+               <ng-template #noImage>
+                 <div class="no-image-placeholder">
+                   <mat-icon>image_not_supported</mat-icon>
+                   <span>Aucune image disponible</span>
+                 </div>
+               </ng-template>
+             </div>
+           </div>
+
+           <!-- Section Informations -->
+           <div class="info-section">
+          
+             
+             <div class="info-grid">
+               <div class="info-card">
+                 <div class="info-icon">
+                   <mat-icon style="color:white">branding_watermark</mat-icon>
+                 </div>
+                 <div class="info-content">
+                   <span class="info-label">Marque</span>
+                   <span class="info-value">{{ produit.marque || 'Non spécifiée' }}</span>
+                 </div>
+               </div>
+
+               <div class="info-card">
+                 <div class="info-icon">
+                   <mat-icon style="color:white">qr_code</mat-icon>
+                 </div>
+                 <div class="info-content">
+                   <span class="info-label">Référence</span>
+                   <span class="info-value">{{ produit.reference || 'Non spécifiée' }}</span>
+                 </div>
+               </div>
+
+               <div class="info-card">
+                 <div class="info-icon">
+                   <mat-icon style="color:white">category</mat-icon>
+                 </div>
+                 <div class="info-content">
+                   <span class="info-label">Catégorie</span>
+                   <span class="info-value">{{ produit.categorie || 'Non spécifiée' }}</span>
+                 </div>
+               </div>
+
+               <div class="info-card">
+                 <div class="info-icon">
+                   <mat-icon style="color:white">article</mat-icon>
+                 </div>
+                 <div class="info-content">
+                   <span class="info-label">Article</span>
+                   <span class="info-value">{{ produit.article || 'Non spécifié' }}</span>
+                 </div>
+               </div>
+
+               <div class="info-card">
+                 <div class="info-icon">
+                   <mat-icon style="color:white">style</mat-icon>
+                 </div>
+                 <div class="info-content">
+                   <span class="info-label">Type</span>
+                   <span class="info-value">{{ produit.type || 'Non spécifié' }}</span>
+                 </div>
+               </div>
+
+               <div class="info-card">
+                 <div class="info-icon">
+                   <mat-icon style="color:white">straighten</mat-icon>
+                 </div>
+                 <div class="info-content">
+                   <span class="info-label">Dimensions</span>
+                   <span class="info-value">{{ produit.dimensions || 'Non spécifiées' }}</span>
+                 </div>
+               </div>
+
+               <div class="info-card">
+                 <div class="info-icon">
+                   <mat-icon style="color:white">attach_money</mat-icon>
+                 </div>
+                 <div class="info-content">
+                   <span class="info-label">Prix</span>
+                   <span class="info-value">{{ produit.prix ? produit.prix + ' MAD' : 'Non spécifié' }}</span>
+                 </div>
+               </div>
+
+               <div class="info-card">
+                 <div class="info-icon">
+                   <mat-icon style="color:white">family_restroom</mat-icon>
+                 </div>
+                 <div class="info-content">
+                   <span class="info-label">Famille</span>
+                   <span class="info-value">{{ produit.famille || 'Non spécifiée' }}</span>
+                 </div>
+               </div>
+
+               <div class="info-card">
+                 <div class="info-icon">
+                   <mat-icon style="color:white">label</mat-icon>
+                 </div>
+                 <div class="info-content">
+                   <span class="info-label">Sous-marques</span>
+                   <span class="info-value">{{ produit.sousMarques || 'Non spécifiée' }}</span>
+                 </div>
+               </div>
+
+               <div class="info-card">
+                 <div class="info-icon">
+                   <mat-icon style="color:white">qr_code_2</mat-icon>
+                 </div>
+                 <div class="info-content">
+                   <span class="info-label">Code EAN</span>
+                   <span class="info-value">{{ produit.codeEAN || 'Non spécifié' }}</span>
+                 </div>
+               </div>
+
+               <div class="info-card">
+                 <div class="info-icon">
+                   <mat-icon style="color:white">description</mat-icon>
+                 </div>
+                 <div class="info-content">
+                   <span class="info-label">Désignation Article</span>
+                   <span class="info-value">{{ produit.designationArticle || 'Non spécifiée' }}</span>
+                 </div>
+               </div>
+
+               <div class="info-card">
+                 <div class="info-icon">
+                   <mat-icon style="color:white">{{ produit.disponible ? 'check_circle' : 'cancel' }}</mat-icon>
+                 </div>
+                 <div class="info-content">
+                   <span class="info-label">Disponibilité</span>
+                   <span class="info-value" [class]="produit.disponible ? 'status-available' : 'status-unavailable'">
+                     {{ produit.disponible ? 'Disponible' : 'Non disponible' }}
+                   </span>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+   
+
+</div>
+</div>

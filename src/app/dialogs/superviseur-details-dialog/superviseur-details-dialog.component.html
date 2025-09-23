@@ -1,0 +1,79 @@
+<!-- supervisor-dialog.component.html -->
+<mat-dialog-content class="file-card">
+  <div class="file-header">
+    <h2 mat-dialog-title class="file-title">Fiche du Superviseur</h2>
+  </div>
+  
+  <div class="scrollable-content">
+    <div class="product-image-container">
+      <img src="assets/profil.webp" 
+           class="product-main-image"
+           *ngIf="imageLoaded; else noImage"
+           (load)="imageLoaded = true"
+           (error)="imageLoaded = false">
+      <ng-template #noImage>
+        <div class="no-image-placeholder">
+          <mat-icon>image</mat-icon>
+        </div>
+      </ng-template>
+    </div>
+    
+    <div class="file-content">
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">Nom</span>
+          <span class="info-value">{{ data.nom }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Prénom</span>
+          <span class="info-value">{{ data.prenom }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Région</span>
+          <span class="info-value">{{ data.region }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Ville</span>
+          <span class="info-value">{{ data.ville }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Téléphone</span>
+          <span class="info-value">{{ data.telephone }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Enseigne</span>
+          <span class="info-value">{{ data.enseigne }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Magasin</span>
+          <span class="info-value">{{ data.magasin }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Marques couvertes</span>
+          <span class="info-value">{{ data.marquesCouvertes }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Date d'intégration</span>
+          <span class="info-value">{{ data.dateIntegration }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Date de sortie</span>
+          <span class="info-value">{{ data.dateSortie }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Marchandiseurs</span>
+          <span class="info-value"> {{ getMerchandiseurNames(data.merchendiseurs) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button mat-dialog-close class="close-button">
+    <mat-icon>close</mat-icon> Fermer
+  </button>
+  <button mat-raised-button (click)="printFile()" class="print-button">
+    <mat-icon>print</mat-icon> Imprimer
+  </button>
+</mat-dialog-actions>

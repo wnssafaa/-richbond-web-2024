@@ -1,0 +1,63 @@
+/* 🎨 Styles améliorés pour les icônes des statistiques */
+.stat-icon-wrapper {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 60px !important;
+  height: 60px !important;
+  background: linear-gradient(135deg, #0A2681 0%, #1a4ba3 100%) !important;
+  border-radius: 50% !important;
+  margin: 0 auto 16px auto !important;
+  box-shadow: 0 4px 12px rgba(10, 38, 129, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.stat-card:hover .stat-icon-wrapper {
+  transform: scale(1.1) !important;
+  box-shadow: 0 6px 20px rgba(10, 38, 129, 0.4) !important;
+}
+
+.stat-icon {
+  font-size: 1.75rem !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  line-height: 1 !important;
+}
+
+.stat-card::before {
+  background: linear-gradient(90deg, #0A2681 0%, #1a4ba3 100%) !important;
+}
+
+.stat-label {
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* 🎨 Styles responsive pour les icônes */
+@media (max-width: 768px) {
+  .stat-icon-wrapper {
+    width: 50px !important;
+    height: 50px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .stat-icon {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-icon-wrapper {
+    width: 45px !important;
+    height: 45px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .stat-icon {
+    font-size: 1.25rem !important;
+  }
+}
