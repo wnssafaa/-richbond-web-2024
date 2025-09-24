@@ -1,156 +1,262 @@
 <div class="header">
   <img src="assets/logo.png" alt="Richbond Logo" class="logo" />
   <div class="header-icons">
-    <mat-icon style=" color: #0E6AF4 !important;">notifications_none</mat-icon>
-    
+    <mat-icon style="color: #0e6af4 !important">notifications_none</mat-icon>
+
     <!-- Bouton de changement de langue -->
     <button mat-button [matMenuTriggerFor]="languageMenu" class="lang-button">
-      <img [src]="'assets/' + (currentLanguage === 'fr' ? 'OIP.webp' : 'usa.png')" 
-           alt="Language" 
-           class="lang-icon" />
+      <img
+        [src]="'assets/' + (currentLanguage === 'fr' ? 'OIP.webp' : 'usa.png')"
+        alt="Language"
+        class="lang-icon"
+      />
       <span>{{ currentLanguage | uppercase }}</span>
       <mat-icon>arrow_drop_down</mat-icon>
     </button>
-    
+
     <mat-menu #languageMenu="matMenu">
       <button mat-menu-item (click)="changeLanguage('fr')">
-        <img src="assets/OIP.webp" alt="Français" class="lang-option-icon">
+        <img src="assets/OIP.webp" alt="Français" class="lang-option-icon" />
         <span>FR</span>
       </button>
       <button mat-menu-item (click)="changeLanguage('en')">
-        <img src="assets/usa.png" alt="English" class="lang-option-icon">
+        <img src="assets/usa.png" alt="English" class="lang-option-icon" />
         <span>EN</span>
       </button>
     </mat-menu>
-    
-    <mat-icon style=" color: #0E6AF4 !important;">settings</mat-icon>
+
+    <mat-icon style="color: #0e6af4 !important">settings</mat-icon>
   </div>
 </div>
 <div class="container">
-    <div class="example-container">
+  <div class="example-container">
     <!-- ✅ SIDEBAR NAVIGATION -->
-      <div class="sidebar" [class.sidebar-collapsed]="!menuOpen">
+    <div class="sidebar" [class.sidebar-collapsed]="!menuOpen">
       <div class="user-profile" [class.user-profile-collapsed]="!menuOpen">
-  <!-- Image dynamique : avatarUrl ou imagePath -->
-  <img 
-    [src]="avatarUrl" 
-    alt="Avatar" 
-    width="100" 
-    height="100" 
-    style="border-radius:50%;" />
-  <div class="user-info" [class.user-info-hidden]="!menuOpen">
-    <strong>{{ username }}</strong>
-    <p>{{ role }}</p>
-    
-    <!-- Logo de l'entreprise dans la section utilisateur -->
+        <!-- Image dynamique : avatarUrl ou imagePath -->
+        <img
+          [src]="avatarUrl"
+          alt="Avatar"
+          width="100"
+          height="100"
+          style="border-radius: 50%"
+        />
+        <div class="user-info" [class.user-info-hidden]="!menuOpen">
+          <strong>{{ username }}</strong>
+          <p>{{ role }}</p>
 
-  </div>
-</div>
+          <!-- Logo de l'entreprise dans la section utilisateur -->
+        </div>
+      </div>
 
       <mat-nav-list [class.nav-list-collapsed]="!menuOpen">
-        <a mat-list-item routerLink="/Dashbord" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen" 
-           [matTooltip]="!menuOpen ? ('COMMON.DASHBOARD' | translate) : ''" matTooltipPosition="right">
+        <a
+          mat-list-item
+          routerLink="/Dashbord"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.DASHBOARD' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>dashboard</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.DASHBOARD' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.DASHBOARD" | translate
+          }}</span>
         </a>
-        
+
         <!-- <a mat-list-item (click)="userMenuOpen = !userMenuOpen" [class.nav-item-collapsed]="!menuOpen"
            [matTooltip]="!menuOpen ? ('COMMON.USERS' | translate) : ''" matTooltipPosition="right">
           <mat-icon matListItemIcon>people</mat-icon>
           <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.USERS' | translate }}</span>
           <mat-icon style="margin-left:auto;" [class.text-hidden]="!menuOpen">{{ userMenuOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
         </a> -->
-        
-        <a  mat-list-item routerLink="/users" routerLinkActive="active-link"  [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''" matTooltipPosition="right">
-          <mat-icon matListItemIcon>group</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">Tous les utilisateurs</span>
-        </a>
-        
-        <a mat-list-item routerLink="/login-history" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('LOGIN_HISTORY.TITLE' | translate) : ''" matTooltipPosition="right">
+        <a
+          mat-list-item
+          routerLink="/login-history"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('LOGIN_HISTORY.TITLE' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>history</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'LOGIN_HISTORY.TITLE' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "LOGIN_HISTORY.TITLE" | translate
+          }}</span>
         </a>
-        
-        <a  mat-list-item routerLink="/merchendiseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.MERCHANDISERS' | translate) : ''" matTooltipPosition="right">
+
+        <a
+          mat-list-item
+          routerLink="/users"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>group</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen"
+            >Tous les utilisateurs</span
+          >
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/merchendiseur"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.MERCHANDISERS' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>storefront</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.MERCHANDISERS' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.MERCHANDISERS" | translate
+          }}</span>
         </a>
-        
-        <a  mat-list-item routerLink="/superviseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.SUPERVISORS' | translate) : ''" matTooltipPosition="right">
+
+        <a
+          mat-list-item
+          routerLink="/superviseur"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.SUPERVISORS' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>supervisor_account</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SUPERVISORS' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.SUPERVISORS" | translate
+          }}</span>
         </a>
-        
-        <a mat-list-item routerLink="/magasins" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.STORES' | translate) : ''" matTooltipPosition="right">
+
+        <a
+          mat-list-item
+          routerLink="/magasins"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.STORES' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>store</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.STORES' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.STORES" | translate
+          }}</span>
         </a>
-        
-        <a mat-list-item routerLink="/planification" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.PLANNING' | translate) : ''" matTooltipPosition="right">
+
+        <a
+          mat-list-item
+          routerLink="/planification"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.PLANNING' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>event_note</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PLANNING' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.PLANNING" | translate
+          }}</span>
         </a>
-        
-        <a mat-list-item routerLink="/gestion-visites" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.VISIT' | translate) : ''" matTooltipPosition="right">
+
+        <a
+          mat-list-item
+          routerLink="/gestion-visites"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.VISIT' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>location_on</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.VISIT' | translate}}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.VISIT" | translate
+          }}</span>
         </a>
 
-        <a mat-list-item routerLink="/Produit" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.PRODUCTS' | translate) : ''" matTooltipPosition="right">
+        <a
+          mat-list-item
+          routerLink="/Produit"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.PRODUCTS' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>inventory</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PRODUCTS' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.PRODUCTS" | translate
+          }}</span>
         </a>
-        
-        <a mat-list-item routerLink="/parametre" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.SETTINGS' | translate) : ''" matTooltipPosition="right">
+
+        <a
+          mat-list-item
+          routerLink="/parametre"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.SETTINGS' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>settings</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SETTINGS' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.SETTINGS" | translate
+          }}</span>
         </a>
 
- 
-
-      
-          <a mat-list-item routerLink="/help" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-             [matTooltip]="!menuOpen ? ('COMMON.HELP' | translate) : ''" matTooltipPosition="right">
-            <mat-icon matListItemIcon>help_outline</mat-icon>
-            <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.HELP' | translate }}</span>
-          </a>
-          <a mat-list-item (click)="openLogoutDialog()" [class.nav-item-collapsed]="!menuOpen"
-             [matTooltip]="!menuOpen ? ('AUTH.LOGOUT' | translate) : ''" matTooltipPosition="right">
-            <mat-icon matListItemIcon style="color: #ff0022;">logout</mat-icon>
-            <span matListItemTitle style="color: #ff0022;" [class.text-hidden]="!menuOpen">{{ 'AUTH.LOGOUT' | translate }}</span>
-          </a>
-        
+        <a
+          mat-list-item
+          routerLink="/help"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.HELP' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>help_outline</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.HELP" | translate
+          }}</span>
+        </a>
+        <a
+          mat-list-item
+          (click)="openLogoutDialog()"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('AUTH.LOGOUT' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon style="color: #ff0022">logout</mat-icon>
+          <span
+            matListItemTitle
+            style="color: #ff0022"
+            [class.text-hidden]="!menuOpen"
+            >{{ "AUTH.LOGOUT" | translate }}</span
+          >
+        </a>
       </mat-nav-list>
-        </div>
+    </div>
 
-      <div class="content">
-        
+    <div class="content">
       <div class="page-header">
         <div class="page-header-left">
           <button mat-icon-button (click)="toggleMenu()" class="menu-toggle">
-            <mat-icon *ngIf="!menuOpen" style="color: #333;margin-bottom: 15px;">keyboard_arrow_left</mat-icon>
-            <mat-icon *ngIf="menuOpen" style="color: #333;margin-bottom: 15px;">keyboard_arrow_right</mat-icon>
+            <mat-icon *ngIf="!menuOpen" style="color: #333; margin-bottom: 15px"
+              >keyboard_arrow_left</mat-icon
+            >
+            <mat-icon *ngIf="menuOpen" style="color: #333; margin-bottom: 15px"
+              >keyboard_arrow_right</mat-icon
+            >
           </button>
-          <h1>{{ 'COMMON.DASHBOARD' | translate }}</h1>
+          <h1>{{ "COMMON.DASHBOARD" | translate }}</h1>
         </div>
       </div>
 
       <div class="filters-container">
-        <div class="filters flex items-center p-3 bg-white rounded-lg shadow-sm">
+        <div
+          class="filters flex items-center p-3 bg-white rounded-lg shadow-sm"
+        >
           <mat-form-field appearance="outline" class="filter-field">
-            <mat-label>{{ 'PLANNING.FILTERS.MONTH' | translate }}</mat-label>
-            <mat-select [(value)]="selectedMonth" (selectionChange)="filterPlanificationsByMonth()">
+            <mat-label>{{ "PLANNING.FILTERS.MONTH" | translate }}</mat-label>
+            <mat-select
+              [(value)]="selectedMonth"
+              (selectionChange)="filterPlanificationsByMonth()"
+            >
               <!-- <mat-option [value]="0">{{ 'PLANNING.FILTERS.ALL_MONTHS' | translate }}</mat-option> -->
-              <mat-option *ngFor="let month of months; let i = index" [value]="i">
+              <mat-option
+                *ngFor="let month of months; let i = index"
+                [value]="i"
+              >
                 {{ month | translate }}
               </mat-option>
             </mat-select>
@@ -159,10 +265,19 @@
           <span class="separator"></span>
 
           <mat-form-field appearance="outline" class="filter-field">
-            <mat-label>{{ 'PLANNING.FILTERS.STORE' | translate }}</mat-label>
-            <mat-select panelClass="filter-select" [(value)]="selectedMagasin" (selectionChange)="filterByMagasin()">
-              <mat-option [value]="null">{{ 'PLANNING.FILTERS.ALL_STORES' | translate }}</mat-option>
-              <mat-option *ngFor="let magasin of allMagasins" [value]="magasin.id">
+            <mat-label>{{ "PLANNING.FILTERS.STORE" | translate }}</mat-label>
+            <mat-select
+              panelClass="filter-select"
+              [(value)]="selectedMagasin"
+              (selectionChange)="filterByMagasin()"
+            >
+              <mat-option [value]="null">{{
+                "PLANNING.FILTERS.ALL_STORES" | translate
+              }}</mat-option>
+              <mat-option
+                *ngFor="let magasin of allMagasins"
+                [value]="magasin.id"
+              >
                 {{ magasin.nom }}
               </mat-option>
             </mat-select>
@@ -171,10 +286,21 @@
           <span class="separator"></span>
 
           <mat-form-field appearance="outline" class="filter-field">
-            <mat-label>{{ 'PLANNING.FILTERS.MERCHANDISER' | translate }}</mat-label>
-            <mat-select panelClass="filter-select" [(value)]="selectedMerchandiseur" (selectionChange)="filterMerchandiseurs()">
-              <mat-option [value]="null">{{ 'PLANNING.FILTERS.ALL_MERCHANDISERS' | translate }}</mat-option>
-              <mat-option *ngFor="let merch of marchandiseurs" [value]="merch.id">
+            <mat-label>{{
+              "PLANNING.FILTERS.MERCHANDISER" | translate
+            }}</mat-label>
+            <mat-select
+              panelClass="filter-select"
+              [(value)]="selectedMerchandiseur"
+              (selectionChange)="filterMerchandiseurs()"
+            >
+              <mat-option [value]="null">{{
+                "PLANNING.FILTERS.ALL_MERCHANDISERS" | translate
+              }}</mat-option>
+              <mat-option
+                *ngFor="let merch of marchandiseurs"
+                [value]="merch.id"
+              >
                 {{ merch.nom }} {{ merch.prenom }}
               </mat-option>
             </mat-select>
@@ -186,121 +312,143 @@
         </div>
       </div>
 
-<div class="stats-grid">
-  <mat-card class="stat-card">
-    <div class="text-content">
-      <mat-icon class="stat-icon">check_circle</mat-icon>
-      <span class="stat-label">{{ 'DASHBOARD.TASKS_PLANNED' | translate }}</span>
-      <h2>{{ totalPlanifiees }}</h2>
-    </div>
-  </mat-card>
-
-  <mat-card class="stat-card">
-    <div class="text-content">
-      <mat-icon class="stat-icon">check_circle</mat-icon>
-      <span class="stat-label">{{ 'DASHBOARD.TASKS_DONE' | translate }}</span>
-      <h2>{{ totalEffectuees }}</h2>
-    </div>
-  </mat-card>
-
-  <mat-card class="stat-card">
-    <div class="text-content">
-      <mat-icon class="stat-icon">check_circle</mat-icon>
-      <span class="stat-label">{{ 'DASHBOARD.TASKS_LEFT' | translate }}</span>
-      <h2>{{ totalRestantes }}</h2>
-    </div>
-  </mat-card>
-
- 
-</div>
-
-<!-- Section des graphiques -->
-<div class="charts-container">
-  <div class="charts-grid">
-   
-
-   
-
-    <!-- Graphique des planifications par statut -->
-    <mat-card class="chart-card">
-      <mat-card-header>
-        <mat-card-title>
-          <mat-icon>event_note</mat-icon>
-          Planifications par Statut
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="chart-container">
-          <canvas id="planificationsChart"></canvas>
-        </div>
-      </mat-card-content>
-    </mat-card>
-       <mat-card class="chart-card" (click)="goToPlabification()">
-          <mat-card-content>
-            <div class="calendar-header">
-              <h1 class="card-title">{{ 'PLANNING.TITLE' | translate }}</h1>
-              <div class="calendar-filters">
-                <mat-form-field appearance="outline" class="filter-select" (click)="$event.stopPropagation()">
-                  <mat-select [(ngModel)]="selectedMonth" (selectionChange)="onMonthChange()">
-                    <mat-option *ngFor="let month of months; let i = index" [value]="i">
-                      {{ month | translate }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="filter-select" (click)="$event.stopPropagation()">
-                  <mat-select [(ngModel)]="selectedYear" (selectionChange)="onYearChange()">
-                    <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
-
-            <nz-calendar
-             [nzFullscreen]="false"
-              [nzDateFullCell]="dateCell"
-              [(nzValue)]="calendarDate"
-              (nzPanelChange)="onCalendarMonthChange($event)"
-              (nzSelectChange)="onValueChange($event)"
-              [nzCustomHeader]="customHeader"
-              [nzFullscreen]="false"
-              (click)="$event.stopPropagation()"
-            ></nz-calendar>
-
-            <ng-template #customHeader let-date></ng-template>
-            <ng-template #dateCell let-date>
-              <div class="day-cell" [ngClass]="getDayCellClass(date)">
-                <span class="day-number" [class.has-events]="hasPlanif(date)">{{ date.getDate() }}</span>
-              </div>
-            </ng-template>
-          </mat-card-content>
-
-          <div class="legend">
-            <div class="status-legend">
-              <span class="circle event-planned"></span> {{ 'PLANNING.LEGEND.PLANNED' | translate }}
-            </div>
-            <div class="status-legend">
-              <span class="circle event-in-progress"></span> {{ 'PLANNING.LEGEND.IN_PROGRESS' | translate }}
-            </div>
-            <div class="status-legend">
-              <span class="circle event-done"></span> {{ 'PLANNING.LEGEND.DONE' | translate }}
-            </div>
-            <div class="status-legend">
-              <span class="circle event-rescheduled"></span> {{ 'PLANNING.LEGEND.RESCHEDULED' | translate }}
-            </div>
-            <div class="status-legend">
-              <span class="circle event-not-done"></span> {{ 'PLANNING.LEGEND.NOT_DONE' | translate }}
-            </div>
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <div class="text-content">
+            <mat-icon class="stat-icon">check_circle</mat-icon>
+            <span class="stat-label">{{
+              "DASHBOARD.TASKS_PLANNED" | translate
+            }}</span>
+            <h2>{{ totalPlanifiees }}</h2>
           </div>
         </mat-card>
-  </div>
-</div>
 
+        <mat-card class="stat-card">
+          <div class="text-content">
+            <mat-icon class="stat-icon">check_circle</mat-icon>
+            <span class="stat-label">{{
+              "DASHBOARD.TASKS_DONE" | translate
+            }}</span>
+            <h2>{{ totalEffectuees }}</h2>
+          </div>
+        </mat-card>
 
-   
+        <mat-card class="stat-card">
+          <div class="text-content">
+            <mat-icon class="stat-icon">check_circle</mat-icon>
+            <span class="stat-label">{{
+              "DASHBOARD.TASKS_LEFT" | translate
+            }}</span>
+            <h2>{{ totalRestantes }}</h2>
+          </div>
+        </mat-card>
+      </div>
 
+      <!-- Section des graphiques -->
+      <div class="charts-container">
+        <div class="charts-grid">
+          <!-- Graphique des planifications par statut -->
+          <mat-card class="chart-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>event_note</mat-icon>
+                Planifications par Statut
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="chart-container">
+                <canvas id="planificationsChart"></canvas>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="chart-card" (click)="goToPlabification()">
+            <mat-card-content>
+              <div class="calendar-header">
+                <h1 class="card-title">{{ "PLANNING.TITLE" | translate }}</h1>
+                <div class="calendar-filters">
+                  <mat-form-field
+                    appearance="outline"
+                    class="filter-select"
+                    (click)="$event.stopPropagation()"
+                  >
+                    <mat-select
+                      [(ngModel)]="selectedMonth"
+                      (selectionChange)="onMonthChange()"
+                    >
+                      <mat-option
+                        *ngFor="let month of months; let i = index"
+                        [value]="i"
+                      >
+                        {{ month | translate }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
 
+                  <mat-form-field
+                    appearance="outline"
+                    class="filter-select"
+                    (click)="$event.stopPropagation()"
+                  >
+                    <mat-select
+                      [(ngModel)]="selectedYear"
+                      (selectionChange)="onYearChange()"
+                    >
+                      <mat-option *ngFor="let year of years" [value]="year">{{
+                        year
+                      }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <nz-calendar
+                [nzFullscreen]="false"
+                [nzDateFullCell]="dateCell"
+                [(nzValue)]="calendarDate"
+                (nzPanelChange)="onCalendarMonthChange($event)"
+                (nzSelectChange)="onValueChange($event)"
+                [nzCustomHeader]="customHeader"
+                [nzFullscreen]="false"
+                (click)="$event.stopPropagation()"
+              ></nz-calendar>
+
+              <ng-template #customHeader let-date></ng-template>
+              <ng-template #dateCell let-date>
+                <div class="day-cell" [ngClass]="getDayCellClass(date)">
+                  <span
+                    class="day-number"
+                    [class.has-events]="hasPlanif(date)"
+                    >{{ date.getDate() }}</span
+                  >
+                </div>
+              </ng-template>
+            </mat-card-content>
+
+            <div class="legend">
+              <div class="status-legend">
+                <span class="circle event-planned"></span>
+                {{ "PLANNING.LEGEND.PLANNED" | translate }}
+              </div>
+              <div class="status-legend">
+                <span class="circle event-in-progress"></span>
+                {{ "PLANNING.LEGEND.IN_PROGRESS" | translate }}
+              </div>
+              <div class="status-legend">
+                <span class="circle event-done"></span>
+                {{ "PLANNING.LEGEND.DONE" | translate }}
+              </div>
+              <div class="status-legend">
+                <span class="circle event-rescheduled"></span>
+                {{ "PLANNING.LEGEND.RESCHEDULED" | translate }}
+              </div>
+              <div class="status-legend">
+                <span class="circle event-not-done"></span>
+                {{ "PLANNING.LEGEND.NOT_DONE" | translate }}
+              </div>
+            </div>
+          </mat-card>
+        </div>
       </div>
     </div>
+  </div>
 </div>
-

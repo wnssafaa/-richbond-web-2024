@@ -1,3 +1,152 @@
+/* Ligne du haut : Barre principale avec actions (toujours visible) */
+.main-toolbar {
+  width: 100%;
+  padding: 16px 0;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.main-toolbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+/* Section gauche : Recherche et Filtre */
+.left-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Section droite : Boutons d'action */
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Préserver le style existant des boutons */
+.right-controls .export-button {
+  background-color: #000;
+  color: white;
+  border-radius: 20px;
+  text-transform: none;
+}
+
+.right-controls .refresh-button {
+  background-color: #0a2681;
+  color: white;
+  border-radius: 20px;
+  text-transform: none;
+  font-weight: bold;
+}
+
+/* Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) */
+.filters-toolbar {
+  width: 100%;
+  padding: 16px 0;
+  margin-bottom: 20px;
+}
+
+.filters-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 0 16px;
+}
+
+.filters-content mat-form-field {
+  min-width: 200px;
+  flex: 1;
+}
+
+.clear-filter-btn {
+  color: #666;
+}
+
+.close-filters {
+  margin-left: auto;
+  color: #666;
+}
+
+/* Responsive styles */
+/* Tablettes */
+@media (max-width: 1024px) {
+  .main-toolbar-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .left-controls,
+  .right-controls {
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .filters-content mat-form-field {
+    min-width: 150px;
+  }
+}
+
+/* Mobiles */
+@media (max-width: 768px) {
+  .main-toolbar {
+    padding: 12px 0;
+  }
+
+  .main-toolbar-content {
+    gap: 12px;
+  }
+
+  .left-controls,
+  .right-controls {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .custom-search-box {
+    max-width: none;
+  }
+
+  .filters-toolbar {
+    padding: 12px 0;
+  }
+
+  .filters-content {
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 12px;
+  }
+
+  .filters-content mat-form-field {
+    min-width: 100%;
+  }
+}
+
+/* Très petits écrans */
+@media (max-width: 480px) {
+  .main-toolbar {
+    padding: 8px 0;
+  }
+
+  .filters-toolbar {
+    padding: 8px 0;
+  }
+
+  .filters-content {
+    padding: 0 8px;
+  }
+}
 .header {
   display: flex;
   justify-content: space-between;

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatCardModule, MatCardHeader, MatCardTitle, MatCardContent } from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,9 +24,6 @@ import { TranslateModule } from '@ngx-translate/core';
     MatTableModule,
     MatPaginatorModule,
     MatCardModule,
-    MatCardHeader,
-    MatCardTitle,
-    MatCardContent,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -260,5 +257,29 @@ export class LoginHistoryComponent implements OnInit, OnDestroy {
    */
   refresh(): void {
     this.loadLoginHistory();
+  }
+
+  /**
+   * Gère le changement de date de début
+   */
+  onStartDateChange(dateString: string): void {
+    if (dateString) {
+      this.selectedDateRange.start = new Date(dateString);
+    } else {
+      this.selectedDateRange.start = null;
+    }
+    this.applyFilters();
+  }
+
+  /**
+   * Gère le changement de date de fin
+   */
+  onEndDateChange(dateString: string): void {
+    if (dateString) {
+      this.selectedDateRange.end = new Date(dateString);
+    } else {
+      this.selectedDateRange.end = null;
+    }
+    this.applyFilters();
   }
 }

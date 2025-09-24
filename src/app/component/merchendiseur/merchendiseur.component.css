@@ -7,7 +7,8 @@
   background-color: #fff;
 }
 
-.header-left, .header-right {
+.header-left,
+.header-right {
   display: flex;
   align-items: center;
 }
@@ -22,7 +23,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: #0E6AF4 !important;
+  color: #0e6af4 !important;
 }
 
 .page-header-left {
@@ -41,18 +42,18 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #0E6AF4! important;
+  color: #0e6af4 !important;
 }
 
 .lang-icon {
   width: 24px;
   height: 24px;
-  color: #0E6AF4;
+  color: #0e6af4;
 }
 
 .icon {
   cursor: pointer;
-  color: #0E6AF4;
+  color: #0e6af4;
 }
 
 /* Version mobile */
@@ -60,16 +61,16 @@
   .header {
     padding: 0.5rem;
   }
-  
+
   .logo {
     height: 45px;
     width: 90px;
   }
-  
+
   .lang-text {
     display: none;
   }
-  
+
   .header-icons {
     gap: 0.75rem;
   }
@@ -81,12 +82,12 @@
     height: 35px;
     width: 70px;
   }
-  
+
   .lang-icon {
     width: 20px;
     height: 20px;
   }
-  
+
   .icon {
     font-size: 20px;
   }
@@ -132,7 +133,7 @@
 .content {
   flex: 1;
   padding: 24px;
-  background-color: #ffffff; 
+  background-color: #ffffff;
   border-radius: 16px;
   min-height: 100vh;
   display: flex;
@@ -205,7 +206,7 @@ mat-nav-list a.active {
 
 /* Style pour les icônes de navigation */
 mat-nav-list mat-icon[matListItemIcon] {
-  color: #0A2681;
+  color: #0a2681;
   font-size: 20px;
   width: 20px;
   height: 20px;
@@ -215,7 +216,7 @@ mat-nav-list mat-icon[matListItemIcon] {
 
 /* Style pour les liens actifs avec icônes */
 mat-nav-list a.active mat-icon[matListItemIcon] {
-  color: #0A2681 !important;
+  color: #0a2681 !important;
 }
 
 /* Style pour les titres des éléments de navigation */
@@ -233,16 +234,18 @@ mat-nav-list a.active span[matListItemTitle] {
 
 /* Hover effect pour les éléments de navigation */
 mat-nav-list a:hover mat-icon[matListItemIcon] {
-  color: #0A2681;
+  color: #0a2681;
   transform: scale(1.1);
 }
 
 mat-nav-list a:hover span[matListItemTitle] {
-  color: #0E6AF4;
+  color: #0e6af4;
 }
 
 /* Style spécial pour le bouton de déconnexion */
-mat-nav-list a[mat-list-item] mat-icon[matListItemIcon][style*="color: #ff0022"] {
+mat-nav-list
+  a[mat-list-item]
+  mat-icon[matListItemIcon][style*="color: #ff0022"] {
   color: #ff0022 !important;
 }
 
@@ -251,11 +254,15 @@ mat-nav-list a[mat-list-item] span[matListItemTitle][style*="color: #ff0022"] {
 }
 
 /* Hover effect pour le bouton de déconnexion */
-mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) mat-icon[matListItemIcon] {
+mat-nav-list
+  a[mat-list-item]:has(mat-icon[style*="color: #ff0022"])
+  mat-icon[matListItemIcon] {
   color: #ff0022 !important;
 }
 
-mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matListItemTitle] {
+mat-nav-list
+  a[mat-list-item]:has(mat-icon[style*="color: #ff0022"])
+  span[matListItemTitle] {
   color: #ff0022 !important;
 }
 
@@ -396,7 +403,7 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   }
 
   .logout-icon::before {
-    content: 'logout';
+    content: "logout";
   }
 
   .content {
@@ -410,8 +417,8 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: nowrap;         
-  white-space: nowrap;       
+  flex-wrap: nowrap;
+  white-space: nowrap;
   gap: 10px;
   color: #333;
   padding: 12px 20px;
@@ -421,7 +428,6 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
 }
 
 .page-header h1 {
- 
   margin: 0;
   flex-shrink: 0;
   color: #333;
@@ -429,7 +435,7 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
 
 .page-header .menu-toggle {
   margin-right: 10px;
-  flex-shrink: 0;  
+  flex-shrink: 0;
   background-color: transparent;
   transition: background-color 0.3s ease;
 }
@@ -443,10 +449,10 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   align-items: center;
   padding: 1rem;
   background-color: #fff; /* Adaptez la couleur */
-
 }
 
-.header-left, .header-right {
+.header-left,
+.header-right {
   display: flex;
   align-items: center;
 }
@@ -461,7 +467,7 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: #0E6AF4 !important;
+  color: #0e6af4 !important;
 }
 .page-header-left {
   display: flex;
@@ -477,18 +483,18 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #0E6AF4! important;
+  color: #0e6af4 !important;
 }
 
 .lang-icon {
   width: 24px;
   height: 24px;
-  color: #0E6AF4;
+  color: #0e6af4;
 }
 
 .icon {
   cursor: pointer;
-  color: #0E6AF4;
+  color: #0e6af4;
 }
 
 /* Version mobile */
@@ -496,16 +502,16 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   .header {
     padding: 0.5rem;
   }
-  
+
   .logo {
     height: 45px; /* Taille réduite pour mobile mais plus grande qu'avant */
     width: 90px;
   }
-  
+
   .lang-text {
     display: none; /* Cache le texte de la langue sur mobile */
   }
-  
+
   .header-icons {
     gap: 0.75rem;
   }
@@ -517,12 +523,12 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
     height: 35px; /* Taille augmentée même sur très petits écrans */
     width: 70px;
   }
-  
+
   .lang-icon {
     width: 20px;
     height: 20px;
   }
-  
+
   .icon {
     font-size: 20px;
   }
@@ -548,7 +554,8 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
 }
 
 /* Style pour les icônes de langue */
-.lang-icon, .lang-option-icon {
+.lang-icon,
+.lang-option-icon {
   width: 24px;
   height: 16px;
   object-fit: cover;
@@ -574,21 +581,21 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   /* Espacement */
   padding: 20px;
   margin: 12px;
-  
+
   /* Bordures réduites */
   border-radius: 12px;
   border: 1px solid #e5e7eb;
-  
+
   /* Arrière-plan */
   background-color: #ffffff;
-  
+
   /* Ombre portée légère */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  
+
   /* Dimensions */
   min-height: calc(100vh - 24px);
   box-sizing: border-box;
-  
+
   /* Disposition des enfants */
   display: flex;
   flex-direction: column;
@@ -631,7 +638,7 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
 .content {
   flex: 1;
   padding: 24px;
-  background-color: #ffffff; 
+  background-color: #ffffff;
   border-radius: 16px;
   min-height: 100vh;
   display: flex;
@@ -718,7 +725,7 @@ mat-nav-list a.active {
 
 /* Style pour les icônes de navigation */
 mat-nav-list mat-icon[matListItemIcon] {
-  color: #0A2681;
+  color: #0a2681;
   font-size: 20px;
   width: 20px;
   height: 20px;
@@ -728,7 +735,7 @@ mat-nav-list mat-icon[matListItemIcon] {
 
 /* Style pour les liens actifs avec icônes */
 mat-nav-list a.active mat-icon[matListItemIcon] {
-  color: #0A2681 !important;
+  color: #0a2681 !important;
 }
 
 /* Style pour les titres des éléments de navigation */
@@ -740,22 +747,24 @@ mat-nav-list span[matListItemTitle] {
 
 /* Style pour les liens actifs */
 mat-nav-list a.active span[matListItemTitle] {
-  color: #0A2681 !important;
+  color: #0a2681 !important;
   font-weight: 600;
 }
 
 /* Hover effect pour les éléments de navigation */
 mat-nav-list a:hover mat-icon[matListItemIcon] {
-  color: #0A2681;
+  color: #0a2681;
   transform: scale(1.1);
 }
 
 mat-nav-list a:hover span[matListItemTitle] {
-  color: #0E6AF4;
+  color: #0e6af4;
 }
 
 /* Style spécial pour le bouton de déconnexion */
-mat-nav-list a[mat-list-item] mat-icon[matListItemIcon][style*="color: #ff0022"] {
+mat-nav-list
+  a[mat-list-item]
+  mat-icon[matListItemIcon][style*="color: #ff0022"] {
   color: #ff0022 !important;
 }
 
@@ -764,14 +773,17 @@ mat-nav-list a[mat-list-item] span[matListItemTitle][style*="color: #ff0022"] {
 }
 
 /* Hover effect pour le bouton de déconnexion */
-mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) mat-icon[matListItemIcon] {
+mat-nav-list
+  a[mat-list-item]:has(mat-icon[style*="color: #ff0022"])
+  mat-icon[matListItemIcon] {
   color: #ff0022 !important;
 }
 
-mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matListItemTitle] {
+mat-nav-list
+  a[mat-list-item]:has(mat-icon[style*="color: #ff0022"])
+  span[matListItemTitle] {
   color: #ff0022 !important;
 }
-
 
 /* ============================================================================
    MODE COLLAPSED - ICÔNES SEULEMENT
@@ -840,9 +852,6 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   display: none !important;
 }
 
-
-
-
 /* ============================================================================
    4. BOUTONS DU BAS (Aide + Déconnexion)
 ============================================================================ */
@@ -851,7 +860,6 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   padding-top: 16px;
 }
-
 
 .logout-icon {
   color: #ff0022;
@@ -863,8 +871,8 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
 
 /* Icône personnalisée avec Material Icons */
 .logout-icon::before {
-  content: 'arrow_forward';
-  font-family: 'Material Icons';
+  content: "arrow_forward";
+  font-family: "Material Icons";
 }
 
 /* ============================================================================
@@ -928,7 +936,7 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   }
 
   .logout-icon::before {
-    content: 'logout';
+    content: "logout";
   }
 
   .content {
@@ -941,8 +949,8 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: nowrap;         
-  white-space: nowrap;       
+  flex-wrap: nowrap;
+  white-space: nowrap;
   gap: 10px;
   color: #333;
   padding: 12px 20px;
@@ -952,7 +960,6 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
 }
 
 .page-header h1 {
-  
   margin: 0;
   flex-shrink: 0;
   color: #333;
@@ -960,7 +967,7 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
 
 .page-header .menu-toggle {
   margin-right: 10px;
-  flex-shrink: 0;  
+  flex-shrink: 0;
   background-color: transparent;
   transition: background-color 0.3s ease;
 }
@@ -968,92 +975,87 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
 .page-header .menu-toggle:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
-  
-  .export-button {
-    background-color: #313743;
-    color: white;
-    border-radius: 6px;
-    padding: 8px 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .action-buttons {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .export-button {
-    background: #4caf50;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .add-user-button {
-    background: #007bff;
-    color: white;
-    font-weight: bold;
-    border-radius: 5px;
-    
-  }
-  
-  .mat-icon {
-    vertical-align: middle;
-  }
 
-  
- 
-  .action-buttons {
-    display: flex;
-    gap: 15px;
-  }
-  
+.export-button {
+  background-color: #313743;
+  color: white;
+  border-radius: 6px;
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-  
-  .export-button {
-    background: #28a745;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
-    font-weight: bold;
-  }
-  
-  .add-user-button {
-    background: #007bff;
-    color: white;
-    font-weight: bold;
-    padding: 10px 15px;
-    border-radius: 5px;
-  }
-  
-  .mat-icon {
-    vertical-align: middle;
-    color: #555;
-  }
-      .footer-actions {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      flex-shrink: 0;
-      justify-content: flex-end;
-      margin-right: 0;
-    }
-    
-    .footer-actions .export-button {
-      background-color: #000;
-      color: white;
-      border-radius: 20px;
-      text-transform: none;
-    }
-    
-    .footer-actions .add-user-button {
-      border-radius: 20px;
-      text-transform: none;
-      font-weight: bold;
-    }
-  .controls-container {
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.export-button {
+  background: #4caf50;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.add-user-button {
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.mat-icon {
+  vertical-align: middle;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.export-button {
+  background: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.add-user-button {
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+.mat-icon {
+  vertical-align: middle;
+  color: #555;
+}
+.footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+  justify-content: flex-end;
+  margin-right: 0;
+}
+
+.footer-actions .export-button {
+  background-color: #000;
+  color: white;
+  border-radius: 20px;
+  text-transform: none;
+}
+
+.footer-actions .add-user-button {
+  border-radius: 20px;
+  text-transform: none;
+  font-weight: bold;
+}
+.controls-container {
   width: 100%;
   padding: 10px 0;
   display: flex;
@@ -1082,7 +1084,7 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
 
 .filter-button-custom {
   border-radius: 70px; /* Valeur plus standard */
- padding: 8px 20px; /* Padding plus proportionné */
+  padding: 8px 20px; /* Padding plus proportionné */
   display: inline-flex;
   align-items: center; /* Centrage vertical */
   justify-content: center; /* Centrage horizontal */
@@ -1093,7 +1095,6 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   cursor: pointer;
   width: auto; /* Largeur automatique selon le contenu */
   min-width: 140px;
- 
 }
 :host ::ng-deep .mdc-text-field--outlined {
   --mdc-outlined-text-field-container-shape: 28px;
@@ -1128,7 +1129,7 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   background-color: #f8f9fa;
   border: 1px solid #ccc;
   border-radius: 25px;
- padding: 8px 20px;
+  padding: 8px 20px;
   width: 400px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   font-weight: bold;
@@ -1201,7 +1202,7 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   background-color: transparent;
   border: none;
   cursor: pointer;
-  color: #0E6AF4;
+  color: #0e6af4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1261,7 +1262,7 @@ table.mat-table {
   font-size: 14px;
   color: #333;
   padding: 12px;
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   white-space: nowrap;
 }
 
@@ -1292,6 +1293,34 @@ table.mat-table {
 .mat-cell:last-child {
   padding-right: 12px;
   text-align: right;
+}
+
+/* Styles pour la colonne Actions */
+.actions-cell {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.actions-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+.action-button {
+  min-width: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  margin: 0 2px !important;
+}
+
+.action-button mat-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
 }
 
 /* === Lignes survolées === */
@@ -1338,6 +1367,24 @@ table.mat-table {
   .mat-icon-button {
     padding: 6px;
   }
+
+  /* Responsive pour les boutons d'action */
+  .actions-container {
+    gap: 2px;
+  }
+
+  .action-button {
+    min-width: 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+    margin: 0 1px !important;
+  }
+
+  .action-button mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
 }
 
 /* === Responsive très petits écrans (téléphones < 480px) === */
@@ -1351,6 +1398,24 @@ table.mat-table {
 
   .mat-icon-button mat-icon {
     font-size: 18px;
+  }
+
+  /* Responsive pour les boutons d'action sur très petits écrans */
+  .actions-container {
+    gap: 1px;
+  }
+
+  .action-button {
+    min-width: 32px !important;
+    width: 32px !important;
+    height: 32px !important;
+    margin: 0 !important;
+  }
+
+  .action-button mat-icon {
+    font-size: 14px !important;
+    width: 14px !important;
+    height: 14px !important;
   }
 }
 /* 📦 Wrapper du tableau + pagination */
@@ -1369,12 +1434,20 @@ table.mat-table {
   width: 100%;
   min-width: 1000px; /* facultatif pour scroll horizontal si trop de colonnes */
 }
+.mdc-data-table__header-cell {
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  outline: none;
+  text-align: left;
+  padding-top: 10px;
+}
 
 /* 📄 Cellules d'en-tête */
 .mat-header-cell {
   font-weight: bold;
   font-size: 14px;
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   white-space: nowrap;
 }
 
@@ -1403,7 +1476,8 @@ mat-paginator {
     padding: 8px;
   }
 
-  .mat-header-cell, .mat-cell {
+  .mat-header-cell,
+  .mat-cell {
     font-size: 12px;
     padding: 8px;
   }
@@ -1489,15 +1563,15 @@ mat-paginator {
   align-items: center;
   gap: 10px;
 }
-  .page-header-left h1:hover {
-    color: #1e3a8a;
-  }
-  
-  .page-header-left h1 .title-icon {
-    font-size: 1.5rem;
-    color: #002B7F;
-    transition: color 0.2s ease;
-  }
+.page-header-left h1:hover {
+  color: #1e3a8a;
+}
+
+.page-header-left h1 .title-icon {
+  font-size: 1.5rem;
+  color: #002b7f;
+  transition: color 0.2s ease;
+}
 
 /* ============================================================================
    NOUVELLE ORGANISATION DE LA BARRE D'OUTILS EN DEUX LIGNES
@@ -1584,7 +1658,7 @@ mat-paginator {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  color: #0E6AF4;
+  color: #0e6af4;
   display: flex;
   align-items: center;
   justify-content: center;

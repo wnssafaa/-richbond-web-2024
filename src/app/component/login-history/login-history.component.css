@@ -64,6 +64,157 @@
   margin-bottom: 1rem;
 }
 
+/* Ligne du haut : Barre principale avec actions (toujours visible) */
+.main-toolbar {
+  width: 100%;
+  padding: 16px 0;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.main-toolbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+/* Section gauche : Recherche et Filtre */
+.left-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Section droite : Boutons d'action */
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Préserver le style existant des boutons */
+.right-controls .export-button {
+  background-color: #000;
+  color: white;
+  border-radius: 20px;
+  text-transform: none;
+}
+
+.right-controls .refresh-button {
+  background-color: #0a2681;
+  color: white;
+  border-radius: 20px;
+  text-transform: none;
+  font-weight: bold;
+}
+
+/* Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) */
+.filters-toolbar {
+  width: 100%;
+  padding: 16px 0;
+  margin-bottom: 20px;
+}
+
+.filters-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 0 16px;
+}
+
+.filters-content mat-form-field {
+  min-width: 200px;
+  flex: 1;
+}
+
+.clear-filter-btn {
+  color: #666;
+}
+
+.close-filters {
+  margin-left: auto;
+  color: #666;
+}
+
+/* Responsive styles */
+/* Tablettes */
+@media (max-width: 1024px) {
+  .main-toolbar-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .left-controls,
+  .right-controls {
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .filters-content mat-form-field {
+    min-width: 150px;
+  }
+}
+
+/* Mobiles */
+@media (max-width: 768px) {
+  .main-toolbar {
+    padding: 12px 0;
+  }
+
+  .main-toolbar-content {
+    gap: 12px;
+  }
+
+  .left-controls,
+  .right-controls {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .custom-search-box {
+    width: 100%;
+    max-width: none;
+  }
+
+  .filters-toolbar {
+    padding: 12px 0;
+  }
+
+  .filters-content {
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 12px;
+  }
+
+  .filters-content mat-form-field {
+    min-width: 100%;
+  }
+}
+
+/* Très petits écrans */
+@media (max-width: 480px) {
+  .main-toolbar {
+    padding: 8px 0;
+  }
+
+  .filters-toolbar {
+    padding: 8px 0;
+  }
+
+  .filters-content {
+    padding: 0 8px;
+  }
+}
+
 .controls-container {
   display: flex;
   justify-content: space-between;
@@ -88,46 +239,54 @@
 }
 
 .custom-search-box {
-  position: relative;
-  flex: 1;
-  max-width: 400px;
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  padding: 8px 20px;
+  width: 400px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-weight: bold;
+  margin-left: 0;
 }
 
 .custom-search-box input {
-  width: 100%;
-  padding: 12px 45px 12px 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: border-color 0.2s ease;
-}
-
-.custom-search-box input:focus {
+  border: none;
   outline: none;
-  border-color: #0E6AF4;
-  box-shadow: 0 0 0 2px rgba(14, 106, 244, 0.1);
+  background: transparent;
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  font-weight: bold;
 }
 
 .custom-search-box button {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
   background: none;
   border: none;
-  color: #666;
+  outline: none;
   cursor: pointer;
-  padding: 4px;
+  color: #6c757d;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-search-box button .material-icons {
+  font-size: 20px;
 }
 
 .filter-button-custom {
-  border: 1px solid #ddd;
-  background: white;
-  color: #666;
+  border: 1px solid #ccc;
+  background: #f8f9fa;
+  color: #6c757d;
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: 25px;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-weight: bold;
 }
 
 .filter-button-custom:hover {
@@ -465,6 +624,7 @@ mat-paginator {
   }
   
   .custom-search-box {
+    width: 100%;
     max-width: none;
   }
   

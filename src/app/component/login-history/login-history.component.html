@@ -1,93 +1,156 @@
 <div class="all">
-  <div class="header">
-    <div class="controls-container">
-      <div class="search-filter-container-custom">
-        <div *ngIf="!showFilters" class="search-filter-section" style="display: flex; align-items: center; gap: 1rem; flex-wrap: nowrap;">
-          <div class="custom-search-box">
-            <input 
-              type="text" 
-              placeholder="{{ 'LOGIN_HISTORY.SEARCH_PLACEHOLDER' | translate }}" 
-              [(ngModel)]="searchText"
-              (keyup)="applyFilters()"
+  <!-- Ligne du haut : Barre principale avec actions (toujours visible) -->
+  <div class="main-toolbar">
+    <div class="main-toolbar-content">
+      <!-- Section gauche : Recherche et Filtre -->
+      <div class="left-controls">
+        <div class="custom-search-box">
+          <input
+            type="text"
+            placeholder="{{ 'LOGIN_HISTORY.SEARCH_PLACEHOLDER' | translate }}"
+            [(ngModel)]="searchText"
+            (keyup)="applyFilters()"
+          />
+          <button>
+            <span class="material-icons" style="font-weight: bold"
+              >search</span
             >
-            <button>
-              <span class="material-icons" style="font-weight: bold;">search</span>
-            </button>
-          </div>
-   
-          <button 
-            mat-stroked-button 
-            class="filter-button-custom" 
-            (click)="showFilters = true"
-          >
-            <mat-icon style="color: #8192A6; font-size: 18px;">filter_list</mat-icon> 
-            <span style="color: #8192A6;">{{ 'ACTIONS.FILTER' | translate }}</span>
           </button>
         </div>
 
-        <!-- Active Filters Section -->
-        <div class="active-filters-section" style="display: flex;">
-          <div *ngIf="showFilters" class="filter-controls">
-            <!-- Filtre par rôle -->
-            <mat-form-field appearance="outline">
-              <mat-label>{{ 'USERS.ROLE' | translate }}</mat-label>
-              <mat-select [(ngModel)]="selectedRole" (selectionChange)="applyFilters()">
-                <mat-option value="">{{ 'COMMON.ALL' | translate }}</mat-option>
-                <mat-option *ngFor="let role of roles" [value]="role">
-                  {{ role }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+        <button
+          mat-stroked-button
+          class="filter-button-custom"
+          (click)="showFilters = !showFilters"
+        >
+          <mat-icon style="color: #8192a6; font-size: 18px"
+            >filter_list</mat-icon
+          >
+          <span style="color: #8192a6">{{
+            "ACTIONS.FILTER" | translate
+          }}</span>
+        </button>
+      </div>
 
-            <!-- Filtre par statut -->
-            <mat-form-field appearance="outline">
-              <mat-label>{{ 'USERS.STATUS' | translate }}</mat-label>
-              <mat-select [(ngModel)]="selectedStatus" (selectionChange)="applyFilters()">
-                <mat-option value="">{{ 'COMMON.ALL' | translate }}</mat-option>
-                <mat-option *ngFor="let status of statuses" [value]="status">
-                  {{ status }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+      <!-- Section droite : Boutons d'action -->
+      <div class="right-controls">
+        <button
+          mat-raised-button
+          class="export-button"
+          (click)="exportToExcel()"
+        >
+          <span>{{ "ACTIONS.EXPORT" | translate }}</span>
+          <mat-icon>file_download</mat-icon>
+        </button>
 
-            <!-- Filtre par plage de dates -->
-            <mat-form-field appearance="outline">
-              <mat-label>Date de début</mat-label>
-              <input 
-                matInput 
-                type="date" 
-                [(ngModel)]="selectedDateRange.start"
-                (ngModelChange)="applyFilters()"
-              >
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Date de fin</mat-label>
-              <input 
-                matInput 
-                type="date" 
-                [(ngModel)]="selectedDateRange.end"
-                (ngModelChange)="applyFilters()"
-              >
-            </mat-form-field>
-
-            <button mat-button (click)="showFilters = false" class="close-filters">
-              <mat-icon>close</mat-icon>
-            </button>
-          </div>
-        </div>
+        <button
+          mat-raised-button
+          class="refresh-button"
+          (click)="refresh()"
+        >
+          <span>{{ "COMMON.REFRESH" | translate }}</span>
+          <mat-icon>refresh</mat-icon>
+        </button>
       </div>
     </div>
+  </div>
 
-    <div class="footer-actions">
-      <button mat-raised-button class="export-button" (click)="exportToExcel()">
-        <span>{{ 'ACTIONS.EXPORT' | translate }}</span>
-        <mat-icon>file_download</mat-icon>
-      </button>
-      
-      <button mat-raised-button class="refresh-button" (click)="refresh()">
-        <span>{{ 'COMMON.REFRESH' | translate }}</span>
-        <mat-icon>refresh</mat-icon>
+  <!-- Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) -->
+  <div *ngIf="showFilters" class="filters-toolbar">
+    <div class="filters-content">
+      <!-- Filtre par rôle -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'USERS.ROLE' | translate }}</mat-label>
+        <mat-select [(ngModel)]="selectedRole" (selectionChange)="applyFilters()">
+          <mat-option value="">{{ 'COMMON.ALL' | translate }}</mat-option>
+          <mat-option *ngFor="let role of roles" [value]="role">
+            {{ role }}
+          </mat-option>
+        </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="selectedRole = ''; applyFilters()"
+          class="clear-filter-btn"
+          tabindex="-1"
+          aria-label="Effacer le filtre rôle"
+          *ngIf="selectedRole"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <!-- Filtre par statut -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'USERS.STATUS' | translate }}</mat-label>
+        <mat-select [(ngModel)]="selectedStatus" (selectionChange)="applyFilters()">
+          <mat-option value="">{{ 'COMMON.ALL' | translate }}</mat-option>
+          <mat-option *ngFor="let status of statuses" [value]="status">
+            {{ status }}
+          </mat-option>
+        </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="selectedStatus = ''; applyFilters()"
+          class="clear-filter-btn"
+          tabindex="-1"
+          aria-label="Effacer le filtre statut"
+          *ngIf="selectedStatus"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <!-- Filtre par plage de dates -->
+      <mat-form-field appearance="outline">
+        <mat-label>Date de début</mat-label>
+        <input 
+          matInput 
+          type="date" 
+          [ngModel]="selectedDateRange.start ? selectedDateRange.start.toISOString().split('T')[0] : ''"
+          (ngModelChange)="onStartDateChange($event)"
+        >
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="selectedDateRange.start = null; applyFilters()"
+          class="clear-filter-btn"
+          tabindex="-1"
+          aria-label="Effacer le filtre date début"
+          *ngIf="selectedDateRange.start"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Date de fin</mat-label>
+        <input 
+          matInput 
+          type="date" 
+          [ngModel]="selectedDateRange.end ? selectedDateRange.end.toISOString().split('T')[0] : ''"
+          (ngModelChange)="onEndDateChange($event)"
+        >
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="selectedDateRange.end = null; applyFilters()"
+          class="clear-filter-btn"
+          tabindex="-1"
+          aria-label="Effacer le filtre date fin"
+          *ngIf="selectedDateRange.end"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button
+        mat-button
+        (click)="showFilters = false"
+        class="close-filters"
+      >
+        <mat-icon>close</mat-icon>
       </button>
     </div>
   </div>

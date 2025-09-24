@@ -1,339 +1,577 @@
 <div class="header">
   <img src="assets/logo.png" alt="Richbond Logo" class="logo" />
   <div class="header-icons">
-    <mat-icon style=" color: #0E6AF4 !important;">notifications_none</mat-icon>
-    
+    <mat-icon style="color: #0e6af4 !important">notifications_none</mat-icon>
+
     <!-- Bouton de changement de langue -->
     <button mat-button [matMenuTriggerFor]="languageMenu" class="lang-button">
-      <img [src]="'assets/' + (currentLanguage === 'fr' ? 'OIP.webp' : 'usa.png')" 
-           alt="Language" 
-           class="lang-icon" />
+      <img
+        [src]="'assets/' + (currentLanguage === 'fr' ? 'OIP.webp' : 'usa.png')"
+        alt="Language"
+        class="lang-icon"
+      />
       <span>{{ currentLanguage | uppercase }}</span>
       <mat-icon>arrow_drop_down</mat-icon>
     </button>
-    
+
     <mat-menu #languageMenu="matMenu">
       <button mat-menu-item (click)="changeLanguage('fr')">
-        <img src="assets/OIP.webp" alt="Français" class="lang-option-icon">
+        <img src="assets/OIP.webp" alt="Français" class="lang-option-icon" />
         <span>FR</span>
       </button>
       <button mat-menu-item (click)="changeLanguage('en')">
-        <img src="assets/usa.png" alt="English" class="lang-option-icon">
+        <img src="assets/usa.png" alt="English" class="lang-option-icon" />
         <span>EN</span>
       </button>
     </mat-menu>
-    
-    <mat-icon style=" color: #0E6AF4 !important;">settings</mat-icon>
+
+    <mat-icon style="color: #0e6af4 !important">settings</mat-icon>
   </div>
 </div>
 <div class="container">
-    <div class="example-container">
+  <div class="example-container">
     <!-- ✅ SIDEBAR NAVIGATION -->
-      <div class="sidebar" [class.sidebar-collapsed]="!menuOpen">
+    <div class="sidebar" [class.sidebar-collapsed]="!menuOpen">
       <div class="user-profile" [class.user-profile-collapsed]="!menuOpen">
-  <!-- Image dynamique : avatarUrl ou imagePath -->
-  <img 
-    [src]="avatarUrl" 
-    alt="Avatar" 
-    width="100" 
-    height="100" 
-    style="border-radius:50%;" />
-  <div class="user-info" [class.user-info-hidden]="!menuOpen">
+        <!-- Image dynamique : avatarUrl ou imagePath -->
+        <img
+          [src]="avatarUrl"
+          alt="Avatar"
+          width="100"
+          height="100"
+          style="border-radius: 50%"
+        />
+        <div class="user-info" [class.user-info-hidden]="!menuOpen">
           <strong>{{ username }}</strong>
           <p>{{ role }}</p>
-    
-    <!-- Logo de l'entreprise dans la section utilisateur -->
 
+          <!-- Logo de l'entreprise dans la section utilisateur -->
         </div>
       </div>
 
       <mat-nav-list [class.nav-list-collapsed]="!menuOpen">
-        <a mat-list-item routerLink="/Dashbord" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen" 
-           [matTooltip]="!menuOpen ? ('COMMON.DASHBOARD' | translate) : ''" matTooltipPosition="right">
+        <a
+          mat-list-item
+          routerLink="/Dashbord"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.DASHBOARD' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>dashboard</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.DASHBOARD' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.DASHBOARD" | translate
+          }}</span>
         </a>
-        
+
         <!-- <a mat-list-item (click)="userMenuOpen = !userMenuOpen" [class.nav-item-collapsed]="!menuOpen"
            [matTooltip]="!menuOpen ? ('COMMON.USERS' | translate) : ''" matTooltipPosition="right">
           <mat-icon matListItemIcon>people</mat-icon>
           <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.USERS' | translate }}</span>
           <mat-icon style="margin-left:auto;" [class.text-hidden]="!menuOpen">{{ userMenuOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
         </a> -->
-        
-        <a  mat-list-item routerLink="/users" routerLinkActive="active-link"  [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''" matTooltipPosition="right">
-          <mat-icon matListItemIcon>group</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">Tous les utilisateurs</span>
-        </a>
-           <a mat-list-item routerLink="/login-history" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('LOGIN_HISTORY.TITLE' | translate) : ''" matTooltipPosition="right">
+        <a
+          mat-list-item
+          routerLink="/login-history"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('LOGIN_HISTORY.TITLE' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>history</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'LOGIN_HISTORY.TITLE' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "LOGIN_HISTORY.TITLE" | translate
+          }}</span>
         </a>
-        <a  mat-list-item routerLink="/merchendiseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.MERCHANDISERS' | translate) : ''" matTooltipPosition="right">
+        <a
+          mat-list-item
+          routerLink="/users"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>group</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen"
+            >Tous les utilisateurs</span
+          >
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/merchendiseur"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.MERCHANDISERS' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>storefront</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.MERCHANDISERS' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.MERCHANDISERS" | translate
+          }}</span>
         </a>
-        
-        <a  mat-list-item routerLink="/superviseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.SUPERVISORS' | translate) : ''" matTooltipPosition="right">
+
+        <a
+          mat-list-item
+          routerLink="/superviseur"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.SUPERVISORS' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>supervisor_account</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SUPERVISORS' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.SUPERVISORS" | translate
+          }}</span>
         </a>
-        
-        <a mat-list-item routerLink="/magasins" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.STORES' | translate) : ''" matTooltipPosition="right">
+
+        <a
+          mat-list-item
+          routerLink="/magasins"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.STORES' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>store</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.STORES' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.STORES" | translate
+          }}</span>
         </a>
-        
-        <a mat-list-item routerLink="/planification" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.PLANNING' | translate) : ''" matTooltipPosition="right">
+
+        <a
+          mat-list-item
+          routerLink="/planification"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.PLANNING' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>event_note</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PLANNING' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.PLANNING" | translate
+          }}</span>
         </a>
-        
-        <a mat-list-item routerLink="/gestion-visites" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.VISIT' | translate) : ''" matTooltipPosition="right">
+
+        <a
+          mat-list-item
+          routerLink="/gestion-visites"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.VISIT' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>location_on</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.VISIT' | translate}}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.VISIT" | translate
+          }}</span>
         </a>
 
-        <a mat-list-item routerLink="/Produit" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.PRODUCTS' | translate) : ''" matTooltipPosition="right">
+        <a
+          mat-list-item
+          routerLink="/Produit"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.PRODUCTS' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>inventory</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PRODUCTS' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.PRODUCTS" | translate
+          }}</span>
         </a>
-        
-        <a mat-list-item routerLink="/parametre" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.SETTINGS' | translate) : ''" matTooltipPosition="right">
+
+        <a
+          mat-list-item
+          routerLink="/parametre"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.SETTINGS' | translate) : ''"
+          matTooltipPosition="right"
+        >
           <mat-icon matListItemIcon>settings</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SETTINGS' | translate }}</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.SETTINGS" | translate
+          }}</span>
         </a>
 
- 
-
-      
-          <a mat-list-item routerLink="/help" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
-             [matTooltip]="!menuOpen ? ('COMMON.HELP' | translate) : ''" matTooltipPosition="right">
-            <mat-icon matListItemIcon>help_outline</mat-icon>
-            <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.HELP' | translate }}</span>
-          </a>
-          <a mat-list-item (click)="openLogoutDialog()" [class.nav-item-collapsed]="!menuOpen"
-             [matTooltip]="!menuOpen ? ('AUTH.LOGOUT' | translate) : ''" matTooltipPosition="right">
-            <mat-icon matListItemIcon style="color: #ff0022;">logout</mat-icon>
-            <span matListItemTitle style="color: #ff0022;" [class.text-hidden]="!menuOpen">{{ 'AUTH.LOGOUT' | translate }}</span>
-          </a>
-        
+        <a
+          mat-list-item
+          routerLink="/help"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('COMMON.HELP' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>help_outline</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "COMMON.HELP" | translate
+          }}</span>
+        </a>
+        <a
+          mat-list-item
+          (click)="openLogoutDialog()"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? ('AUTH.LOGOUT' | translate) : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon style="color: #ff0022">logout</mat-icon>
+          <span
+            matListItemTitle
+            style="color: #ff0022"
+            [class.text-hidden]="!menuOpen"
+            >{{ "AUTH.LOGOUT" | translate }}</span
+          >
+        </a>
       </mat-nav-list>
-        </div>
-  
-      <div class="content">
+    </div>
+
+    <div class="content">
       <div class="page-header">
         <div class="page-header-left">
           <button mat-icon-button (click)="toggleMenu()" class="menu-toggle">
-            <mat-icon *ngIf="!menuOpen" style="color: #333;margin-bottom: 15px;">keyboard_arrow_left</mat-icon>
-            <mat-icon *ngIf="menuOpen" style="color: #333;margin-bottom: 15px;">keyboard_arrow_right</mat-icon>
+            <mat-icon *ngIf="!menuOpen" style="color: #333; margin-bottom: 15px"
+              >keyboard_arrow_left</mat-icon
+            >
+            <mat-icon *ngIf="menuOpen" style="color: #333; margin-bottom: 15px"
+              >keyboard_arrow_right</mat-icon
+            >
           </button>
-          <h1>{{ 'VISITS.TITLE' | translate }}</h1>
+          <h1>{{ "VISITS.TITLE" | translate }}</h1>
         </div>
-     </div>
+      </div>
 
       <div class="all">
-        <div class="header">
-          <div class="controls-container">
-            <div class="search-filter-container-custom">
-              <div *ngIf="!showFilters" class="search-filter-section" style="display: flex; align-items: center; gap: 1rem; flex-wrap: nowrap;">
-                <div class="custom-search-box">
-                  <input 
-                    type="text" 
-                    placeholder="{{ 'ACTIONS.SEARCH' | translate }}" 
-                    [(ngModel)]="searchText"
-                    (keyup)="onSearchChange()"
+        <!-- Ligne du haut : Barre principale avec actions (toujours visible) -->
+        <div class="main-toolbar">
+          <div class="main-toolbar-content">
+            <!-- Section gauche : Recherche et Filtre -->
+            <div class="left-controls">
+              <div class="custom-search-box">
+                <input
+                  type="text"
+                  placeholder="{{ 'ACTIONS.SEARCH' | translate }}"
+                  [(ngModel)]="searchText"
+                  (keyup)="onSearchChange()"
+                />
+                <button>
+                  <span class="material-icons" style="font-weight: bold"
+                    >search</span
                   >
-                  <button>
-                    <span class="material-icons" style="font-weight: bold;">search</span>
-                  </button>
-                </div>
-         
-                <button 
-                  mat-stroked-button 
-                  class="filter-button-custom" 
-                  (click)="showFilters = true"
-                >
-                  <mat-icon style="color: #8192A6; font-size: 18px;">filter_list</mat-icon> 
-                  <span style="color: #8192A6;">{{ 'ACTIONS.FILTER' | translate }}</span>
                 </button>
               </div>
 
-              <!-- Active Filters Section -->
-              <div class="active-filters-section" style="display: flex;">
-                <div *ngIf="showFilters" class="filter-controls">
-                  <!-- Filtre par magasin -->
-                  <mat-form-field appearance="outline">
-                    <mat-label>Magasin</mat-label>
-                    <mat-select [(ngModel)]="selectedMagasin" (selectionChange)="filterByMagasin()">
-                      <mat-option value="">Tous les magasins</mat-option>
-                      <mat-option *ngFor="let magasin of magasinsOptions" [value]="magasin.value">{{ magasin.label }}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-
-                  <!-- Filtre par merchandiseur -->
-                  <mat-form-field appearance="outline">
-                    <mat-label>Merchandiseur</mat-label>
-                    <mat-select [(ngModel)]="selectedMerchandiseur" (selectionChange)="filterByMerchandiseur()">
-                      <mat-option value="">Tous les merchandiseurs</mat-option>
-                      <mat-option *ngFor="let merch of merchandiseursOptions" [value]="merch.value">{{ merch.label }}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-
-                  <!-- Filtre par plage de dates -->
-                  <mat-form-field appearance="outline">
-                    <mat-label>Date de début</mat-label>
-                    <input matInput [matDatepicker]="startPicker" [(ngModel)]="selectedDateRange.start" 
-                           (dateChange)="onDateRangeChange()">
-                    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-                    <mat-datepicker #startPicker></mat-datepicker>
-                  </mat-form-field>
-
-                  <mat-form-field appearance="outline">
-                    <mat-label>Date de fin</mat-label>
-                    <input matInput [matDatepicker]="endPicker" [(ngModel)]="selectedDateRange.end" 
-                           (dateChange)="onDateRangeChange()">
-                    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-                    <mat-datepicker #endPicker></mat-datepicker>
-                  </mat-form-field>
-
-                  <button mat-button (click)="showFilters = false" class="close-filters">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </div>
-              </div>
-              
+              <button
+                mat-stroked-button
+                class="filter-button-custom"
+                (click)="showFilters = !showFilters"
+              >
+                <mat-icon style="color: #8192a6; font-size: 18px"
+                  >filter_list</mat-icon
+                >
+                <span style="color: #8192a6">{{
+                  "ACTIONS.FILTER" | translate
+                }}</span>
+              </button>
             </div>
-               <button mat-raised-button class="export-button" (click)="exportToExcel()" style=" background-color: #313743;
-    color: white;
-    
-     border-radius: 70px; /* Valeur plus standard */
-  padding: 8px 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;">
-            <span>{{ 'ACTIONS.EXPORT' | translate }}</span>
-              <mat-icon style="color:white">file_download</mat-icon>
-          </button>
-          </div>
 
-          
+            <!-- Section droite : Boutons d'action -->
+            <div class="right-controls">
+              <button
+                mat-raised-button
+                class="export-button"
+                (click)="exportToExcel()"
+              >
+                <span>{{ "ACTIONS.EXPORT" | translate }}</span>
+                <mat-icon>file_download</mat-icon>
+              </button>
+            </div>
+          </div>
         </div>
 
-      
+        <!-- Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) -->
+        <div *ngIf="showFilters" class="filters-toolbar">
+          <div class="filters-content">
+            <!-- Filtre par magasin -->
+            <mat-form-field appearance="outline">
+              <mat-label>Magasin</mat-label>
+              <mat-select
+                [(ngModel)]="selectedMagasin"
+                (selectionChange)="filterByMagasin()"
+              >
+                <mat-option value="">Tous les magasins</mat-option>
+                <mat-option
+                  *ngFor="let magasin of magasinsOptions"
+                  [value]="magasin.value"
+                  >{{ magasin.label }}</mat-option
+                >
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedMagasin = null; filterByMagasin()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre magasin"
+                *ngIf="selectedMagasin"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
 
-        
-        
-            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table" *ngIf="!isLoading">
-             
-              <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'VISITS.COLUMNS.ID' | translate }}</th>
-                <td mat-cell *matCellDef="let visit">{{ visit.id }}</td>
-              </ng-container>
+            <!-- Filtre par merchandiseur -->
+            <mat-form-field appearance="outline">
+              <mat-label>Merchandiseur</mat-label>
+              <mat-select
+                [(ngModel)]="selectedMerchandiseur"
+                (selectionChange)="filterByMerchandiseur()"
+              >
+                <mat-option value="">Tous les merchandiseurs</mat-option>
+                <mat-option
+                  *ngFor="let merch of merchandiseursOptions"
+                  [value]="merch.value"
+                  >{{ merch.label }}</mat-option
+                >
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedMerchandiseur = null; filterByMerchandiseur()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre merchandiseur"
+                *ngIf="selectedMerchandiseur"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
 
-              <!-- Arrival Time -->
-              <ng-container matColumnDef="heureArrivee">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'VISITS.COLUMNS.HEURE_ARRIVEE' | translate }}</th>
-                <td mat-cell *matCellDef="let visit">{{ visit.heureArrivee | date:'short' }}</td>
-              </ng-container>
+            <!-- Filtre par plage de dates -->
+            <mat-form-field appearance="outline">
+              <mat-label>Date de début</mat-label>
+              <input
+                matInput
+                [matDatepicker]="startPicker"
+                [(ngModel)]="selectedDateRange.start"
+                (dateChange)="onDateRangeChange()"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="startPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedDateRange.start = null; onDateRangeChange()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre date début"
+                *ngIf="selectedDateRange.start"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
 
-              <!-- Departure Time -->
-              <ng-container matColumnDef="heureDepart">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'VISITS.COLUMNS.HEURE_DEPART' | translate }}</th>
-                <td mat-cell *matCellDef="let visit">{{ visit.heureDepart | date:'short' }}</td>
-              </ng-container>
+            <mat-form-field appearance="outline">
+              <mat-label>Date de fin</mat-label>
+              <input
+                matInput
+                [matDatepicker]="endPicker"
+                [(ngModel)]="selectedDateRange.end"
+                (dateChange)="onDateRangeChange()"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="endPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #endPicker></mat-datepicker>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedDateRange.end = null; onDateRangeChange()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre date fin"
+                *ngIf="selectedDateRange.end"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
 
-              <!-- Facings -->
-              <ng-container matColumnDef="nombreFacings">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'VISITS.COLUMNS.NOMBRE_FACINGS' | translate }}</th>
-                <td mat-cell *matCellDef="let visit">{{ visit.nombreFacings }}</td>
-              </ng-container>
+            <button
+              mat-button
+              (click)="showFilters = false"
+              class="close-filters"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
 
-              <!-- Normal Price -->
-              <ng-container matColumnDef="prixNormal">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'VISITS.COLUMNS.PRIX_NORMAL' | translate }}</th>
-                <td mat-cell *matCellDef="let visit">{{ visit.prixNormal }} MAD</td>
-              </ng-container>
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          matSort
+          class="mat-elevation-z8 full-width-table"
+          *ngIf="!isLoading"
+        >
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "VISITS.COLUMNS.ID" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let visit">{{ visit.id }}</td>
+          </ng-container>
 
-              <!-- Promo Price -->
-              <!-- <ng-container matColumnDef="prixPromotionnel">
+          <!-- Arrival Time -->
+          <ng-container matColumnDef="heureArrivee">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "VISITS.COLUMNS.HEURE_ARRIVEE" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let visit">
+              {{ visit.heureArrivee | date : "short" }}
+            </td>
+          </ng-container>
+
+          <!-- Departure Time -->
+          <ng-container matColumnDef="heureDepart">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "VISITS.COLUMNS.HEURE_DEPART" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let visit">
+              {{ visit.heureDepart | date : "short" }}
+            </td>
+          </ng-container>
+
+          <!-- Facings -->
+          <ng-container matColumnDef="nombreFacings">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "VISITS.COLUMNS.NOMBRE_FACINGS" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let visit">{{ visit.nombreFacings }}</td>
+          </ng-container>
+
+          <!-- Normal Price -->
+          <ng-container matColumnDef="prixNormal">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "VISITS.COLUMNS.PRIX_NORMAL" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let visit">{{ visit.prixNormal }} MAD</td>
+          </ng-container>
+
+          <!-- Promo Price -->
+          <!-- <ng-container matColumnDef="prixPromotionnel">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'VISITS.COLUMNS.PRIX_PROMOTIONNEL' | translate }}</th>
                 <td mat-cell *matCellDef="let visit">{{ visit.prixPromotionnel }} MAD</td>
               </ng-container> -->
 
-              <!-- Merchandiseur Column -->
-              <ng-container matColumnDef="merchandiser">
-                <th mat-header-cell *matHeaderCellDef>Merchandiseur</th>
-                <td mat-cell *matCellDef="let visit">
-                  <div style="display: flex; align-items: center; gap: 8px;">
-                    <img [src]="visit.planning?.merchandiser?.imagePath ? 
-                      (visit.planning.merchandiser.imagePath.startsWith('data:image') ? visit.planning.merchandiser.imagePath : 'http://localhost:8080/uploads/' + visit.planning.merchandiser.imagePath) : 
-                      'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNFNUU3RUIiLz4KPHBhdGggZD0iTTE2IDEwQzE4LjIwOTEgMTAgMjAgMTEuNzkwOSAyMCAxNEMyMCAxNi4yMDkxIDE4LjIwOTEgMTggMTYgMThDMTMuNzkwOSAxOCAxMiAxNi4yMDkxIDEyIDE0QzEyIDExLjc5MDkgMTMuNzkwOSAxMCAxNiAxMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTE2IDIwQzEyLjY4NjMgMjAgMTAuMDAwMSAyMi42ODYzIDEwLjAwMDEgMjZIMjIuMDAwMUMyMi4wMDAxIDIyLjY4NjMgMTkuMzEzNyAyMCAxNiAyMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+'" 
-                      alt="Avatar" 
-                      style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;"
-                      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNFNUU3RUIiLz4KPHBhdGggZD0iTTE2IDEwQzE4LjIwOTEgMTAgMjAgMTEuNzkwOSAyMCAxNEMyMCAxNi4yMDkxIDE4LjIwOTEgMTggMTYgMThDMTMuNzkwOSAxOCAxMiAxNi4yMDkxIDEyIDE0QzEyIDExLjc5MDkgMTMuNzkwOSAxMCAxNiAxMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTE2IDIwQzEyLjY4NjMgMjAgMTAuMDAwMSAyMi42ODYzIDEwLjAwMDEgMjZIMjIuMDAwMUMyMi4wMDAxIDIyLjY4NjMgMTkuMzEzNyAyMCAxNiAyMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+'">
-                    <div>
-                      <div style="font-weight: 600; color: #333;">{{ visit.planning?.merchandiser?.nom || 'N/A' }} {{ visit.planning?.merchandiser?.prenom || '' }}</div>
-                      <div style="font-size: 12px; color: #666;">{{ visit.planning?.merchandiser?.email || '' }}</div>
-                    </div>
+          <!-- Merchandiseur Column -->
+          <ng-container matColumnDef="merchandiser">
+            <th mat-header-cell *matHeaderCellDef>Merchandiseur</th>
+            <td mat-cell *matCellDef="let visit">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <img
+                  [src]="
+                    visit.planning?.merchandiser?.imagePath
+                      ? visit.planning.merchandiser.imagePath.startsWith(
+                          'data:image'
+                        )
+                        ? visit.planning.merchandiser.imagePath
+                        : 'http://localhost:8080/uploads/' +
+                          visit.planning.merchandiser.imagePath
+                      : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNFNUU3RUIiLz4KPHBhdGggZD0iTTE2IDEwQzE4LjIwOTEgMTAgMjAgMTEuNzkwOSAyMCAxNEMyMCAxNi4yMDkxIDE4LjIwOTEgMTggMTYgMThDMTMuNzkwOSAxOCAxMiAxNi4yMDkxIDEyIDE0QzEyIDExLjc5MDkgMTMuNzkwOSAxMCAxNiAxMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTE2IDIwQzEyLjY4NjMgMjAgMTAuMDAwMSAyMi42ODYzIDEwLjAwMDEgMjZIMjIuMDAwMUMyMi4wMDAxIDIyLjY4NjMgMTkuMzEzNyAyMCAxNiAyMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+'
+                  "
+                  alt="Avatar"
+                  style="
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                  "
+                  onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNFNUU3RUIiLz4KPHBhdGggZD0iTTE2IDEwQzE4LjIwOTEgMTAgMjAgMTEuNzkwOSAyMCAxNEMyMCAxNi4yMDkxIDE4LjIwOTEgMTggMTYgMThDMTMuNzkwOSAxOCAxMiAxNi4yMDkxIDEyIDE0QzEyIDExLjc5MDkgMTMuNzkwOSAxMCAxNiAxMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTE2IDIwQzEyLjY4NjMgMjAgMTAuMDAwMSAyMi42ODYzIDEwLjAwMDEgMjZIMjIuMDAwMUMyMi4wMDAxIDIyLjY4NjMgMTkuMzEzNyAyMCAxNiAyMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+'"
+                />
+                <div>
+                  <div style="font-weight: 600; color: #333">
+                    {{ visit.planning?.merchandiser?.nom || "N/A" }}
+                    {{ visit.planning?.merchandiser?.prenom || "" }}
                   </div>
-                </td>
-              </ng-container>
-
-              <!-- Magasin Column -->
-              <ng-container matColumnDef="magasin">
-                <th mat-header-cell *matHeaderCellDef>Magasin</th>
-                <td mat-cell *matCellDef="let visit">
-                  <div style="display: flex; flex-direction: column;">
-                    <span style="font-weight: 600; color: #333;">{{ visit.planning?.magasin?.nom || 'N/A' }}</span>
-                    <span style="font-size: 12px; color: #666;">{{ visit.planning?.magasin?.adresse || '' }}</span>
+                  <div style="font-size: 12px; color: #666">
+                    {{ visit.planning?.merchandiser?.email || "" }}
                   </div>
-                </td>
-              </ng-container>
+                </div>
+              </div>
+            </td>
+          </ng-container>
 
-              <!-- Images Column -->
-              <ng-container matColumnDef="images">
-                <th mat-header-cell *matHeaderCellDef>{{ 'VISITS.COLUMNS.IMAGES' | translate }}</th>
-                <td mat-cell *matCellDef="let visit">
-                  <div class="image-gallery">
-                    <span *ngIf="visit.images?.length" class="image-count-display">
-                      {{ visit.images.length }} photo(s)
-                    </span>
-                    <span *ngIf="!visit.images?.length" class="no-images">-</span>
-                  </div>
-                </td>
-              </ng-container>
+          <!-- Magasin Column -->
+          <ng-container matColumnDef="magasin">
+            <th mat-header-cell *matHeaderCellDef>Magasin</th>
+            <td mat-cell *matCellDef="let visit">
+              <div style="display: flex; flex-direction: column">
+                <span style="font-weight: 600; color: #333">{{
+                  visit.planning?.magasin?.nom || "N/A"
+                }}</span>
+                <span style="font-size: 12px; color: #666">{{
+                  visit.planning?.magasin?.adresse || ""
+                }}</span>
+              </div>
+            </td>
+          </ng-container>
 
-              <!-- Actions -->
-              <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>{{ 'VISITS.ACTIONS' | translate }}</th>
-                <td mat-cell *matCellDef="let visit">
-                  <button mat-icon-button color="primary" [matTooltip]="'ACTIONS.EDIT' | translate" (click)="editVisit(visit); $event.stopPropagation()">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button mat-icon-button><mat-icon>visibility</mat-icon></button>
-                  <button mat-icon-button color="warn" [matTooltip]="'ACTIONS.DELETE' | translate" (click)="deleteVisit(visit); $event.stopPropagation()">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </ng-container>
+          <!-- Images Column -->
+          <ng-container matColumnDef="images">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ "VISITS.COLUMNS.IMAGES" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let visit">
+              <div class="image-gallery">
+                <span *ngIf="visit.images?.length" class="image-count-display">
+                  {{ visit.images.length }} photo(s)
+                </span>
+                <span *ngIf="!visit.images?.length" class="no-images">-</span>
+              </div>
+            </td>
+          </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openVisitDetail(row)"></tr>
-            </table>
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ "VISITS.ACTIONS" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let visit">
+              <button
+                mat-icon-button
+                color="primary"
+                [matTooltip]="'ACTIONS.EDIT' | translate"
+                (click)="editVisit(visit); $event.stopPropagation()"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button><mat-icon>visibility</mat-icon></button>
+              <button
+                mat-icon-button
+                color="warn"
+                [matTooltip]="'ACTIONS.DELETE' | translate"
+                (click)="deleteVisit(visit); $event.stopPropagation()"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
 
-            <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
-          </div>
-        </div>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="openVisitDetail(row)"
+          ></tr>
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 25]"
+          showFirstLastButtons
+        ></mat-paginator>
       </div>
-      </div>
-
+    </div>
+  </div>
+</div>

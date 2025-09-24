@@ -595,4 +595,11 @@ editVisit(visit: VisitDTO) {
         this.router.navigate(['/visit-detail', visit.id]);
       }
     }
+
+    /**
+     * Rafraîchit les données
+     */
+    refresh(): void {
+      this.loadVisits();
+    }
 }
