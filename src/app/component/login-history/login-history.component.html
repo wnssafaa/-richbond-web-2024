@@ -12,9 +12,7 @@
             (keyup)="applyFilters()"
           />
           <button>
-            <span class="material-icons" style="font-weight: bold"
-              >search</span
-            >
+            <span class="material-icons" style="font-weight: bold">search</span>
           </button>
         </div>
 
@@ -26,9 +24,7 @@
           <mat-icon style="color: #8192a6; font-size: 18px"
             >filter_list</mat-icon
           >
-          <span style="color: #8192a6">{{
-            "ACTIONS.FILTER" | translate
-          }}</span>
+          <span style="color: #8192a6">{{ "ACTIONS.FILTER" | translate }}</span>
         </button>
       </div>
 
@@ -38,16 +34,13 @@
           mat-raised-button
           class="export-button"
           (click)="exportToExcel()"
+          style="background-color: #000000; color: white; margin-right: 8px"
         >
-          <span>{{ "ACTIONS.EXPORT" | translate }}</span>
+          <span>Export </span>
           <mat-icon>file_download</mat-icon>
         </button>
 
-        <button
-          mat-raised-button
-          class="refresh-button"
-          (click)="refresh()"
-        >
+        <button mat-raised-button class="refresh-button" (click)="refresh()">
           <span>{{ "COMMON.REFRESH" | translate }}</span>
           <mat-icon>refresh</mat-icon>
         </button>
@@ -60,9 +53,12 @@
     <div class="filters-content">
       <!-- Filtre par rôle -->
       <mat-form-field appearance="outline">
-        <mat-label>{{ 'USERS.ROLE' | translate }}</mat-label>
-        <mat-select [(ngModel)]="selectedRole" (selectionChange)="applyFilters()">
-          <mat-option value="">{{ 'COMMON.ALL' | translate }}</mat-option>
+        <mat-label>{{ "USERS.ROLE" | translate }}</mat-label>
+        <mat-select
+          [(ngModel)]="selectedRole"
+          (selectionChange)="applyFilters()"
+        >
+          <mat-option value="">{{ "COMMON.ALL" | translate }}</mat-option>
           <mat-option *ngFor="let role of roles" [value]="role">
             {{ role }}
           </mat-option>
@@ -82,9 +78,12 @@
 
       <!-- Filtre par statut -->
       <mat-form-field appearance="outline">
-        <mat-label>{{ 'USERS.STATUS' | translate }}</mat-label>
-        <mat-select [(ngModel)]="selectedStatus" (selectionChange)="applyFilters()">
-          <mat-option value="">{{ 'COMMON.ALL' | translate }}</mat-option>
+        <mat-label>{{ "USERS.STATUS" | translate }}</mat-label>
+        <mat-select
+          [(ngModel)]="selectedStatus"
+          (selectionChange)="applyFilters()"
+        >
+          <mat-option value="">{{ "COMMON.ALL" | translate }}</mat-option>
           <mat-option *ngFor="let status of statuses" [value]="status">
             {{ status }}
           </mat-option>
@@ -105,12 +104,16 @@
       <!-- Filtre par plage de dates -->
       <mat-form-field appearance="outline">
         <mat-label>Date de début</mat-label>
-        <input 
-          matInput 
-          type="date" 
-          [ngModel]="selectedDateRange.start ? selectedDateRange.start.toISOString().split('T')[0] : ''"
+        <input
+          matInput
+          type="date"
+          [ngModel]="
+            selectedDateRange.start
+              ? selectedDateRange.start.toISOString().split('T')[0]
+              : ''
+          "
           (ngModelChange)="onStartDateChange($event)"
-        >
+        />
         <button
           mat-icon-button
           matSuffix
@@ -126,12 +129,16 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Date de fin</mat-label>
-        <input 
-          matInput 
-          type="date" 
-          [ngModel]="selectedDateRange.end ? selectedDateRange.end.toISOString().split('T')[0] : ''"
+        <input
+          matInput
+          type="date"
+          [ngModel]="
+            selectedDateRange.end
+              ? selectedDateRange.end.toISOString().split('T')[0]
+              : ''
+          "
           (ngModelChange)="onEndDateChange($event)"
-        >
+        />
         <button
           mat-icon-button
           matSuffix
@@ -145,11 +152,7 @@
         </button>
       </mat-form-field>
 
-      <button
-        mat-button
-        (click)="showFilters = false"
-        class="close-filters"
-      >
+      <button mat-button (click)="showFilters = false" class="close-filters">
         <mat-icon>close</mat-icon>
       </button>
     </div>
@@ -165,42 +168,51 @@
 <!-- Spinner de chargement -->
 <div *ngIf="isLoading" class="loading-container">
   <mat-spinner diameter="50"></mat-spinner>
-  <p>{{ 'COMMON.LOADING' | translate }}</p>
+  <p>{{ "COMMON.LOADING" | translate }}</p>
 </div>
 
 <!-- Tableau des données -->
 <div *ngIf="!isLoading" class="table-container">
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table">
-    
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    matSort
+    class="mat-elevation-z8 full-width-table"
+  >
     <!-- Colonne Utilisateur -->
     <ng-container matColumnDef="user">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">
-        {{ 'USERS.USER' | translate }}
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="background-color: #f2f2f2"
+      >
+        {{ "USERS.USER" | translate }}
       </th>
       <td mat-cell *matCellDef="let entry">
         <div class="user-cell">
           <!-- Image de profil -->
           <div class="user-avatar">
-            <img 
-              *ngIf="entry.user?.imagePath" 
-              [src]="entry.user.imagePath" 
-              alt="Photo de profil" 
+            <img
+              *ngIf="entry.user?.imagePath"
+              [src]="entry.user.imagePath"
+              alt="Photo de profil"
               class="avatar-image"
-            >
-            <div 
-              *ngIf="!entry.user?.imagePath" 
-              class="avatar-placeholder"
-            >
+            />
+            <div *ngIf="!entry.user?.imagePath" class="avatar-placeholder">
               <span class="avatar-initial">
                 {{ entry.user?.username?.charAt(0) | uppercase }}
               </span>
             </div>
           </div>
-          
+
           <!-- Informations utilisateur -->
           <div class="user-info">
             <div class="username">{{ entry.user?.username }}</div>
-            <div *ngIf="entry.user?.nom || entry.user?.prenom" class="user-fullname">
+            <div
+              *ngIf="entry.user?.nom || entry.user?.prenom"
+              class="user-fullname"
+            >
               {{ entry.user?.prenom }} {{ entry.user?.nom }}
             </div>
           </div>
@@ -210,8 +222,13 @@
 
     <!-- Colonne Date de connexion -->
     <ng-container matColumnDef="date login">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">
-        {{ 'LOGIN_HISTORY.LOGIN_TIME' | translate }}
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="background-color: #f2f2f2"
+      >
+        {{ "LOGIN_HISTORY.LOGIN_TIME" | translate }}
       </th>
       <td mat-cell *matCellDef="let entry">
         <div class="date-cell">
@@ -223,8 +240,13 @@
 
     <!-- Colonne Date de déconnexion -->
     <ng-container matColumnDef="date logout">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">
-        {{ 'LOGIN_HISTORY.LOGOUT_TIME' | translate }}
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="background-color: #f2f2f2"
+      >
+        {{ "LOGIN_HISTORY.LOGOUT_TIME" | translate }}
       </th>
       <td mat-cell *matCellDef="let entry">
         <div class="date-cell">
@@ -236,13 +258,20 @@
 
     <!-- Colonne Durée de session -->
     <ng-container matColumnDef="session">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">
-        {{ 'LOGIN_HISTORY.SESSION_DURATION' | translate }}
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="background-color: #f2f2f2"
+      >
+        {{ "LOGIN_HISTORY.SESSION_DURATION" | translate }}
       </th>
       <td mat-cell *matCellDef="let entry">
-        <mat-chip 
+        <mat-chip
           [class]="entry.logoutTime ? 'session-completed' : 'session-active'"
-          [matTooltip]="entry.logoutTime ? 'Session terminée' : 'Session active'"
+          [matTooltip]="
+            entry.logoutTime ? 'Session terminée' : 'Session active'
+          "
         >
           <mat-icon matChipAvatar>
             {{ getStatusIcon(entry.loginTime, entry.logoutTime) }}
@@ -254,8 +283,13 @@
 
     <!-- Colonne Rôle -->
     <ng-container matColumnDef="role">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">
-        {{ 'USERS.ROLE' | translate }}
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="background-color: #f2f2f2"
+      >
+        {{ "USERS.ROLE" | translate }}
       </th>
       <td mat-cell *matCellDef="let entry">
         <mat-chip [class]="'role-' + entry.user?.role?.toLowerCase()">
@@ -266,16 +300,25 @@
 
     <!-- Colonne Statut -->
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">
-        {{ 'USERS.STATUS' | translate }}
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="background-color: #f2f2f2"
+      >
+        {{ "USERS.STATUS" | translate }}
       </th>
       <td mat-cell *matCellDef="let entry">
-        <mat-chip 
+        <mat-chip
           [class]="'status-' + entry.user?.status?.toLowerCase()"
-          [matTooltip]="entry.user?.status === 'ACTIVE' ? 'Utilisateur actif' : 'Utilisateur inactif'"
+          [matTooltip]="
+            entry.user?.status === 'ACTIVE'
+              ? 'Utilisateur actif'
+              : 'Utilisateur inactif'
+          "
         >
           <mat-icon matChipAvatar>
-            {{ entry.user?.status === 'ACTIVE' ? 'check_circle' : 'cancel' }}
+            {{ entry.user?.status === "ACTIVE" ? "check_circle" : "cancel" }}
           </mat-icon>
           {{ entry.user?.status }}
         </mat-chip>
@@ -284,31 +327,38 @@
 
     <!-- Colonne Adresse IP -->
     <ng-container matColumnDef="ip">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">
-        {{ 'LOGIN_HISTORY.IP_ADDRESS' | translate }}
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="background-color: #f2f2f2"
+      >
+        {{ "LOGIN_HISTORY.IP_ADDRESS" | translate }}
       </th>
       <td mat-cell *matCellDef="let entry">
         <div class="ip-cell">
           <mat-icon class="ip-icon">router</mat-icon>
-          <span class="ip-address">{{ entry.ipAddress || 'N/A' }}</span>
+          <span class="ip-address">{{ entry.ipAddress || "N/A" }}</span>
         </div>
       </td>
     </ng-container>
 
     <!-- En-têtes et lignes du tableau -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hoverable"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      class="hoverable"
+    ></tr>
   </table>
 
   <!-- Pagination -->
-  <mat-paginator 
-    [pageSizeOptions]="[5, 10, 20]" 
-    showFirstLastButtons>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
   </mat-paginator>
 </div>
 
 <!-- Message si aucune donnée -->
 <div *ngIf="!isLoading && dataSource.data.length === 0" class="no-data">
   <mat-icon>inbox</mat-icon>
-  <p>{{ 'LOGIN_HISTORY.NO_DATA' | translate }}</p>
+  <p>{{ "LOGIN_HISTORY.NO_DATA" | translate }}</p>
 </div>

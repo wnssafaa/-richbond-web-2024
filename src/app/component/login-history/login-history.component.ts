@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { ExportService } from '../../services/export.service';
 
 @Component({
   selector: 'app-login-history',
@@ -73,7 +74,8 @@ export class LoginHistoryComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private exportService: ExportService
   ) {}
 
   ngOnInit(): void {
@@ -245,12 +247,15 @@ export class LoginHistoryComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Exporte les données vers Excel (à implémenter si nécessaire)
+   * Exporte les données vers Excel
    */
   exportToExcel(): void {
-    // TODO: Implémenter l'export Excel
-    console.log('Export Excel - À implémenter');
+    this.exportService.exportLoginHistory(this.dataSource.data, {
+      filename: 'historique_connexions',
+      sheetName: 'Historique Connexions'
+    });
   }
+
 
   /**
    * Rafraîchit les données

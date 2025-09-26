@@ -30,8 +30,7 @@ import { AddMagasinComponent } from '../../dialogs/add-magasin/add-magasin.compo
 import { Region } from '../../enum/Region';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { AuthService } from '../../services/auth.service';
-import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';
+import { ExportService } from '../../services/export.service';
 import { MagasinDetailComponent } from '../../dialogs/magasin-detail/magasin-detail.component';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -111,15 +110,10 @@ export class MagasinsComponent {
     }
     
      exportToExcel(): void {
-        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataSource.data);
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    
-        XLSX.utils.book_append_sheet(wb, ws, 'Merchandiseurs');
-    
-        const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-        const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    
-        FileSaver.saveAs(data, 'merchandiseurs.xlsx');
+        this.exportService.exportMagasins(this.dataSource.data, {
+          filename: 'magasins',
+          sheetName: 'Magasins'
+        });
       }
         onToggleDashboard(event: any): void {
   if (event.checked) {
@@ -229,7 +223,8 @@ enseignes = [
       private router: Router,
       private athService: AuthService,
       private superviseurService: SuperveseurService,
-      private merchendiseurService: MerchendiseurService
+      private merchendiseurService: MerchendiseurService,
+      private exportService: ExportService
     ) {
 
 this.translate.setDefaultLang('fr');

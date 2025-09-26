@@ -38,8 +38,7 @@ import { AddProduitComponent } from '../../dialogs/add-produit/add-produit.compo
 import { MatDrawer } from '@angular/material/sidenav';
 import { MarqueProduit } from '../../enum/MarqueProduit';
 import { AuthService } from '../../services/auth.service';
-import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';
+import { ExportService } from '../../services/export.service';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { ProduitDetailComponent } from '../../dialogs/produit-detail/produit-detail.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -65,15 +64,10 @@ throw new Error('Method not implemented.');
   role: any;
  
     exportToExcel(): void {
-       const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataSource.data);
-       const wb: XLSX.WorkBook = XLSX.utils.book_new();
-   
-       XLSX.utils.book_append_sheet(wb, ws, 'produites');
-   
-       const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-       const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-   
-       FileSaver.saveAs(data, 'merchandiseurs.xlsx');
+       this.exportService.exportProduits(this.dataSource.data, {
+         filename: 'produits',
+         sheetName: 'Produits'
+       });
      }
     displayedColumns: string[] = [
       'marque', 'reference', 'categorie', 'image',
@@ -113,9 +107,11 @@ throw new Error('Method not implemented.');
     constructor(
       private produitService: ProduitService,
       private snackBar: MatSnackBar,
-      private dialog: MatDialog, private athService:AuthService,
+      private dialog: MatDialog, 
+      private athService:AuthService,
       private router: Router,
-       private translate: TranslateService,
+      private translate: TranslateService,
+      private exportService: ExportService
     ) {
           this.translate.setDefaultLang('fr');
   this.translate.use('fr');

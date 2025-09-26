@@ -141,8 +141,7 @@ userProfile: any;
       private dialog: MatDialog,
       private authService: AuthService,
       private router: Router,
-        private translate: TranslateService,
-       private athService:AuthService) {
+        private translate: TranslateService) {
        this.translate.setDefaultLang('fr');
   this.translate.use('fr');
   }
@@ -178,7 +177,7 @@ userProfile: any;
       }
     
    logout(): void {
-          this.athService.logout();
+          this.authService.logout();
         }
       nom: string | undefined;
   prenom: string | undefined;
@@ -187,7 +186,7 @@ userProfile: any;
   imagePath: string | undefined;
   status: string | undefined;
  loadCurrentUser(): void {
-  this.athService.getCurrentUserInfo().subscribe({
+  this.authService.getCurrentUserInfo().subscribe({
     next: (data) => {
       this.username = data.username ?? '';
       this.role = data.role ?? '';

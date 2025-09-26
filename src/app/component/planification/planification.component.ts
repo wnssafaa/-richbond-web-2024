@@ -182,6 +182,17 @@ applyFilters(): void {
 private applyAllFilters(planifs: Planification[]): Planification[] {
   let filtered = [...planifs];
 
+  // Filtre par terme de recherche
+  if (this.searchTerm && this.searchTerm.trim()) {
+    const searchLower = this.searchTerm.toLowerCase().trim();
+    filtered = filtered.filter(p => 
+      p.magasin?.nom?.toLowerCase().includes(searchLower) ||
+      p.merchandiser?.nom?.toLowerCase().includes(searchLower) ||
+      p.commentaire?.toLowerCase().includes(searchLower) ||
+      p.statut?.toLowerCase().includes(searchLower)
+    );
+  }
+
   if (this.selectedRegion) {
     filtered = filtered.filter(p => p.magasin?.region === this.selectedRegion);
   }
@@ -469,6 +480,19 @@ resetFilters(): void {
   this.selectedWeekDate = null;
   this.selectedDateRange = { start: null, end: null };
   this.showDatePicker = false;
+  this.searchTerm = '';
+  this.showAdvancedFilters = false;
+  this.applyFilters();
+  this.applyTableFilters();
+}
+
+// Méthode pour basculer l'affichage des filtres avancés
+toggleAdvancedFilters(): void {
+  this.showAdvancedFilters = !this.showAdvancedFilters;
+}
+
+// Méthode pour gérer la recherche
+onSearchChange(): void {
   this.applyFilters();
   this.applyTableFilters();
 }
@@ -539,6 +563,10 @@ progressParMerch: number | null = null;
   // Filtres de date pour le calendrier de plage
   selectedDateRange: { start: Date | null, end: Date | null } = { start: null, end: null };
   showDatePicker = false;
+  
+  // Nouvelles propriétés pour la barre de recherche et filtres avancés
+  searchTerm: string = '';
+  showAdvancedFilters: boolean = false;
   // selectedMagasin: number | null = null;
 
   // Données
@@ -608,12 +636,13 @@ highlightWeekends(arg: any): void {
     private merchService: MerchendiseurService,
     private magasinService: MagasinService,
     private snackBar: MatSnackBar,
-     private translate: TranslateService,
+    private translate: TranslateService
   ) {
 
     this.translate.setDefaultLang('fr');
   this.translate.use('fr');
   }
+
 
   ngOnInit(): void {
     console.log('Initialisation du composant');
@@ -1835,6 +1864,17 @@ loadPlanificationsForTable(): void {
 
 applyTableFilters(): void {
   let filtered = [...this.allPlanifications];
+
+  // Filtre par terme de recherche
+  if (this.searchTerm && this.searchTerm.trim()) {
+    const searchLower = this.searchTerm.toLowerCase().trim();
+    filtered = filtered.filter(p => 
+      p.magasin?.nom?.toLowerCase().includes(searchLower) ||
+      p.merchandiser?.nom?.toLowerCase().includes(searchLower) ||
+      p.commentaire?.toLowerCase().includes(searchLower) ||
+      p.statut?.toLowerCase().includes(searchLower)
+    );
+  }
 
   // Appliquer les filtres
   if (this.selectedSemaine) {

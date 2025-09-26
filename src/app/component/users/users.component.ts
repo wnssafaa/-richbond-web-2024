@@ -34,8 +34,7 @@ import { AddSupComponent } from '../../dialogs/add-sup/add-sup.component';
 import { AddMerchComponent } from '../../dialogs/add-merch/add-merch.component';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { AuthService } from '../../services/auth.service';
-import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';
+import { ExportService } from '../../services/export.service';
 import { UserDetailsDialogComponent } from '../../dialogs/user-details-dialog/user-details-dialog.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -84,7 +83,7 @@ export class UsersComponent implements OnInit {
   };
   showFilters: boolean = false;
   loadCurrentUser(): void {
-    this.athService.getCurrentUserInfo().subscribe({
+    this.authService.getCurrentUserInfo().subscribe({
       next: (data) => {
         this.username = data.username ?? '';
         this.role = data.role ?? '';
@@ -128,8 +127,8 @@ export class UsersComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private snackBar: MatSnackBar,
-    private athService: AuthService,
-    private authService: AuthService
+    private authService: AuthService,
+    private exportService: ExportService
   ) {
     this.translate.setDefaultLang('fr');
     this.translate.use('fr');
@@ -225,15 +224,18 @@ export class UsersComponent implements OnInit {
   }
 
   exportToExcel(): void {
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.combinedDataSource.data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(wb, ws, 'AllUsers');
-
-    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-
-    FileSaver.saveAs(data, 'merchandiseurs.xlsx');
+    // Séparer les utilisateurs par type
+    const superviseurs = this.combinedDataSource.data.filter(user => user.type === 'SUPERVISEUR');
+    const merchandisers = this.combinedDataSource.data.filter(user => user.type === 'MERCHENDISEUR' || user.type === 'MERCHANDISEUR_MONO' || user.type === 'MERCHANDISEUR_MULTI');
+    
+    // Exporter tous les utilisateurs dans un fichier multi-feuilles
+    this.exportService.exportAllData({
+      superviseurs: superviseurs,
+      merchandisers: merchandisers
+    }, {
+      filename: 'utilisateurs_complets',
+      sheetName: 'Utilisateurs'
+    });
   }
 
   deleteUser(userId: number, type: string): void {
@@ -315,7 +317,7 @@ export class UsersComponent implements OnInit {
   }
 
   logout(): void {
-    this.athService.logout();
+    this.authService.logout();
   }
 
   onRowClick(event: MouseEvent, row: any): void {

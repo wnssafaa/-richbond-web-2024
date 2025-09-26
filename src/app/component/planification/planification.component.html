@@ -281,6 +281,72 @@
           <div
             class="filters flex items-center p-3 bg-white rounded-lg shadow-sm"
           >
+            <!-- Barre de recherche -->
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-label>Rechercher</mat-label>
+              <input
+                matInput
+                [(ngModel)]="searchTerm"
+                (input)="onSearchChange()"
+                placeholder="Rechercher..."
+              />
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+
+            <!-- Bouton de filtre -->
+            <button
+              mat-raised-button
+              class="filter-button"
+              (click)="toggleAdvancedFilters()"
+              style="
+                background-color: white;
+                color: #333;
+                border: 1px solid #ddd;
+                border-radius: 20px;
+                padding: 10px 20px;
+                font-weight: 500;
+                margin-left: 12px;
+                min-height: 40px;
+                text-transform: none;
+                font-size: 14px;
+              "
+            >
+              <mat-icon style="margin-right: 8px; font-size: 18px"
+                >filter_list</mat-icon
+              >
+              Filtrer
+            </button>
+
+            <!-- Bouton Add Planife -->
+
+            <button
+              mat-raised-button
+              class="add-planife-button"
+              (click)="openAddvisitDialog()"
+              matTooltip="Ajouter une nouvelle planification"
+              style="
+                background-color: #0a2681;
+                color: white;
+                border-radius: 20px;
+                padding: 10px 20px;
+                font-weight: bold;
+                box-shadow: none;
+                border: none;
+                text-transform: none;
+                font-size: 14px;
+                margin-left: 12px;
+                min-height: 40px;
+              "
+            >
+              Ajauter Planification
+            </button>
+          </div>
+
+          <!-- Filtres avancés (affichés conditionnellement) -->
+          <div
+            *ngIf="showAdvancedFilters"
+            class="advanced-filters flex items-center p-3 bg-white rounded-lg shadow-sm mt-3"
+          >
             <!-- Filtre par semaine avec calendrier -->
             <mat-form-field appearance="outline" class="filter-field">
               <mat-label>Sélectionner une semaine</mat-label>
@@ -351,32 +417,6 @@
                 >
               </mat-select>
             </mat-form-field>
-
-            <button
-              mat-raised-button
-              class="add-user-button"
-              (click)="openAddvisitDialog()"
-              matTooltip="Ajouter une nouvelle planification"
-              style="
-                background-color: #0a2681;
-                color: white;
-                border-radius: 50px;
-                padding: 10px 28px;
-                font-weight: 700;
-                box-shadow: 0 6px 12px rgba(10, 38, 129, 0.4);
-                border: none;
-                text-transform: none;
-                font-size: 16px;
-                margin-left: 16px;
-                min-height: 56px;
-                margin-bottom: 20px;
-              "
-            >
-              <mat-icon style="margin-right: 12px; font-size: 22px"
-                >add</mat-icon
-              >
-              Ajouter une visite
-            </button>
           </div>
 
           <!-- Calendrier de sélection de date (affiché conditionnellement) -->
@@ -646,6 +686,72 @@
           <div
             class="filters flex items-center p-3 bg-white rounded-lg shadow-sm"
           >
+            <!-- Barre de recherche -->
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-label>Rechercher</mat-label>
+              <input
+                matInput
+                [(ngModel)]="searchTerm"
+                (input)="onSearchChange()"
+                placeholder="Rechercher..."
+              />
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+
+            <!-- Bouton de filtre -->
+            <button
+              mat-raised-button
+              class="filter-button"
+              (click)="toggleAdvancedFilters()"
+              style="
+                background-color: white;
+                color: #333;
+                border: 1px solid #ddd;
+                border-radius: 20px;
+                padding: 10px 20px;
+                font-weight: 500;
+                margin-left: 12px;
+                min-height: 40px;
+                text-transform: none;
+                font-size: 14px;
+              "
+            >
+              <mat-icon style="margin-right: 8px; font-size: 18px"
+                >filter_list</mat-icon
+              >
+              Filtrer
+            </button>
+
+            <!-- Bouton Add Planife -->
+
+            <button
+              mat-raised-button
+              class="add-planife-button"
+              (click)="openAddvisitDialog()"
+              matTooltip="Ajouter une nouvelle planification"
+              style="
+                background-color: #0a2681;
+                color: white;
+                border-radius: 20px;
+                padding: 10px 20px;
+                font-weight: bold;
+                box-shadow: none;
+                border: none;
+                text-transform: none;
+                font-size: 14px;
+                margin-left: 12px;
+                min-height: 40px;
+              "
+            >
+              Add Planife
+            </button>
+          </div>
+
+          <!-- Filtres avancés (affichés conditionnellement) -->
+          <div
+            *ngIf="showAdvancedFilters"
+            class="advanced-filters flex items-center p-3 bg-white rounded-lg shadow-sm mt-3"
+          >
             <!-- Filtre par semaine avec calendrier -->
             <mat-form-field appearance="outline" class="filter-field">
               <mat-label>Sélectionner une semaine</mat-label>
@@ -716,32 +822,6 @@
                 >
               </mat-select>
             </mat-form-field>
-
-            <button
-              mat-raised-button
-              class="add-user-button"
-              (click)="openAddvisitDialog()"
-              matTooltip="Ajouter une nouvelle planification"
-              style="
-                background-color: #0a2681;
-                color: white;
-                border-radius: 50px;
-                padding: 10px 28px;
-                font-weight: 700;
-                box-shadow: 0 6px 12px rgba(10, 38, 129, 0.4);
-                border: none;
-                text-transform: none;
-                font-size: 16px;
-                margin-left: 16px;
-                min-height: 56px;
-                margin-bottom: 20px;
-              "
-            >
-              <mat-icon style="margin-right: 12px; font-size: 22px"
-                >add</mat-icon
-              >
-              Ajouter une visite
-            </button>
           </div>
 
           <!-- Calendrier de sélection de date (affiché conditionnellement) -->

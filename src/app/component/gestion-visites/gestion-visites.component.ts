@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewChild, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,8 +30,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AddVisitComponent } from '../add-visit/add-visit.component';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { AuthService } from '../../services/auth.service';
-import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';
+import { ExportService } from '../../services/export.service';
+import { Inject } from '@angular/core';
 import { MagasinService, Magasin } from '../../services/magasin.service';
 import { MerchendiseurService, Merchendiseur } from '../../services/merchendiseur.service';
 import { Region } from '../../enum/Region';
@@ -152,7 +152,8 @@ editVisit(visit: VisitDTO) {
     private magasinService: MagasinService,
     private merchendiseurService: MerchendiseurService,
     private planificationService: PlanificationService,
-    private router: Router
+    private router: Router,
+    @Inject(ExportService) private exportService: ExportService
   ) {
     this.translate.setDefaultLang('fr');
     this.translate.use('fr');
@@ -288,15 +289,10 @@ editVisit(visit: VisitDTO) {
       });
     }
   exportToExcel(): void {
-        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataSource.data);
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    
-        XLSX.utils.book_append_sheet(wb, ws, 'Visits');
-    
-        const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-        const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    
-        FileSaver.saveAs(data, 'merchandiseurs.xlsx');
+        this.exportService.exportVisits(this.dataSource.data, {
+          filename: 'visites',
+          sheetName: 'Visites'
+        });
       }
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;

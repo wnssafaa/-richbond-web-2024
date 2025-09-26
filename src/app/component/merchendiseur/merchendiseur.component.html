@@ -274,8 +274,13 @@
                 mat-raised-button
                 class="export-button"
                 (click)="exportToExcel()"
+                style="
+                  background-color: #000000;
+                  color: white;
+                  margin-right: 8px;
+                "
               >
-                <span>{{ "ACTIONS.EXPORT" | translate }}</span>
+                <span>Export </span>
                 <mat-icon>file_download</mat-icon>
               </button>
 

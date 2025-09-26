@@ -42,8 +42,7 @@ import {
   MerchendiseurService,
 } from '../../services/merchendiseur.service';
 import { AuthService } from '../../services/auth.service';
-import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';
+import { ExportService } from '../../services/export.service';
 import { SuperviseurDetailsDialogComponent } from '../../dialogs/superviseur-details-dialog/superviseur-details-dialog.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
@@ -125,20 +124,10 @@ export class SuperviseursComponent implements OnInit {
   email: any;
   role: any;
   exportToExcel(): void {
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataSource.data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(wb, ws, 'superviseurs');
-
-    const excelBuffer: any = XLSX.write(wb, {
-      bookType: 'xlsx',
-      type: 'array',
+    this.exportService.exportSuperviseurs(this.dataSource.data, {
+      filename: 'superviseurs',
+      sheetName: 'Superviseurs'
     });
-    const data: Blob = new Blob([excelBuffer], {
-      type: 'application/octet-stream',
-    });
-
-    FileSaver.saveAs(data, 'merchandiseurs.xlsx');
   }
   // Colonnes à afficher dans le tableau
   displayedColumns: string[] = [
@@ -391,8 +380,8 @@ export class SuperviseursComponent implements OnInit {
     private athService: AuthService,
     private translate: TranslateService,
     private magasinService: MagasinService,
-
-    private merchandiserService: MerchendiseurService
+    private merchandiserService: MerchendiseurService,
+    private exportService: ExportService
   ) {
     this.translate.setDefaultLang('fr');
     this.translate.use('fr');

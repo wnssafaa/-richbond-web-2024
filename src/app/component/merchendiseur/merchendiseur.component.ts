@@ -48,8 +48,7 @@ import {
   animate,
   keyframes,
 } from '@angular/animations';
-import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';
+import { ExportService } from '../../services/export.service';
 import { MerchandiserDetailsDialogComponent } from '../../dialogs/merchandiser-details-dialog/merchandiser-details-dialog.component';
 import {
   SuperveseurService,
@@ -152,21 +151,28 @@ export class MerchendiseurComponent implements OnInit {
     }
   }
   exportToExcel(): void {
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataSource.data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(wb, ws, 'Merchandiseurs');
-
-    const excelBuffer: any = XLSX.write(wb, {
-      bookType: 'xlsx',
-      type: 'array',
-    });
-    const data: Blob = new Blob([excelBuffer], {
-      type: 'application/octet-stream',
-    });
-
-    FileSaver.saveAs(data, 'merchandiseurs.xlsx');
+    console.log('Début de l\'exportation des merchandisers...');
+    console.log('Données à exporter:', this.dataSource.data);
+    
+    try {
+      this.exportService.exportMerchandisers(this.dataSource.data, {
+        filename: 'merchandiseurs',
+        sheetName: 'Merchandiseurs'
+      });
+      console.log('Exportation Excel lancée avec succès');
+      this.snackBar.open('Fichier Excel téléchargé', 'Fermer', { duration: 3000 });
+    } catch (error) {
+      console.error('Erreur lors de l\'exportation:', error);
+      this.snackBar.open('Erreur lors de l\'exportation', 'Fermer', { duration: 3000 });
+    }
   }
+
+
+  testExport(): void {
+    console.log('Test d\'exportation simple...');
+    this.exportService.testExport();
+  }
+
   enseignes = [
     'Carrefour',
     'Marjane',
@@ -343,10 +349,9 @@ export class MerchendiseurComponent implements OnInit {
     private dialog: MatDialog,
     private authService: AuthService,
     private router: Router,
-    private athService: AuthService,
     private superviseurService: SuperveseurService,
-
-    private magasinService: MagasinService
+    private magasinService: MagasinService,
+    private exportService: ExportService
   ) {
     this.translate.setDefaultLang('fr');
     this.translate.use('fr');
@@ -754,7 +759,7 @@ export class MerchendiseurComponent implements OnInit {
   }
 
   logout(): void {
-    this.athService.logout();
+    this.authService.logout();
   }
   loadCurrentUser(): void {
     this.authService.getCurrentUserInfo().subscribe({
