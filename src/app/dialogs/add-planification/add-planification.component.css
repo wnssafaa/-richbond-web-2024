@@ -4,7 +4,9 @@
     max-width: 800px;
     margin: 20px auto;
     padding: 0 16px;
-    overflow-x: auto; /* Ajoute cette ligne */
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   
   mat-card {
@@ -176,5 +178,67 @@
   }
   .add-icon {
     font-size: 1.3em;
+  }
+
+  /* Styles pour le scrollbar principal du formulaire */
+  .user-form-container::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .user-form-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  .user-form-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+  }
+
+  .user-form-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+
+  /* Responsive design pour les petits écrans */
+  @media (max-width: 768px) {
+    .user-form-container {
+      max-height: 85vh;
+      margin: 10px auto;
+      padding: 0 8px;
+    }
+    
+    mat-card {
+      padding: 16px;
+    }
+    
+    .form-row {
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    mat-form-field {
+      min-width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .user-form-container {
+      max-height: 80vh;
+      margin: 5px auto;
+      padding: 0 4px;
+    }
+    
+    mat-card {
+      padding: 12px;
+    }
+    
+    .form-actions {
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .form-actions button {
+      max-width: 100%;
+    }
   }
 
