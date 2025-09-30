@@ -433,6 +433,19 @@
             </td>
           </ng-container> -->
 
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              ID
+            </th>
+            <td mat-cell *matCellDef="let magasin">{{ magasin.id }}</td>
+          </ng-container>
+
           <ng-container matColumnDef="nom">
             <th
               mat-header-cell
@@ -562,32 +575,34 @@
             >
               Actions
             </th>
-            <td mat-cell *matCellDef="let magasin">
-              <button
-                mat-icon-button
-                color="primary"
-                (click)="
-                  openEditMagasinDialog(magasin); $event.stopPropagation()
-                "
-              >
-                <mat-icon style="color: blue">edit</mat-icon>
-              </button>
-              <br />
-              <button
-                mat-icon-button
-                (click)="viewMagasinDetail(magasin); $event.stopPropagation()"
-              >
-                <mat-icon>visibility</mat-icon>
-              </button>
-              <br />
-              <button
-                mat-icon-button
-                color="warn"
-                (click)="deleteMagasin(magasin.id); $event.stopPropagation()"
-              >
-                <mat-icon style="color: black">delete</mat-icon>
-              </button>
-              <br />
+            <td mat-cell *matCellDef="let magasin" class="action-buttons-cell">
+              <div class="action-buttons-container">
+                <button
+                  mat-icon-button
+                  color="primary"
+                  (click)="
+                    openEditMagasinDialog(magasin); $event.stopPropagation()
+                  "
+                  title="Modifier"
+                >
+                  <mat-icon style="color: blue">edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  (click)="viewMagasinDetail(magasin); $event.stopPropagation()"
+                  title="Voir détails"
+                >
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="deleteMagasin(magasin.id); $event.stopPropagation()"
+                  title="Supprimer"
+                >
+                  <mat-icon style="color: black">delete</mat-icon>
+                </button>
+              </div>
             </td>
           </ng-container>
 

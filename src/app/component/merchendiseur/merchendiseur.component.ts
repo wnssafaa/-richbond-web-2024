@@ -109,34 +109,35 @@ export class MerchendiseurComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   displayedColumns: string[] = [
-    // 'select',
+    'id',
     'nom',
     'prenom',
+    'Profil',
     'region',
     'ville',
-    'marques',
-    'dateIntegration',
-    'Profil',
     'superviseur',
-    'dateSortie',
+    'marques',
+    'magasin',
     'telephone',
-    // 'magasin',
-    // 'enseigne',
+    'dateIntegration',
+    'dateSortie',
     'actions',
   ];
 
   // Configuration des colonnes pour la personnalisation
   columnConfig = [
+    { key: 'id', label: 'ID', visible: true },
     { key: 'nom', label: 'Nom', visible: true },
     { key: 'prenom', label: 'Prénom', visible: true },
+    { key: 'Profil', label: 'Profil', visible: true },
     { key: 'region', label: 'Région', visible: true },
     { key: 'ville', label: 'Ville', visible: true },
-    { key: 'marques', label: 'Marques', visible: true },
-    { key: 'dateIntegration', label: 'Date d\'intégration', visible: true },
-    { key: 'Profil', label: 'Profil', visible: true },
     { key: 'superviseur', label: 'Superviseur', visible: true },
-    { key: 'dateSortie', label: 'Date de sortie', visible: true },
+    { key: 'marques', label: 'Marques', visible: true },
+    { key: 'magasin', label: 'Magasin', visible: true },
     { key: 'telephone', label: 'Téléphone', visible: true },
+    { key: 'dateIntegration', label: 'Date d\'intégration', visible: true },
+    { key: 'dateSortie', label: 'Date de sortie', visible: true },
     { key: 'actions', label: 'Actions', visible: true }
   ];
   nom: string | undefined;

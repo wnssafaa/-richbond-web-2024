@@ -462,13 +462,28 @@
         </div>
 
        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table">
-          <!-- Checkbox Column -->
- 
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">
+              ID
+            </th>
+            <td mat-cell *matCellDef="let superviseur">{{superviseur.id}}</td>
+          </ng-container>
+
+          <!-- Nom Column -->
           <ng-container matColumnDef="nom">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">
               {{ 'SUPERVISORS.NAME' | translate }}
             </th>
-            <td mat-cell *matCellDef="let superviseur">{{superviseur.nom}} {{superviseur.prenom}}</td>
+            <td mat-cell *matCellDef="let superviseur">{{superviseur.nom}}</td>
+          </ng-container>
+
+          <!-- Prénom Column -->
+          <ng-container matColumnDef="prenom">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">
+              Prénom
+            </th>
+            <td mat-cell *matCellDef="let superviseur">{{superviseur.prenom}}</td>
           </ng-container>
           
           <!-- Enseignes des merchandiseurs Column -->
@@ -574,17 +589,18 @@
             <th mat-header-cell *matHeaderCellDef style="background-color: #F2F2F2;">
               {{ 'USERS.ACTIONS' | translate }}
             </th>
-            <td mat-cell *matCellDef="let superviseur">
-              <button mat-icon-button color="primary" (click)="editSuperviseur(superviseur);$event.stopPropagation()">
-                <mat-icon style="color: blue;">edit</mat-icon>
-              </button>
-             
-              <button mat-icon-button (click)="viewSuperviseur(superviseur);$event.stopPropagation()">
-                <mat-icon>visibility</mat-icon>
-              </button>
-              <button mat-icon-button color="warn" (click)="deleteSuperviseur(superviseur.id); $event.stopPropagation()">
-                <mat-icon style="color: black;">delete</mat-icon>
-              </button>
+            <td mat-cell *matCellDef="let superviseur" class="action-buttons-cell">
+              <div class="action-buttons-container">
+                <button mat-icon-button color="primary" (click)="editSuperviseur(superviseur);$event.stopPropagation()" title="Modifier">
+                  <mat-icon style="color: blue;">edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="viewSuperviseur(superviseur);$event.stopPropagation()" title="Voir détails">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteSuperviseur(superviseur.id); $event.stopPropagation()" title="Supprimer">
+                  <mat-icon style="color: black;">delete</mat-icon>
+                </button>
+              </div>
             </td>
           </ng-container>
           

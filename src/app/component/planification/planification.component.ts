@@ -892,7 +892,7 @@ renderEventContent(arg: any): any {
         style="
           background: none; 
           border: none; 
-          color: #dc3545; 
+          color: black; 
           cursor: pointer;
           padding: 4px;
           border-radius: 4px;

@@ -1653,8 +1653,56 @@ table.mat-table {
 }
 
 /* === Style des boutons d'action === */
-.mat-icon-button {
-  margin: 0 4px;
+.action-buttons-cell {
+  padding: 8px 12px !important;
+  text-align: center;
+}
+
+.action-buttons-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+.action-buttons-container .mat-icon-button {
+  margin: 0;
+  padding: 8px;
+  min-width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.action-buttons-container .mat-icon-button:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+  transform: scale(1.1);
+}
+
+.action-buttons-container .mat-icon-button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+/* Style spécifique pour l'icône de suppression */
+.action-buttons-container .mat-icon-button:has(mat-icon[style*="color: black"]) {
+  transition: all 0.2s ease;
+}
+
+.action-buttons-container .mat-icon-button:has(mat-icon[style*="color: black"]):hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Style spécifique pour l'icône d'édition */
+.action-buttons-container .mat-icon-button:has(mat-icon[style*="color: blue"]) {
+  transition: all 0.2s ease;
+}
+
+.action-buttons-container .mat-icon-button:has(mat-icon[style*="color: blue"]):hover {
+  background-color: rgba(33, 150, 243, 0.1);
 }
 
 /* === Responsive : petits écrans (tablettes & téléphones) === */

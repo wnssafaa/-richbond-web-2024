@@ -603,22 +603,26 @@
             >
               {{ "USERS.ACTIONS" | translate }}
             </th>
-            <td mat-cell *matCellDef="let produit">
-              <button
-                mat-icon-button
-                (click)="editProduit(produit); $event.stopPropagation()"
-              >
-                <mat-icon style="color: blue">edite</mat-icon>
-              </button>
-              <button
-                mat-icon-button
-                (click)="deleteProduit(produit); $event.stopPropagation()"
-              >
-                <mat-icon style="color: black">delete</mat-icon>
-              </button>
-              <button mat-icon-button>
-                <mat-icon>visibility</mat-icon>
-              </button>
+            <td mat-cell *matCellDef="let produit" class="action-buttons-cell">
+              <div class="action-buttons-container">
+                <button
+                  mat-icon-button
+                  (click)="editProduit(produit); $event.stopPropagation()"
+                  title="Modifier"
+                >
+                  <mat-icon style="color: blue">edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="viewProduit(produit); $event.stopPropagation()" title="Voir détails">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  (click)="deleteProduit(produit); $event.stopPropagation()"
+                  title="Supprimer"
+                >
+                  <mat-icon style="color: black">delete</mat-icon>
+                </button>
+              </div>
             </td>
           </ng-container>
 

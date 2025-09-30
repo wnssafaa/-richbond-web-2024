@@ -243,15 +243,15 @@ this.translate.setDefaultLang('fr');
   
 // }
 displayedColumns: string[] = [
-  
+  'id',
   'nom',
   'localisation',
   'region',
   'ville',
-  'typeMagasin',
-  'enseigne',
   'merchandiseur',
   'superviseur',
+  'enseigne',
+  'typeMagasin',
   'actions']
 
 dataSourceFilter = {

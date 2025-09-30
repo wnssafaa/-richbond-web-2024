@@ -485,6 +485,19 @@
           matSort
           class="full-width-table"
         >
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              ID
+            </th>
+            <td mat-cell *matCellDef="let m">{{ m.id }}</td>
+          </ng-container>
+
           <ng-container matColumnDef="nom">
             <th
               mat-header-cell
@@ -543,6 +556,25 @@
               {{ "PRODUCTS.BRAND" | translate }}
             </th>
             <td mat-cell *matCellDef="let m">{{ m.marques }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="magasin">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ 'COMMON.STORES' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let m">
+              <span *ngIf="m.magasinIds && m.magasinIds.length > 0">
+                {{ m.magasinIds.join(', ') }}
+              </span>
+              <span *ngIf="!m.magasinIds || m.magasinIds.length === 0" style="color: #999; font-style: italic">
+                Aucun magasin
+              </span>
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="dateIntegration">
@@ -616,10 +648,6 @@
             <td mat-cell *matCellDef="let m">{{ m.telephone }}</td>
           </ng-container>
 
-          <!-- <ng-container matColumnDef="magasin">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">{{ 'COMMON.STORES' | translate }}</th>
-            <td mat-cell *matCellDef="let m"> {{ m.magasinIds }} </td>
-          </ng-container> -->
 
           <ng-container matColumnDef="actions">
             <th

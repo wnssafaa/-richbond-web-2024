@@ -131,32 +131,33 @@ export class SuperviseursComponent implements OnInit {
   }
   // Colonnes à afficher dans le tableau
   displayedColumns: string[] = [
-    // 'select',
+    'id',
     'nom',
-    // 'prenom',
+    'prenom',
     'region',
     'villeIntervention',
-    // 'marquesCouvertes',
-    'dateIntegration',
-    'dateSortie',
-    'telephone',
     'magasin',
     'merchandiseurs',
     'enseigne',
+    'telephone',
+    'dateIntegration',
+    'dateSortie',
     'actions',
   ];
 
   // Configuration des colonnes pour la personnalisation
   columnConfig = [
+    { key: 'id', label: 'ID', visible: true },
     { key: 'nom', label: 'Nom', visible: true },
+    { key: 'prenom', label: 'Prénom', visible: true },
     { key: 'region', label: 'Région', visible: true },
     { key: 'villeIntervention', label: 'Ville d\'intervention', visible: true },
-    { key: 'dateIntegration', label: 'Date d\'intégration', visible: true },
-    { key: 'dateSortie', label: 'Date de sortie', visible: true },
-    { key: 'telephone', label: 'Téléphone', visible: true },
-    { key: 'magasin', label: 'Magasin', visible: true },
+    { key: 'magasin', label: 'Magasins', visible: true },
     { key: 'merchandiseurs', label: 'Merchandiseurs', visible: true },
     { key: 'enseigne', label: 'Enseigne', visible: true },
+    { key: 'telephone', label: 'Téléphone', visible: true },
+    { key: 'dateIntegration', label: 'Date d\'intégration', visible: true },
+    { key: 'dateSortie', label: 'Date de sortie', visible: true },
     { key: 'actions', label: 'Actions', visible: true }
   ];
   showFilters: boolean = false;
