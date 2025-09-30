@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -40,7 +40,7 @@ import { ExportService } from '../../services/export.service';
   templateUrl: './login-history.component.html',
   styleUrl: './login-history.component.css'
 })
-export class LoginHistoryComponent implements OnInit, OnDestroy {
+export class LoginHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('paginator') paginator!: MatPaginator;
 
   // Propriétés pour le tableau
@@ -83,7 +83,13 @@ export class LoginHistoryComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+    // Configuration du paginateur après l'initialisation de la vue
+    // Utiliser setTimeout pour s'assurer que le DOM est complètement rendu
+    setTimeout(() => {
+      if (this.paginator) {
+        this.dataSource.paginator = this.paginator;
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -101,6 +107,15 @@ export class LoginHistoryComponent implements OnInit, OnDestroy {
       next: (history: any) => {
         this.loginHistory = Array.isArray(history) ? history : (history.content || []);
         this.dataSource.data = this.loginHistory;
+        
+        // Reconfigurer le paginateur après le chargement des données
+        setTimeout(() => {
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+            this.paginator.firstPage();
+          }
+        });
+        
         this.isLoading = false;
       },
       error: (err) => {
@@ -152,7 +167,14 @@ export class LoginHistoryComponent implements OnInit, OnDestroy {
     }
 
     this.dataSource.data = filteredData;
-    this.dataSource.paginator?.firstPage();
+    
+    // Reconfigurer le paginateur après l'application des filtres
+    setTimeout(() => {
+      if (this.paginator) {
+        this.dataSource.paginator = this.paginator;
+        this.paginator.firstPage();
+      }
+    });
   }
 
   /**
@@ -164,7 +186,14 @@ export class LoginHistoryComponent implements OnInit, OnDestroy {
     this.selectedStatus = '';
     this.selectedDateRange = { start: null, end: null };
     this.dataSource.data = this.loginHistory;
-    this.dataSource.paginator?.firstPage();
+    
+    // Reconfigurer le paginateur après la réinitialisation des filtres
+    setTimeout(() => {
+      if (this.paginator) {
+        this.dataSource.paginator = this.paginator;
+        this.paginator.firstPage();
+      }
+    });
   }
 
   /**

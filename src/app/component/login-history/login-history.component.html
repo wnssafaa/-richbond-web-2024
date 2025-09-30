@@ -353,7 +353,11 @@
   </table>
 
   <!-- Pagination -->
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+  <mat-paginator 
+    #paginator
+    [pageSizeOptions]="[5, 10, 20]" 
+    [pageSize]="10"
+    showFirstLastButtons>
   </mat-paginator>
 </div>
 

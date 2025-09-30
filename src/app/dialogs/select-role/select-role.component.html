@@ -1,0 +1,55 @@
+<div class="role-selection-dialog">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>Choisir le type d'utilisateur</h2>
+    <button mat-icon-button (click)="onCancel()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="dialog-content">
+    <p class="dialog-description">
+      Veuillez sélectionner le type d'utilisateur que vous souhaitez ajouter :
+    </p>
+
+    <div class="role-options">
+      <mat-card 
+        *ngFor="let role of roleOptions" 
+        class="role-card"
+        [class.selected]="selectedRole === role.value"
+        (click)="selectedRole = role.value"
+      >
+        <mat-card-content>
+          <div class="role-content">
+            <mat-icon class="role-icon">{{ role.icon }}</mat-icon>
+            <div class="role-info">
+              <h3 class="role-title">{{ role.label }}</h3>
+              <p class="role-description">{{ role.description }}</p>
+            </div>
+            <mat-icon 
+              class="check-icon" 
+              *ngIf="selectedRole === role.value"
+            >
+              check_circle
+            </mat-icon>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onCancel()" class="cancel-button">
+      Annuler
+    </button>
+    <button 
+      mat-raised-button 
+      (click)="onRoleSelect()" 
+      [disabled]="!selectedRole"
+      class="confirm-button"
+      color="primary"
+    >
+      Continuer
+    </button>
+  </div>
+</div>
+

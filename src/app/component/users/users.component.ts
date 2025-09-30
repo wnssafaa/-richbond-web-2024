@@ -32,6 +32,7 @@ import { SuperveseurService, Superviseur } from '../../services/superveseur.serv
 import { MerchendiseurService, Merchendiseur } from '../../services/merchendiseur.service';
 import { AddSupComponent } from '../../dialogs/add-sup/add-sup.component';
 import { AddMerchComponent } from '../../dialogs/add-merch/add-merch.component';
+import { SelectRoleComponent } from '../../dialogs/select-role/select-role.component';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { AuthService } from '../../services/auth.service';
 import { ExportService } from '../../services/export.service';
@@ -291,9 +292,42 @@ export class UsersComponent implements OnInit {
   }
 
   openAddUserDialog(): void {
-    const dialogRef = this.dialog.open(AdduserComponent, {
+    // Ouvrir d'abord le dialogue de sélection de rôle
+    const roleDialogRef = this.dialog.open(SelectRoleComponent, {
       width: '600px',
-      data: {} // ici tu peux passer un user à modifier si nécessaire
+      disableClose: true
+    });
+
+    roleDialogRef.afterClosed().subscribe(result => {
+      if (result && result.selectedRole) {
+        this.openUserFormByRole(result.selectedRole);
+      }
+    });
+  }
+
+  openUserFormByRole(role: string): void {
+    let component: any;
+    let data: any = {};
+    let width = '700px';
+
+    switch (role) {
+      case 'SUPERVISEUR':
+        component = AddSupComponent;
+        data = { superviseur: null };
+        break;
+      case 'MERCHANDISEUR':
+        component = AddMerchComponent;
+        data = { Merchendiseur: null };
+        break;
+      default:
+        console.warn('Rôle non reconnu:', role);
+        return;
+    }
+
+    const dialogRef = this.dialog.open(component, {
+      width: width,
+      data: data,
+      panelClass: 'custom-dialog-container'
     });
 
     dialogRef.afterClosed().subscribe(result => {
