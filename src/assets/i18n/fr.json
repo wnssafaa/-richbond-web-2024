@@ -1,15 +1,15 @@
 {
   "COMMON": {
     "DASHBOARD": "Tableau de bord",
-    "USERS": " Gestion Utilisateurs",
-    "PRODUCTS": " Gestion Produits",
-    "STORES": " Gestion Magasins",
-    "SUPERVISORS": "Gestion Superviseurs",
-    "MERCHANDISERS":"Gestion Merchandiseurs",
+    "USERS": " Gestion des utilisateurs",
+    "PRODUCTS": " Gestion des produits",
+    "STORES": " Gestion des magasins",
+    "SUPERVISORS": "Gestion des superviseurs",
+    "MERCHANDISERS": "Gestion des merchandiseurs",
     "PLANNING": "Planification",
     "SETTINGS": "Paramètres",
     "HELP": "Aide",
-    "VISIT":"Gestion Visites",
+    "VISIT": "Gestion des visites",
     "SEARCH": "Rechercher",
     "EXPORT": "Exporter",
     "REFRESH": "Actualiser",
@@ -49,20 +49,21 @@
     "REQUIRED_FIELD": "Ce champ est requis"
   },
   "USERS": {
-     "TITLE": "Gestion des Utilisateurs",
-    "ADD_USER": "Ajouter Utilisateur",
-    "EDIT_USER": "Modifier Utilisateur",
-    "DELETE_USER": "Supprimer Utilisateur",
-    "FULL_NAME": "Nom Complet",
+    "TITLE": "Gestion des utilisateurs",
+    "USER": "Utilisateur",
+    "ADD_USER": "Ajouter un utilisateur",
+    "EDIT_USER": "Modifier le utilisateur",
+    "DELETE_USER": "Supprimer le utilisateur",
+    "FULL_NAME": "Nom complet",
     "ROLE": "Rôle",
     "STATUS": "Statut",
-    "LAST_LOGIN": "Dernière Connexion",
+    "LAST_LOGIN": "Dernière connexion",
     "ACTIONS": "Actions",
     "SESSIONS": "Sessions",
-    "ALL_USERS": "Tous les Utilisateurs"
+    "ALL_USERS": "Tous les utilisateurs"
   },
   "LOGIN_HISTORY": {
-    "TITLE": "Historique des Connexions",
+    "TITLE": "Historique des connexions",
     "LOGIN_TIME": "Connexion",
     "LOGOUT_TIME": "Déconnexion",
     "SESSION_DURATION": "Durée de session",
@@ -112,7 +113,8 @@
     "CATEGORY": "Catégorie",
     "BRAND": "Marque",
     "PRICE": "Prix",
-    "STOCK": "Stock","REFERENCE": "Référence",
+    "STOCK": "Stock",
+    "REFERENCE": "Référence",
     "IMAGE": "Image",
     "TYPE": "Type",
     "DIMENSIONS": "Dimensions",
@@ -131,7 +133,7 @@
     "STATUS": "Statut",
     "DURATION": "Durée",
     "NOTES": "Notes",
-        "LEGEND": {
+    "LEGEND": {
       "PLANNED": "Planifié",
       "IN_PROGRESS": "En cours",
       "DONE": "Terminé",
@@ -156,7 +158,9 @@
       "SEPTEMBER": "Septembre",
       "OCTOBER": "Octobre",
       "NOVEMBER": "Novembre",
-      "DECEMBER": "Décembre"
+      "DECEMBER": "Décembre",
+      "ALL_MERCHANDISERS": "Tous les merchandiseurs",
+      "ALL_STORES": "Tous les magasins"
     }
   },
   "SETTINGS": {
@@ -192,10 +196,31 @@
     "THIS_WEEK": "Cette semaine",
     "THIS_MONTH": "Ce mois",
     "TASKS_PLANNED": "Tâches planifiées",
-  "TASKS_DONE": "Tâches effectuées",
-  "TASKS_LEFT": "Tâches restantes",
-  "VISITS_PLANNED": "Visites planifiées",
-  "VISITS_DONE": "Visites effectuées",
+    "TASKS_DONE": "Tâches effectuées",
+    "TASKS_LEFT": "Tâches restantes",
+    "VISITS_PLANNED": "Visites planifiées",
+    "VISITS_DONE": "Visites effectuées",
+    "WEEKLY_STATISTICS": "Statistiques de la semaine actuelle",
+    "PLANNED_VISITS": "Visites planifiées",
+    "STORE_MANAGEMENT": "Gestion des magasins",
+    "MERCHANDISER_MANAGEMENT": "Gestion des merchandiseurs",
+    "GLOBAL_PROGRESS": "Progression globale",
+    "VS_PREVIOUS_WEEK": "VS Sem. Précédente",
+    "WEEK_CURRENT": "Semaine actuelle",
+    "WEEK_PREVIOUS": "Semaine précédente",
+    "WEEK_NEXT": "Semaine prochaine",
+    "PLANNED": "Planifiées",
+    "IN_PROGRESS": "En cours",
+    "COMPLETED": "Effectuées",
+    "RESCHEDULED": "Reprogrammées",
+    "NOT_COMPLETED": "Non accomplies",
+    "PLANNING_BY_STATUS": "Planifications par Statut",
+    "FILTER": "Filtre",
+    "ALL_USERS": "Tous les utilisateurs",
+    "VIEW_MAP": "Voir la carte",
+    "PLANNING_MANAGEMENT": "Gestion des planifications",
+    "SEARCH": "Rechercher",
+    "SEARCH_PLACEHOLDER": "Rechercher...",
     "VISIT_STATUS": {
       "COMPLETED": "Terminée",
       "PENDING": "En attente",
@@ -209,11 +234,10 @@
       "STORE_TYPE": "Type de magasin",
       "BY_MERCHANDISER": "Par merchandiseur",
       "BY_BRAND": "Par marque",
-      "ALL_TYPES": "Tous les types",
-      "ALL_MERCHANDISERS": "Tous les merchandiseurs"
+      "ALL_TYPES": "Tous les types"
     }
   },
-   "VISITS": {
+  "VISITS": {
     "TITLE": "Gestion des visites",
     "ADD_VISIT": "Ajouter une visite",
     "EDIT_VISIT": "Modifier la visite",
@@ -268,5 +292,4 @@
       "APPLY": "Appliquer les filtres"
     }
   }
-
 }

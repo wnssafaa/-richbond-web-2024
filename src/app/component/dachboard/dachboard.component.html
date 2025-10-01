@@ -89,12 +89,12 @@
           routerLink="/users"
           routerLinkActive="active-link"
           [class.nav-item-collapsed]="!menuOpen"
-          [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''"
+          [matTooltip]="!menuOpen ? ('DASHBOARD.ALL_USERS' | translate) : ''"
           matTooltipPosition="right"
         >
           <mat-icon matListItemIcon>group</mat-icon>
           <span matListItemTitle [class.text-hidden]="!menuOpen"
-            >Tous les utilisateurs</span
+            >{{ "DASHBOARD.ALL_USERS" | translate }}</span
           >
         </a>
 
@@ -352,7 +352,7 @@
             <mat-card-header>
               <mat-card-title>
                 <mat-icon>event_note</mat-icon>
-                Planifications par Statut
+                {{ "DASHBOARD.PLANNING_BY_STATUS" | translate }}
               </mat-card-title>
             </mat-card-header>
             <mat-card-content>

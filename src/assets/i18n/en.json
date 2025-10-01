@@ -50,6 +50,7 @@
   },
   "USERS": {
     "TITLE": "User Management",
+    "USER": "User",
     "ADD_USER": "Add User",
     "EDIT_USER": "Edit User",
     "DELETE_USER": "Delete User",
@@ -153,7 +154,9 @@
       "SEPTEMBER": "September",
       "OCTOBER": "October",
       "NOVEMBER": "November",
-      "DECEMBER": "December"
+      "DECEMBER": "December",
+      "ALL_MERCHANDISERS": "All merchandisers",
+      "ALL_STORES": "All stores"
     }
   },
   "SETTINGS": {
@@ -186,11 +189,32 @@
     "STATISTICS": "Statistics",
     "PERFORMANCE": "Performance",
     "DURATION": "Duration",
- "TASKS_PLANNED": "Planned Tasks",
-  "TASKS_DONE": "Completed Tasks",
-  "TASKS_LEFT": "Remaining Tasks",
-  "VISITS_PLANNED": "Planned Visits",
-  "VISITS_DONE": "Completed Visits",
+    "TASKS_PLANNED": "Planned Tasks",
+    "TASKS_DONE": "Completed Tasks",
+    "TASKS_LEFT": "Remaining Tasks",
+    "VISITS_PLANNED": "Planned Visits",
+    "VISITS_DONE": "Completed Visits",
+    "WEEKLY_STATISTICS": "Current week statistics",
+    "PLANNED_VISITS": "Planned visits",
+    "STORE_MANAGEMENT": "Store management",
+    "MERCHANDISER_MANAGEMENT": "Merchandiser management",
+    "GLOBAL_PROGRESS": "Global progress",
+    "VS_PREVIOUS_WEEK": "VS Previous Week",
+    "WEEK_CURRENT": "Current week",
+    "WEEK_PREVIOUS": "Previous week",
+    "WEEK_NEXT": "Next week",
+    "PLANNED": "Planned",
+    "IN_PROGRESS": "In progress",
+    "COMPLETED": "Completed",
+    "RESCHEDULED": "Rescheduled",
+    "NOT_COMPLETED": "Not completed",
+    "PLANNING_BY_STATUS": "Planning by Status",
+    "FILTER": "Filter",
+    "ALL_USERS": "All users",
+    "VIEW_MAP": "View map",
+    "PLANNING_MANAGEMENT": "Planning management",
+    "SEARCH": "Search",
+    "SEARCH_PLACEHOLDER": "Search...",
     "TODAY": "Today",
     "THIS_WEEK": "This week",
     "THIS_MONTH": "This month",
@@ -207,8 +231,7 @@
       "STORE_TYPE": "Store type",
       "BY_MERCHANDISER": "By merchandiser",
       "BY_BRAND": "By brand",
-      "ALL_TYPES": "All types",
-      "ALL_MERCHANDISERS": "All merchandisers"
+      "ALL_TYPES": "All types"
     }
   },
   "VISITS": {

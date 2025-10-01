@@ -155,7 +155,7 @@ export class DachboardComponent implements OnDestroy {
   };
 
   public planificationsChartData: ChartData<'doughnut'> = {
-    labels: ['Planifiées', 'En cours', 'Effectuées', 'Reprogrammées', 'Non accomplies'],
+    labels: [],
     datasets: [{
       data: [0, 0, 0, 0, 0],
       backgroundColor: ['#2196F3', '#FF9800', '#4CAF50', '#9C27B0', '#F44336'],
@@ -263,22 +263,66 @@ stores = [
  selectedDate: Date = new Date();
 isLoading: any;
 errorMessage: any;
- constructor(
-   private datePipe: DatePipe,
-  private router: Router,
-  private dialog: MatDialog,
-  private magasinService: MagasinService,
-  private merchendiseurService: MerchendiseurService,
-  private athService: AuthService,
-  private planificationService: PlanificationService,
-  private superviseurService: SuperveseurService,
-  private visitService: VisitService,
-  private userService: UserService,
-  public cdr: ChangeDetectorRef,
-  private translate: TranslateService,
+  constructor(
+    private datePipe: DatePipe,
+    private router: Router,
+    private dialog: MatDialog,
+    private magasinService: MagasinService,
+    private merchendiseurService: MerchendiseurService,
+    private athService: AuthService,
+    private planificationService: PlanificationService,
+    private superviseurService: SuperveseurService,
+    private visitService: VisitService,
+    private userService: UserService,
+    public cdr: ChangeDetectorRef,
+    private translate: TranslateService,
 ) {
   this.translate.setDefaultLang('fr');
   this.translate.use('fr');
+  this.initializeChartLabels();
+  
+  // Écouter les changements de langue
+  this.translate.onLangChange.subscribe(() => {
+    this.updateChartLabelsOnLanguageChange();
+  });
+}
+
+private initializeChartLabels(): void {
+  this.translate.get([
+    'DASHBOARD.PLANNED',
+    'DASHBOARD.IN_PROGRESS', 
+    'DASHBOARD.COMPLETED',
+    'DASHBOARD.RESCHEDULED',
+    'DASHBOARD.NOT_COMPLETED'
+  ]).subscribe(translations => {
+    this.planificationsChartData.labels = [
+      translations['DASHBOARD.PLANNED'],
+      translations['DASHBOARD.IN_PROGRESS'],
+      translations['DASHBOARD.COMPLETED'],
+      translations['DASHBOARD.RESCHEDULED'],
+      translations['DASHBOARD.NOT_COMPLETED']
+    ];
+  });
+}
+
+private updateChartLabelsOnLanguageChange(): void {
+  // Mettre à jour les labels et le titre du graphique existant
+  this.updatePlanificationsChartDisplay();
+  this.updateChartTitle();
+}
+
+private updateChartTitle(): void {
+  if (this.planificationsChart) {
+    this.translate.get('DASHBOARD.PLANNING_BY_STATUS').subscribe(title => {
+      if (this.planificationsChart && this.planificationsChart.options && this.planificationsChart.options.plugins) {
+        this.planificationsChart.options.plugins.title = {
+          display: true,
+          text: title
+        };
+        this.planificationsChart.update();
+      }
+    });
+  }
 }
 getDayCellClass(date: Date): string {
   if (!date) return '';
@@ -542,7 +586,7 @@ resetFilters(): void {
     'Miniprix', 'Decathlon', 'IKEA', 'Electroplanet', 'Virgin Megastore', 'LC Waikiki'
   ];
 
-  semaines = ['Semaine actuelle', 'Semaine précédente', 'Semaine prochaine'];
+  semaines = ['DASHBOARD.WEEK_CURRENT', 'DASHBOARD.WEEK_PREVIOUS', 'DASHBOARD.WEEK_NEXT'];
 dashboardView: boolean = false;
 
 merchandiseursOptions: any[] = []; 
@@ -767,14 +811,28 @@ updatePlanificationsChart(planifications: Planification[]): void {
   const rescheduled = planifications.filter(p => p.statut === 'REPROGRAMMEE').length;
   const notCompleted = planifications.filter(p => p.statut === 'NON_ACCOMPLIE').length;
   
-  this.planificationsChartData = {
-    labels: ['Planifiées', 'En cours', 'Effectuées', 'Reprogrammées', 'Non accomplies'],
-    datasets: [{
-      data: [planned, inProgress, completed, rescheduled, notCompleted],
-      backgroundColor: ['#2196F3', '#FF9800', '#4CAF50', '#9C27B0', '#F44336'],
-      borderWidth: 2
-    }]
-  };
+    this.translate.get([
+      'DASHBOARD.PLANNED',
+      'DASHBOARD.IN_PROGRESS', 
+      'DASHBOARD.COMPLETED',
+      'DASHBOARD.RESCHEDULED',
+      'DASHBOARD.NOT_COMPLETED'
+    ]).subscribe(translations => {
+      this.planificationsChartData = {
+        labels: [
+          translations['DASHBOARD.PLANNED'],
+          translations['DASHBOARD.IN_PROGRESS'],
+          translations['DASHBOARD.COMPLETED'],
+          translations['DASHBOARD.RESCHEDULED'],
+          translations['DASHBOARD.NOT_COMPLETED']
+        ],
+        datasets: [{
+          data: [planned, inProgress, completed, rescheduled, notCompleted],
+          backgroundColor: ['#2196F3', '#FF9800', '#4CAF50', '#9C27B0', '#F44336'],
+          borderWidth: 2
+        }]
+      };
+    });
   
   // Mettre à jour le graphique des planifications
   this.updatePlanificationsChartDisplay();
@@ -976,26 +1034,28 @@ private createVisitsChart(): void {
 private createPlanificationsChart(): void {
   const ctx = document.getElementById('planificationsChart') as HTMLCanvasElement;
   if (ctx && !this.planificationsChart) {
-    this.planificationsChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: this.planificationsChartData,
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: {
-              usePointStyle: true,
-              padding: 20
+    this.translate.get('DASHBOARD.PLANNING_BY_STATUS').subscribe(title => {
+      this.planificationsChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: this.planificationsChartData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                usePointStyle: true,
+                padding: 20
+              }
+            },
+            title: {
+              display: true,
+              text: title
             }
-          },
-          title: {
-            display: true,
-            text: 'Planifications par Statut'
           }
         }
-      }
+      });
     });
   }
 }
@@ -1009,8 +1069,27 @@ private updateVisitsChart(): void {
 
 private updatePlanificationsChartDisplay(): void {
   if (this.planificationsChart) {
-    this.planificationsChart.data = this.planificationsChartData;
-    this.planificationsChart.update();
+    // Mettre à jour les labels traduits
+    this.translate.get([
+      'DASHBOARD.PLANNED',
+      'DASHBOARD.IN_PROGRESS', 
+      'DASHBOARD.COMPLETED',
+      'DASHBOARD.RESCHEDULED',
+      'DASHBOARD.NOT_COMPLETED'
+    ]).subscribe(translations => {
+      this.planificationsChartData.labels = [
+        translations['DASHBOARD.PLANNED'],
+        translations['DASHBOARD.IN_PROGRESS'],
+        translations['DASHBOARD.COMPLETED'],
+        translations['DASHBOARD.RESCHEDULED'],
+        translations['DASHBOARD.NOT_COMPLETED']
+      ];
+      
+      if (this.planificationsChart) {
+        this.planificationsChart.data = this.planificationsChartData;
+        this.planificationsChart.update();
+      }
+    });
   }
 }
 
