@@ -278,75 +278,60 @@
 
       <div *ngIf="selectedTab === 'planification'">
         <div class="filters-container">
-          <div
-            class="filters flex items-center p-3 bg-white rounded-lg shadow-sm"
-          >
-            <!-- Barre de recherche -->
-            <mat-form-field appearance="outline" class="search-field">
-              <mat-label>Rechercher</mat-label>
+          <div class="main-toolbar">
+            <div class="main-toolbar-content">
+              <!-- Section gauche : Recherche et Filtre -->
+              <div class="left-controls">
+                <div class="custom-search-box">
               <input
-                matInput
+                    type="text"
+                    placeholder="Rechercher"
                 [(ngModel)]="searchTerm"
-                (input)="onSearchChange()"
-                placeholder="Rechercher..."
-              />
-              <mat-icon matSuffix>search</mat-icon>
-            </mat-form-field>
+                    (keyup)="onSearchChange()"
+                  />
+                  <button>
+                    <span class="material-icons" style="font-weight: bold"
+                      >search</span
+                    >
+                  </button>
+                </div>
 
-            <!-- Bouton de filtre -->
             <button
-              mat-raised-button
-              class="filter-button"
+                  mat-stroked-button
+                  class="filter-button-custom"
               (click)="toggleAdvancedFilters()"
-              style="
-                background-color: white;
-                color: #333;
-                border: 1px solid #ddd;
-                border-radius: 20px;
-                padding: 10px 20px;
-                font-weight: 500;
-                margin-left: 12px;
-                min-height: 40px;
-                text-transform: none;
-                font-size: 14px;
-              "
-            >
-              <mat-icon style="margin-right: 8px; font-size: 18px"
+                >
+                  <mat-icon style="color: #8192a6; font-size: 18px"
                 >filter_list</mat-icon
               >
-              Filtrer
+                  <span style="color: #8192a6">Filtrer</span>
             </button>
+              </div>
 
-            <!-- Bouton Add Planife -->
-
+              <!-- Section droite : Boutons d'action -->
+              <div class="right-controls">
             <button
               mat-raised-button
-              class="add-planife-button"
+                  class="export-button"
               (click)="openAddvisitDialog()"
               matTooltip="Ajouter une nouvelle planification"
-              style="
-                background-color: #0a2681;
-                color: white;
-                border-radius: 20px;
-                padding: 10px 20px;
-                font-weight: bold;
-                box-shadow: none;
-                border: none;
-                text-transform: none;
-                font-size: 14px;
-                margin-left: 12px;
-                min-height: 40px;
-              "
-            >
-              Ajauter Planification
+                >
+                  <span>Ajouter Planification</span>
+                  <mat-icon>add</mat-icon>
             </button>
+              </div>
+            </div>
           </div>
+          
+          <!-- Indicateur de scroll pour les filtres masqués -->
+          <div class="filters-scroll-indicator" *ngIf="showAdvancedFilters"></div>
 
           <!-- Filtres avancés (affichés conditionnellement) -->
           <div
             *ngIf="showAdvancedFilters"
-            class="advanced-filters flex items-center p-3 bg-white rounded-lg shadow-sm mt-3"
+            class="filters-toolbar"
           >
+            <div class="filters-content">
             <!-- Filtre par semaine avec calendrier -->
             <mat-form-field appearance="outline" class="filter-field">
               <mat-label>Sélectionner une semaine</mat-label>
@@ -368,6 +353,17 @@
                 [startAt]="selectedWeekDate || today"
               >
               </mat-datepicker>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedWeekDate = null; onWeekDateChange()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre semaine"
+                  *ngIf="selectedWeekDate"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
 
             <!-- Filtre par statut -->
@@ -384,6 +380,17 @@
                   >{{ statut.label }}</mat-option
                 >
               </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedStatut = null; filterByStatut()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre statut"
+                  *ngIf="selectedStatut"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="filter-field">
@@ -400,10 +407,21 @@
                   >{{ magasin.label }}</mat-option
                 >
               </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedMagasin = null; filterByMagasin()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre magasin"
+                  *ngIf="selectedMagasin"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="filter-field">
-              <mat-label>{{ "COMMON.MERCHANDISERS" | translate }}</mat-label>
+              <mat-label>Merchendiseurs</mat-label>
               <mat-select
                 panelClass="filter-select"
                 [(value)]="selectedMerchandiseur"
@@ -416,7 +434,27 @@
                   >{{ merch.label }}</mat-option
                 >
               </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedMerchandiseur = null; filterMerchandiseurs()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre merchandiseur"
+                  *ngIf="selectedMerchandiseur"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
+
+              <button
+                mat-button
+                (click)="showAdvancedFilters = false"
+                class="close-filters"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
           </div>
 
           <!-- Calendrier de sélection de date (affiché conditionnellement) -->
@@ -503,7 +541,7 @@
             </div>
           </div>
         </div>
-
+        <!-- 
         <div class="calendar-stats">
           <h2 class="stats-title">
             {{ "DASHBOARD.STATISTICS" | translate }}
@@ -571,7 +609,7 @@
               <p class="stat-label">VS SEM. PRÉCÉDENTE</p>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div>
           <full-calendar
@@ -683,75 +721,60 @@
       <div *ngIf="selectedTab === 'table'">
         <!-- Filtres pour le tableau -->
         <div class="filters-container">
-          <div
-            class="filters flex items-center p-3 bg-white rounded-lg shadow-sm"
-          >
-            <!-- Barre de recherche -->
-            <mat-form-field appearance="outline" class="search-field">
-              <mat-label>Rechercher</mat-label>
+          <div class="main-toolbar">
+            <div class="main-toolbar-content">
+              <!-- Section gauche : Recherche et Filtre -->
+              <div class="left-controls">
+                <div class="custom-search-box">
               <input
-                matInput
+                    type="text"
+                    placeholder="Rechercher"
                 [(ngModel)]="searchTerm"
-                (input)="onSearchChange()"
-                placeholder="Rechercher..."
-              />
-              <mat-icon matSuffix>search</mat-icon>
-            </mat-form-field>
+                    (keyup)="onSearchChange()"
+                  />
+                  <button>
+                    <span class="material-icons" style="font-weight: bold"
+                      >search</span
+                    >
+                  </button>
+                </div>
 
-            <!-- Bouton de filtre -->
             <button
-              mat-raised-button
-              class="filter-button"
+                  mat-stroked-button
+                  class="filter-button-custom"
               (click)="toggleAdvancedFilters()"
-              style="
-                background-color: white;
-                color: #333;
-                border: 1px solid #ddd;
-                border-radius: 20px;
-                padding: 10px 20px;
-                font-weight: 500;
-                margin-left: 12px;
-                min-height: 40px;
-                text-transform: none;
-                font-size: 14px;
-              "
-            >
-              <mat-icon style="margin-right: 8px; font-size: 18px"
+                >
+                  <mat-icon style="color: #8192a6; font-size: 18px"
                 >filter_list</mat-icon
               >
-              Filtrer
+                  <span style="color: #8192a6">Filtrer</span>
             </button>
+              </div>
 
-            <!-- Bouton Add Planife -->
-
+              <!-- Section droite : Boutons d'action -->
+              <div class="right-controls">
             <button
               mat-raised-button
-              class="add-planife-button"
+                  class="export-button"
               (click)="openAddvisitDialog()"
               matTooltip="Ajouter une nouvelle planification"
-              style="
-                background-color: #0a2681;
-                color: white;
-                border-radius: 20px;
-                padding: 10px 20px;
-                font-weight: bold;
-                box-shadow: none;
-                border: none;
-                text-transform: none;
-                font-size: 14px;
-                margin-left: 12px;
-                min-height: 40px;
-              "
-            >
-              Add Planife
+                >
+                  <span>Add Planife</span>
+                  <mat-icon>add</mat-icon>
             </button>
+              </div>
+            </div>
           </div>
+          
+          <!-- Indicateur de scroll pour les filtres masqués -->
+          <div class="filters-scroll-indicator" *ngIf="showAdvancedFilters"></div>
 
           <!-- Filtres avancés (affichés conditionnellement) -->
           <div
             *ngIf="showAdvancedFilters"
-            class="advanced-filters flex items-center p-3 bg-white rounded-lg shadow-sm mt-3"
+            class="filters-toolbar"
           >
+            <div class="filters-content">
             <!-- Filtre par semaine avec calendrier -->
             <mat-form-field appearance="outline" class="filter-field">
               <mat-label>Sélectionner une semaine</mat-label>
@@ -773,6 +796,17 @@
                 [startAt]="selectedWeekDate || today"
               >
               </mat-datepicker>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedWeekDate = null; onWeekDateChange()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre semaine"
+                  *ngIf="selectedWeekDate"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
 
             <!-- Filtre par statut -->
@@ -789,10 +823,21 @@
                   >{{ statut.label }}</mat-option
                 >
               </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedStatut = null; filterByStatut()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre statut"
+                  *ngIf="selectedStatut"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="filter-field">
-              <mat-label>{{ "STORES.TITLE" | translate }}</mat-label>
+              <mat-label>Magasins</mat-label>
               <mat-select
                 panelClass="filter-select"
                 [(value)]="selectedMagasin"
@@ -805,10 +850,21 @@
                   >{{ magasin.label }}</mat-option
                 >
               </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedMagasin = null; filterByMagasin()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre magasin"
+                  *ngIf="selectedMagasin"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="filter-field">
-              <mat-label>{{ "COMMON.MERCHANDISERS" | translate }}</mat-label>
+              <mat-label>Merhendiseurs</mat-label>
               <mat-select
                 panelClass="filter-select"
                 [(value)]="selectedMerchandiseur"
@@ -821,7 +877,27 @@
                   >{{ merch.label }}</mat-option
                 >
               </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedMerchandiseur = null; filterMerchandiseurs()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre merchandiseur"
+                  *ngIf="selectedMerchandiseur"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
+
+              <button
+                mat-button
+                (click)="showAdvancedFilters = false"
+                class="close-filters"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
           </div>
 
           <!-- Calendrier de sélection de date (affiché conditionnellement) -->

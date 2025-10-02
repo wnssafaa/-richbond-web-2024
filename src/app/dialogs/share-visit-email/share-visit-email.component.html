@@ -1,0 +1,163 @@
+<div class="share-email-dialog">
+  <!-- Header -->
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon>email</mat-icon>
+      Partager le rapport de visite par email
+    </h2>
+    <button mat-icon-button mat-dialog-close class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Visit Summary -->
+  <div class="visit-summary">
+    <div class="summary-card">
+      <div class="summary-header">
+        <mat-icon>info</mat-icon>
+        <h3>Résumé de la visite</h3>
+      </div>
+      <div class="summary-content">
+        <div class="summary-row">
+          <span class="label">Visite #{{ visit.id }}</span>
+          <span class="value">{{ getMagasinName() }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">Merchandiseur:</span>
+          <span class="value">{{ getMerchandiserName() }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">Date:</span>
+          <span class="value">{{ getVisitDate() }}</span>
+        </div>
+        <div class="summary-row" *ngIf="getImageCount() > 0">
+          <span class="label">Images:</span>
+          <span class="value">{{ getImageCount() }} photo(s)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email Form -->
+  <form [formGroup]="emailForm" (ngSubmit)="sendEmail()" class="email-form">
+    <div class="form-section">
+      <h3>
+        <mat-icon>person</mat-icon>
+        Destinataire
+      </h3>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Adresse email du destinataire</mat-label>
+        <input 
+          matInput 
+          type="email" 
+          formControlName="recipientEmail"
+          placeholder="exemple@entreprise.com"
+          [class.mat-form-field-invalid]="hasError('recipientEmail')"
+        >
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error *ngIf="hasError('recipientEmail')">
+          {{ getErrorMessage('recipientEmail') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-section">
+      <h3>
+        <mat-icon>message</mat-icon>
+        Message personnalisé (optionnel)
+      </h3>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ajouter un message personnalisé</mat-label>
+        <textarea 
+          matInput 
+          formControlName="customMessage"
+          rows="4"
+          placeholder="Bonjour, veuillez trouver ci-joint le rapport de visite..."
+        ></textarea>
+        <mat-hint>Ce message sera ajouté au début de l'email</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="form-section">
+      <h3>
+        <mat-icon>attach_file</mat-icon>
+        Options d'envoi
+      </h3>
+      
+      <div class="options-container">
+        <mat-checkbox formControlName="includeImages" class="option-checkbox">
+          <div class="option-content">
+            <div class="option-title">Inclure les images de la visite</div>
+            <div class="option-description" *ngIf="getImageCount() > 0">
+              {{ getImageCount() }} image(s) seront jointes au rapport
+            </div>
+            <div class="option-description" *ngIf="getImageCount() === 0">
+              Aucune image disponible pour cette visite
+            </div>
+          </div>
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <!-- Email Preview -->
+    <div class="form-section">
+      <h3>
+        <mat-icon>preview</mat-icon>
+        Aperçu de l'email
+      </h3>
+      
+      <div class="email-preview">
+        <div class="preview-header">
+          <strong>À:</strong> {{ emailForm.get('recipientEmail')?.value || 'destinataire@email.com' }}
+        </div>
+        <div class="preview-header">
+          <strong>Objet:</strong> Rapport de visite #{{ visit.id }} - {{ getMagasinName() }}
+        </div>
+        <div class="preview-content">
+          <p><strong>Contenu:</strong></p>
+          <ul>
+            <li>Rapport détaillé de la visite au format HTML</li>
+            <li>Fichier CSV avec les données de la visite</li>
+            <li *ngIf="emailForm.get('includeImages')?.value && getImageCount() > 0">
+              {{ getImageCount() }} image(s) en pièce(s) jointe(s)
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Actions -->
+  <div class="dialog-actions">
+    <button 
+      mat-button 
+      type="button" 
+      (click)="cancel()"
+      [disabled]="isLoading"
+      class="cancel-button"
+    >
+      <mat-icon>cancel</mat-icon>
+      Annuler
+    </button>
+    
+    <button 
+      mat-raised-button 
+      color="primary" 
+      type="submit"
+      (click)="sendEmail()"
+      [disabled]="emailForm.invalid || isLoading"
+      class="send-button"
+    >
+      <mat-spinner 
+        diameter="20" 
+        *ngIf="isLoading"
+        class="button-spinner"
+      ></mat-spinner>
+      <mat-icon *ngIf="!isLoading">send</mat-icon>
+      {{ isLoading ? 'Envoi en cours...' : 'Envoyer le rapport' }}
+    </button>
+  </div>
+</div>
+

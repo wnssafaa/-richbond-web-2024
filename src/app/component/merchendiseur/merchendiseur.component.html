@@ -298,7 +298,8 @@
 
         <!-- Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) -->
         <div *ngIf="showFilters" class="filters-toolbar">
-          <div class="filters-content">
+          <!-- Première ligne : 4 filtres -->
+          <div class="filters-row filters-row-1">
             <mat-form-field appearance="outline">
               <mat-label>Région</mat-label>
               <mat-select
@@ -397,7 +398,10 @@
                 <mat-icon>close</mat-icon>
               </button>
             </mat-form-field>
+          </div>
 
+          <!-- Deuxième ligne : 4 filtres + bouton fermer -->
+          <div class="filters-row filters-row-2">
             <mat-form-field appearance="outline">
               <mat-label>Marque</mat-label>
               <mat-select
@@ -470,6 +474,30 @@
               </button>
             </mat-form-field>
 
+            <mat-form-field appearance="outline">
+              <mat-label>Date d'intégration</mat-label>
+              <input
+                matInput
+                [matDatepicker]="integrationPicker"
+                [(ngModel)]="selectedIntegrationDate"
+                (dateChange)="applyFilters()"
+                placeholder="Sélectionner une date"
+              />
+              <mat-datepicker-toggle matSuffix [for]="integrationPicker"></mat-datepicker-toggle>
+              <mat-datepicker #integrationPicker></mat-datepicker>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedIntegrationDate = null; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre date d'intégration"
+                *ngIf="selectedIntegrationDate"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
             <button
               mat-button
               (click)="showFilters = false"
@@ -477,6 +505,33 @@
             >
               <mat-icon>close</mat-icon>
             </button>
+          </div>
+
+          <!-- Troisième ligne : Date de sortie seule -->
+          <div class="filters-row filters-row-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Date de sortie</mat-label>
+              <input
+                matInput
+                [matDatepicker]="sortiePicker"
+                [(ngModel)]="selectedSortieDate"
+                (dateChange)="applyFilters()"
+                placeholder="Sélectionner une date"
+              />
+              <mat-datepicker-toggle matSuffix [for]="sortiePicker"></mat-datepicker-toggle>
+              <mat-datepicker #sortiePicker></mat-datepicker>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedSortieDate = null; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre date de sortie"
+                *ngIf="selectedSortieDate"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
           </div>
         </div>
         <table
@@ -507,21 +562,10 @@
             >
               {{ "MERCHANDISERS.NAME" | translate }}
             </th>
-            <td mat-cell *matCellDef="let m">{{ m.nom }}</td>
+            <td mat-cell *matCellDef="let m">{{ m.nom }} {{ m.prenom }}</td>
           </ng-container>
 
-          <ng-container matColumnDef="prenom">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header
-              style="background-color: #f2f2f2"
-            >
-              Prénom
-            </th>
-            <td mat-cell *matCellDef="let m">{{ m.prenom }}</td>
-          </ng-container>
-
+         
           <ng-container matColumnDef="region">
             <th
               mat-header-cell
@@ -568,12 +612,7 @@
               {{ 'COMMON.STORES' | translate }}
             </th>
             <td mat-cell *matCellDef="let m">
-              <span *ngIf="m.magasinIds && m.magasinIds.length > 0">
-                {{ m.magasinIds.join(', ') }}
-              </span>
-              <span *ngIf="!m.magasinIds || m.magasinIds.length === 0" style="color: #999; font-style: italic">
-                Aucun magasin
-              </span>
+              {{ getMagasinNames(m) }}
             </td>
           </ng-container>
 

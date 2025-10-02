@@ -36,6 +36,8 @@ import { MarqueProduit } from '../../enum/MarqueProduit';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { MagasinService, Magasin } from '../../services/magasin.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 import {
   Merchendiseur,
@@ -58,6 +60,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     TranslateModule,
     MatCheckboxModule,
     MatTooltipModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatToolbarModule,
     MatTableModule,
     MatIconModule,
@@ -163,14 +167,12 @@ export class SuperviseursComponent implements OnInit {
   showFilters: boolean = false;
   selectedRegion: string = '';
   selectedVille: string = '';
-
-  // selectedEnseigne: string = '';
-
+  selectedEnseigne: string = '';
   selectedMagasin: string = '';
-
   selectedMarque: string = '';
-
   selectedMerchandiseur: string = '';
+  selectedDateDebut: Date | null = null;
+  selectedDateSortie: Date | null = null;
 
   // Listes pour les filtres
 
@@ -339,16 +341,9 @@ export class SuperviseursComponent implements OnInit {
 
     [Region.DAKHLA_OUED_ED_DAHAB]: ['Dakhla', 'Aousserd'],
   };
-  onRegionChange(selectedRegion: Region): void {
+  onRegionChange(selectedRegion: string): void {
     this.selectedRegion = selectedRegion;
-    this.villes = this.regionVillesMap[selectedRegion] || [];
-    this.selectedVille = '';
-    this.applyFilters();
-  }
-
-  onRegionFilterChange(selectedRegion: Region): void {
-    this.selectedRegion = selectedRegion;
-    this.villesDisponibles = this.regionVillesMap[selectedRegion] || [];
+    this.villesDisponibles = this.regionVillesMap[selectedRegion as keyof typeof this.regionVillesMap] || [];
     this.selectedVille = '';
     this.applyFilters();
   }
@@ -358,20 +353,17 @@ export class SuperviseursComponent implements OnInit {
       searchText: this.searchText.toLowerCase(),
       region: this.selectedRegion,
       ville: this.selectedVille,
-
       enseigne: this.selectedEnseigne,
-
       magasin: this.selectedMagasin,
-
       marque: this.selectedMarque,
-
       marchandiseur: this.selectedMerchandiseur,
+      dateDebut: this.selectedDateDebut?.toISOString(),
+      dateSortie: this.selectedDateSortie?.toISOString(),
     });
   }
   regions: string[] = Object.values(Region);
   villes: string[] = [];
   profils: string[] = [];
-  selectedEnseigne: string = '';
   selectedProfil: string = '';
   constructor(
     @Inject(SuperveseurService) private superviseurService: SuperveseurService,
@@ -425,11 +417,52 @@ export class SuperviseursComponent implements OnInit {
 
   loadSuperviseurs() {
     this.superviseurService.getAll().subscribe((data: Superviseur[]) => {
-      console.log('Superviseurs chargés :', data); // AJOUTE CECI
+      console.log('Superviseurs chargés :', data);
       this.superviseurs = data;
-      this.dataSource.data = data;
-      this.dataSource.paginator = this.paginator;
+      this.createExpandedDataSource();
     });
+  }
+
+  // Méthode pour créer une ligne par superviseur-merchandiser
+  createExpandedDataSource(): void {
+    const expandedData: any[] = [];
+
+    this.superviseurs.forEach((superviseur) => {
+      if (superviseur.merchendiseurs && superviseur.merchendiseurs.length > 0) {
+        // Si le superviseur a des merchandiseurs, créer une ligne pour chaque merchandiseur
+        superviseur.merchendiseurs.forEach((merchandiseur) => {
+          const expandedSuperviseur = {
+            ...superviseur,
+            uniqueKey: `${superviseur.id}_${merchandiseur.id}`, // Clé unique pour chaque ligne
+            merchandiseurId: merchandiseur.id,
+            merchandiseurNom: merchandiseur.nom,
+            merchandiseurPrenom: merchandiseur.prenom,
+            merchandiseurEmail: merchandiseur.email,
+            merchandiseurTelephone: merchandiseur.telephone,
+            merchandiseurRegion: merchandiseur.region,
+            merchandiseurVille: merchandiseur.ville
+          };
+          expandedData.push(expandedSuperviseur);
+        });
+      } else {
+        // Si le superviseur n'a pas de merchandiseurs, créer une ligne sans merchandiseur
+        const expandedSuperviseur = {
+          ...superviseur,
+          uniqueKey: `${superviseur.id}_no_merchandiseur`,
+          merchandiseurId: null,
+          merchandiseurNom: 'Aucun merchandiseur',
+          merchandiseurPrenom: '',
+          merchandiseurEmail: '',
+          merchandiseurTelephone: '',
+          merchandiseurRegion: '',
+          merchandiseurVille: ''
+        };
+        expandedData.push(expandedSuperviseur);
+      }
+    });
+
+    this.dataSource.data = expandedData;
+    this.dataSource.paginator = this.paginator;
   }
 
   loadMagasins(): void {
@@ -489,21 +522,23 @@ export class SuperviseursComponent implements OnInit {
   }
 
   private setupCustomFilter() {
-    this.dataSource.filterPredicate = (data: Superviseur, filter: string) => {
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
       const filterObj = JSON.parse(filter);
 
       const matchesSearch =
         !filterObj.searchText ||
         data.nom?.toLowerCase().includes(filterObj.searchText) ||
         data.prenom?.toLowerCase().includes(filterObj.searchText) ||
-        data.email?.toLowerCase().includes(filterObj.searchText);
+        data.email?.toLowerCase().includes(filterObj.searchText) ||
+        data.merchandiseurNom?.toLowerCase().includes(filterObj.searchText) ||
+        data.merchandiseurPrenom?.toLowerCase().includes(filterObj.searchText);
 
       const matchesRegion =
         !filterObj.region || data.region === filterObj.region;
 
-      const matchesVille = !filterObj.ville || data.ville === filterObj.ville;
-
-      // Pour les superviseurs, on peut filtrer par magasin via la propriété magasin (string)
+      // Filtre ville conditionnel : seulement si une région est sélectionnée
+      const matchesVille = !filterObj.ville || 
+        (filterObj.region && data.ville === filterObj.ville);
 
       const matchesMagasin =
         !filterObj.magasin ||
@@ -511,8 +546,6 @@ export class SuperviseursComponent implements OnInit {
           data.magasin &&
             data.magasin.toLowerCase().includes(filterObj.magasin.toLowerCase())
         );
-
-      // Logique de filtrage par marque
 
       const matchesMarque =
         !filterObj.marque ||
@@ -523,8 +556,6 @@ export class SuperviseursComponent implements OnInit {
               .includes(filterObj.marque.toLowerCase())
         );
 
-      // Pour les superviseurs, on peut filtrer par enseigne via la propriété magasin
-
       const matchesEnseigne =
         !filterObj.enseigne ||
         Boolean(
@@ -534,18 +565,19 @@ export class SuperviseursComponent implements OnInit {
               .includes(filterObj.enseigne.toLowerCase())
         );
 
-      // Logique de filtrage par marchandiseur
-
       const matchesMerchandiseur =
         !filterObj.merchandiseur ||
         Boolean(
-          data.merchendiseurs &&
-            data.merchendiseurs.some((merch) =>
-              `${merch.nom} ${merch.prenom}`
-                .toLowerCase()
-                .includes(filterObj.merchandiseur.toLowerCase())
-            )
+          data.merchandiseurNom &&
+            data.merchandiseurNom.toLowerCase().includes(filterObj.merchandiseur.toLowerCase())
         );
+
+      // Filtres par date
+      const matchesDateDebut = !filterObj.dateDebut || 
+        this.matchesExactDate(data.dateIntegration, filterObj.dateDebut);
+
+      const matchesDateSortie = !filterObj.dateSortie || 
+        this.matchesExactDate(data.dateSortie, filterObj.dateSortie);
 
       return (
         matchesSearch &&
@@ -554,9 +586,25 @@ export class SuperviseursComponent implements OnInit {
         matchesEnseigne &&
         matchesMagasin &&
         matchesMarque &&
-        matchesMerchandiseur
+        matchesMerchandiseur &&
+        matchesDateDebut &&
+        matchesDateSortie
       );
     };
+  }
+
+  // Méthode utilitaire pour vérifier si une date correspond exactement
+  private matchesExactDate(date: Date | string | null | undefined, filterDate: string | null): boolean {
+    if (!filterDate) return true;
+    if (!date) return false;
+
+    const checkDate = new Date(date);
+    const filter = new Date(filterDate);
+
+    // Comparer seulement l'année, le mois et le jour (ignorer l'heure)
+    return checkDate.getFullYear() === filter.getFullYear() &&
+           checkDate.getMonth() === filter.getMonth() &&
+           checkDate.getDate() === filter.getDate();
   }
 
   // Méthode pour la sélection/désélection de toutes les lignes

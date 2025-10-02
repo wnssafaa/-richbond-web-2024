@@ -18,6 +18,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
+import { ShareVisitEmailComponent } from '../../dialogs/share-visit-email/share-visit-email.component';
 
 @Component({
   selector: 'app-visit-detail-page',
@@ -141,6 +142,30 @@ export class VisitDetailPageComponent implements OnInit {
 
   printPage(): void {
     window.print();
+  }
+
+  shareByEmail(): void {
+    if (!this.visit) {
+      this.snackBar.open('Aucune visite à partager', 'Fermer', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ShareVisitEmailComponent, {
+      width: '600px',
+      maxWidth: '90vw',
+      maxHeight: '90vh',
+      data: { visit: this.visit },
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Rapport de visite partagé avec succès');
+      }
+    });
   }
 
   toggleMenu(): void {

@@ -158,7 +158,7 @@ export class DachboardComponent implements OnDestroy {
     labels: [],
     datasets: [{
       data: [0, 0, 0, 0, 0],
-      backgroundColor: ['#2196F3', '#FF9800', '#4CAF50', '#9C27B0', '#F44336'],
+      backgroundColor: ['#1f1f5e', '#ff9800', '#4caf50', '#beab71', '#f44336'],
       borderWidth: 2
     }]
   };
@@ -302,6 +302,9 @@ private initializeChartLabels(): void {
       translations['DASHBOARD.RESCHEDULED'],
       translations['DASHBOARD.NOT_COMPLETED']
     ];
+    
+    // S'assurer que les couleurs correspondent au calendrier
+    this.planificationsChartData.datasets[0].backgroundColor = ['#1f1f5e', '#ff9800', '#4caf50', '#beab71', '#f44336'];
   });
 }
 
@@ -828,7 +831,7 @@ updatePlanificationsChart(planifications: Planification[]): void {
         ],
         datasets: [{
           data: [planned, inProgress, completed, rescheduled, notCompleted],
-          backgroundColor: ['#2196F3', '#FF9800', '#4CAF50', '#9C27B0', '#F44336'],
+          backgroundColor: ['#1f1f5e', '#ff9800', '#4caf50', '#beab71', '#f44336'],
           borderWidth: 2
         }]
       };
@@ -1084,6 +1087,9 @@ private updatePlanificationsChartDisplay(): void {
         translations['DASHBOARD.RESCHEDULED'],
         translations['DASHBOARD.NOT_COMPLETED']
       ];
+      
+      // Mettre à jour aussi les couleurs pour qu'elles correspondent au calendrier
+      this.planificationsChartData.datasets[0].backgroundColor = ['#1f1f5e', '#ff9800', '#4caf50', '#beab71', '#f44336'];
       
       if (this.planificationsChart) {
         this.planificationsChart.data = this.planificationsChartData;

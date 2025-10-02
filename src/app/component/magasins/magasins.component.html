@@ -403,6 +403,33 @@
               </button>
             </mat-form-field>
 
+            <mat-form-field appearance="outline">
+              <mat-label>Superviseur</mat-label>
+              <mat-select
+                [(ngModel)]="selectedSuperviseur"
+                (selectionChange)="applyFilters()"
+              >
+                <mat-option value="">Tous les superviseurs</mat-option>
+                <mat-option
+                  *ngFor="let superv of superviseurs"
+                  [value]="superv.id"
+                >
+                  {{ superv.prenom }} {{ superv.nom }}
+                </mat-option>
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedSuperviseur = ''; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre superviseur"
+                *ngIf="selectedSuperviseur"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
             <button
               mat-button
               (click)="showFilters = false"

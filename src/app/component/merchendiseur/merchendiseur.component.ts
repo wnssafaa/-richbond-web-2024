@@ -22,6 +22,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { AdduserComponent } from '../adduser/adduser.component';
 import {
   MerchendiseurService,
@@ -86,6 +88,8 @@ import { MagasinService, Magasin } from '../../services/magasin.service';
     RouterLink,
     MatPaginatorModule,
     RouterModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     ColumnCustomizationPanelComponent,
   ],
   animations: [
@@ -111,7 +115,7 @@ export class MerchendiseurComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'nom',
-    'prenom',
+   
     'Profil',
     'region',
     'ville',
@@ -128,7 +132,7 @@ export class MerchendiseurComponent implements OnInit {
   columnConfig = [
     { key: 'id', label: 'ID', visible: true },
     { key: 'nom', label: 'Nom', visible: true },
-    { key: 'prenom', label: 'Prénom', visible: true },
+    // { key: 'prenom', label: 'Prénom', visible: true },
     { key: 'Profil', label: 'Profil', visible: true },
     { key: 'region', label: 'Région', visible: true },
     { key: 'ville', label: 'Ville', visible: true },
@@ -333,6 +337,10 @@ export class MerchendiseurComponent implements OnInit {
 
   selectedSuperviseur: string = '';
 
+  // Variables pour les filtres de dates
+  selectedIntegrationDate: Date | null = null;
+  selectedSortieDate: Date | null = null;
+
   villes: string[] = [];
 
   onRegionChange(region: string) {
@@ -403,7 +411,7 @@ export class MerchendiseurComponent implements OnInit {
   }
 
   private setupCustomFilter() {
-    this.dataSource.filterPredicate = (data: Merchendiseur, filter: string) => {
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
       const filterObj = JSON.parse(filter);
       const matchesSearch =
         !filterObj.searchText ||
@@ -421,7 +429,7 @@ export class MerchendiseurComponent implements OnInit {
 
       const matchesMagasin =
         !filterObj.magasin ||
-        this.isMerchandiserInMagasin(data, filterObj.magasin);
+        (data.magasinNom && data.magasinNom.toLowerCase().includes(filterObj.magasin.toLowerCase()));
 
       // Logique de filtrage par marque
 
@@ -445,6 +453,18 @@ export class MerchendiseurComponent implements OnInit {
               .includes(filterObj.superviseur.toLowerCase())
         );
 
+      // Logique de filtrage par date d'intégration
+      const matchesIntegrationDate = this.matchesExactDate(
+        data.dateDebutIntegration,
+        filterObj.integrationDate
+      );
+
+      // Logique de filtrage par date de sortie
+      const matchesSortieDate = this.matchesExactDate(
+        data.dateSortie,
+        filterObj.sortieDate
+        );
+
       return (
         matchesSearch &&
         matchesRegion &&
@@ -454,33 +474,25 @@ export class MerchendiseurComponent implements OnInit {
         matchesMarque &&
         matchesProfil &&
         matchesRole &&
-        matchesSuperviseur
+        matchesSuperviseur &&
+        matchesIntegrationDate &&
+        matchesSortieDate
       );
     };
   }
-  private isMerchandiserInMagasin(
-    merchandiser: Merchendiseur,
-    magasinName: string
-  ): boolean {
-    if (
-      !magasinName ||
-      !merchandiser.magasinIds ||
-      merchandiser.magasinIds.length === 0
-    ) {
-      return false;
-    }
 
-    // Trouver le magasin par nom
+  // Méthode utilitaire pour vérifier si une date correspond exactement
+  private matchesExactDate(date: Date | string | null | undefined, filterDate: string | null): boolean {
+    if (!filterDate) return true;
+    if (!date) return false;
 
-    const magasin = this.magasins.find((m) => m.nom === magasinName);
+    const checkDate = new Date(date);
+    const filter = new Date(filterDate);
 
-    if (!magasin || !magasin.id) {
-      return false;
-    }
-
-    // Vérifier si le merchandiser est associé à ce magasin
-
-    return merchandiser.magasinIds.includes(magasin.id);
+    // Comparer seulement l'année, le mois et le jour (ignorer l'heure)
+    return checkDate.getFullYear() === filter.getFullYear() &&
+           checkDate.getMonth() === filter.getMonth() &&
+           checkDate.getDate() === filter.getDate();
   }
   currentLanguage = 'fr';
   changeLanguage(lang: string) {
@@ -522,7 +534,6 @@ export class MerchendiseurComponent implements OnInit {
     this.merchendiseurService.getAllMerchendiseurs().subscribe(
       (data) => {
         this.merchandiseurs = data;
-        this.dataSource.data = data;
         this.loadSuperviseurNames(); // Charge les noms des superviseurs
       },
       (error) => console.error(error)
@@ -534,7 +545,7 @@ export class MerchendiseurComponent implements OnInit {
     
     if (totalToLoad === 0) {
       // Aucun superviseur à charger, mettre à jour le DataSource
-      this.dataSource.data = [...this.merchandiseurs];
+      this.createExpandedDataSource();
       return;
     }
 
@@ -556,11 +567,54 @@ export class MerchendiseurComponent implements OnInit {
             loadedCount++;
             // Mettre à jour le DataSource quand tous les superviseurs sont chargés
             if (loadedCount === totalToLoad) {
-              this.dataSource.data = [...this.merchandiseurs];
+              this.createExpandedDataSource();
             }
           });
       }
     });
+  }
+
+  // Méthode pour créer une ligne par merchandiser-magasin
+  createExpandedDataSource(): void {
+    const expandedData: any[] = [];
+
+    this.merchandiseurs.forEach((merch) => {
+      if (merch.magasinIds && merch.magasinIds.length > 0) {
+        // Si le merchandiser a des magasins, créer une ligne pour chaque magasin
+        merch.magasinIds.forEach((magasinId) => {
+          const magasin = this.magasins.find(m => m.id === magasinId);
+          const expandedMerch = {
+            ...merch,
+            uniqueKey: `${merch.id}_${magasinId}`, // Clé unique pour chaque ligne
+            magasinId: magasinId,
+            magasinNom: magasin ? magasin.nom : `Magasin ${magasinId}`,
+            magasinNoms: [magasin ? magasin.nom : `Magasin ${magasinId}`], // Un seul magasin par ligne
+            dateIntegration: merch.dateDebutIntegration // Mapper la propriété correcte
+          };
+          expandedData.push(expandedMerch);
+        });
+      } else {
+        // Si le merchandiser n'a pas de magasins, créer une ligne sans magasin
+        const expandedMerch = {
+          ...merch,
+          uniqueKey: `${merch.id}_no_magasin`,
+          magasinId: null,
+          magasinNom: 'Aucun magasin',
+          magasinNoms: [],
+          dateIntegration: merch.dateDebutIntegration // Mapper la propriété correcte
+        };
+        expandedData.push(expandedMerch);
+      }
+    });
+
+    this.dataSource.data = expandedData;
+  }
+
+
+  // Méthode pour obtenir les noms des magasins d'un merchandiser
+  getMagasinNames(merch: any): string {
+    // Utiliser le nom du magasin unique pour cette ligne
+    return merch.magasinNom || 'Aucun magasin';
   }
   userMenuOpen = false;
   applyFilters() {
@@ -570,14 +624,12 @@ export class MerchendiseurComponent implements OnInit {
       ville: this.selectedVille,
       enseigne: this.selectedEnseigne,
       magasin: this.selectedMagasin,
-
       marque: this.selectedMarque,
-
       profil: this.selectedProfil,
-
       role: this.selectedRole,
-
       superviseur: this.selectedSuperviseur,
+      integrationDate: this.selectedIntegrationDate?.toISOString(),
+      sortieDate: this.selectedSortieDate?.toISOString(),
     });
   }
   // Filtrer les superviseurs

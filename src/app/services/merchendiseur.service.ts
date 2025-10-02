@@ -6,9 +6,9 @@ import { Magasin } from './magasin.service';
 import { Role } from '../enum/Role';
 
 export interface Merchendiseur {
-  magasinNoms: never[];
-  superviseurPrenom: string;
-  superviseurNom: string;
+  magasinNoms?: string[];
+  superviseurPrenom?: string;
+  superviseurNom?: string;
   username?: string; // Optionnel si différent de l'email
   password?: string;
   id?: number;
