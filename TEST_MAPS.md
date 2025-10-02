@@ -119,5 +119,3 @@
 - Google Maps nécessite une clé API
 - Les deux options offrent les mêmes fonctionnalités de base
 - OpenStreetMap est suffisant pour la plupart des cas d'usage
-  te
-  test puull
