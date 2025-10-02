@@ -288,6 +288,39 @@
       "CLEAR": "Clear filters",
       "APPLY": "Apply filters"
     }
+  },
+  "EMAIL": {
+    "SHARE_VISIT_REPORT": "Share visit report by email",
+    "RECIPIENT_EMAIL": "Recipient email address",
+    "RECIPIENT_EMAIL_PLACEHOLDER": "example@company.com",
+    "CUSTOM_MESSAGE": "Custom message (optional)",
+    "CUSTOM_MESSAGE_PLACEHOLDER": "Hello, please find attached the visit report...",
+    "CUSTOM_MESSAGE_HINT": "This message will be added at the beginning of the email",
+    "INCLUDE_IMAGES": "Include visit images",
+    "INCLUDE_IMAGES_DESCRIPTION": "{{count}} image(s) will be attached to the report",
+    "NO_IMAGES_AVAILABLE": "No images available for this visit",
+    "EMAIL_PREVIEW": "Email preview",
+    "EMAIL_TO": "To:",
+    "EMAIL_SUBJECT": "Subject:",
+    "EMAIL_CONTENT": "Content:",
+    "EMAIL_CONTENT_HTML": "Detailed visit report in HTML format",
+    "EMAIL_CONTENT_CSV": "CSV file with visit data",
+    "EMAIL_CONTENT_IMAGES": "{{count}} image(s) as attachment(s)",
+    "SEND_REPORT": "Send report",
+    "SENDING": "Sending...",
+    "CANCEL": "Cancel",
+    "VISIT_SUMMARY": "Visit summary",
+    "VISIT_ID": "Visit #{{id}}",
+    "MERCHANDISER": "Merchandiser:",
+    "DATE": "Date:",
+    "IMAGES": "Images:",
+    "PHOTO_COUNT": "{{count}} photo(s)",
+    "SEND_SUCCESS": "Report sent successfully!",
+    "SEND_ERROR": "Error sending email",
+    "INVALID_EMAIL": "Invalid email address",
+    "NO_VISIT_TO_SHARE": "No visit to share",
+    "REQUIRED_FIELD": "This field is required",
+    "INVALID_EMAIL_FORMAT": "Invalid email format"
   }
 
 }

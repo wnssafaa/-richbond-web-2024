@@ -291,5 +291,38 @@
       "CLEAR": "Effacer les filtres",
       "APPLY": "Appliquer les filtres"
     }
+  },
+  "EMAIL": {
+    "SHARE_VISIT_REPORT": "Partager le rapport de visite par email",
+    "RECIPIENT_EMAIL": "Adresse email du destinataire",
+    "RECIPIENT_EMAIL_PLACEHOLDER": "exemple@entreprise.com",
+    "CUSTOM_MESSAGE": "Message personnalisé (optionnel)",
+    "CUSTOM_MESSAGE_PLACEHOLDER": "Bonjour, veuillez trouver ci-joint le rapport de visite...",
+    "CUSTOM_MESSAGE_HINT": "Ce message sera ajouté au début de l'email",
+    "INCLUDE_IMAGES": "Inclure les images de la visite",
+    "INCLUDE_IMAGES_DESCRIPTION": "{{count}} image(s) seront jointes au rapport",
+    "NO_IMAGES_AVAILABLE": "Aucune image disponible pour cette visite",
+    "EMAIL_PREVIEW": "Aperçu de l'email",
+    "EMAIL_TO": "À:",
+    "EMAIL_SUBJECT": "Objet:",
+    "EMAIL_CONTENT": "Contenu:",
+    "EMAIL_CONTENT_HTML": "Rapport détaillé de la visite au format HTML",
+    "EMAIL_CONTENT_CSV": "Fichier CSV avec les données de la visite",
+    "EMAIL_CONTENT_IMAGES": "{{count}} image(s) en pièce(s) jointe(s)",
+    "SEND_REPORT": "Envoyer le rapport",
+    "SENDING": "Envoi en cours...",
+    "CANCEL": "Annuler",
+    "VISIT_SUMMARY": "Résumé de la visite",
+    "VISIT_ID": "Visite #{{id}}",
+    "MERCHANDISER": "Merchandiseur:",
+    "DATE": "Date:",
+    "IMAGES": "Images:",
+    "PHOTO_COUNT": "{{count}} photo(s)",
+    "SEND_SUCCESS": "Rapport envoyé avec succès !",
+    "SEND_ERROR": "Erreur lors de l'envoi de l'email",
+    "INVALID_EMAIL": "Adresse email invalide",
+    "NO_VISIT_TO_SHARE": "Aucune visite à partager",
+    "REQUIRED_FIELD": "Ce champ est obligatoire",
+    "INVALID_EMAIL_FORMAT": "Adresse email invalide"
   }
 }
