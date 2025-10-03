@@ -36,7 +36,7 @@
           (click)="exportToExcel()"
           style="background-color: #000000; color: white; margin-right: 8px"
         >
-          <span>Export </span>
+          <span>{{ "LOGIN_HISTORY.EXPORT" | translate }} </span>
           <mat-icon>file_download</mat-icon>
         </button>
 
@@ -51,9 +51,87 @@
   <!-- Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) -->
   <div *ngIf="showFilters" class="filters-toolbar">
     <div class="filters-content">
-      <!-- Filtre par rôle -->
+      <!-- Première ligne : 4 filtres (Région, Ville, Magasin, Fonction) -->
+      <div class="filters-row">
+        <!-- Filtre par région -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ "LOGIN_HISTORY.REGION" | translate }}</mat-label>
+          <mat-select
+            [(ngModel)]="selectedRegion"
+            (selectionChange)="onRegionChange($event.value)"
+          >
+            <mat-option value="">{{ "COMMON.ALL" | translate }}</mat-option>
+              <mat-option *ngFor="let region of regions" [value]="region">
+                {{ getRegionTranslation(region) }}
+              </mat-option>
+          </mat-select>
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="selectedRegion = ''; applyFilters()"
+            class="clear-filter-btn"
+            tabindex="-1"
+            [attr.aria-label]="'LOGIN_HISTORY.CLEAR_FILTER_REGION' | translate"
+            *ngIf="selectedRegion"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <!-- Filtre par ville -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ "LOGIN_HISTORY.CITY" | translate }}</mat-label>
+          <mat-hint>{{ "LOGIN_HISTORY.FILTERS_INDEPENDENT" | translate }}</mat-hint>
+          <mat-select
+            [(ngModel)]="selectedVille"
+            (selectionChange)="onVilleChange($event.value)"
+          >
+            <mat-option value="">{{ "COMMON.ALL" | translate }}</mat-option>
+            <mat-option *ngFor="let ville of villes" [value]="ville">
+              {{ ville }}
+            </mat-option>
+          </mat-select>
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="selectedVille = ''; applyFilters()"
+            class="clear-filter-btn"
+            tabindex="-1"
+            [attr.aria-label]="'LOGIN_HISTORY.CLEAR_FILTER_CITY' | translate"
+            *ngIf="selectedVille"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <!-- Filtre par magasin -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ "LOGIN_HISTORY.STORE" | translate }}</mat-label>
+          <mat-select
+            [(ngModel)]="selectedMagasin"
+            (selectionChange)="onMagasinChange($event.value)"
+          >
+            <mat-option value="">{{ "COMMON.ALL" | translate }}</mat-option>
+            <mat-option *ngFor="let magasin of magasins" [value]="magasin">
+              {{ magasin }}
+            </mat-option>
+          </mat-select>
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="selectedMagasin = ''; applyFilters()"
+            class="clear-filter-btn"
+            tabindex="-1"
+            [attr.aria-label]="'LOGIN_HISTORY.CLEAR_FILTER_STORE' | translate"
+            *ngIf="selectedMagasin"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <!-- Filtre par fonction (anciennement rôle) -->
       <mat-form-field appearance="outline">
-        <mat-label>{{ "USERS.ROLE" | translate }}</mat-label>
+          <mat-label>{{ "LOGIN_HISTORY.FUNCTION" | translate }}</mat-label>
         <mat-select
           [(ngModel)]="selectedRole"
           (selectionChange)="applyFilters()"
@@ -69,13 +147,16 @@
           (click)="selectedRole = ''; applyFilters()"
           class="clear-filter-btn"
           tabindex="-1"
-          aria-label="Effacer le filtre rôle"
+            [attr.aria-label]="'LOGIN_HISTORY.CLEAR_FILTER_FUNCTION' | translate"
           *ngIf="selectedRole"
         >
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
+      </div>
 
+      <!-- Deuxième ligne : 3 filtres (Statut, Date de connexion, Date de déconnexion) -->
+      <div class="filters-row">
       <!-- Filtre par statut -->
       <mat-form-field appearance="outline">
         <mat-label>{{ "USERS.STATUS" | translate }}</mat-label>
@@ -94,16 +175,16 @@
           (click)="selectedStatus = ''; applyFilters()"
           class="clear-filter-btn"
           tabindex="-1"
-          aria-label="Effacer le filtre statut"
+            [attr.aria-label]="'LOGIN_HISTORY.CLEAR_FILTER_STATUS' | translate"
           *ngIf="selectedStatus"
         >
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
 
-      <!-- Filtre par plage de dates -->
+        <!-- Filtre par date de connexion -->
       <mat-form-field appearance="outline">
-        <mat-label>Date de début</mat-label>
+          <mat-label>{{ "LOGIN_HISTORY.LOGIN_DATE" | translate }}</mat-label>
         <input
           matInput
           type="date"
@@ -120,15 +201,16 @@
           (click)="selectedDateRange.start = null; applyFilters()"
           class="clear-filter-btn"
           tabindex="-1"
-          aria-label="Effacer le filtre date début"
+            [attr.aria-label]="'LOGIN_HISTORY.CLEAR_FILTER_LOGIN_DATE' | translate"
           *ngIf="selectedDateRange.start"
         >
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
 
+        <!-- Filtre par date de déconnexion -->
       <mat-form-field appearance="outline">
-        <mat-label>Date de fin</mat-label>
+          <mat-label>{{ "LOGIN_HISTORY.LOGOUT_DATE" | translate }}</mat-label>
         <input
           matInput
           type="date"
@@ -145,16 +227,13 @@
           (click)="selectedDateRange.end = null; applyFilters()"
           class="clear-filter-btn"
           tabindex="-1"
-          aria-label="Effacer le filtre date fin"
+            [attr.aria-label]="'LOGIN_HISTORY.CLEAR_FILTER_LOGOUT_DATE' | translate"
           *ngIf="selectedDateRange.end"
         >
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
-
-      <button mat-button (click)="showFilters = false" class="close-filters">
-        <mat-icon>close</mat-icon>
-      </button>
+      </div>
     </div>
   </div>
 </div>
@@ -196,7 +275,7 @@
             <img
               *ngIf="entry.user?.imagePath"
               [src]="entry.user.imagePath"
-              alt="Photo de profil"
+              alt="{{ 'LOGIN_HISTORY.PROFILE_PHOTO' | translate }}"
               class="avatar-image"
             />
             <div *ngIf="!entry.user?.imagePath" class="avatar-placeholder">
@@ -217,6 +296,104 @@
             </div>
           </div>
         </div>
+      </td>
+    </ng-container>
+
+    <!-- Colonne Région -->
+    <ng-container matColumnDef="region">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="background-color: #f2f2f2"
+      >
+        {{ "LOGIN_HISTORY.REGION" | translate }}
+      </th>
+      <td mat-cell *matCellDef="let entry">
+        <div class="region-cell">
+          <mat-icon class="region-icon">location_on</mat-icon>
+          <span>{{ getRegionTranslation(entry.user?.region || '') || 'N/A' }}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Colonne Ville -->
+    <ng-container matColumnDef="ville">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="background-color: #f2f2f2"
+      >
+        {{ "LOGIN_HISTORY.CITY" | translate }}
+      </th>
+      <td mat-cell *matCellDef="let entry">
+        <div class="ville-cell">
+          <mat-icon class="ville-icon">place</mat-icon>
+          <span>{{ entry.user?.ville || 'N/A' }}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Colonne Magasin -->
+    <ng-container matColumnDef="magasin">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="background-color: #f2f2f2"
+      >
+        {{ "LOGIN_HISTORY.STORE" | translate }}
+      </th>
+      <td mat-cell *matCellDef="let entry">
+        <div class="magasin-cell">
+          <mat-icon class="magasin-icon">store</mat-icon>
+          <span>{{ entry.user?.magasin || 'N/A' }}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Colonne Fonction (anciennement Rôle) -->
+    <ng-container matColumnDef="fonction">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="background-color: #f2f2f2"
+      >
+        {{ "LOGIN_HISTORY.FUNCTION" | translate }}
+      </th>
+      <td mat-cell *matCellDef="let entry">
+        <mat-chip [class]="'role-' + entry.user?.role?.toLowerCase()">
+          {{ entry.user?.role }}
+        </mat-chip>
+      </td>
+    </ng-container>
+
+    <!-- Colonne Statut -->
+    <ng-container matColumnDef="status">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="background-color: #f2f2f2"
+      >
+        {{ "USERS.STATUS" | translate }}
+      </th>
+      <td mat-cell *matCellDef="let entry">
+        <mat-chip
+          [class]="'status-' + entry.user?.status?.toLowerCase()"
+          [matTooltip]="
+            entry.user?.status === 'ACTIVE'
+              ? 'Utilisateur actif'
+              : 'Utilisateur inactif'
+          "
+        >
+          <mat-icon matChipAvatar>
+            {{ entry.user?.status === "ACTIVE" ? "check_circle" : "cancel" }}
+          </mat-icon>
+          {{ entry.user?.status }}
+        </mat-chip>
       </td>
     </ng-container>
 
@@ -277,50 +454,6 @@
             {{ getStatusIcon(entry.loginTime, entry.logoutTime) }}
           </mat-icon>
           {{ calculateSessionDuration(entry.loginTime, entry.logoutTime) }}
-        </mat-chip>
-      </td>
-    </ng-container>
-
-    <!-- Colonne Rôle -->
-    <ng-container matColumnDef="role">
-      <th
-        mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-        style="background-color: #f2f2f2"
-      >
-        {{ "USERS.ROLE" | translate }}
-      </th>
-      <td mat-cell *matCellDef="let entry">
-        <mat-chip [class]="'role-' + entry.user?.role?.toLowerCase()">
-          {{ entry.user?.role }}
-        </mat-chip>
-      </td>
-    </ng-container>
-
-    <!-- Colonne Statut -->
-    <ng-container matColumnDef="status">
-      <th
-        mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-        style="background-color: #f2f2f2"
-      >
-        {{ "USERS.STATUS" | translate }}
-      </th>
-      <td mat-cell *matCellDef="let entry">
-        <mat-chip
-          [class]="'status-' + entry.user?.status?.toLowerCase()"
-          [matTooltip]="
-            entry.user?.status === 'ACTIVE'
-              ? 'Utilisateur actif'
-              : 'Utilisateur inactif'
-          "
-        >
-          <mat-icon matChipAvatar>
-            {{ entry.user?.status === "ACTIVE" ? "check_circle" : "cancel" }}
-          </mat-icon>
-          {{ entry.user?.status }}
         </mat-chip>
       </td>
     </ng-container>

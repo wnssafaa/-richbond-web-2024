@@ -123,13 +123,19 @@
 
 .filters-content {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 16px;
-  flex-wrap: wrap;
   padding: 0 16px;
 }
 
-.filters-content mat-form-field {
+.filters-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filters-row mat-form-field {
   min-width: 200px;
   flex: 1;
 }
@@ -138,10 +144,6 @@
   color: #666;
 }
 
-.close-filters {
-  margin-left: auto;
-  color: #666;
-}
 
 /* Responsive styles */
 /* Tablettes */
@@ -158,7 +160,7 @@
     margin-left: 0;
   }
 
-  .filters-content mat-form-field {
+  .filters-row mat-form-field {
     min-width: 150px;
   }
 }
@@ -190,12 +192,16 @@
   }
 
   .filters-content {
-    flex-direction: column;
     gap: 12px;
     padding: 0 12px;
   }
 
-  .filters-content mat-form-field {
+  .filters-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filters-row mat-form-field {
     min-width: 100%;
   }
 }
@@ -211,7 +217,12 @@
   }
 
   .filters-content {
+    gap: 8px;
     padding: 0 8px;
+  }
+
+  .filters-row {
+    gap: 8px;
   }
 }
 
@@ -315,20 +326,6 @@
   flex: 1;
 }
 
-.close-filters {
-  color: #666;
-  border: 1px solid #ddd;
-  background: white;
-  padding: 8px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.close-filters:hover {
-  background: #f5f5f5;
-  color: #d32f2f;
-}
 
 .footer-actions {
   display: flex;
@@ -496,6 +493,42 @@
 }
 
 .date-icon {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Cellule Région */
+.region-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.region-icon {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Cellule Ville */
+.ville-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ville-icon {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Cellule Magasin */
+.magasin-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.magasin-icon {
   font-size: 16px;
   color: #666;
 }
