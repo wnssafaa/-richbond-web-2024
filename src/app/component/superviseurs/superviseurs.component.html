@@ -276,7 +276,18 @@
                 (click)="exportToExcel()"
               >
                 <span>{{ "ACTIONS.EXPORT" | translate }}</span>
-                <mat-icon>file_download</mat-icon>
+                <mat-icon style="color:white">file_download</mat-icon>
+              </button>
+
+              <button
+                mat-raised-button
+                class="add-user-button"
+                (click)="openColumnCustomizationPanel()"
+                style="background-color: #3b45ca; color: white; margin-right: 8px"
+                matTooltip="Personnaliser les colonnes"
+              >
+                <span>Colonnes</span>
+                <mat-icon style="color:white">view_column</mat-icon>
               </button>
 
               <button
@@ -328,7 +339,6 @@
                 <mat-select
                   [(ngModel)]="selectedVille"
                   (selectionChange)="applyFilters()"
-                  [disabled]="!selectedRegion"
                 >
                   <mat-option
                     *ngFor="let ville of villesDisponibles"
@@ -505,13 +515,7 @@
                 </button>
               </mat-form-field>
 
-              <button
-                mat-button
-                (click)="showFilters = false"
-                class="close-filters"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
+             
             </div>
           </div>
         </div>

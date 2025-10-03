@@ -283,6 +283,16 @@
                 <span>Export </span>
                 <mat-icon>file_download</mat-icon>
               </button>
+ <button
+          mat-raised-button
+           class="export-button"
+          (click)="openColumnCustomizationPanel()"
+          style="background-color: #3b45ca; color: white; margin-right: 8px"
+          matTooltip="Personnaliser les colonnes"
+        >
+          <span>Colonnes</span>
+          <mat-icon style="color:white">view_column</mat-icon>
+        </button>
 
               <button
                 mat-raised-button
@@ -498,13 +508,6 @@
               </button>
             </mat-form-field>
 
-            <button
-              mat-button
-              (click)="showFilters = false"
-              class="close-filters"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
           </div>
 
           <!-- Troisième ligne : Date de sortie seule -->
@@ -686,28 +689,13 @@
             </th>
             <td mat-cell *matCellDef="let m">{{ m.telephone }}</td>
           </ng-container>
-
-
-          <ng-container matColumnDef="actions">
+ <ng-container matColumnDef="actions">
             <th
               mat-header-cell
               *matHeaderCellDef
-              style="
-                background-color: #f2f2f2;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-              "
+              style="background-color: #f2f2f2"
             >
-              <span>{{ "USERS.ACTIONS" | translate }}</span>
-              <button
-                mat-icon-button
-                matTooltip="Personnaliser les colonnes"
-                (click)="openColumnCustomizationPanel()"
-                style="margin-left: 8px"
-              >
-                <mat-icon style="font-size: 18px">view_column</mat-icon>
-              </button>
+              {{ "USERS.ACTIONS" | translate }}
             </th>
             <td mat-cell *matCellDef="let m" class="actions-cell">
               <div class="actions-container">
@@ -716,6 +704,7 @@
                   color="primary"
                   (click)="editUser(m); $event.stopPropagation()"
                   class="action-button"
+                  matTooltip="Modifier"
                 >
                   <mat-icon style="color: blue">edit</mat-icon>
                 </button>
@@ -723,6 +712,7 @@
                   mat-icon-button
                   (click)="viewMerchendiseur(m); $event.stopPropagation()"
                   class="action-button"
+                  matTooltip="Voir les détails"
                 >
                   <mat-icon>visibility</mat-icon>
                 </button>
@@ -731,12 +721,15 @@
                   color="warn"
                   (click)="deleteMerchendiseur(m.id!); $event.stopPropagation()"
                   class="action-button"
+                  matTooltip="Supprimer"
                 >
                   <mat-icon style="color: black">delete</mat-icon>
                 </button>
               </div>
             </td>
           </ng-container>
+
+         
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr

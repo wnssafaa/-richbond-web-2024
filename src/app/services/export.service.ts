@@ -381,6 +381,10 @@ export class ExportService {
         (entry.user?.nom || entry.user?.prenom || ''),
       'Rôle': entry.user?.role || '',
       'Statut': entry.user?.status || '',
+      'Magasins': this.getStoreInfoForExport(entry.user),
+      'Merchandiser': this.getMerchandiserInfoForExport(entry.user),
+      'Région': entry.user?.region || 'N/A',
+      'Ville': entry.user?.ville || 'N/A',
       'Date Connexion': this.formatDate(entry.loginTime, 'DD/MM/YYYY HH:mm'),
       'Date Déconnexion': entry.logoutTime ? this.formatDate(entry.logoutTime, 'DD/MM/YYYY HH:mm') : 'En cours',
       'Durée Session': this.calculateSessionDuration(entry.loginTime, entry.logoutTime),
@@ -712,4 +716,80 @@ export class ExportService {
       return 'Ordinateur';
     }
   }
+
+  /**
+   * Obtient les informations des magasins pour l'export selon le rôle de l'utilisateur
+   */
+  private getStoreInfoForExport(user: any): string {
+    if (!user) return 'N/A';
+
+    const role = user.role;
+    
+    switch (role) {
+      case 'MERCHANDISEUR_MONO':
+      case 'MERCHANDISEUR_MULTI':
+        // Pour les merchandisers, afficher leurs magasins assignés
+        if (user.magasinNoms && user.magasinNoms.length > 0) {
+          return user.magasinNoms.join(', ');
+        }
+        return 'Aucun magasin assigné';
+        
+      case 'SUPERVISEUR':
+        // Pour les superviseurs, afficher leurs merchandisers et leurs magasins
+        if (user.merchendiseurs && user.merchendiseurs.length > 0) {
+          let result = '';
+          user.merchendiseurs.forEach((merch: any, index: number) => {
+            if (index > 0) result += ' | ';
+            result += `${merch.prenom} ${merch.nom}`;
+            if (merch.magasinNoms && merch.magasinNoms.length > 0) {
+              result += ` (${merch.magasinNoms.join(', ')})`;
+            } else {
+              result += ' (Aucun magasin)';
+            }
+          });
+          return result;
+        }
+        return 'Aucun merchandiser assigné';
+        
+      case 'ADMIN':
+        return 'Tous les magasins';
+        
+      default:
+        return 'N/A';
+    }
+  }
+
+  /**
+   * Obtient les informations du merchandiser pour l'export selon le rôle de l'utilisateur
+   */
+  private getMerchandiserInfoForExport(user: any): string {
+    if (!user) return 'N/A';
+
+    const role = user.role;
+
+    switch (role) {
+      case 'MERCHANDISEUR_MONO':
+      case 'MERCHANDISEUR_MULTI':
+        // Pour les merchandisers, afficher leurs magasins assignés
+        if (user.magasinNoms && user.magasinNoms.length > 0) {
+          return user.magasinNoms.join(', ');
+        }
+        return 'Aucun magasin assigné';
+
+      case 'SUPERVISEUR':
+        // Pour les superviseurs, afficher leurs merchandisers
+        if (user.merchendiseurs && user.merchendiseurs.length > 0) {
+          return user.merchendiseurs.map((merch: any) => `${merch.prenom} ${merch.nom}`).join(', ');
+        }
+        return 'Aucun merchandiser assigné';
+
+      case 'ADMIN':
+        // Pour les admins, afficher "N/A"
+        return 'N/A';
+
+      default:
+        return 'N/A';
+    }
+  }
+
 }

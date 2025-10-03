@@ -25,11 +25,22 @@ export interface Planification {
     type: string | null;
     enseigne: string | null;
     marques: any;
-    nom: string; id: number 
-}; // Correspond à @ManyToOne magasin
+    nom: string;
+    id: number;
+    ville?: string; // Ajout de la propriété ville
+  }; // Correspond à @ManyToOne magasin
   merchandiser: {
-    nom: string; id: number 
-}; // Correspond à @ManyToOne merchandiser
+    nom: string;
+    id: number;
+    prenom?: string; // Ajout du prénom
+    telephone?: string; // Ajout du téléphone
+    imagePath?: string; // Ajout du chemin de l'image
+    superviseur?: { // Ajout du superviseur
+      id: number;
+      nom: string;
+      prenom: string;
+    };
+  }; // Correspond à @ManyToOne merchandiser
 }
 
 

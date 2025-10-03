@@ -343,9 +343,18 @@ export class SuperviseursComponent implements OnInit {
   };
   onRegionChange(selectedRegion: string): void {
     this.selectedRegion = selectedRegion;
-    this.villesDisponibles = this.regionVillesMap[selectedRegion as keyof typeof this.regionVillesMap] || [];
-    this.selectedVille = '';
+    // Ne pas vider selectedVille automatiquement, laisser l'utilisateur choisir
     this.applyFilters();
+  }
+
+  // Méthode pour initialiser toutes les villes disponibles
+  initializeAllVilles(): void {
+    const allVilles: string[] = [];
+    Object.values(this.regionVillesMap).forEach(villes => {
+      allVilles.push(...villes);
+    });
+    // Supprimer les doublons et trier
+    this.villesDisponibles = [...new Set(allVilles)].sort();
   }
 
   applyFilters() {
@@ -409,6 +418,7 @@ export class SuperviseursComponent implements OnInit {
 
     this.setupCustomFilter();
     this.updateDisplayedColumns();
+    this.initializeAllVilles(); // Initialiser toutes les villes disponibles
   }
 
   ngAfterViewInit() {
@@ -536,9 +546,8 @@ export class SuperviseursComponent implements OnInit {
       const matchesRegion =
         !filterObj.region || data.region === filterObj.region;
 
-      // Filtre ville conditionnel : seulement si une région est sélectionnée
-      const matchesVille = !filterObj.ville || 
-        (filterObj.region && data.ville === filterObj.ville);
+      // Filtre ville indépendant de la région
+      const matchesVille = !filterObj.ville || data.ville === filterObj.ville;
 
       const matchesMagasin =
         !filterObj.magasin ||

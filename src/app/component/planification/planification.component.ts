@@ -30,6 +30,7 @@ import { Merchendiseur, MerchendiseurService } from '../../services/merchendiseu
 import { AddPlanificationComponent } from '../../dialogs/add-planification/add-planification.component';
 import { Planification, PlanificationService, StatutVisite } from '../../services/planification.service';
 import { Magasin, MagasinService } from '../../services/magasin.service';
+import { SuperveseurService } from '../../services/superveseur.service';
 import { Region } from '../../enum/Region';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -43,6 +44,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
 
 // Add this before initializing your map
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -112,7 +114,7 @@ interface FilterOption {
     MatButtonModule, MatInputModule, MatFormFieldModule, MatSelectModule, MatBadgeModule,
     MatChipsModule, MatSlideToggleModule, MatMenuModule, MatListModule, MatIconModule,
     RouterModule, HttpClientModule,MatTooltipModule,MatPaginatorModule,
-    MatDatepickerModule, MatNativeDateModule
+    MatDatepickerModule, MatNativeDateModule, ColumnCustomizationPanelComponent
   ],
   templateUrl: './planification.component.html',
   styleUrls: ['./planification.component.css', './stat-icons.css']
@@ -197,6 +199,14 @@ private applyAllFilters(planifs: Planification[]): Planification[] {
     filtered = filtered.filter(p => p.magasin?.region === this.selectedRegion);
   }
 
+  if (this.selectedVille) {
+    filtered = filtered.filter(p => p.magasin?.ville === this.selectedVille);
+  }
+
+  if (this.selectedSuperviseur) {
+    filtered = filtered.filter(p => p.merchandiser?.superviseur?.id === this.selectedSuperviseur);
+  }
+
   if (this.selectedMagasin) {
     filtered = filtered.filter(p => p.magasin?.id === this.selectedMagasin);
   }
@@ -272,6 +282,7 @@ differenceVisites = 0;
 
 
 
+// Méthode pour filtrer par région
 filterByRegion(): void {
   this.applyFilters();
 }
@@ -468,9 +479,99 @@ private filterByWeek(planifs: Planification[], semaine: string): Planification[]
 }
 
 
+  // Méthodes pour l'optimisation des colonnes
+  updateDisplayedColumns(): void {
+    this.displayedColumns = this.columnConfig
+      .filter(col => col.visible)
+      .map(col => col.key);
+  }
+
+  toggleColumnVisibility(columnKey: string): void {
+    const column = this.columnConfig.find(col => col.key === columnKey);
+    if (column) {
+      column.visible = !column.visible;
+      this.updateDisplayedColumns();
+    }
+  }
+
+  openColumnCustomizationPanel(): void {
+    this.isColumnCustomizationOpen = true;
+  }
+
+  closeColumnCustomizationPanel(): void {
+    this.isColumnCustomizationOpen = false;
+  }
+
+  onColumnCustomizationSave(columnConfig: any[]): void {
+    this.columnConfig = columnConfig;
+    this.updateDisplayedColumns();
+  }
+
+  // Méthodes pour charger les superviseurs
+  loadSuperviseurs(): void {
+    this.superviseurService.getAll().subscribe({
+      next: (superviseurs) => {
+        this.superviseursOptions = [
+          { value: null, label: 'Tous les superviseurs' },
+          ...superviseurs.map(s => ({
+            value: s.id,
+            label: `${s.nom} ${s.prenom}`
+          }))
+        ];
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des superviseurs:', err);
+      }
+    });
+  }
+
+  // Méthode pour extraire les régions et villes des magasins
+  extractRegionsAndVilles(): void {
+    if (this.magasins.length > 0) {
+      this.regions = [...new Set(this.magasins.map(m => m.region))].sort();
+      this.villes = [...new Set(this.magasins.map(m => m.ville).filter(v => v))].sort();
+    }
+  }
+
+  // Méthodes pour les nouveaux filtres
+  filterByRegionNew(): void {
+    this.applyFilters();
+    this.applyTableFilters();
+  }
+
+  filterByVille(): void {
+    this.applyFilters();
+    this.applyTableFilters();
+  }
+
+  filterBySuperviseur(): void {
+    this.applyFilters();
+    this.applyTableFilters();
+  }
+
+  // Méthode pour obtenir le superviseur d'un merchandiser
+  getSuperviseurInfo(planification: Planification): string {
+    if (planification.merchandiser && planification.merchandiser.superviseur) {
+      return `${planification.merchandiser.superviseur.nom} ${planification.merchandiser.superviseur.prenom}`;
+    }
+    return 'N/A';
+  }
+
+  // Méthode pour obtenir la région du magasin
+  getRegionInfo(planification: Planification): string {
+    return planification.magasin?.region || 'N/A';
+  }
+
+  // Méthode pour obtenir la ville du magasin
+  getVilleInfo(planification: Planification): string {
+    return planification.magasin?.ville || 'N/A';
+  }
+
 // Méthode pour réinitialiser tous les filtres
 resetFilters(): void {
   this.selectedRegion = null;
+  this.selectedVille = null;
+  this.selectedSuperviseur = null;
   this.selectedSemaine = null;
   this.selectedEnseigne = null;
   this.selectedMarque = null;
@@ -487,9 +588,7 @@ resetFilters(): void {
 }
 
 // Méthode pour basculer l'affichage des filtres avancés
-toggleAdvancedFilters(): void {
-  this.showAdvancedFilters = !this.showAdvancedFilters;
-}
+  // Méthode supprimée car maintenant gérée directement dans le template
 
 // Méthode pour gérer la recherche
 onSearchChange(): void {
@@ -529,7 +628,7 @@ loadFilterOptions(): void {
  progressGlobal = 0;
 progressParMerch: number | null = null;
   // Données pour les filtres
-  regions = Object.entries(Region);
+  regionsEnum = Object.entries(Region);
   enseignes = [
     'Carrefour', 'Marjane', 'Aswak Assalam', 'Acima', 'Label\'Vie', 'BIM',
     'Atacadao', 'Carrefour Market', 'Metro', 'Super U', 'Uniprix', 'Hanouty',
@@ -549,6 +648,8 @@ progressParMerch: number | null = null;
   ];
 
   selectedRegion: string | null = null;
+  selectedVille: string | null = null;
+  selectedSuperviseur: number | null = null;
   selectedSemaine: string | null = null;
   selectedEnseigne: string | null = null;
   selectedMarque: string | null = null;
@@ -575,11 +676,33 @@ progressParMerch: number | null = null;
   magasins: Magasin[] = [];
   merchandiseursOptions: FilterOption[] = [];
   magasinsOptions: FilterOption[] = [];
+  superviseursOptions: FilterOption[] = [];
+  
+  // Nouvelles propriétés pour les filtres
+  regions: string[] = [];
+  villes: string[] = [];
+  
+  // Propriété pour l'optimisation des colonnes
+  isColumnCustomizationOpen: boolean = false;
   
   // Données pour le tableau
   allPlanifications: Planification[] = [];
   filteredPlanifications: Planification[] = [];
-  displayedColumns: string[] = ['dateVisite', 'magasin', 'merchandiser', 'statut', 'dureeVisite', 'commentaire', 'actions'];
+  displayedColumns: string[] = ['dateVisite', 'magasin', 'merchandiser', 'region', 'ville', 'superviseur', 'statut', 'dureeVisite', 'commentaire', 'actions'];
+  
+  // Configuration des colonnes pour l'optimisation
+  columnConfig = [
+    { key: 'dateVisite', label: 'Date & Heure', visible: true },
+    { key: 'magasin', label: 'Magasin', visible: true },
+    { key: 'merchandiser', label: 'Merchandiseur', visible: true },
+    { key: 'region', label: 'Région', visible: true },
+    { key: 'ville', label: 'Ville', visible: true },
+    { key: 'superviseur', label: 'Superviseur', visible: true },
+    { key: 'statut', label: 'Statut', visible: true },
+    { key: 'dureeVisite', label: 'Durée', visible: true },
+    { key: 'commentaire', label: 'Commentaire', visible: true },
+    { key: 'actions', label: 'Actions', visible: true }
+  ];
 
   // UI
   menuOpen = true;
@@ -635,6 +758,7 @@ highlightWeekends(arg: any): void {
     private planificationService: PlanificationService,
     private merchService: MerchendiseurService,
     private magasinService: MagasinService,
+    private superviseurService: SuperveseurService,
     private snackBar: MatSnackBar,
     private translate: TranslateService
   ) {
@@ -651,6 +775,9 @@ highlightWeekends(arg: any): void {
     this.loadFilterOptions();
     this.loadMagasins();
     this.loadPlanificationsForTable();
+    this.loadSuperviseurs();
+    this.extractRegionsAndVilles();
+    this.updateDisplayedColumns();
     
          // Forcer le chargement des magasins après un délai pour s'assurer que tout est initialisé
      setTimeout(() => {
@@ -1470,21 +1597,7 @@ loadMagasins(): void {
        }
       
       // Afficher un message informatif
-      if (magasins.length > 0) {
-        if (magasinsWithCoords.length === 0) {
-          this.snackBar.open(
-            `${magasins.length} magasin(s) trouvé(s). Aucun n'a de coordonnées GPS précises. Des coordonnées estimées seront utilisées.`,
-            'Fermer',
-            { duration: 5000, panelClass: ['info-snackbar'] }
-          );
-        } else {
-          this.snackBar.open(
-            `${magasins.length} magasin(s) chargé(s) avec succès ! ${magasinsWithCoords.length} avec coordonnées GPS précises.`,
-            'Fermer',
-            { duration: 3000, panelClass: ['success-snackbar'] }
-          );
-        }
-      }
+   
     },
     error: (err) => {
       console.error('❌ Erreur lors du chargement des magasins', err);
@@ -1880,6 +1993,15 @@ applyTableFilters(): void {
   if (this.selectedSemaine) {
     filtered = this.filterByWeek(filtered, this.selectedSemaine);
   }
+    if (this.selectedRegion) {
+      filtered = filtered.filter(p => p.magasin?.region === this.selectedRegion);
+    }
+    if (this.selectedVille) {
+      filtered = filtered.filter(p => p.magasin?.ville === this.selectedVille);
+    }
+    if (this.selectedSuperviseur) {
+      filtered = filtered.filter(p => p.merchandiser?.superviseur?.id === this.selectedSuperviseur);
+    }
   if (this.selectedMagasin) {
     filtered = filtered.filter(p => p.magasin?.id === this.selectedMagasin);
   }
