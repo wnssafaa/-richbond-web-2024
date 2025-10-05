@@ -278,75 +278,57 @@
 
       <div *ngIf="selectedTab === 'planification'">
         <div class="filters-container">
-          <div
-            class="filters flex items-center p-3 bg-white rounded-lg shadow-sm"
-          >
-            <!-- Barre de recherche -->
-            <mat-form-field appearance="outline" class="search-field">
-              <mat-label>Rechercher</mat-label>
+          <div class="main-toolbar">
+            <div class="main-toolbar-content">
+              <!-- Section gauche : Recherche et Filtre -->
+              <div class="left-controls">
+                <div class="custom-search-box">
               <input
-                matInput
+                    type="text"
+                    placeholder="Rechercher"
                 [(ngModel)]="searchTerm"
-                (input)="onSearchChange()"
-                placeholder="Rechercher..."
-              />
-              <mat-icon matSuffix>search</mat-icon>
-            </mat-form-field>
+                    (keyup)="onSearchChange()"
+                  />
+                  <button>
+                    <span class="material-icons" style="font-weight: bold"
+                      >search</span
+                    >
+                  </button>
+                </div>
 
-            <!-- Bouton de filtre -->
+                <button
+                  mat-stroked-button
+                  class="filter-button-custom"
+                  (click)="showAdvancedFilters = !showAdvancedFilters"
+                >
+                  <mat-icon style="color: #8192a6; font-size: 18px">filter_list</mat-icon>
+                  <span style="color: #8192a6">Filtrer</span>
+                </button>
+              </div>
+
+              <!-- Section droite : Boutons d'action -->
+              <div class="right-controls">
             <button
               mat-raised-button
-              class="filter-button"
-              (click)="toggleAdvancedFilters()"
-              style="
-                background-color: white;
-                color: #333;
-                border: 1px solid #ddd;
-                border-radius: 20px;
-                padding: 10px 20px;
-                font-weight: 500;
-                margin-left: 12px;
-                min-height: 40px;
-                text-transform: none;
-                font-size: 14px;
-              "
-            >
-              <mat-icon style="margin-right: 8px; font-size: 18px"
-                >filter_list</mat-icon
-              >
-              Filtrer
-            </button>
-
-            <!-- Bouton Add Planife -->
-
-            <button
-              mat-raised-button
-              class="add-planife-button"
+                  class="export-button"
               (click)="openAddvisitDialog()"
               matTooltip="Ajouter une nouvelle planification"
-              style="
-                background-color: #0a2681;
-                color: white;
-                border-radius: 20px;
-                padding: 10px 20px;
-                font-weight: bold;
-                box-shadow: none;
-                border: none;
-                text-transform: none;
-                font-size: 14px;
-                margin-left: 12px;
-                min-height: 40px;
-              "
-            >
-              Ajauter Planification
+                >
+                  <span>Ajouter Planification</span>
+                  <mat-icon>add</mat-icon>
             </button>
+              </div>
+            </div>
           </div>
+          
+         
 
           <!-- Filtres avancés (affichés conditionnellement) -->
           <div
             *ngIf="showAdvancedFilters"
-            class="advanced-filters flex items-center p-3 bg-white rounded-lg shadow-sm mt-3"
+            class="filters-toolbar"
           >
+            <div class="filters-content">
             <!-- Filtre par semaine avec calendrier -->
             <mat-form-field appearance="outline" class="filter-field">
               <mat-label>Sélectionner une semaine</mat-label>
@@ -368,6 +350,17 @@
                 [startAt]="selectedWeekDate || today"
               >
               </mat-datepicker>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedWeekDate = null; onWeekDateChange()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre semaine"
+                  *ngIf="selectedWeekDate"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
 
             <!-- Filtre par statut -->
@@ -384,6 +377,17 @@
                   >{{ statut.label }}</mat-option
                 >
               </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedStatut = null; filterByStatut()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre statut"
+                  *ngIf="selectedStatut"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="filter-field">
@@ -400,10 +404,21 @@
                   >{{ magasin.label }}</mat-option
                 >
               </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedMagasin = null; filterByMagasin()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre magasin"
+                  *ngIf="selectedMagasin"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="filter-field">
-              <mat-label>{{ "COMMON.MERCHANDISERS" | translate }}</mat-label>
+              <mat-label>Merchendiseurs</mat-label>
               <mat-select
                 panelClass="filter-select"
                 [(value)]="selectedMerchandiseur"
@@ -416,7 +431,21 @@
                   >{{ merch.label }}</mat-option
                 >
               </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedMerchandiseur = null; filterMerchandiseurs()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre merchandiseur"
+                  *ngIf="selectedMerchandiseur"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
+
+             
+            </div>
           </div>
 
           <!-- Calendrier de sélection de date (affiché conditionnellement) -->
@@ -682,146 +711,277 @@
       <!-- Vue Tableau -->
       <div *ngIf="selectedTab === 'table'">
         <!-- Filtres pour le tableau -->
-        <div class="filters-container">
-          <div
-            class="filters flex items-center p-3 bg-white rounded-lg shadow-sm"
-          >
-            <!-- Barre de recherche -->
-            <mat-form-field appearance="outline" class="search-field">
-              <mat-label>Rechercher</mat-label>
-              <input
-                matInput
-                [(ngModel)]="searchTerm"
-                (input)="onSearchChange()"
-                placeholder="Rechercher..."
-              />
-              <mat-icon matSuffix>search</mat-icon>
-            </mat-form-field>
+      
+          <!-- Ligne du haut : Barre principale avec actions (toujours visible) -->
+          <div class="main-toolbar">
+            <div class="main-toolbar-content">
+              <!-- Section gauche : Recherche et Filtre -->
+              <div class="left-controls">
+                <div class="custom-search-box">
+                  <input
+                    type="text"
+                    placeholder="Rechercher"
+                    [(ngModel)]="searchTerm"
+                    (keyup)="onSearchChange()"
+                  />
+                  <button>
+                    <span class="material-icons" style="font-weight: bold">search</span>
+                  </button>
+                </div>
 
-            <!-- Bouton de filtre -->
-            <button
-              mat-raised-button
-              class="filter-button"
-              (click)="toggleAdvancedFilters()"
-              style="
-                background-color: white;
-                color: #333;
-                border: 1px solid #ddd;
-                border-radius: 20px;
-                padding: 10px 20px;
-                font-weight: 500;
-                margin-left: 12px;
-                min-height: 40px;
-                text-transform: none;
-                font-size: 14px;
-              "
-            >
-              <mat-icon style="margin-right: 8px; font-size: 18px"
-                >filter_list</mat-icon
-              >
-              Filtrer
-            </button>
+                <button
+                  mat-stroked-button
+                  class="filter-button-custom"
+                  (click)="showAdvancedFilters = !showAdvancedFilters"
+                >
+                  <mat-icon style="color: #8192a6; font-size: 18px">filter_list</mat-icon>
+                  <span style="color: #8192a6">Filtrer</span>
+                </button>
+              </div>
 
-            <!-- Bouton Add Planife -->
+              <!-- Section droite : Boutons d'action -->
+              <div class="right-controls">
+                <button
+                  mat-raised-button
+                  class="export-button"
+                  (click)="exportToExcel()"
+                  style="background-color: #000000; color: white; margin-right: 8px"
+                  matTooltip="Exporter les données"
+                >
+                  <span>Export</span>
+                  <mat-icon>file_download</mat-icon>
+                </button>
 
-            <button
-              mat-raised-button
-              class="add-planife-button"
-              (click)="openAddvisitDialog()"
-              matTooltip="Ajouter une nouvelle planification"
-              style="
-                background-color: #0a2681;
-                color: white;
-                border-radius: 20px;
-                padding: 10px 20px;
-                font-weight: bold;
-                box-shadow: none;
-                border: none;
-                text-transform: none;
-                font-size: 14px;
-                margin-left: 12px;
-                min-height: 40px;
-              "
-            >
-              Add Planife
-            </button>
+                <button
+                  mat-raised-button
+                  class="export-button"
+                  (click)="openColumnCustomizationPanel()"
+                  style="background-color: #3b45ca; color: white; margin-right: 8px"
+                  matTooltip="Personnaliser les colonnes"
+                >
+                  <span>Colonnes</span>
+                  <mat-icon style="color:white">view_column</mat-icon>
+                </button>
+                
+                <button
+                  mat-raised-button
+                  class="add-user-button"
+                  (click)="openAddvisitDialog()"
+                  matTooltip="Ajouter une nouvelle planification"
+                >
+                  <span>Add Planife</span>
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
           </div>
 
-          <!-- Filtres avancés (affichés conditionnellement) -->
-          <div
-            *ngIf="showAdvancedFilters"
-            class="advanced-filters flex items-center p-3 bg-white rounded-lg shadow-sm mt-3"
-          >
-            <!-- Filtre par semaine avec calendrier -->
-            <mat-form-field appearance="outline" class="filter-field">
-              <mat-label>Sélectionner une semaine</mat-label>
-              <input
-                matInput
-                [matDatepicker]="weekPicker"
-                [(ngModel)]="selectedWeekDate"
-                (dateChange)="onWeekDateChange()"
-                [placeholder]="getWeekPlaceholder()"
-                readonly
-              />
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="weekPicker"
-              ></mat-datepicker-toggle>
-              <mat-datepicker
-                #weekPicker
-                (selectedChange)="onWeekDateChange()"
-                [startAt]="selectedWeekDate || today"
-              >
-              </mat-datepicker>
-            </mat-form-field>
+          <!-- Filtres avancés (affichés seulement si showAdvancedFilters = true) -->
+          <div *ngIf="showAdvancedFilters" class="filters-toolbar">
+            <div class="filters-content">
+              
+              <!-- Première ligne : 4 filtres -->
+              <div class="filters-row filters-row-1">
+                <mat-form-field appearance="outline">
+                  <mat-label>Région</mat-label>
+                  <mat-select
+                    [(ngModel)]="selectedRegion"
+                    (selectionChange)="filterByRegion()"
+                  >
+                    <mat-option [value]="null">Toutes les régions</mat-option>
+                    <mat-option
+                      *ngFor="let region of regions"
+                      [value]="region"
+                    >
+                      {{ region }}
+                    </mat-option>
+                  </mat-select>
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="selectedRegion = null; filterByRegion()"
+                    class="clear-filter-btn"
+                    tabindex="-1"
+                    aria-label="Effacer le filtre région"
+                    *ngIf="selectedRegion"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
 
-            <!-- Filtre par statut -->
-            <mat-form-field appearance="outline" class="filter-field">
-              <mat-label>Statut</mat-label>
-              <mat-select
-                panelClass="filter-select"
-                [(value)]="selectedStatut"
-                (selectionChange)="filterByStatut()"
-              >
-                <mat-option
-                  *ngFor="let statut of statutOptions"
-                  [value]="statut.value"
-                  >{{ statut.label }}</mat-option
-                >
-              </mat-select>
-            </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Ville</mat-label>
+                  <mat-select
+                    [(ngModel)]="selectedVille"
+                    (selectionChange)="filterByVille()"
+                  >
+                    <mat-option [value]="null">Toutes les villes</mat-option>
+                    <mat-option
+                      *ngFor="let ville of villes"
+                      [value]="ville"
+                    >
+                      {{ ville }}
+                    </mat-option>
+                  </mat-select>
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="selectedVille = null; filterByVille()"
+                    class="clear-filter-btn"
+                    tabindex="-1"
+                    aria-label="Effacer le filtre ville"
+                    *ngIf="selectedVille"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline" class="filter-field">
-              <mat-label>{{ "STORES.TITLE" | translate }}</mat-label>
-              <mat-select
-                panelClass="filter-select"
-                [(value)]="selectedMagasin"
-                (selectionChange)="filterByMagasin()"
-              >
-                <mat-option [value]="null">Tous les magasins</mat-option>
-                <mat-option
-                  *ngFor="let magasin of magasinsOptions"
-                  [value]="magasin.value"
-                  >{{ magasin.label }}</mat-option
-                >
-              </mat-select>
-            </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Magasins</mat-label>
+                  <mat-select
+                    [(ngModel)]="selectedMagasin"
+                    (selectionChange)="filterByMagasin()"
+                  >
+                    <mat-option [value]="null">Tous les magasins</mat-option>
+                    <mat-option
+                      *ngFor="let magasin of magasinsOptions"
+                      [value]="magasin.value"
+                    >
+                      {{ magasin.label }}
+                    </mat-option>
+                  </mat-select>
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="selectedMagasin = null; filterByMagasin()"
+                    class="clear-filter-btn"
+                    tabindex="-1"
+                    aria-label="Effacer le filtre magasin"
+                    *ngIf="selectedMagasin"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline" class="filter-field">
-              <mat-label>{{ "COMMON.MERCHANDISERS" | translate }}</mat-label>
-              <mat-select
-                panelClass="filter-select"
-                [(value)]="selectedMerchandiseur"
-                (selectionChange)="filterMerchandiseurs()"
-              >
-                <mat-option [value]="null">Tous les merchandiseurs</mat-option>
-                <mat-option
-                  *ngFor="let merch of merchandiseursOptions"
-                  [value]="merch.value"
-                  >{{ merch.label }}</mat-option
-                >
-              </mat-select>
-            </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Merchandiseurs</mat-label>
+                  <mat-select
+                    [(ngModel)]="selectedMerchandiseur"
+                    (selectionChange)="filterMerchandiseurs()"
+                  >
+                    <mat-option [value]="null">Tous les merchandiseurs</mat-option>
+                    <mat-option
+                      *ngFor="let merch of merchandiseursOptions"
+                      [value]="merch.value"
+                    >
+                      {{ merch.label }}
+                    </mat-option>
+                  </mat-select>
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="selectedMerchandiseur = null; filterMerchandiseurs()"
+                    class="clear-filter-btn"
+                    tabindex="-1"
+                    aria-label="Effacer le filtre merchandiseur"
+                    *ngIf="selectedMerchandiseur"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+
+              <!-- Deuxième ligne : 4 filtres + bouton fermer -->
+              <div class="filters-row filters-row-2">
+                <mat-form-field appearance="outline">
+                  <mat-label>Superviseurs</mat-label>
+                  <mat-select
+                    [(ngModel)]="selectedSuperviseur"
+                    (selectionChange)="filterBySuperviseur()"
+                  >
+                    <mat-option [value]="null">Tous les superviseurs</mat-option>
+                    <mat-option
+                      *ngFor="let superviseur of superviseursOptions"
+                      [value]="superviseur.value"
+                    >
+                      {{ superviseur.label }}
+                    </mat-option>
+                  </mat-select>
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="selectedSuperviseur = null; filterBySuperviseur()"
+                    class="clear-filter-btn"
+                    tabindex="-1"
+                    aria-label="Effacer le filtre superviseur"
+                    *ngIf="selectedSuperviseur"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Statut</mat-label>
+                  <mat-select
+                    [(ngModel)]="selectedStatut"
+                    (selectionChange)="filterByStatut()"
+                  >
+                    <mat-option [value]="null">Tous les statuts</mat-option>
+                    <mat-option
+                      *ngFor="let statut of statutOptions"
+                      [value]="statut.value"
+                    >
+                      {{ statut.label }}
+                    </mat-option>
+                  </mat-select>
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="selectedStatut = null; filterByStatut()"
+                    class="clear-filter-btn"
+                    tabindex="-1"
+                    aria-label="Effacer le filtre statut"
+                    *ngIf="selectedStatut"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Sélectionner une semaine</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="weekPicker"
+                    [(ngModel)]="selectedWeekDate"
+                    (dateChange)="onWeekDateChange()"
+                    [placeholder]="getWeekPlaceholder()"
+                    readonly
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="weekPicker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker
+                    #weekPicker
+                    (selectedChange)="onWeekDateChange()"
+                    [startAt]="selectedWeekDate || today"
+                  >
+                  </mat-datepicker>
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="selectedWeekDate = null; onWeekDateChange()"
+                    class="clear-filter-btn"
+                    tabindex="-1"
+                    aria-label="Effacer le filtre semaine"
+                    *ngIf="selectedWeekDate"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+
+              </div>
+            </div>
           </div>
 
           <!-- Calendrier de sélection de date (affiché conditionnellement) -->
@@ -907,8 +1067,7 @@
               {{ selectedDateRange.end | date : "dd/MM/yyyy" }}
             </div>
           </div>
-        </div>
-
+       
         <!-- Tableau des planifications -->
         <div
           class="table-container"
@@ -989,6 +1148,54 @@
                       {{ element.merchandiser?.telephone || "" }}
                     </div>
                   </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Colonne Région -->
+            <ng-container matColumnDef="region">
+              <th mat-header-cell *matHeaderCellDef>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <mat-icon style="color: #666; font-size: 18px">public</mat-icon>
+                  <span>Région</span>
+                </div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="region-cell">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <mat-icon class="region-icon" style="color: #666; font-size: 16px">public</mat-icon>
+                  <span class="region-text">{{ getRegionInfo(element) }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Colonne Ville -->
+            <ng-container matColumnDef="ville">
+              <th mat-header-cell *matHeaderCellDef>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <mat-icon style="color: #666; font-size: 18px">location_city</mat-icon>
+                  <span>Ville</span>
+                </div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="ville-cell">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <mat-icon class="ville-icon" style="color: #666; font-size: 16px">location_city</mat-icon>
+                  <span class="ville-text">{{ getVilleInfo(element) }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Colonne Superviseur -->
+            <ng-container matColumnDef="superviseur">
+              <th mat-header-cell *matHeaderCellDef>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <mat-icon style="color: #666; font-size: 18px">supervisor_account</mat-icon>
+                  <span>Superviseur</span>
+                </div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="superviseur-cell">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <mat-icon class="superviseur-icon" style="color: #666; font-size: 16px">supervisor_account</mat-icon>
+                  <span class="superviseur-text">{{ getSuperviseurInfo(element) }}</span>
                 </div>
               </td>
             </ng-container>
@@ -1112,5 +1319,16 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Panneau de personnalisation des colonnes -->
+  <div class="panel-overlay" [class.visible]="isColumnCustomizationOpen" (click)="closeColumnCustomizationPanel()">
+    <app-column-customization-panel
+      [isOpen]="isColumnCustomizationOpen"
+      [columnConfig]="columnConfig"
+      (save)="onColumnCustomizationSave($event)"
+      (close)="closeColumnCustomizationPanel()"
+      (click)="$event.stopPropagation()"
+    ></app-column-customization-panel>
   </div>
 </div>

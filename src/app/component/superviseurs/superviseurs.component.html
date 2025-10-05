@@ -276,7 +276,18 @@
                 (click)="exportToExcel()"
               >
                 <span>{{ "ACTIONS.EXPORT" | translate }}</span>
-                <mat-icon>file_download</mat-icon>
+                <mat-icon style="color:white">file_download</mat-icon>
+              </button>
+
+              <button
+                mat-raised-button
+                class="add-user-button"
+                (click)="openColumnCustomizationPanel()"
+                style="background-color: #3b45ca ; color: white; margin-right: 8px"
+                matTooltip="Personnaliser les colonnes"
+              >
+                <span>Colonnes</span>
+                <mat-icon style="color:white">view_column</mat-icon>
               </button>
 
               <button
@@ -291,173 +302,221 @@
           </div>
         </div>
 
-        <!-- Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) -->
+        <!-- Filtres avancés (affichés seulement si showFilters = true) -->
         <div *ngIf="showFilters" class="filters-toolbar">
           <div class="filters-content">
-            <mat-form-field appearance="outline">
-              <mat-label>Région</mat-label>
-              <mat-select
-                [(ngModel)]="selectedRegion"
-                (selectionChange)="onRegionFilterChange($event.value)"
-              >
-                <mat-option
-                  *ngFor="let region of regions"
-                  [value]="region"
+            
+            <!-- Première ligne : 4 filtres -->
+            <div class="filters-row filters-row-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Région</mat-label>
+                <mat-select
+                  [(ngModel)]="selectedRegion"
+                  (selectionChange)="onRegionChange($event.value)"
                 >
-                  {{ region }}
-                </mat-option>
-              </mat-select>
-              <button
-                mat-icon-button
-                matSuffix
-                (click)="selectedRegion = ''; applyFilters()"
-                class="clear-filter-btn"
-                tabindex="-1"
-                aria-label="Effacer le filtre région"
-                *ngIf="selectedRegion"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Ville</mat-label>
-              <mat-select
-                [(ngModel)]="selectedVille"
-                (selectionChange)="applyFilters()"
-                [disabled]="!selectedRegion"
-              >
-                <mat-option
-                  *ngFor="let ville of villesDisponibles"
-                  [value]="ville"
+                  <mat-option
+                    *ngFor="let region of regions"
+                    [value]="region"
+                  >
+                    {{ region }}
+                  </mat-option>
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedRegion = ''; applyFilters()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre région"
+                  *ngIf="selectedRegion"
                 >
-                  {{ ville }}
-                </mat-option>
-              </mat-select>
-              <button
-                mat-icon-button
-                matSuffix
-                (click)="selectedVille = ''; applyFilters()"
-                class="clear-filter-btn"
-                tabindex="-1"
-                aria-label="Effacer le filtre ville"
-                *ngIf="selectedVille"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
-            </mat-form-field>
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Enseigne</mat-label>
-              <mat-select
-                [(ngModel)]="selectedEnseigne"
-                (selectionChange)="applyFilters()"
-              >
-                <mat-option
-                  *ngFor="let enseigne of enseignes"
-                  [value]="enseigne"
+              <mat-form-field appearance="outline">
+                <mat-label>Ville</mat-label>
+                <mat-select
+                  [(ngModel)]="selectedVille"
+                  (selectionChange)="applyFilters()"
                 >
-                  {{ enseigne }}
-                </mat-option>
-              </mat-select>
-              <button
-                mat-icon-button
-                matSuffix
-                (click)="selectedEnseigne = ''; applyFilters()"
-                class="clear-filter-btn"
-                tabindex="-1"
-                aria-label="Effacer le filtre enseigne"
-                *ngIf="selectedEnseigne"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Magasin</mat-label>
-              <mat-select
-                [(ngModel)]="selectedMagasin"
-                (selectionChange)="applyFilters()"
-              >
-                <mat-option
-                  *ngFor="let magasin of magasinNames"
-                  [value]="magasin"
+                  <mat-option
+                    *ngFor="let ville of villesDisponibles"
+                    [value]="ville"
+                  >
+                    {{ ville }}
+                  </mat-option>
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedVille = ''; applyFilters()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre ville"
+                  *ngIf="selectedVille"
                 >
-                  {{ magasin }}
-                </mat-option>
-              </mat-select>
-              <button
-                mat-icon-button
-                matSuffix
-                (click)="selectedMagasin = ''; applyFilters()"
-                class="clear-filter-btn"
-                tabindex="-1"
-                aria-label="Effacer le filtre magasin"
-                *ngIf="selectedMagasin"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
-            </mat-form-field>
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Marque</mat-label>
-              <mat-select
-                [(ngModel)]="selectedMarque"
-                (selectionChange)="applyFilters()"
-              >
-                <mat-option
-                  *ngFor="let marque of marques"
-                  [value]="marque"
+              <mat-form-field appearance="outline">
+                <mat-label>Enseigne</mat-label>
+                <mat-select
+                  [(ngModel)]="selectedEnseigne"
+                  (selectionChange)="applyFilters()"
                 >
-                  {{ marque }}
-                </mat-option>
-              </mat-select>
-              <button
-                mat-icon-button
-                matSuffix
-                (click)="selectedMarque = ''; applyFilters()"
-                class="clear-filter-btn"
-                tabindex="-1"
-                aria-label="Effacer le filtre marque"
-                *ngIf="selectedMarque"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Marchandiseur</mat-label>
-              <mat-select
-                [(ngModel)]="selectedMerchandiseur"
-                (selectionChange)="applyFilters()"
-              >
-                <mat-option
-                  *ngFor="let marchandiseur of merchandiserNames"
-                  [value]="marchandiseur"
+                  <mat-option
+                    *ngFor="let enseigne of enseignes"
+                    [value]="enseigne"
+                  >
+                    {{ enseigne }}
+                  </mat-option>
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedEnseigne = ''; applyFilters()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre enseigne"
+                  *ngIf="selectedEnseigne"
                 >
-                  {{ marchandiseur }}
-                </mat-option>
-              </mat-select>
-              <button
-                mat-icon-button
-                matSuffix
-                (click)="selectedMerchandiseur = ''; applyFilters()"
-                class="clear-filter-btn"
-                tabindex="-1"
-                aria-label="Effacer le filtre marchandiseur"
-                *ngIf="selectedMerchandiseur"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
-            </mat-form-field>
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
 
-            <button
-              mat-button
-              (click)="showFilters = false"
-              class="close-filters"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
+              <mat-form-field appearance="outline">
+                <mat-label>Magasin</mat-label>
+                <mat-select
+                  [(ngModel)]="selectedMagasin"
+                  (selectionChange)="applyFilters()"
+                >
+                  <mat-option
+                    *ngFor="let magasin of magasinNames"
+                    [value]="magasin"
+                  >
+                    {{ magasin }}
+                  </mat-option>
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedMagasin = ''; applyFilters()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre magasin"
+                  *ngIf="selectedMagasin"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+
+            <!-- Deuxième ligne : 4 filtres + bouton fermer -->
+            <div class="filters-row filters-row-2">
+              <mat-form-field appearance="outline">
+                <mat-label>Marque</mat-label>
+                <mat-select
+                  [(ngModel)]="selectedMarque"
+                  (selectionChange)="applyFilters()"
+                >
+                  <mat-option
+                    *ngFor="let marque of marques"
+                    [value]="marque"
+                  >
+                    {{ marque }}
+                  </mat-option>
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedMarque = ''; applyFilters()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre marque"
+                  *ngIf="selectedMarque"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Marchandiseur</mat-label>
+                <mat-select
+                  [(ngModel)]="selectedMerchandiseur"
+                  (selectionChange)="applyFilters()"
+                >
+                  <mat-option
+                    *ngFor="let marchandiseur of merchandiserNames"
+                    [value]="marchandiseur"
+                  >
+                    {{ marchandiseur }}
+                  </mat-option>
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedMerchandiseur = ''; applyFilters()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre marchandiseur"
+                  *ngIf="selectedMerchandiseur"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Date de début</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="debutPicker"
+                  [(ngModel)]="selectedDateDebut"
+                  (dateChange)="applyFilters()"
+                  placeholder="Sélectionner une date"
+                />
+                <mat-datepicker-toggle matSuffix [for]="debutPicker"></mat-datepicker-toggle>
+                <mat-datepicker #debutPicker></mat-datepicker>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedDateDebut = null; applyFilters()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre date de début"
+                  *ngIf="selectedDateDebut"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Date de sortie</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="sortiePicker"
+                  [(ngModel)]="selectedDateSortie"
+                  (dateChange)="applyFilters()"
+                  placeholder="Sélectionner une date"
+                />
+                <mat-datepicker-toggle matSuffix [for]="sortiePicker"></mat-datepicker-toggle>
+                <mat-datepicker #sortiePicker></mat-datepicker>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedDateSortie = null; applyFilters()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre date de sortie"
+                  *ngIf="selectedDateSortie"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+
+             
+            </div>
           </div>
         </div>
 
@@ -572,7 +631,12 @@
              Merchandiseurs
             </th>
             <td mat-cell *matCellDef="let superviseur">
-              {{ getMerchandiseurNames(superviseur.merchendiseurs) }}
+              <span *ngIf="superviseur.merchandiseurNom && superviseur.merchandiseurNom !== 'Aucun merchandiseur'">
+                {{ superviseur.merchandiseurNom }} {{ superviseur.merchandiseurPrenom }}
+              </span>
+              <span *ngIf="!superviseur.merchandiseurNom || superviseur.merchandiseurNom === 'Aucun merchandiseur'" style="color: #999; font-style: italic">
+                {{ superviseur.merchandiseurNom }}
+              </span>
             </td>
           </ng-container>
           

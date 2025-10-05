@@ -3627,45 +3627,230 @@ button[mat-icon-button]:active {
   color: #333;
 }
 
-/* Styles pour la barre de recherche et filtres avancés */
-.search-field {
+/* Styles pour la barre de recherche et filtres avancés - Copiés du composant gestion-visites */
+.filters-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+/* Styles pour les nouvelles colonnes */
+.region-cell, .ville-cell, .superviseur-cell {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.region-icon, .ville-icon, .superviseur-icon {
+  color: #666;
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.region-text, .ville-text, .superviseur-text {
+  color: #333;
+  font-weight: 500;
+}
+
+/* Styles pour le panneau de personnalisation des colonnes */
+.panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.panel-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Ligne du haut : Barre principale avec actions (toujours visible) */
+.main-toolbar {
+  width: 100%;
+  padding: 16px 0;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.main-toolbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+/* Section gauche : Recherche et Filtre */
+.left-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Section droite : Boutons d'action */
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Préserver le style existant des boutons */
+.right-controls .export-button {
+  background-color: #000;
+  color: white;
+  border-radius: 20px;
+  text-transform: none;
+}
+
+.right-controls .refresh-button {
+  background-color: #0a2681;
+  color: white;
+  border-radius: 20px;
+  text-transform: none;
+  font-weight: bold;
+}
+
+/* Barre de recherche personnalisée */
+.custom-search-box {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  padding: 18px 22px;
+  width: 400px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-weight: bold;
+}
+
+.custom-search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
   flex: 1;
-  max-width: 400px;
-  margin-right: 12px;
+  font-size: 14px;
+  color: #333;
+  font-weight: bold;
 }
 
-.search-field .mat-form-field-wrapper {
-  padding-bottom: 0;
+.custom-search-box button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.search-field .mat-form-field-outline {
-  color: #e0e0e0;
+.custom-search-box button .material-icons {
+  font-size: 20px;
 }
 
-.search-field .mat-form-field-outline-thick {
+/* Bouton de filtre personnalisé */
+.filter-button-custom {
+  border-radius: 70px;
+  padding: 8px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  font-weight: 800;
+  font-size: 18px;
+  cursor: pointer;
+  width: auto;
+  min-width: 140px;
+}
+
+/* Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) */
+.filters-toolbar {
+  width: 100%;
+  padding: 16px 0;
+  margin-bottom: 20px;
+}
+
+.filters-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 0 16px;
+}
+
+.filters-content mat-form-field {
+  min-width: 200px;
+  flex: 1;
+}
+
+.clear-filter-btn {
+  color: #666;
+}
+
+.close-filters {
+  margin-left: auto;
+  color: #666;
+}
+
+/* Indicateur pour les filtres masqués */
+.filters-scroll-indicator {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9));
+  width: 30px;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+}
+
+.filters-scroll-indicator::after {
+  content: '→';
   color: #0a2681;
+  font-size: 18px;
+  font-weight: bold;
+  opacity: 0.7;
 }
 
-.filter-button {
-  transition: all 0.3s ease;
+/* Amélioration de l'apparence des filtres */
+.filters-container {
+  position: relative;
 }
 
-.filter-button:hover {
-  background-color: #f5f5f5 !important;
-  border-color: #0a2681 !important;
-  color: #0a2681 !important;
+.filters::-webkit-scrollbar {
+  height: 4px;
 }
 
-.add-planife-button {
-  transition: all 0.3s ease;
+.filters::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
 }
 
-.add-planife-button:hover {
-  background-color: #0d3a9a !important;
+.filters::-webkit-scrollbar-thumb {
+  background: #0a2681;
+  border-radius: 2px;
 }
 
-.advanced-filters {
-  animation: slideDown 0.3s ease-out;
+.filters::-webkit-scrollbar-thumb:hover {
+  background: #0d3a9a;
 }
 
 @keyframes slideDown {
@@ -3679,30 +3864,361 @@ button[mat-icon-button]:active {
   }
 }
 
-/* Responsive design pour les filtres */
+/* Responsive design pour les filtres - Copiés du composant gestion-visites */
+/* Tablettes */
+@media (max-width: 1024px) {
+  .main-toolbar-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .left-controls,
+  .right-controls {
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .advanced-filters .filter-field {
+    min-width: 150px;
+  }
+}
+
+/* Mobiles */
 @media (max-width: 768px) {
-  .filters {
+  .main-toolbar {
+    padding: 12px 0;
+  }
+
+  .main-toolbar-content {
+    gap: 12px;
+  }
+
+  .left-controls,
+  .right-controls {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .custom-search-box {
+    max-width: none;
+    width: 100%;
+  }
+
+  .filters-toolbar {
+    padding: 12px 0;
+  }
+
+  .filters-content {
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 12px;
+  }
+
+  .filters-content mat-form-field {
+    min-width: 100%;
+  }
+}
+
+/* Très petits écrans */
+@media (max-width: 480px) {
+  .main-toolbar {
+    padding: 8px 0;
+  }
+
+  .filters-toolbar {
+    padding: 8px 0;
+  }
+
+  .filters-content {
+    padding: 0 8px;
+  }
+}
+
+/* ============================================================================
+   NOUVELLE ORGANISATION DE LA BARRE D'OUTILS EN DEUX LIGNES
+============================================================================ */
+
+/* Ligne du haut : Barre principale avec actions (toujours visible) */
+.main-toolbar {
+  width: 100%;
+  padding: 16px 0;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.main-toolbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+/* Section gauche : Recherche et Filtre */
+.left-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Section droite : Boutons d'action */
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Préserver le style existant des boutons */
+.right-controls .export-button {
+  background-color: #000;
+  color: white;
+  border-radius: 20px;
+  text-transform: none;
+}
+
+.right-controls .add-user-button {
+  background-color: #0a2681;
+  color: white;
+  border-radius: 20px;
+  text-transform: none;
+  font-weight: bold;
+}
+
+/* Ligne du bas : Filtres avancés (affichés seulement si showAdvancedFilters = true) */
+.filters-toolbar {
+  width: 100%;
+  padding: 16px 0;
+  margin-bottom: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.filters-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* Styles pour les lignes de filtres */
+.filters-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+}
+
+.filters-row-1 {
+  /* Première ligne : 4 filtres */
+}
+
+.filters-row-2 {
+  /* Deuxième ligne : 4 filtres + bouton fermer */
+  justify-content: space-between;
+}
+
+.filters-row mat-form-field {
+  flex: 1 1 22%; /* 4 filtres par ligne (22% chacun) */
+  min-width: 180px;
+}
+
+.filters-row .close-filters {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.filters-content .close-filters {
+  align-self: center;
+  height: 40px;
+  margin-bottom: 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #0E6AF4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Style pour les boutons de suppression de filtre à l'intérieur du champ */
+.clear-filter-btn {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  color: #666;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+}
+
+.clear-filter-btn:hover {
+  background-color: #e0e0e0;
+  color: #333;
+  transform: scale(1.1);
+}
+
+.clear-filter-btn mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 6px;
+  line-height: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: -6px;
+  padding: 0;
+}
+
+/* Style pour la boîte de recherche personnalisée */
+.custom-search-box {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  padding: 8px 20px;
+  width: 400px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-weight: bold;
+  margin-left: 0;
+}
+
+.custom-search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  font-weight: bold;
+}
+
+.custom-search-box button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-search-box button .material-icons {
+  font-size: 20px;
+}
+
+/* Style pour le bouton de filtre */
+.filter-button-custom {
+  border-radius: 70px;
+  padding: 8px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  font-weight: 800;
+  font-size: 18px;
+  cursor: pointer;
+  width: auto;
+  min-width: 140px;
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN POUR LA NOUVELLE ORGANISATION
+============================================================================ */
+
+/* Tablettes */
+@media (max-width: 1024px) {
+  .main-toolbar-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .left-controls,
+  .right-controls {
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .filters-content mat-form-field {
+    flex: 1 1 45%; /* deux par ligne si possible */
+  }
+}
+
+/* Mobiles */
+@media (max-width: 768px) {
+  .main-toolbar {
+    padding: 12px 0;
+  }
+
+  .main-toolbar-content {
+    gap: 12px;
+  }
+
+  .left-controls,
+  .right-controls {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .custom-search-box {
+    width: 100%;
+    max-width: none;
+  }
+
+  .filters-toolbar {
+    padding: 12px 0;
+  }
+
+  .filters-row {
     flex-direction: column;
     gap: 12px;
   }
-  
-  .search-field {
-    max-width: 100%;
-    margin-right: 0;
+
+  .filters-row mat-form-field {
+    flex: 1 1 100%; /* 1 par ligne */
+    min-width: 100%;
   }
-  
-  .filter-button,
-  .add-planife-button {
+
+  .filters-row-2 .close-filters {
     width: 100%;
-    margin-left: 0 !important;
+    justify-content: center;
+    margin: 0;
   }
-  
-  .advanced-filters {
-    flex-direction: column;
-    gap: 12px;
+}
+
+/* Très petits écrans */
+@media (max-width: 480px) {
+  .main-toolbar {
+    padding: 8px 0;
   }
-  
-  .filter-field {
-    width: 100%;
+
+  .filters-toolbar {
+    padding: 8px 0;
+  }
+
+  .filters-content {
+    padding: 0 8px;
+  }
+
+  .filters-row .close-filters {
+    height: 36px;
+    font-size: 14px;
   }
 }

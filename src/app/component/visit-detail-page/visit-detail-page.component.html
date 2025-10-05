@@ -164,15 +164,15 @@
     </button>
                 <button
                   mat-raised-button
-                  class="share-email-button"
-                  style="background-color: #4CAF50; color: white;"
+                 class="add-user-button"
+                  style="background-color: #0A2681; color: white;"
                   (click)="shareByEmail()"
                   *ngIf="visit"
                 >
                   <mat-icon>email</mat-icon>
                   Partager par email
                 </button>
-                <button
+                <!-- <button
                   mat-raised-button
                   class="add-user-button"
                   style="background-color: #0A2681; color: white;"
@@ -181,7 +181,7 @@
                 >
                   <mat-icon>print</mat-icon>
                   Imprimer le rapport
-                </button>
+                </button> -->
               </div>
             </div>
 
@@ -196,11 +196,15 @@
                       <div class="field-value">{{ visit.id }}</div>
                     </div>
                     
-                    <div class="info-field">
+                    <!-- <div class="info-field">
                       <label class="field-label">Statut</label>
                       <div class="field-value status-badge" [class]="'status-' + (visit.planning?.statut?.toLowerCase() || 'pending')">
                         {{ visit.planning?.statut || 'N/A' }}
                       </div>
+                    </div> -->
+                      <div class="info-field">
+                      <label class="field-label">Nouveauté concurrente</label>
+                      <div class="field-value">{{ visit.nouveauteConcurrente || 'Aucune' }}</div>
                     </div>
                   </div>
 
@@ -252,7 +256,7 @@
                     </div>
                   </div>
 
-                  <div class="info-row">
+                  <!-- <div class="info-row">
                     <div class="info-field">
                       <label class="field-label">Photo prise</label>
                       <div class="field-value status-badge" [class]="visit.photoPrise ? 'status-active' : 'status-inactive'">
@@ -264,7 +268,7 @@
                       <label class="field-label">Nouveauté concurrente</label>
                       <div class="field-value">{{ visit.nouveauteConcurrente || 'Aucune' }}</div>
                     </div>
-                  </div>
+                  </div> -->
                  </div>
                </div>
 

@@ -141,7 +141,7 @@ export class AddProduitComponent implements OnInit {
       marque: ['', Validators.required],
       reference: [''],
       categorie: ['', Validators.required],
-      image: ['', Validators.required],
+      image: [''],
       article: ['', Validators.required],
       type: ['', Validators.required],
       dimensions: ['', Validators.required],

@@ -1651,6 +1651,52 @@ mat-paginator {
   min-width: 180px;
 }
 
+/* Organisation des filtres en lignes */
+.filters-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+/* Première ligne : 4 filtres */
+.filters-row-1 {
+  justify-content: flex-start;
+}
+
+.filters-row-1 mat-form-field {
+  flex: 1 1 22%;
+  min-width: 180px;
+}
+
+/* Deuxième ligne : 4 filtres + bouton fermer */
+.filters-row-2 {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.filters-row-2 mat-form-field {
+  flex: 1 1 22%;
+  min-width: 180px;
+}
+
+.filters-row-2 .close-filters {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+/* Troisième ligne : Date de sortie seule */
+.filters-row-3 {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.filters-row-3 mat-form-field {
+  flex: 1 1 22%;
+  min-width: 200px;
+}
+
 .filters-content .close-filters {
   align-self: center;
   height: 40px;
@@ -1759,6 +1805,28 @@ mat-paginator {
     width: 100%;
     justify-content: center;
     margin-bottom: 10px;
+  }
+
+  /* Styles responsive pour les nouvelles lignes de filtres */
+  .filters-row {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .filters-row-1 mat-form-field,
+  .filters-row-2 mat-form-field,
+  .filters-row-3 mat-form-field {
+    flex: 1 1 100%;
+    min-width: 100%;
+    width: 100%;
+  }
+
+  .filters-row-2 .close-filters,
+  .filters-row-3 .close-filters {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
   }
 }
 

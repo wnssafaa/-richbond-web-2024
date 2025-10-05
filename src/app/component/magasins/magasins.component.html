@@ -279,9 +279,21 @@
                 mat-raised-button
                 class="export-button"
                 (click)="exportToExcel()"
+                style="background-color: #000000; color: white; margin-right: 8px"
               >
                 <span>{{ "ACTIONS.EXPORT" | translate }}</span>
                 <mat-icon>file_download</mat-icon>
+              </button>
+
+              <button
+                mat-raised-button
+                class="export-button"
+                (click)="openColumnCustomizationPanel()"
+                style="background-color: #3b45ca; color: white; margin-right: 8px"
+                matTooltip="Personnaliser les colonnes"
+              >
+                <span>Colonnes</span>
+                <mat-icon style="color:white">view_column</mat-icon>
               </button>
 
               <button
@@ -398,6 +410,33 @@
                 tabindex="-1"
                 aria-label="Effacer le filtre merchandiseur"
                 *ngIf="selectedMerchandiseur"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Superviseur</mat-label>
+              <mat-select
+                [(ngModel)]="selectedSuperviseur"
+                (selectionChange)="applyFilters()"
+              >
+                <mat-option value="">Tous les superviseurs</mat-option>
+                <mat-option
+                  *ngFor="let superv of superviseurs"
+                  [value]="superv.id"
+                >
+                  {{ superv.prenom }} {{ superv.nom }}
+                </mat-option>
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedSuperviseur = ''; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre superviseur"
+                *ngIf="selectedSuperviseur"
               >
                 <mat-icon>close</mat-icon>
               </button>
@@ -624,3 +663,18 @@
     </div>
   </div>
 </div>
+
+<!-- Overlay pour fermer le panneau en cliquant à l'extérieur -->
+<div
+  class="panel-overlay"
+  [class.visible]="isColumnCustomizationOpen"
+  (click)="closeColumnCustomizationPanel()"
+></div>
+
+<!-- Panneau de personnalisation des colonnes -->
+<app-column-customization-panel
+  [isOpen]="isColumnCustomizationOpen"
+  [columnConfig]="columnConfig"
+  (close)="closeColumnCustomizationPanel()"
+  (save)="onColumnCustomizationSave($event)"
+></app-column-customization-panel>

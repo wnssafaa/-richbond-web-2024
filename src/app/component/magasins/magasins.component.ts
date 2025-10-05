@@ -36,6 +36,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { SuperveseurService } from '../../services/superveseur.service';
 import { MerchendiseurService, Merchendiseur } from '../../services/merchendiseur.service';
+import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
 @Component({
   selector: 'app-magasins',
   standalone: true,
@@ -65,7 +66,8 @@ import { MerchendiseurService, Merchendiseur } from '../../services/merchendiseu
     HttpClientModule,
     MatPaginatorModule,
     RouterModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ColumnCustomizationPanelComponent
   ],
   templateUrl: './magasins.component.html',
   styleUrl: './magasins.component.css'
@@ -254,6 +256,21 @@ displayedColumns: string[] = [
   'typeMagasin',
   'actions']
 
+// Propriétés pour la personnalisation des colonnes
+isColumnCustomizationOpen: boolean = false;
+columnConfig = [
+  { key: 'id', label: 'ID', visible: true },
+  { key: 'nom', label: 'Nom', visible: true },
+  { key: 'localisation', label: 'Localisation', visible: true },
+  { key: 'region', label: 'Région', visible: true },
+  { key: 'ville', label: 'Ville', visible: true },
+  { key: 'merchandiseur', label: 'Merchandiseur', visible: true },
+  { key: 'superviseur', label: 'Superviseur', visible: true },
+  { key: 'enseigne', label: 'Enseigne', visible: true },
+  { key: 'typeMagasin', label: 'Type', visible: true },
+  { key: 'actions', label: 'Actions', visible: true }
+];
+
 dataSourceFilter = {
   searchText: '',
   filters: {
@@ -361,6 +378,7 @@ loadSuperviseurs() {
     this.loadCurrentUser();
     this.changeLanguage('fr'); 
     this.loadMagasins();
+    this.updateDisplayedColumns();
     this.dataSource.filterPredicate = (data: Magasin, filter: string) => {
       const filterObj = JSON.parse(filter);
       
@@ -577,5 +595,34 @@ openAddMagasinDialog(): void {
     viewMagasinDetail(magasin: Magasin): void {
       this.router.navigate(['/magasin-detail', magasin.id]);
     }
+
+    // Méthodes pour la personnalisation des colonnes
+    updateDisplayedColumns(): void {
+      this.displayedColumns = this.columnConfig
+        .filter(col => col.visible)
+        .map(col => col.key);
+    }
+
+    toggleColumnVisibility(columnKey: string): void {
+      const column = this.columnConfig.find(col => col.key === columnKey);
+      if (column) {
+        column.visible = !column.visible;
+        this.updateDisplayedColumns();
+      }
+    }
+
+    openColumnCustomizationPanel(): void {
+      this.isColumnCustomizationOpen = true;
+    }
+
+    closeColumnCustomizationPanel(): void {
+      this.isColumnCustomizationOpen = false;
+    }
+
+    onColumnCustomizationSave(columnConfig: any[]): void {
+      this.columnConfig = columnConfig;
+      this.updateDisplayedColumns();
+    }
+
      userMenuOpen: boolean = false;
 }

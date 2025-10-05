@@ -283,6 +283,16 @@
                 <span>Export </span>
                 <mat-icon>file_download</mat-icon>
               </button>
+ <button
+          mat-raised-button
+           class="export-button"
+          (click)="openColumnCustomizationPanel()"
+          style="background-color: #3b45ca; color: white; margin-right: 8px"
+          matTooltip="Personnaliser les colonnes"
+        >
+          <span>Colonnes</span>
+          <mat-icon style="color:white">view_column</mat-icon>
+        </button>
 
               <button
                 mat-raised-button
@@ -298,7 +308,8 @@
 
         <!-- Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) -->
         <div *ngIf="showFilters" class="filters-toolbar">
-          <div class="filters-content">
+          <!-- Première ligne : 4 filtres -->
+          <div class="filters-row filters-row-1">
             <mat-form-field appearance="outline">
               <mat-label>Région</mat-label>
               <mat-select
@@ -397,7 +408,10 @@
                 <mat-icon>close</mat-icon>
               </button>
             </mat-form-field>
+          </div>
 
+          <!-- Deuxième ligne : 4 filtres + bouton fermer -->
+          <div class="filters-row filters-row-2">
             <mat-form-field appearance="outline">
               <mat-label>Marque</mat-label>
               <mat-select
@@ -470,13 +484,57 @@
               </button>
             </mat-form-field>
 
-            <button
-              mat-button
-              (click)="showFilters = false"
-              class="close-filters"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
+            <mat-form-field appearance="outline">
+              <mat-label>Date d'intégration</mat-label>
+              <input
+                matInput
+                [matDatepicker]="integrationPicker"
+                [(ngModel)]="selectedIntegrationDate"
+                (dateChange)="applyFilters()"
+                placeholder="Sélectionner une date"
+              />
+              <mat-datepicker-toggle matSuffix [for]="integrationPicker"></mat-datepicker-toggle>
+              <mat-datepicker #integrationPicker></mat-datepicker>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedIntegrationDate = null; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre date d'intégration"
+                *ngIf="selectedIntegrationDate"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+          </div>
+
+          <!-- Troisième ligne : Date de sortie seule -->
+          <div class="filters-row filters-row-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Date de sortie</mat-label>
+              <input
+                matInput
+                [matDatepicker]="sortiePicker"
+                [(ngModel)]="selectedSortieDate"
+                (dateChange)="applyFilters()"
+                placeholder="Sélectionner une date"
+              />
+              <mat-datepicker-toggle matSuffix [for]="sortiePicker"></mat-datepicker-toggle>
+              <mat-datepicker #sortiePicker></mat-datepicker>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedSortieDate = null; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre date de sortie"
+                *ngIf="selectedSortieDate"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
           </div>
         </div>
         <table
@@ -507,21 +565,10 @@
             >
               {{ "MERCHANDISERS.NAME" | translate }}
             </th>
-            <td mat-cell *matCellDef="let m">{{ m.nom }}</td>
+            <td mat-cell *matCellDef="let m">{{ m.nom }} {{ m.prenom }}</td>
           </ng-container>
 
-          <ng-container matColumnDef="prenom">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header
-              style="background-color: #f2f2f2"
-            >
-              Prénom
-            </th>
-            <td mat-cell *matCellDef="let m">{{ m.prenom }}</td>
-          </ng-container>
-
+         
           <ng-container matColumnDef="region">
             <th
               mat-header-cell
@@ -565,15 +612,10 @@
               mat-sort-header
               style="background-color: #f2f2f2"
             >
-              {{ 'COMMON.STORES' | translate }}
+             Magasins
             </th>
             <td mat-cell *matCellDef="let m">
-              <span *ngIf="m.magasinIds && m.magasinIds.length > 0">
-                {{ m.magasinIds.join(', ') }}
-              </span>
-              <span *ngIf="!m.magasinIds || m.magasinIds.length === 0" style="color: #999; font-style: italic">
-                Aucun magasin
-              </span>
+              {{ getMagasinNames(m) }}
             </td>
           </ng-container>
 
@@ -610,7 +652,7 @@
               mat-sort-header
               style="background-color: #f2f2f2"
             >
-              {{ "COMMON.SUPERVISORS" | translate }}
+            Superviseur
             </th>
             <td mat-cell *matCellDef="let m">
               <span *ngIf="m.superviseur; else noSupervisor">
@@ -647,28 +689,13 @@
             </th>
             <td mat-cell *matCellDef="let m">{{ m.telephone }}</td>
           </ng-container>
-
-
-          <ng-container matColumnDef="actions">
+ <ng-container matColumnDef="actions">
             <th
               mat-header-cell
               *matHeaderCellDef
-              style="
-                background-color: #f2f2f2;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-              "
+              style="background-color: #f2f2f2"
             >
-              <span>{{ "USERS.ACTIONS" | translate }}</span>
-              <button
-                mat-icon-button
-                matTooltip="Personnaliser les colonnes"
-                (click)="openColumnCustomizationPanel()"
-                style="margin-left: 8px"
-              >
-                <mat-icon style="font-size: 18px">view_column</mat-icon>
-              </button>
+              {{ "USERS.ACTIONS" | translate }}
             </th>
             <td mat-cell *matCellDef="let m" class="actions-cell">
               <div class="actions-container">
@@ -677,6 +704,7 @@
                   color="primary"
                   (click)="editUser(m); $event.stopPropagation()"
                   class="action-button"
+                  matTooltip="Modifier"
                 >
                   <mat-icon style="color: blue">edit</mat-icon>
                 </button>
@@ -684,6 +712,7 @@
                   mat-icon-button
                   (click)="viewMerchendiseur(m); $event.stopPropagation()"
                   class="action-button"
+                  matTooltip="Voir les détails"
                 >
                   <mat-icon>visibility</mat-icon>
                 </button>
@@ -692,12 +721,15 @@
                   color="warn"
                   (click)="deleteMerchendiseur(m.id!); $event.stopPropagation()"
                   class="action-button"
+                  matTooltip="Supprimer"
                 >
                   <mat-icon style="color: black">delete</mat-icon>
                 </button>
               </div>
             </td>
           </ng-container>
+
+         
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr
