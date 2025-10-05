@@ -146,12 +146,12 @@
               <mat-icon (click)="clearFile()" class="clear-icon" style="cursor:pointer;">close</mat-icon>
             </div>
 
-            <!-- Aperçu de l'image -->
+           
             <div *ngIf="produitForm.get('image')?.value" class="image-preview">
               <img [src]="'data:image/jpeg;base64,' + produitForm.get('image')?.value" alt="Aperçu image" width="150">
             </div>
 
-            <!-- Erreur image requise -->
+            
             <mat-error *ngIf="produitForm.get('image')?.hasError('required') && !isEditMode">
               L'image est obligatoire
             </mat-error>
