@@ -11,6 +11,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatProgressBarModule, MatProgressBar } from '@angular/material/progress-bar';
 import { MatSpinner } from '@angular/material/progress-spinner';
+import { forkJoin } from 'rxjs';
 import { AdduserComponent } from '../adduser/adduser.component';
 import { LoginHistoryComponent } from '../login-history/login-history.component';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -132,6 +133,7 @@ export class DachboardComponent implements OnDestroy {
   // Graphiques Chart.js
   visitsChart: Chart | null = null;
   planificationsChart: Chart | null = null;
+  usersIntegrationChart: Chart | null = null;
 
   // Graphiques
   public usersChartData: ChartData<'doughnut'> = {
@@ -160,6 +162,17 @@ export class DachboardComponent implements OnDestroy {
       data: [0, 0, 0, 0, 0],
       backgroundColor: ['#1f1f5e', '#ff9800', '#4caf50', '#beab71', '#f44336'],
       borderWidth: 2
+    }]
+  };
+
+  public usersIntegrationChartData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{
+      label: 'Utilisateurs intégrés',
+      data: [],
+      backgroundColor: '#2196F3',
+      borderColor: '#1976D2',
+      borderWidth: 1
     }]
   };
 
@@ -524,6 +537,7 @@ ngOnInit(): void {
   // Charger les données des graphiques
   this.loadUsersChartData();
   this.loadVisitsChartData();
+  this.loadUsersIntegrationChartData();
 
   const currentYear = new Date().getFullYear();
   this.years = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i);
@@ -775,6 +789,71 @@ loadVisitsChartData(): void {
   });
 }
 
+loadUsersIntegrationChartData(): void {
+  // Charger tous les utilisateurs (superviseurs et merchandisers)
+  forkJoin([
+    this.superviseurService.getAll(),
+    this.merchendiseurService.getAllMerchendiseurs()
+  ]).subscribe(([superviseurs, merchandisers]) => {
+    // Combiner tous les utilisateurs
+    const allUsers = [
+      ...superviseurs.map(s => ({ ...s, type: 'Superviseur' })),
+      ...merchandisers.map(m => ({ ...m, type: 'Merchandiser' }))
+    ];
+
+    // Grouper par mois d'intégration
+    const usersByMonth = new Map<string, number>();
+    const monthNames = [
+      'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+      'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+    ];
+
+    // Initialiser tous les mois avec 0
+    monthNames.forEach(month => {
+      usersByMonth.set(month, 0);
+    });
+
+    allUsers.forEach(user => {
+      // Accéder aux propriétés de date d'intégration selon le type d'utilisateur
+      let integrationDate: string | undefined;
+      
+      if (user.type === 'Superviseur') {
+        integrationDate = (user as any).dateIntegration;
+      } else if (user.type === 'Merchandiser') {
+        integrationDate = (user as any).dateDebutIntegration;
+      }
+      
+      if (integrationDate) {
+        const date = new Date(integrationDate);
+        const monthIndex = date.getMonth();
+        const monthName = monthNames[monthIndex];
+        
+        if (usersByMonth.has(monthName)) {
+          usersByMonth.set(monthName, usersByMonth.get(monthName)! + 1);
+        }
+      }
+    });
+
+    // Préparer les données pour le graphique
+    const labels = Array.from(usersByMonth.keys());
+    const data = Array.from(usersByMonth.values());
+
+    this.usersIntegrationChartData = {
+      labels: labels,
+      datasets: [{
+        label: 'Utilisateurs intégrés',
+        data: data,
+        backgroundColor: '#2196F3',
+        borderColor: '#1976D2',
+        borderWidth: 1
+      }]
+    };
+
+    // Mettre à jour le graphique
+    this.updateUsersIntegrationChart();
+  });
+}
+
 // Méthode pour vérifier si une visite est complète
 private isVisitComplete(visit: any): boolean {
   // Vérifier les champs obligatoires
@@ -997,6 +1076,7 @@ getPlanificationsForDate(d: Date): Planification[] {
 private initializeCharts(): void {
   this.createVisitsChart();
   this.createPlanificationsChart();
+  this.createUsersIntegrationChart();
 }
 
 private createVisitsChart(): void {
@@ -1063,10 +1143,52 @@ private createPlanificationsChart(): void {
   }
 }
 
+private createUsersIntegrationChart(): void {
+  const ctx = document.getElementById('usersIntegrationChart') as HTMLCanvasElement;
+  if (ctx && !this.usersIntegrationChart) {
+    this.usersIntegrationChart = new Chart(ctx, {
+      type: 'bar',
+      data: this.usersIntegrationChartData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 20
+            }
+          },
+          title: {
+            display: true,
+            text: 'Intégration des Utilisateurs par Mois'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        }
+      }
+    });
+  }
+}
+
 private updateVisitsChart(): void {
   if (this.visitsChart) {
     this.visitsChart.data = this.visitsChartData;
     this.visitsChart.update();
+  }
+}
+
+private updateUsersIntegrationChart(): void {
+  if (this.usersIntegrationChart) {
+    this.usersIntegrationChart.data = this.usersIntegrationChartData;
+    this.usersIntegrationChart.update();
   }
 }
 
@@ -1106,6 +1228,9 @@ ngOnDestroy(): void {
   }
   if (this.planificationsChart) {
     this.planificationsChart.destroy();
+  }
+  if (this.usersIntegrationChart) {
+    this.usersIntegrationChart.destroy();
   }
 }
 

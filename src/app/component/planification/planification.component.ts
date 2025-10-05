@@ -39,12 +39,12 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import * as L from 'leaflet';
 import 'leaflet-defaulticon-compatibility';
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
+import { ExportService } from '../../services/export.service';
 
 // Add this before initializing your map
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -507,6 +507,14 @@ private filterByWeek(planifs: Planification[], semaine: string): Planification[]
     this.updateDisplayedColumns();
   }
 
+  // Méthode pour exporter les planifications en Excel
+  exportToExcel(): void {
+    this.exportService.exportPlanifications(this.dataSource.data, {
+      filename: 'planifications',
+      sheetName: 'Planifications'
+    });
+  }
+
   // Méthodes pour charger les superviseurs
   loadSuperviseurs(): void {
     this.superviseurService.getAll().subscribe({
@@ -760,7 +768,8 @@ highlightWeekends(arg: any): void {
     private magasinService: MagasinService,
     private superviseurService: SuperveseurService,
     private snackBar: MatSnackBar,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private exportService: ExportService
   ) {
 
     this.translate.setDefaultLang('fr');

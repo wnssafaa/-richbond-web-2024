@@ -744,6 +744,17 @@
                 <button
                   mat-raised-button
                   class="export-button"
+                  (click)="exportToExcel()"
+                  style="background-color: #000000; color: white; margin-right: 8px"
+                  matTooltip="Exporter les données"
+                >
+                  <span>Export</span>
+                  <mat-icon>file_download</mat-icon>
+                </button>
+
+                <button
+                  mat-raised-button
+                  class="export-button"
                   (click)="openColumnCustomizationPanel()"
                   style="background-color: #3b45ca; color: white; margin-right: 8px"
                   matTooltip="Personnaliser les colonnes"
