@@ -325,10 +325,10 @@
               <mat-select
                 [(ngModel)]="selectedVille"
                 (selectionChange)="applyFilters()"
-                [disabled]="!selectedRegion"
               >
+                <mat-option value="">Toutes les villes</mat-option>
                 <mat-option
-                  *ngFor="let ville of villesDisponibles"
+                  *ngFor="let ville of allVilles"
                   [value]="ville"
                 >
                   {{ ville }}

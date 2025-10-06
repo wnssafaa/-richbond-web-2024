@@ -213,6 +213,7 @@ export class SuperviseursComponent implements OnInit {
     }
   }
   villesDisponibles: string[] = [];
+  allVilles: string[] = [];
   regionVillesMap: { [key in Region]: string[] } = {
     [Region.SUD]: ['Assa', 'Zag', 'Tata', 'Akka', 'Foum Zguid'],
     [Region.NORD]: [
@@ -348,9 +349,18 @@ export class SuperviseursComponent implements OnInit {
 
   onRegionFilterChange(selectedRegion: Region): void {
     this.selectedRegion = selectedRegion;
-    this.villesDisponibles = this.regionVillesMap[selectedRegion] || [];
-    this.selectedVille = '';
+    // Ne pas réinitialiser la ville sélectionnée pour rendre les filtres indépendants
     this.applyFilters();
+  }
+
+  loadAllVilles(): void {
+    // Charger toutes les villes de toutes les régions
+    this.allVilles = [];
+    Object.values(this.regionVillesMap).forEach(villes => {
+      this.allVilles.push(...villes);
+    });
+    // Supprimer les doublons
+    this.allVilles = [...new Set(this.allVilles)];
   }
 
   applyFilters() {
@@ -414,6 +424,7 @@ export class SuperviseursComponent implements OnInit {
     this.loadMagasins();
 
     this.loadMerchandisers();
+    this.loadAllVilles();
 
     this.setupCustomFilter();
     this.updateDisplayedColumns();

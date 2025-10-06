@@ -303,9 +303,9 @@
               <mat-label>{{ "MERCHANDISERS.FILTERS.REGION" | translate }}</mat-label>
               <mat-select
                 [(ngModel)]="selectedRegion"
-                (selectionChange)="applyFilters()"
                 (selectionChange)="onRegionChange($event.value)"
               >
+                <mat-option value="">Toutes les régions</mat-option>
                 <mat-option *ngFor="let region of regions" [value]="region">
                   {{ region }}
                 </mat-option>
@@ -329,6 +329,7 @@
                 [(ngModel)]="selectedVille"
                 (selectionChange)="applyFilters()"
               >
+                <mat-option value="">Toutes les villes</mat-option>
                 <mat-option *ngFor="let ville of villes" [value]="ville">
                   {{ ville }}
                 </mat-option>
