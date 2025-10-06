@@ -299,15 +299,8 @@ resetFilters(): void {
     
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
-            this.produitService.createProduit(result).subscribe({
-              next: () => {
-                this.snackBar.open('Produit ajouté avec succès', 'Fermer', { duration: 3000 });
-                this.loadProduits();
-              },
-              error: () => {
-                this.snackBar.open("Erreur lors de l'ajout du produit", 'Fermer', { duration: 3000 });
-              }
-            });
+            // Le produit a déjà été créé dans le dialog, on recharge juste la liste
+            this.loadProduits();
           }
         });
       }
