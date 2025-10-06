@@ -308,7 +308,7 @@
                 [(ngModel)]="selectedRole"
                 (selectionChange)="applyFilter()"
               >
-                <mat-option value="">Touts les Roles</mat-option>
+                <mat-option value="">{{ "USERS.ALL_ROLES" | translate }}</mat-option>
                 <mat-option value="SUPERVISEUR">SUPERVISEUR</mat-option>
                 <mat-option value="MERCHENDISEUR">MERCHENDISEUR</mat-option>
               </mat-select>
@@ -348,13 +348,78 @@
               </button>
             </mat-form-field>
 
-            <button
-              mat-button
-              (click)="showFilters = false"
-              class="close-filters"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
+            <mat-form-field appearance="outline">
+              <mat-label>{{ "USERS.REGION" | translate }}</mat-label>
+              <mat-select
+                [(ngModel)]="selectedRegion"
+                (selectionChange)="onRegionChange()"
+              >
+                <mat-option value="">{{ "USERS.ALL_REGIONS" | translate }}</mat-option>
+                <mat-option *ngFor="let region of availableRegions" [value]="region">
+                  {{ ('USERS.REGIONS.' + region) | translate }}
+                </mat-option>
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedRegion = ''; onRegionChange()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre région"
+                *ngIf="selectedRegion"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{ "USERS.CITY" | translate }}</mat-label>
+              <mat-select
+                [(ngModel)]="selectedCity"
+                (selectionChange)="onCityChange()"
+              >
+                <mat-option value="">{{ "USERS.ALL_CITIES" | translate }}</mat-option>
+                <mat-option *ngFor="let city of availableCities" [value]="city">
+                  {{ city }}
+                </mat-option>
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedCity = ''; onCityChange()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre ville"
+                *ngIf="selectedCity"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{ "USERS.STORE" | translate }}</mat-label>
+              <mat-select
+                [(ngModel)]="selectedStore"
+                (selectionChange)="applyFilter()"
+              >
+                <mat-option value="">{{ "USERS.ALL_STORES" | translate }}</mat-option>
+                <mat-option *ngFor="let store of availableStores" [value]="store">
+                  {{ store }}
+                </mat-option>
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedStore = ''; applyFilter()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre magasin"
+                *ngIf="selectedStore"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
           </div>
         </div>
 
@@ -388,6 +453,81 @@
               {{ "USERS.FULL_NAME" | translate }}
             </th>
             <td mat-cell *matCellDef="let row">{{ row.nom }}</td>
+          </ng-container>
+
+          <!-- Region -->
+          <ng-container matColumnDef="region">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "USERS.REGION" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <div
+                style="
+                  background-color: #f2f2f2;
+                  text-align: center;
+                  border-radius: 5px;
+                  padding: 6px 16px;
+                  width: 80%;
+                "
+              >
+                {{ row.region || "—" }}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- City -->
+          <ng-container matColumnDef="city">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "USERS.CITY" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <div
+                style="
+                  background-color: #f2f2f2;
+                  text-align: center;
+                  border-radius: 5px;
+                  padding: 6px 16px;
+                  width: 80%;
+                "
+              >
+                {{ row.ville || "—" }}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Store -->
+          <ng-container matColumnDef="store">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              {{ "USERS.STORE" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <div
+                style="
+                  background-color: #f2f2f2;
+                  text-align: center;
+                  border-radius: 5px;
+                  padding: 6px 16px;
+                  width: 80%;
+                "
+              >
+                {{ row.magasin || "—" }}
+              </div>
+            </td>
           </ng-container>
 
           <!-- Connection -->

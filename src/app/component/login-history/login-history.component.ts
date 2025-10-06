@@ -11,17 +11,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ExportService } from '../../services/export.service';
-import { MagasinService } from '../../services/magasin.service';
-import { MerchendiseurService } from '../../services/merchendiseur.service';
-import { SuperveseurService } from '../../services/superveseur.service';
-import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
+import { Region } from '../../enum/Region';
+import { MagasinService, Magasin } from '../../services/magasin.service';
 
 @Component({
   selector: 'app-login-history',
@@ -39,11 +35,8 @@ import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customiz
     MatTooltipModule,
     MatChipsModule,
     MatProgressSpinnerModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     FormsModule,
-    TranslateModule,
-    ColumnCustomizationPanelComponent
+    TranslateModule
   ],
   providers: [DatePipe],
   templateUrl: './login-history.component.html',
@@ -55,17 +48,15 @@ export class LoginHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
   // Propriétés pour le tableau
   displayedColumns: string[] = [
     'user',
+    'region',
+    'ville',
+    'magasin',
+    'fonction',
+    'status',
     'date login',
     'date logout',
     'session',
-    'role',
-    'status',
-    'magasin',
-    'merchandiser',
-    'region',
-    'ville',
-    'ip',
-   
+    'ip'
   ];
   
   dataSource = new MatTableDataSource<any>();
@@ -84,44 +75,56 @@ export class LoginHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
   // Options pour les filtres
   roles: string[] = ['ADMIN', 'SUPERVISEUR', 'MERCHANDISEUR_MONO', 'MERCHANDISEUR_MULTI'];
   statuses: string[] = ['ACTIVE', 'INACTIVE'];
-  regions: string[] = [];
+  regions: string[] = Object.values(Region);
   villes: string[] = [];
-  magasinNames: string[] = [];
-
+  magasins: string[] = [];
+  
+  // Mapping direct des régions pour les traductions
+  regionTranslationMap: { [key: string]: { fr: string, en: string } } = {
+    'Tanger-Tétouan-Al Hoceïma': { fr: 'Tanger-Tétouan-Al Hoceïma', en: 'Tangier-Tetouan-Al Hoceima' },
+    "L'Oriental": { fr: "L'Oriental", en: 'Eastern Region' },
+    'Fès-Meknès': { fr: 'Fès-Meknès', en: 'Fez-Meknes' },
+    'Rabat-Salé-Kénitra': { fr: 'Rabat-Salé-Kénitra', en: 'Rabat-Sale-Kenitra' },
+    'Béni Mellal-Khénifra': { fr: 'Béni Mellal-Khénifra', en: 'Beni Mellal-Khenifra' },
+    'Casablanca-Settat': { fr: 'Casablanca-Settat', en: 'Casablanca-Settat' },
+    'Marrakech-Safi': { fr: 'Marrakech-Safi', en: 'Marrakech-Safi' },
+    'Drâa-Tafilalet': { fr: 'Drâa-Tafilalet', en: 'Draa-Tafilalet' },
+    'Souss-Massa': { fr: 'Souss-Massa', en: 'Souss-Massa' },
+    'Guelmim-Oued Noun': { fr: 'Guelmim-Oued Noun', en: 'Guelmim-Oued Noun' },
+    'Laâyoune-Sakia El Hamra': { fr: 'Laâyoune-Sakia El Hamra', en: 'Laayoune-Sakia El Hamra' },
+    'Dakhla-Oued Ed Dahab': { fr: 'Dakhla-Oued Ed Dahab', en: 'Dakhla-Oued Ed Dahab' },
+    'Sud': { fr: 'Sud', en: 'South' },
+    'Nord': { fr: 'Nord', en: 'North' },
+    'Orient': { fr: 'Orient', en: 'East' },
+    'Centre': { fr: 'Centre', en: 'Center' }
+  };
   
   // État de chargement
   isLoading: boolean = false;
   errorMessage: string = '';
-
-  // Configuration des colonnes pour la personnalisation
-  isColumnCustomizationOpen: boolean = false;
-  columnConfig = [
-    { key: 'user', label: 'Utilisateur', visible: true },
-    { key: 'date login', label: 'Date Connexion', visible: true },
-    { key: 'date logout', label: 'Date Déconnexion', visible: true },
-    { key: 'session', label: 'Durée Session', visible: true },
-    { key: 'role', label: 'Rôle', visible: true },
-    { key: 'status', label: 'Statut', visible: true },
-    { key: 'magasin', label: 'Magasins', visible: true },
-    { key: 'merchandiser', label: 'Merchandiser/Magasins', visible: true },
-    { key: 'region', label: 'Région', visible: true },
-    { key: 'ville', label: 'Ville', visible: true },
-    { key: 'ip', label: 'Adresse IP', visible: true },
-   
-  ];
 
   constructor(
     private authService: AuthService,
     private datePipe: DatePipe,
     private exportService: ExportService,
     private magasinService: MagasinService,
-    private merchendiseurService: MerchendiseurService,
-    private superviseurService: SuperveseurService
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
     this.loadLoginHistory();
-    this.updateDisplayedColumns();
+    this.loadMagasins();
+    
+    // Initialiser les villes avec des données de test si nécessaire
+    setTimeout(() => {
+      if (this.villes.length === 0) {
+        console.log('🚨 Initialisation avec des villes de test...');
+        this.villes = [
+          'Casablanca', 'Rabat', 'Marrakech', 'Fès', 'Tanger', 
+          'Meknès', 'Agadir', 'Oujda', 'Kénitra', 'Tétouan'
+        ];
+      }
+    }, 2000); // Attendre 2 secondes pour voir si les données se chargent
   }
 
   ngAfterViewInit(): void {
@@ -142,20 +145,24 @@ export class LoginHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
    * Charge l'historique de connexion depuis le service
    */
   loadLoginHistory(): void {
+    console.log('🚀 Début du chargement de l\'historique de connexion...');
     this.isLoading = true;
     this.errorMessage = '';
 
     this.authService.getLoginHistory().subscribe({
       next: (history: any) => {
-        this.loginHistory = Array.isArray(history) ? history : (history.content || []);
+        console.log('📥 Données reçues du service:', history);
+        console.log('🔍 Type de données:', typeof history);
+        console.log('📊 Est un tableau:', Array.isArray(history));
         
-        // Enrichir les données utilisateur avec les informations complètes
-        this.enrichUserData();
+        this.loginHistory = Array.isArray(history) ? history : (history.content || []);
+        console.log('📋 LoginHistory après traitement:', this.loginHistory);
+        console.log('📊 Nombre d\'entrées:', this.loginHistory.length);
         
         this.dataSource.data = this.loginHistory;
         
-        // Extraire les options de filtres depuis les données
-        this.extractFilterOptions();
+        // Extraire les villes uniques des données
+        this.extractUniqueVilles();
         
         // Reconfigurer le paginateur après le chargement des données
         setTimeout(() => {
@@ -166,210 +173,40 @@ export class LoginHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         
         this.isLoading = false;
+        console.log('✅ Chargement terminé');
       },
       error: (err) => {
-        console.error('Erreur lors du chargement de l\'historique de connexion:', err);
+        console.error('❌ Erreur lors du chargement de l\'historique de connexion:', err);
         this.errorMessage = 'Erreur lors du chargement des données';
+        this.isLoading = false;
+        
+        // En cas d'erreur, ajouter des données de test
+        console.log('🧪 Ajout de données de test en cas d\'erreur...');
+        this.loginHistory = [
+          {
+            user: { username: 'test1', ville: 'Casablanca', region: 'Casablanca-Settat' },
+            loginTime: new Date().toISOString(),
+            logoutTime: null,
+            ipAddress: '192.168.1.1'
+          },
+          {
+            user: { username: 'test2', ville: 'Rabat', region: 'Rabat-Salé-Kénitra' },
+            loginTime: new Date().toISOString(),
+            logoutTime: null,
+            ipAddress: '192.168.1.2'
+          },
+          {
+            user: { username: 'test3', ville: 'Marrakech', region: 'Marrakech-Safi' },
+            loginTime: new Date().toISOString(),
+            logoutTime: null,
+            ipAddress: '192.168.1.3'
+          }
+        ];
+        this.dataSource.data = this.loginHistory;
+        this.extractUniqueVilles();
         this.isLoading = false;
       }
     });
-  }
-
-  /**
-   * Enrichit les données utilisateur avec les informations complètes selon leur rôle
-   */
-  enrichUserData(): void {
-    this.loginHistory.forEach(entry => {
-      const user = entry.user;
-      if (user && user.role) {
-        // Enrichir selon le rôle
-        switch (user.role) {
-          case 'MERCHANDISEUR_MONO':
-          case 'MERCHANDISEUR_MULTI':
-            this.enrichMerchandiseurData(user);
-            break;
-          case 'SUPERVISEUR':
-            this.enrichSuperviseurData(user);
-            break;
-          case 'ADMIN':
-            // Pour les admins, on peut laisser les données par défaut
-            break;
-        }
-      }
-    });
-  }
-
-  /**
-   * Enrichit les données d'un merchandiser
-   */
-  enrichMerchandiseurData(user: any): void {
-    // Charger tous les merchandisers et trouver celui qui correspond
-    this.merchendiseurService.getAllMerchendiseurs().subscribe({
-      next: (merchandiseurs) => {
-        const matchingMerchandiseur = merchandiseurs.find(merch => 
-          (merch.email === user.email) || 
-          (merch.username === user.username) ||
-          (merch.nom === user.nom && merch.prenom === user.prenom)
-        );
-        
-        if (matchingMerchandiseur) {
-          // Enrichir les données utilisateur
-          user.region = matchingMerchandiseur.region;
-          user.ville = matchingMerchandiseur.ville;
-          user.magasinNoms = matchingMerchandiseur.magasinNoms;
-          user.superviseur = matchingMerchandiseur.superviseur;
-          console.log('Données merchandiser enrichies:', user.username, user.region, user.ville);
-        }
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des merchandisers:', err);
-      }
-    });
-  }
-
-  /**
-   * Enrichit les données d'un superviseur
-   */
-  enrichSuperviseurData(user: any): void {
-    // Charger tous les superviseurs et trouver celui qui correspond
-    this.superviseurService.getAll().subscribe({
-      next: (superviseurs) => {
-        const matchingSuperviseur = superviseurs.find(sup => 
-          (sup.email === user.email) || 
-          (sup.username === user.username) ||
-          (sup.nom === user.nom && sup.prenom === user.prenom)
-        );
-        
-        if (matchingSuperviseur) {
-          // Enrichir les données utilisateur
-          user.region = matchingSuperviseur.region;
-          user.ville = matchingSuperviseur.ville;
-          user.merchendiseurs = matchingSuperviseur.merchendiseurs;
-          console.log('Données superviseur enrichies:', user.username, user.region, user.ville);
-        }
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des superviseurs:', err);
-      }
-    });
-  }
-
-  /**
-   * Extrait les options de filtres depuis les données chargées
-   */
-  extractFilterOptions(): void {
-    // Extraire les régions et villes des utilisateurs connectés
-    this.extractRegionsAndVillesFromHistory();
-    
-    // Charger les magasins depuis l'API
-    this.loadMagasins();
-    
-    // Initialiser les villes selon la région sélectionnée
-    this.updateVillesForRegion();
-  }
-
-  /**
-   * Extrait les régions et villes des utilisateurs connectés
-   */
-  extractRegionsAndVillesFromHistory(): void {
-    const regionsSet = new Set<string>();
-    const villesSet = new Set<string>();
-
-    this.loginHistory.forEach(entry => {
-      const user = entry.user;
-      if (user) {
-        // Extraire région et ville de l'utilisateur connecté
-        if (user.region) {
-          regionsSet.add(user.region);
-        }
-        if (user.ville) {
-          villesSet.add(user.ville);
-        }
-      }
-    });
-
-    this.regions = Array.from(regionsSet).sort();
-    this.villes = Array.from(villesSet).sort();
-  }
-
-  /**
-   * Charge les magasins depuis l'API
-   */
-  loadMagasins(): void {
-    this.magasinService.getAllMagasins().subscribe({
-      next: (magasins) => {
-        this.magasinNames = magasins.map(magasin => magasin.nom).sort();
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des magasins:', err);
-        // En cas d'erreur, utiliser les magasins des données d'historique comme fallback
-        this.extractMagasinsFromHistory();
-      }
-    });
-  }
-
-  /**
-   * Extrait les magasins depuis les données d'historique (fallback)
-   */
-  extractMagasinsFromHistory(): void {
-    const magasinsSet = new Set<string>();
-
-    this.loginHistory.forEach(entry => {
-      const user = entry.user;
-      if (user) {
-        // Magasins
-        if (user.magasinNoms && user.magasinNoms.length > 0) {
-          user.magasinNoms.forEach((magasin: string) => {
-            magasinsSet.add(magasin);
-          });
-        }
-        
-        // Magasins des merchandisers sous superviseur
-        if (user.merchendiseurs && user.merchendiseurs.length > 0) {
-          user.merchendiseurs.forEach((merch: any) => {
-            if (merch.magasinNoms && merch.magasinNoms.length > 0) {
-              merch.magasinNoms.forEach((magasin: string) => {
-                magasinsSet.add(magasin);
-              });
-            }
-          });
-        }
-      }
-    });
-
-    this.magasinNames = Array.from(magasinsSet).sort();
-  }
-
-  /**
-   * Met à jour la liste des villes selon la région sélectionnée
-   */
-  updateVillesForRegion(): void {
-    if (this.selectedRegion) {
-      // Filtrer les villes selon la région sélectionnée
-      const villesSet = new Set<string>();
-      
-      this.loginHistory.forEach(entry => {
-        const user = entry.user;
-        if (user && user.region === this.selectedRegion && user.ville) {
-          villesSet.add(user.ville);
-        }
-      });
-      
-      this.villes = Array.from(villesSet).sort();
-    } else {
-      // Si aucune région sélectionnée, afficher toutes les villes des utilisateurs connectés
-      this.extractRegionsAndVillesFromHistory();
-    }
-  }
-
-  /**
-   * Gère le changement de région
-   */
-  onRegionChange(region: string): void {
-    this.selectedRegion = region;
-    this.selectedVille = ''; // Réinitialiser la ville
-    this.updateVillesForRegion();
-    this.applyFilters();
   }
 
   /**
@@ -385,6 +222,9 @@ export class LoginHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
         entry.user?.username?.toLowerCase().includes(searchLower) ||
         entry.user?.nom?.toLowerCase().includes(searchLower) ||
         entry.user?.prenom?.toLowerCase().includes(searchLower) ||
+        entry.user?.region?.toLowerCase().includes(searchLower) ||
+        entry.user?.ville?.toLowerCase().includes(searchLower) ||
+        entry.user?.magasin?.toLowerCase().includes(searchLower) ||
         entry.ipAddress?.toLowerCase().includes(searchLower)
       );
     }
@@ -403,14 +243,14 @@ export class LoginHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
 
-    // Filtre par région
+    // Filtre par région (INDÉPENDANT du filtre ville)
     if (this.selectedRegion) {
       filteredData = filteredData.filter(entry => 
         entry.user?.region === this.selectedRegion
       );
     }
 
-    // Filtre par ville
+    // Filtre par ville (INDÉPENDANT du filtre région)
     if (this.selectedVille) {
       filteredData = filteredData.filter(entry => 
         entry.user?.ville === this.selectedVille
@@ -419,24 +259,9 @@ export class LoginHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Filtre par magasin
     if (this.selectedMagasin) {
-      filteredData = filteredData.filter(entry => {
-        const user = entry.user;
-        if (!user) return false;
-        
-        // Vérifier les magasins directs de l'utilisateur
-        if (user.magasinNoms && user.magasinNoms.includes(this.selectedMagasin)) {
-          return true;
-        }
-        
-        // Vérifier les magasins des merchandisers sous superviseur
-        if (user.merchendiseurs && user.merchendiseurs.length > 0) {
-          return user.merchendiseurs.some((merch: any) => 
-            merch.magasinNoms && merch.magasinNoms.includes(this.selectedMagasin)
-          );
-        }
-        
-        return false;
-      });
+      filteredData = filteredData.filter(entry => 
+        entry.user?.magasin === this.selectedMagasin
+      );
     }
 
     // Filtre par plage de dates
@@ -578,191 +403,191 @@ export class LoginHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadLoginHistory();
   }
 
+  /**
+   * Gère le changement de date de début
+   */
+  onStartDateChange(dateString: string): void {
+    if (dateString) {
+      this.selectedDateRange.start = new Date(dateString);
+    } else {
+      this.selectedDateRange.start = null;
+    }
+    this.applyFilters();
+  }
 
   /**
-   * Obtient les informations des magasins selon le rôle de l'utilisateur
+   * Gère le changement de date de fin
    */
-  getStoreInfo(user: any): string {
-    if (!user) return 'N/A';
+  onEndDateChange(dateString: string): void {
+    if (dateString) {
+      this.selectedDateRange.end = new Date(dateString);
+    } else {
+      this.selectedDateRange.end = null;
+    }
+    this.applyFilters();
+  }
 
-    const role = user.role;
+  /**
+   * Extrait les villes uniques des données chargées
+   * Cette méthode charge TOUTES les villes disponibles, indépendamment de la région sélectionnée
+   */
+  private extractUniqueVilles(): void {
+    console.log('🔍 Début de l\'extraction des villes...');
+    console.log('📊 Nombre total d\'entrées dans loginHistory:', this.loginHistory.length);
     
-    switch (role) {
-      case 'MERCHANDISEUR_MONO':
-      case 'MERCHANDISEUR_MULTI':
-        // Pour les merchandisers, afficher leurs magasins assignés
-        if (user.magasinNoms && user.magasinNoms.length > 0) {
-          return user.magasinNoms.join(', ');
-        }
-        return 'Aucun magasin assigné';
-        
-      case 'SUPERVISEUR':
-        // Pour les superviseurs, afficher leurs merchandisers et leurs magasins
-        if (user.merchendiseurs && user.merchendiseurs.length > 0) {
-          let result = '';
-          user.merchendiseurs.forEach((merch: any, index: number) => {
-            if (index > 0) result += '\n';
-            result += `• ${merch.prenom} ${merch.nom}`;
-            if (merch.magasinNoms && merch.magasinNoms.length > 0) {
-              result += ` (${merch.magasinNoms.join(', ')})`;
-            } else {
-              result += ' (Aucun magasin)';
-            }
-          });
-          return result;
-        }
-        return 'Aucun merchandiser assigné';
-        
-      case 'ADMIN':
-        return 'Tous les magasins';
-        
-      default:
-        return 'N/A';
-    }
-  }
-
-  /**
-   * Obtient les informations des magasins formatées avec HTML
-   */
-  getFormattedStoreInfo(user: any): string {
-    if (!user) return 'N/A';
-
-    const role = user.role;
+    const uniqueVilles = new Set<string>();
+    let villesTrouvees = 0;
     
-    switch (role) {
-      case 'MERCHANDISEUR_MONO':
-      case 'MERCHANDISEUR_MULTI':
-        // Pour les merchandisers, afficher leurs magasins assignés
-        if (user.magasinNoms && user.magasinNoms.length > 0) {
-          return user.magasinNoms.join(', ');
-        }
-        return '<span class="no-data">Aucun magasin assigné</span>';
-        
-      case 'SUPERVISEUR':
-        // Pour les superviseurs, afficher leurs merchandisers et leurs magasins
-        if (user.merchendiseurs && user.merchendiseurs.length > 0) {
-          let result = '';
-          user.merchendiseurs.forEach((merch: any, index: number) => {
-            if (index > 0) result += '<br>';
-            result += `<div class="merchandiser-item">
-              <span class="merchandiser-name">• ${merch.prenom} ${merch.nom}</span>`;
-            if (merch.magasinNoms && merch.magasinNoms.length > 0) {
-              result += `<span class="merchandiser-stores"> (${merch.magasinNoms.join(', ')})</span>`;
-            } else {
-              result += '<span class="no-data"> (Aucun magasin)</span>';
-            }
-            result += '</div>';
-          });
-          return result;
-        }
-        return '<span class="no-data">Aucun merchandiser assigné</span>';
-        
-      case 'ADMIN':
-        return '<span class="admin-info">Tous les magasins</span>';
-        
-      default:
-        return 'N/A';
-    }
-  }
-
-  /**
-   * Obtient les informations de localisation (ville et région)
-   */
-  getLocationInfo(user: any): string {
-    if (!user) return '';
-
-    const role = user.role;
+    this.loginHistory.forEach((entry, index) => {
+      console.log(`📋 Entrée ${index}:`, {
+        username: entry.user?.username,
+        ville: entry.user?.ville,
+        region: entry.user?.region,
+        hasUser: !!entry.user,
+        hasVille: !!entry.user?.ville
+      });
+      
+      if (entry.user?.ville && entry.user.ville.trim() !== '') {
+        uniqueVilles.add(entry.user.ville.trim());
+        villesTrouvees++;
+        console.log(`✅ Ville trouvée: "${entry.user.ville.trim()}"`);
+      } else {
+        console.log(`❌ Pas de ville pour l'utilisateur: ${entry.user?.username || 'Inconnu'}`);
+      }
+    });
     
-    switch (role) {
-      case 'MERCHANDISEUR_MONO':
-      case 'MERCHANDISEUR_MULTI':
-        // Pour les merchandisers, afficher leur ville et région
-        if (user.ville && user.region) {
-          return `${user.ville}, ${user.region}`;
-        } else if (user.ville) {
-          return user.ville;
-        } else if (user.region) {
-          return user.region;
-        }
-        return '';
+    this.villes = Array.from(uniqueVilles).sort();
+    console.log(`🎯 Résultat final:`);
+    console.log(`   - Villes trouvées: ${villesTrouvees}`);
+    console.log(`   - Villes uniques: ${this.villes.length}`);
+    console.log(`   - Liste des villes:`, this.villes);
+    
+    // Si aucune ville n'est trouvée, essayer d'autres sources
+    if (this.villes.length === 0) {
+      console.log('⚠️ Aucune ville trouvée, recherche dans d\'autres champs...');
+      
+      // Essayer de trouver des villes dans d'autres champs
+      const alternativeVilles = new Set<string>();
+      this.loginHistory.forEach(entry => {
+        // Essayer différents champs possibles
+        const possibleVilleFields = [
+          entry.user?.city,
+          entry.user?.location,
+          entry.user?.address,
+          entry.user?.ville,
+          entry.user?.nom?.includes(' ') ? entry.user.nom.split(' ').pop() : null
+        ];
         
-      case 'SUPERVISEUR':
-        // Pour les superviseurs, afficher leur ville et région
-        if (user.ville && user.region) {
-          return `${user.ville}, ${user.region}`;
-        } else if (user.ville) {
-          return user.ville;
-        } else if (user.region) {
-          return user.region;
-        }
-        return '';
-        
-      case 'ADMIN':
-        return 'Système';
-        
-      default:
-        return '';
+        possibleVilleFields.forEach(field => {
+          if (field && field.trim() !== '') {
+            alternativeVilles.add(field.trim());
+          }
+        });
+      });
+      
+      if (alternativeVilles.size > 0) {
+        this.villes = Array.from(alternativeVilles).sort();
+        console.log('✅ Villes trouvées dans d\'autres champs:', this.villes);
+      } else {
+        // En dernier recours, ajouter des villes communes du Maroc
+        console.log('🧪 Aucune ville trouvée, ajout de villes communes du Maroc...');
+        this.villes = [
+          'Casablanca', 'Rabat', 'Marrakech', 'Fès', 'Tanger', 
+          'Meknès', 'Agadir', 'Oujda', 'Kénitra', 'Tétouan',
+          'Safi', 'Mohammedia', 'Khouribga', 'Beni Mellal', 'El Jadida',
+          'Taza', 'Nador', 'Settat', 'Larache', 'Ksar El Kebir'
+        ];
+        console.log('🧪 Villes communes ajoutées:', this.villes);
+      }
     }
   }
 
   /**
-   * Obtient les informations du merchandiser pour un utilisateur
+   * Gère le changement de filtre région
+   * IMPORTANT: Ce filtre fonctionne indépendamment du filtre ville
    */
-  getMerchandiserInfo(user: any): string {
-    if (!user) return 'N/A';
+  onRegionChange(region: string): void {
+    this.selectedRegion = region;
+    // Le filtre ville reste inchangé - ils sont indépendants
+    this.applyFilters();
+  }
 
-    const role = user.role;
+  /**
+   * Gère le changement de filtre ville
+   * IMPORTANT: Ce filtre fonctionne indépendamment du filtre région
+   */
+  onVilleChange(ville: string): void {
+    this.selectedVille = ville;
+    // Le filtre région reste inchangé - ils sont indépendants
+    this.applyFilters();
+  }
 
-    switch (role) {
-      case 'MERCHANDISEUR_MONO':
-      case 'MERCHANDISEUR_MULTI':
-        // Pour les merchandisers, afficher leurs magasins assignés
-        if (user.magasinNoms && user.magasinNoms.length > 0) {
-          return user.magasinNoms.join(', ');
-        }
-        return 'Aucun magasin assigné';
+  /**
+   * Charge la liste des magasins
+   */
+  loadMagasins(): void {
+    this.magasinService.getAllMagasins().subscribe({
+      next: (magasins: Magasin[]) => {
+        this.magasins = magasins.map(m => m.nom).sort();
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des magasins:', err);
+      }
+    });
+  }
 
-      case 'SUPERVISEUR':
-        // Pour les superviseurs, afficher leurs merchandisers
-        if (user.merchendiseurs && user.merchendiseurs.length > 0) {
-          return user.merchendiseurs.map((merch: any) => `${merch.prenom} ${merch.nom}`).join(', ');
-        }
-        return 'Aucun merchandiser assigné';
+  /**
+   * Gère le changement de filtre magasin
+   */
+  onMagasinChange(magasin: string): void {
+    this.selectedMagasin = magasin;
+    this.applyFilters();
+  }
 
-      case 'ADMIN':
-        // Pour les admins, afficher "N/A"
-        return 'N/A';
 
-      default:
-        return 'N/A';
+  /**
+   * Obtient la traduction d'une région
+   */
+  getRegionTranslation(region: string): string {
+    if (!region) return region;
+    
+    const currentLang = this.translate.currentLang || 'fr';
+    const translation = this.regionTranslationMap[region];
+    
+    if (translation) {
+      return currentLang === 'en' ? translation.en : translation.fr;
     }
+    
+    return region;
   }
 
-  // Méthodes pour la personnalisation des colonnes
-  updateDisplayedColumns(): void {
-    this.displayedColumns = this.columnConfig
-      .filter(col => col.visible)
-      .map(col => col.key);
-  }
-
-  toggleColumnVisibility(columnKey: string): void {
-    const column = this.columnConfig.find(col => col.key === columnKey);
-    if (column) {
-      column.visible = !column.visible;
-      this.updateDisplayedColumns();
+  /**
+   * Obtient les villes disponibles (pour débogage)
+   */
+  getAvailableVilles(): string[] {
+    console.log('🔍 État actuel des villes:');
+    console.log('   - Villes dans le filtre:', this.villes);
+    console.log('   - Nombre de villes:', this.villes.length);
+    console.log('   - Région sélectionnée:', this.selectedRegion);
+    console.log('   - Ville sélectionnée:', this.selectedVille);
+    console.log('   - Données loginHistory:', this.loginHistory.length, 'entrées');
+    
+    // Afficher quelques exemples de données
+    if (this.loginHistory.length > 0) {
+      console.log('📋 Exemples de données utilisateur:');
+      this.loginHistory.slice(0, 3).forEach((entry, index) => {
+        console.log(`   ${index + 1}. ${entry.user?.username}: ville="${entry.user?.ville}", region="${entry.user?.region}"`);
+      });
     }
+    
+    return this.villes;
   }
 
-  openColumnCustomizationPanel(): void {
-    this.isColumnCustomizationOpen = true;
-  }
-
-  closeColumnCustomizationPanel(): void {
-    this.isColumnCustomizationOpen = false;
-  }
-
-  onColumnCustomizationSave(columnConfig: any[]): void {
-    this.columnConfig = columnConfig;
-    this.updateDisplayedColumns();
+  /**
+   * Force le rechargement des villes (pour débogage)
+   */
+  forceReloadVilles(): void {
+    console.log('🔄 Rechargement forcé des villes...');
+    this.extractUniqueVilles();
   }
 }

@@ -123,26 +123,27 @@
 
 .filters-content {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 16px;
-  flex-wrap: wrap;
   padding: 0 16px;
 }
 
-.filters-content mat-form-field {
-  min-width: 180px;
+.filters-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filters-row mat-form-field {
+  min-width: 200px;
   flex: 1;
-  max-width: 250px;
 }
 
 .clear-filter-btn {
   color: #666;
 }
 
-.close-filters {
-  margin-left: auto;
-  color: #666;
-}
 
 /* Responsive styles */
 /* Tablettes */
@@ -159,7 +160,7 @@
     margin-left: 0;
   }
 
-  .filters-content mat-form-field {
+  .filters-row mat-form-field {
     min-width: 150px;
   }
 }
@@ -191,12 +192,16 @@
   }
 
   .filters-content {
-    flex-direction: column;
     gap: 12px;
     padding: 0 12px;
   }
 
-  .filters-content mat-form-field {
+  .filters-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filters-row mat-form-field {
     min-width: 100%;
   }
 }
@@ -212,7 +217,12 @@
   }
 
   .filters-content {
+    gap: 8px;
     padding: 0 8px;
+  }
+
+  .filters-row {
+    gap: 8px;
   }
 }
 
@@ -316,20 +326,6 @@
   flex: 1;
 }
 
-.close-filters {
-  color: #666;
-  border: 1px solid #ddd;
-  background: white;
-  padding: 8px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.close-filters:hover {
-  background: #f5f5f5;
-  color: #d32f2f;
-}
 
 .footer-actions {
   display: flex;
@@ -501,81 +497,16 @@
   color: #666;
 }
 
-/* Cellule Magasin */
-.magasin-cell {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  min-width: 250px;
-  max-width: 350px;
-}
-
-.magasin-icon {
-  font-size: 16px;
-  color: #666;
-  margin-top: 2px;
-  flex-shrink: 0;
-}
-
-.magasin-info {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 1;
-}
-
-.magasin-names {
-  font-size: 0.85rem;
-  color: #333;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-/* Cellule Merchandiser */
-.merchandiser-cell {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 150px;
-}
-
-.merchandiser-icon {
-  font-size: 16px;
-  color: #666;
-  flex-shrink: 0;
-}
-
-.superviseur-icon {
-  font-size: 16px;
-  color: #2196F3;
-  flex-shrink: 0;
-}
-
-.merchandiser-text {
-  font-size: 0.85rem;
-  color: #333;
-  font-weight: 500;
-}
-
 /* Cellule Région */
 .region-cell {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-width: 120px;
 }
 
 .region-icon {
   font-size: 16px;
   color: #666;
-  flex-shrink: 0;
-}
-
-.region-text {
-  font-size: 0.85rem;
-  color: #333;
-  font-weight: 500;
-  line-height: 1.3;
 }
 
 /* Cellule Ville */
@@ -583,46 +514,23 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  min-width: 120px;
 }
 
 .ville-icon {
   font-size: 16px;
   color: #666;
-  flex-shrink: 0;
 }
 
-.ville-text {
-  font-size: 0.85rem;
-  color: #333;
-  font-weight: 500;
-  line-height: 1.3;
+/* Cellule Magasin */
+.magasin-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* Styles pour les merchandisers sous superviseur */
-.merchandiser-item {
-  margin-bottom: 4px;
-  line-height: 1.3;
-}
-
-.merchandiser-name {
-  font-weight: 600;
-  color: #1976d2;
-}
-
-.merchandiser-stores {
-  color: #333;
-  font-weight: 400;
-}
-
-.no-data {
-  color: #999;
-  font-style: italic;
-}
-
-.admin-info {
-  color: #d32f2f;
-  font-weight: 600;
+.magasin-icon {
+  font-size: 16px;
+  color: #666;
 }
 
 /* Cellule IP */
@@ -644,29 +552,6 @@
   background-color: #f5f5f5;
   padding: 2px 6px;
   border-radius: 4px;
-}
-
-/* Cellule Actions */
-.actions-cell {
-  min-width: 100px;
-}
-
-.actions-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.action-button {
-  width: 32px;
-  height: 32px;
-  line-height: 32px;
-}
-
-.action-button mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
 }
 
 /* Chips de statut */
