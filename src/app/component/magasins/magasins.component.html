@@ -307,7 +307,7 @@
                 [(ngModel)]="selectedRegion"
                 (selectionChange)="onRegionChange(selectedRegion)"
               >
-                <mat-option value="">Toutes les régions</mat-option>
+                <mat-option value="">{{ "STORES.FILTERS.ALL_REGIONS" | translate }}</mat-option>
                 <mat-option *ngFor="let region of regions" [value]="region">
                   {{ region }}
                 </mat-option>
@@ -326,13 +326,13 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Ville</mat-label>
+              <mat-label>{{ "STORES.CITY" | translate }}</mat-label>
               <mat-select
                 [(ngModel)]="selectedVille"
                 (selectionChange)="applyFilters()"
               >
-                <mat-option value="">Toutes les villes</mat-option>
-                <mat-option *ngFor="let ville of villes" [value]="ville">
+                <mat-option value="">{{ "STORES.FILTERS.ALL_CITIES" | translate }}</mat-option>
+                <mat-option *ngFor="let ville of allVilles" [value]="ville">
                   {{ ville }}
                 </mat-option>
               </mat-select>
@@ -355,7 +355,7 @@
                 [(ngModel)]="selectedEnseigne"
                 (selectionChange)="applyFilters()"
               >
-                <mat-option value="">Toutes les enseignes</mat-option>
+                <mat-option value="">{{ "STORES.FILTERS.ALL_BRANDS" | translate }}</mat-option>
                 <mat-option
                   *ngFor="let enseigne of enseignes"
                   [value]="enseigne"
@@ -377,12 +377,39 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
+              <mat-label>{{ "STORES.TYPE" | translate }}</mat-label>
+              <mat-select
+                [(ngModel)]="selectedType"
+                (selectionChange)="applyFilters()"
+              >
+                <mat-option value="">{{ "STORES.FILTERS.ALL_TYPES" | translate }}</mat-option>
+                <mat-option
+                  *ngFor="let type of types"
+                  [value]="type"
+                >
+                  {{ type }}
+                </mat-option>
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedType = ''; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre type"
+                *ngIf="selectedType"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
               <mat-label>Merchandiseur</mat-label>
               <mat-select
                 [(ngModel)]="selectedMerchandiseur"
                 (selectionChange)="applyFilters()"
               >
-                <mat-option value="">Tous les merchandiseurs</mat-option>
+                <mat-option value="">{{ "STORES.FILTERS.ALL_MERCHANDISERS" | translate }}</mat-option>
                 <mat-option
                   *ngFor="let merch of merchandiseurs"
                   [value]="merch.id"
@@ -403,13 +430,33 @@
               </button>
             </mat-form-field>
 
-            <button
-              mat-button
-              (click)="showFilters = false"
-              class="close-filters"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
+            <mat-form-field appearance="outline">
+              <mat-label>Superviseur</mat-label>
+              <mat-select
+                [(ngModel)]="selectedSuperviseur"
+                (selectionChange)="applyFilters()"
+              >
+                <mat-option value="">{{ "STORES.FILTERS.ALL_SUPERVISORS" | translate }}</mat-option>
+                <mat-option
+                  *ngFor="let superviseur of superviseurs"
+                  [value]="superviseur.id"
+                >
+                  {{ superviseur.prenom }} {{ superviseur.nom }}
+                </mat-option>
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedSuperviseur = ''; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre superviseur"
+                *ngIf="selectedSuperviseur"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
           </div>
         </div>
         <table
@@ -495,7 +542,7 @@
               mat-sort-header
               style="background-color: #f2f2f2"
             >
-              Superviseur
+              {{ "STORES.SUPERVISOR" | translate }}
             </th>
             <td mat-cell *matCellDef="let magasin">
               <span

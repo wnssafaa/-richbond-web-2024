@@ -131,9 +131,12 @@ selectedVille: string = '';
 selectedEnseigne: string = '';
 selectedMerchandiseur: string = '';
 selectedSuperviseur: string = '';
+selectedType: string = '';
 villes: string[] = [];
+allVilles: string[] = [];
 merchandiseurs: Merchendiseur[] = [];
 superviseurs: any[] = [];
+types: string[] = [];
  // même tableau d'enseignes que dans MerchendiseurComponent
 regions: string[] = Object.values(Region);
 enseignes = [
@@ -279,11 +282,25 @@ loadMagasins() {
     next: (magasins) => {
       this.dataSource.data = magasins;
       console.log('Magasins chargés:', magasins);
+      // Charger les types uniques
+      this.loadTypes(magasins);
+      // Charger toutes les villes uniques
+      this.loadAllCities(magasins);
       // Charger les données des merchandiseurs et leurs superviseurs
       this.loadMerchandiseurAndSuperviseurData(magasins);
     },
     error: (err) => console.error(err)
   });
+}
+
+// Méthode pour charger les types uniques
+loadTypes(magasins: Magasin[]) {
+  this.types = [...new Set(magasins.map(magasin => magasin.type).filter(type => type))];
+}
+
+// Méthode pour charger toutes les villes uniques
+loadAllCities(magasins: Magasin[]) {
+  this.allVilles = [...new Set(magasins.map(magasin => magasin.ville).filter(ville => ville))];
 }
 
 // Méthode pour charger les données des merchandiseurs et leurs superviseurs
@@ -375,6 +392,7 @@ loadSuperviseurs() {
       const matchesRegion = !filterObj.region || data.region === filterObj.region;
       const matchesVille = !filterObj.ville || data.ville === filterObj.ville;
       const matchesEnseigne = !filterObj.enseigne || data.enseigne === filterObj.enseigne;
+      const matchesType = !filterObj.type || data.type === filterObj.type;
       
       // Filtre par merchandiseur
       const matchesMerchandiseur = !filterObj.merchandiseur || 
@@ -386,7 +404,7 @@ loadSuperviseurs() {
          data.merchandiseur.superviseur.id === parseInt(filterObj.superviseur));
     
       return Boolean(matchesSearch && matchesRegion && matchesVille && matchesEnseigne && 
-             matchesMerchandiseur && matchesSuperviseur);
+             matchesType && matchesMerchandiseur && matchesSuperviseur);
     };
     
   }
@@ -413,13 +431,13 @@ loadSuperviseurs() {
       region: this.selectedRegion,
       ville: this.selectedVille,
       enseigne: this.selectedEnseigne,
+      type: this.selectedType,
       merchandiseur: this.selectedMerchandiseur,
       superviseur: this.selectedSuperviseur
     });
   }
   onRegionChange(region: string) {
-    this.villes = this.villesParRegion[region] || [];
-    this.selectedVille = '';
+    // Ne pas réinitialiser la ville sélectionnée pour rendre les filtres indépendants
     this.applyFilters();
   }
     

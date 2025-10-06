@@ -300,7 +300,7 @@
         <div *ngIf="showFilters" class="filters-toolbar">
           <div class="filters-content">
             <mat-form-field appearance="outline">
-              <mat-label>Région</mat-label>
+              <mat-label>{{ "MERCHANDISERS.FILTERS.REGION" | translate }}</mat-label>
               <mat-select
                 [(ngModel)]="selectedRegion"
                 (selectionChange)="applyFilters()"
@@ -324,7 +324,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Ville</mat-label>
+              <mat-label>{{ "MERCHANDISERS.FILTERS.CITY" | translate }}</mat-label>
               <mat-select
                 [(ngModel)]="selectedVille"
                 (selectionChange)="applyFilters()"
@@ -347,7 +347,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Enseigne</mat-label>
+              <mat-label>{{ "MERCHANDISERS.FILTERS.BRAND" | translate }}</mat-label>
               <mat-select
                 [(ngModel)]="selectedEnseigne"
                 (selectionChange)="applyFilters()"
@@ -373,7 +373,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Magasin</mat-label>
+              <mat-label>{{ "MERCHANDISERS.FILTERS.STORE" | translate }}</mat-label>
               <mat-select
                 [(ngModel)]="selectedMagasin"
                 (selectionChange)="applyFilters()"
@@ -399,7 +399,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Marque</mat-label>
+              <mat-label>{{ "MERCHANDISERS.FILTERS.PRODUCT_BRAND" | translate }}</mat-label>
               <mat-select
                 [(ngModel)]="selectedMarque"
                 (selectionChange)="applyFilters()"
@@ -422,7 +422,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Rôle</mat-label>
+              <mat-label>{{ "MERCHANDISERS.FILTERS.FUNCTION" | translate }}</mat-label>
               <mat-select
                 [(ngModel)]="selectedProfil"
                 (selectionChange)="applyFilters()"
@@ -445,7 +445,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Superviseur</mat-label>
+              <mat-label>{{ "MERCHANDISERS.FILTERS.SUPERVISOR" | translate }}</mat-label>
               <mat-select
                 [(ngModel)]="selectedSuperviseur"
                 (selectionChange)="applyFilters()"
@@ -470,13 +470,6 @@
               </button>
             </mat-form-field>
 
-            <button
-              mat-button
-              (click)="showFilters = false"
-              class="close-filters"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
           </div>
         </div>
         <table

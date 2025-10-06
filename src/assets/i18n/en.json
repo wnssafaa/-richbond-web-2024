@@ -55,7 +55,7 @@
     "EDIT_USER": "Edit User",
     "DELETE_USER": "Delete User",
     "FULL_NAME": "Full Name",
-    "ROLE": "Function",
+    "FUNCTION": "Function",
     "STATUS": "Status",
     "LAST_LOGIN": "Last Login",
     "ACTIONS": "Actions",
@@ -131,7 +131,16 @@
     "NAME": "Name",
     "SUPERVISOR": "Supervisor",
     "ASSIGNED_STORES": "Assigned Stores",
-    "PERFORMANCE": "Performance"
+    "PERFORMANCE": "Performance",
+    "FILTERS": {
+      "REGION": "Region",
+      "CITY": "City",
+      "BRAND": "Brand",
+      "STORE": "Store",
+      "PRODUCT_BRAND": "Product Brand",
+      "FUNCTION": "Function",
+      "SUPERVISOR": "Supervisor"
+    }
   },
   "STORES": {
     "TITLE": "Store Management",
@@ -143,7 +152,16 @@
     "CITY": "City",
     "TYPE": "Type",
     "BRAND": "Brand",
-    "ASSIGNED_MERCH": "Assigned Merchandiser"
+    "ASSIGNED_MERCH": "Assigned Merchandiser",
+    "SUPERVISOR": "Supervisor",
+    "FILTERS": {
+      "ALL_TYPES": "All types",
+      "ALL_SUPERVISORS": "All supervisors",
+      "ALL_MERCHANDISERS": "All merchandisers",
+      "ALL_CITIES": "All cities",
+      "ALL_REGIONS": "All regions",
+      "ALL_BRANDS": "All brands"
+    }
   },
   "PRODUCTS": {
     "TITLE": "Product Management",
