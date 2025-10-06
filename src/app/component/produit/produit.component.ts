@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProduitService, Produit } from '../../services/produit.service';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { ProduitService, Produit, ProduitImageDTO } from '../../services/produit.service';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -55,7 +55,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   templateUrl: './produit.component.html',
   styleUrls: ['./produit.component.css']
 })
-export class ProduitComponent implements OnInit, AfterViewInit {
+export class ProduitComponent implements OnInit, OnDestroy, AfterViewInit {
 openUserDetails(_t288: any) {
 throw new Error('Method not implemented.');
 }
@@ -278,14 +278,78 @@ resetFilters(): void {
 }
   
     loadProduits(): void {
+      // Test avec les données brutes
+      this.produitService.testGetAllProduits().subscribe({
+        next: (rawData: any) => {
+          console.log('🔍 DONNÉES BRUTES DE L\'API:', rawData);
+          console.log('🔍 TYPE DE DONNÉES:', typeof rawData);
+          console.log('🔍 EST UN TABLEAU?', Array.isArray(rawData));
+        },
+        error: (error) => {
+          console.error('❌ Erreur test données brutes:', error);
+        }
+      });
+
       this.produitService.getAllProduits().subscribe({
         next: (produits: Produit[]) => {
+          console.log('📦 Produits reçus de l\'API:', produits);
+          console.log('🔍 Premier produit détaillé:', produits[0]);
+          
           this.dataSource.data = produits;
           // Charger les articles uniques pour le filtre
           this.articles = [...new Set(produits.map(p => p.article).filter(article => article))];
+          
+          // Charger les images pour tous les produits en parallèle
+          this.loadImagesForAllProducts(produits);
         },
-        error: () => {
+        error: (error) => {
+          console.error('❌ Erreur lors du chargement des produits:', error);
           this.snackBar.open("Erreur lors du chargement des produits.", 'Fermer', { duration: 3000 });
+        }
+      });
+    }
+
+    /**
+     * Charge les images pour tous les produits
+     */
+    private loadImagesForAllProducts(produits: Produit[]): void {
+      console.log('🔄 Chargement des métadonnées d\'images pour', produits.length, 'produits');
+      
+      // Charger d'abord les métadonnées des images
+      this.produitService.loadImageMetadataForProducts(produits).subscribe({
+        next: (produitsWithMetadata) => {
+          console.log('✅ Métadonnées d\'images chargées pour', produitsWithMetadata.length, 'produits');
+          this.dataSource.data = produitsWithMetadata;
+          
+          // Optionnel: Charger les blobs pour les premiers produits visibles
+          // (pour optimiser les performances)
+          this.loadBlobsForVisibleProducts(produitsWithMetadata);
+        },
+        error: (error) => {
+          console.warn('⚠️ Erreur lors du chargement des métadonnées d\'images:', error);
+          // Continuer sans les images
+          this.dataSource.data = produits;
+        }
+      });
+    }
+
+    /**
+     * Charge les blobs pour les produits visibles (optimisation)
+     */
+    private loadBlobsForVisibleProducts(produits: Produit[]): void {
+      // Charger les thumbnails pour les premiers produits (lazy loading)
+      const visibleProducts = produits.slice(0, 10); // Premiers 10 produits
+      
+      visibleProducts.forEach(produit => {
+        if (produit.imageData?.id && produit.id) {
+          this.produitService.loadThumbnailBlobForProduct(produit).subscribe({
+            next: () => {
+              console.log('✅ Thumbnail blob chargée pour le produit:', produit.id);
+            },
+            error: (error) => {
+              console.warn('❌ Erreur lors du chargement de la thumbnail blob pour le produit:', produit.id, error);
+            }
+          });
         }
       });
     }
@@ -414,4 +478,158 @@ onRowClick(event: MouseEvent, row: Produit): void {
   this.router.navigate(['/produit-detail', row.id]);
 }
  userMenuOpen = false;
+
+  /**
+   * Obtient l'URL d'affichage optimale pour un produit
+   * Utilise les URLs blob du service mis à jour
+   */
+  getProductImageUrl(produit: Produit): string {
+    console.log('🔍 Debug getProductImageUrl pour produit:', produit.id, produit.article);
+    console.log('📊 Données du produit:', {
+      imageUrl: produit.imageUrl,
+      thumbnailUrl: produit.thumbnailUrl,
+      imageData: produit.imageData,
+      images: produit.images,
+      _imageBlobUrl: produit._imageBlobUrl,
+      _thumbnailBlobUrl: produit._thumbnailBlobUrl
+    });
+
+    // 1. Utiliser l'URL blob de la thumbnail si disponible (priorité)
+    if (produit._thumbnailBlobUrl) {
+      console.log('✅ Utilisation de thumbnail blob URL');
+      return produit._thumbnailBlobUrl;
     }
+
+    // 2. Utiliser l'URL blob de l'image complète si disponible
+    if (produit._imageBlobUrl) {
+      console.log('✅ Utilisation de image blob URL');
+      return produit._imageBlobUrl;
+    }
+
+    // 3. Si pas de blob URL mais qu'il y a des métadonnées d'image, charger la thumbnail
+    if (produit.imageData?.id && produit.id && !produit._loadingImage) {
+      console.log('🔄 Chargement de la thumbnail blob pour le produit:', produit.id);
+      this.produitService.loadThumbnailBlobForProduct(produit).subscribe({
+        next: () => {
+          console.log('✅ Thumbnail blob chargée pour le produit:', produit.id);
+          // Le composant se mettra à jour automatiquement grâce au binding
+        },
+        error: (error) => {
+          console.warn('❌ Erreur lors du chargement de la thumbnail blob:', error);
+        }
+      });
+    }
+
+    // 4. Fallback vers l'URL directe (pour les cas où les blobs ne fonctionnent pas)
+    if (produit.thumbnailUrl) {
+      console.log('✅ Utilisation de thumbnailUrl directe comme fallback:', produit.thumbnailUrl);
+      if (produit.thumbnailUrl.startsWith('/api/')) {
+        return `http://localhost:8080${produit.thumbnailUrl}`;
+      }
+      return produit.thumbnailUrl;
+    }
+
+    if (produit.imageUrl) {
+      console.log('✅ Utilisation de imageUrl directe comme fallback:', produit.imageUrl);
+      if (produit.imageUrl.startsWith('/api/')) {
+        return `http://localhost:8080${produit.imageUrl}`;
+      }
+      return produit.imageUrl;
+    }
+
+    // 5. Image par défaut
+    console.log('❌ Aucune image trouvée, utilisation du logo par défaut');
+    return 'assets/logo.png';
+  }
+
+  /**
+   * Charge l'image d'un produit depuis la base de données
+   */
+  private loadProductImage(produit: Produit): void {
+    // Pour l'instant, on ne charge pas d'image depuis l'API car elle n'est pas encore disponible
+    // Cette méthode sera utilisée quand l'API sera prête
+    console.log('Chargement d\'image pour le produit', produit.id, '- API pas encore disponible');
+  }
+
+  /**
+   * Obtient l'URL de la thumbnail d'un produit
+   */
+  getProductThumbnailUrl(produit: Produit): string {
+    // 1. Utiliser thumbnailUrl directe si disponible
+    if (produit.thumbnailUrl) {
+      if (produit.thumbnailUrl.startsWith('/api/')) {
+        return `http://localhost:8080${produit.thumbnailUrl}`;
+      }
+      return produit.thumbnailUrl;
+    }
+
+    // 2. Utiliser imageData.thumbnailUrl si disponible
+    if (produit.imageData && produit.imageData.thumbnailUrl) {
+      if (produit.imageData.thumbnailUrl.startsWith('/api/')) {
+        return `http://localhost:8080${produit.imageData.thumbnailUrl}`;
+      }
+      return produit.imageData.thumbnailUrl;
+    }
+
+    // 3. Utiliser les images du tableau
+    if (produit.images && produit.images.length > 0) {
+      const primaryImage = produit.images.find(img => img.primary || img.isPrimary) || produit.images[0];
+      if (primaryImage.thumbnailUrl) {
+        if (primaryImage.thumbnailUrl.startsWith('/api/')) {
+          return `http://localhost:8080${primaryImage.thumbnailUrl}`;
+        }
+        return primaryImage.thumbnailUrl;
+      }
+    }
+
+    // 4. Fallback vers l'image normale
+    return this.getProductImageUrl(produit);
+  }
+
+  /**
+   * Gère les erreurs de chargement d'image
+   */
+  onImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    if (target) {
+      console.warn('❌ Erreur de chargement d\'image pour l\'URL:', target.src);
+      
+      // Essayer de charger l'image blob si l'URL directe a échoué
+      const produit = this.dataSource.data.find(p => 
+        p.imageUrl === target.src || 
+        p.thumbnailUrl === target.src ||
+        (p.imageData?.imageUrl && target.src.includes(p.imageData.imageUrl!))
+      );
+      
+      if (produit && produit.id && produit.imageData?.id && !produit._loadingImage) {
+        console.log('🔄 Tentative de chargement de l\'image blob pour le produit:', produit.id);
+        
+        // Essayer de charger la thumbnail blob
+        this.produitService.loadThumbnailBlobForProduct(produit).subscribe({
+          next: () => {
+            console.log('✅ Image blob chargée avec succès pour le produit:', produit.id);
+            // L'image se mettra à jour automatiquement grâce au binding
+          },
+          error: (error) => {
+            console.warn('❌ Échec du chargement de l\'image blob pour le produit:', produit.id, error);
+            // Fallback vers l'image par défaut
+            target.src = 'assets/logo.png';
+          }
+        });
+      } else {
+        // Fallback direct vers l'image par défaut
+        target.src = 'assets/logo.png';
+      }
+    }
+  }
+
+  /**
+   * Nettoyage lors de la destruction du composant
+   */
+  ngOnDestroy(): void {
+    // Nettoyer les URLs blob pour éviter les fuites mémoire
+    if (this.dataSource.data && this.dataSource.data.length > 0) {
+      this.produitService.cleanupBlobUrls(this.dataSource.data);
+    }
+  }
+}

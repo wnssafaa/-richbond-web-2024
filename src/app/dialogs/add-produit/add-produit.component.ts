@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { ProduitService, Produit } from '../../services/produit.service';
+import { ProduitService, Produit, ProduitImageDTO } from '../../services/produit.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MarqueProduit } from '../../enum/MarqueProduit';
 
 @Component({
@@ -25,7 +26,8 @@ import { MarqueProduit } from '../../enum/MarqueProduit';
     MatButtonModule,
     CommonModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './add-produit.component.html',
   styleUrls: ['./add-produit.component.css']
@@ -96,6 +98,8 @@ export class AddProduitComponent implements OnInit {
  marques: string[] = Object.values(MarqueProduit);
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
+  isUploading = false;
+  currentImage: ProduitImageDTO | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -124,13 +128,12 @@ export class AddProduitComponent implements OnInit {
           sousMarques: produit.sousMarques,
           codeEAN: produit.codeEAN,
           designationArticle: produit.designationArticle,
-          disponible: produit.disponible,
-          image: produit.image // base64 string
+          disponible: produit.disponible
         });
 
-        // Affichage image existante
-        if (produit.image) {
-          this.previewUrl = 'data:image/jpeg;base64,' + produit.image;
+        // Charger l'image principale si elle existe
+        if (produit.id) {
+          this.loadPrimaryImage(produit.id);
         }
       });
     }
@@ -141,10 +144,9 @@ export class AddProduitComponent implements OnInit {
       marque: ['', Validators.required],
       reference: [''],
       categorie: ['', Validators.required],
-      image: [''],
       article: ['', Validators.required],
       type: ['', Validators.required],
-      dimensions: ['', Validators.required],
+      dimensions: [''],
       prix: ['', [Validators.required, Validators.min(0.01)]],
       famille: ['', Validators.required],
       sousMarques: ['', Validators.required],
@@ -157,29 +159,52 @@ export class AddProduitComponent implements OnInit {
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
+      // Validation du fichier
+      if (!this.validateImageFile(file)) {
+        return;
+      }
+
       this.selectedFile = file;
 
+      // Créer une preview locale
       const reader = new FileReader();
       reader.onload = () => {
-        const base64String = reader.result?.toString().split(',')[1];
         this.previewUrl = reader.result;
-        this.produitForm.patchValue({ image: base64String });
       };
       reader.readAsDataURL(file);
     }
   }
 
+  private validateImageFile(file: File): boolean {
+    // Vérifier le type de fichier
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      this.snackBar.open('Type de fichier non supporté. Utilisez JPG, PNG, GIF ou WebP.', 'Fermer', { duration: 3000 });
+      return false;
+    }
+
+    // Vérifier la taille (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      this.snackBar.open('Fichier trop volumineux. Taille maximale: 5MB.', 'Fermer', { duration: 3000 });
+      return false;
+    }
+
+    return true;
+  }
+
   clearFile() {
     this.selectedFile = null;
     this.previewUrl = null;
-    this.produitForm.patchValue({ image: null });
-    this.produitForm.get('image')?.updateValueAndValidity();
+    this.currentImage = null;
   }
 
   onSubmit() {
     if (this.produitForm.invalid) {
       return;
     }
+
+    this.isUploading = true;
 
     const produit: Produit = {
       marque: this.produitForm.get('marque')?.value,
@@ -194,31 +219,76 @@ export class AddProduitComponent implements OnInit {
       codeEAN: this.produitForm.get('codeEAN')?.value,
       designationArticle: this.produitForm.get('designationArticle')?.value,
       disponible: this.produitForm.get('disponible')?.value,
-      image: this.produitForm.get('image')?.value,
       id: this.isEditMode ? this.editId : undefined
     };
 
     if (this.isEditMode) {
+      // Mode édition
       this.produitService.updateProduit(this.editId, produit).subscribe({
         next: (response) => {
+          // Si une nouvelle image est sélectionnée, l'uploader
+          if (this.selectedFile) {
+            this.uploadImageForProduct(response.id!);
+          } else {
+            this.isUploading = false;
           this.snackBar.open('Produit modifié avec succès', 'Fermer', { duration: 3000 });
          this.dialogRef.close(response); 
+          }
         },
         error: (error) => {
+          this.isUploading = false;
           console.error('Erreur lors de la modification du produit', error);
+          this.snackBar.open('Erreur lors de la modification du produit', 'Fermer', { duration: 3000 });
         }
       });
     } else {
+      // Mode création
      this.produitService.createProduit(produit).subscribe({
   next: (response) => {
+          // Si une image est sélectionnée, l'uploader
+          if (this.selectedFile) {
+            this.uploadImageForProduct(response.id!);
+          } else {
+            this.isUploading = false;
     this.snackBar.open('Produit ajouté avec succès', 'Fermer', { duration: 3000 });
-    this.dialogRef.close(response); // on retourne le produit
+            this.dialogRef.close(response);
+          }
   },
         error: (error) => {
+          this.isUploading = false;
           console.error('Erreur lors de l\'ajout du produit', error);
+          this.snackBar.open('Erreur lors de l\'ajout du produit', 'Fermer', { duration: 3000 });
         }
       });
     }
+  }
+
+  private uploadImageForProduct(produitId: number): void {
+    if (!this.selectedFile) {
+      this.isUploading = false;
+      return;
+    }
+
+    // Pour l'instant, on ne fait pas l'upload car l'API n'est pas encore disponible
+    // On convertit l'image en base64 pour la compatibilité avec l'ancien système
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64String = reader.result?.toString().split(',')[1];
+      this.isUploading = false;
+      this.snackBar.open('Produit ajouté avec succès (image en base64)', 'Fermer', { duration: 3000 });
+      this.dialogRef.close({ 
+        ...this.produitForm.value, 
+        id: produitId, 
+        image: base64String // Utiliser l'ancien système base64
+      });
+    };
+    reader.readAsDataURL(this.selectedFile);
+  }
+
+  private loadPrimaryImage(produitId: number): void {
+    // Pour l'instant, on ne charge pas d'image depuis l'API car elle n'est pas encore disponible
+    // Cette méthode sera utilisée quand l'API sera prête
+    console.log('Chargement d\'image pour le produit', produitId, '- API pas encore disponible');
   }
 
   onCancel(): void {

@@ -502,15 +502,11 @@
             </th>
             <td mat-cell *matCellDef="let produit">
               <img
-                [src]="'data:image/jpeg;base64,' + produit.image"
-                *ngIf="produit.image; else noImage"
+                [src]="getProductImageUrl(produit)"
                 class="product-image"
+                (error)="onImageError($event)"
+                alt="Image du produit {{ produit.article }}"
               />
-              <ng-template #noImage>
-                <div class="no-image-placeholder">
-                  <mat-icon>image</mat-icon>
-                </div>
-              </ng-template>
             </td>
           </ng-container>
 
