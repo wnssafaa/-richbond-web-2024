@@ -21,6 +21,27 @@ export interface ProduitImageDTO {
   isPrimary?: boolean; // Alias pour compatibilité
 }
 
+export interface ProduitDTO {
+  id?: number;
+  marque: string;
+  reference: string;
+  categorie: string;
+  article: string;
+  type: string;
+  dimensions: string;
+  disponible: boolean;
+  prix: number;
+  famille: string;
+  sousMarques: string;
+  codeEAN: string;
+  designationArticle: string;
+  image?: string; // URL de l'image (compatibilité)
+  imageUrl?: string; // URL de l'image principale
+  thumbnailUrl?: string; // URL de la thumbnail
+  imageData?: ProduitImageDTO;
+  images?: ProduitImageDTO[];
+}
+
 export interface Produit {
   id?: number;
   marque: string;
@@ -65,7 +86,16 @@ export class ProduitService {
 
   // Obtenir tous les produits
   getAllProduits(): Observable<Produit[]> {
-    return this.http.get<Produit[]>(`${this.apiUrl}/all`);
+    console.log('🔄 Récupération de tous les produits depuis:', `${this.apiUrl}/all`);
+    
+    return this.http.get<ProduitDTO[]>(`${this.apiUrl}/all`).pipe(
+      map(produitDTOs => {
+        console.log('📦 Produits DTOs reçus du backend:', produitDTOs);
+        const produits = produitDTOs.map(dto => this.convertDTOToProduit(dto));
+        console.log('✅ Produits convertis:', produits);
+        return produits;
+      })
+    );
   }
 
   // Méthode de test pour vérifier les données
@@ -73,9 +103,39 @@ export class ProduitService {
     return this.http.get<any>(`${this.apiUrl}/all`);
   }
 
+  // Méthode de debug pour tester les images
+  debugProductImages(): void {
+    console.log('🔍 Debug des images de produits...');
+    
+    this.testGetAllProduits().subscribe({
+      next: (data) => {
+        console.log('📊 Données brutes du backend:', data);
+        
+        if (Array.isArray(data) && data.length > 0) {
+          const premierProduit = data[0];
+          console.log('🔍 Premier produit analysé:', premierProduit);
+          
+          if (premierProduit.imageData) {
+            console.log('✅ Données d\'image trouvées:', premierProduit.imageData);
+            console.log('🔗 URL d\'image construite:', `http://localhost:8080/api/produits/${premierProduit.id}/images/${premierProduit.imageData.id}`);
+          } else {
+            console.log('❌ Aucune donnée d\'image trouvée dans le premier produit');
+          }
+        } else {
+          console.log('❌ Aucun produit trouvé ou format de données incorrect');
+        }
+      },
+      error: (error) => {
+        console.error('❌ Erreur lors du test des images:', error);
+      }
+    });
+  }
+
   // Obtenir un produit par ID
   getProduitById(id: number): Observable<Produit> {
-    return this.http.get<Produit>(`${this.apiUrl}/${id}`);
+    return this.http.get<ProduitDTO>(`${this.apiUrl}/${id}`).pipe(
+      map(produitDTO => this.convertDTOToProduit(produitDTO))
+    );
   }
 
  updateProduit(id: number, produit: Produit): Observable<Produit> {
@@ -91,7 +151,9 @@ export class ProduitService {
 
   // Rechercher des produits par marque
   getProduitsByMarque(marque: string): Observable<Produit[]> {
-    return this.http.get<Produit[]>(`${this.apiUrl}/marque/${marque}`);
+    return this.http.get<ProduitDTO[]>(`${this.apiUrl}/marque/${marque}`).pipe(
+      map(produitDTOs => produitDTOs.map(dto => this.convertDTOToProduit(dto)))
+    );
   }
 
   // ========== MÉTHODES POUR LA GESTION DES IMAGES ==========
@@ -113,7 +175,17 @@ export class ProduitService {
    * Récupérer l'image d'un produit (OneToOne)
    */
   getImageByProduit(produitId: number): Observable<ProduitImageDTO> {
-    return this.http.get<ProduitImageDTO>(`${this.apiUrl}/${produitId}/images`);
+    return this.http.get<ProduitImageDTO>(`${this.apiUrl}/${produitId}/images`).pipe(
+      catchError(error => {
+        // Si l'endpoint n'existe pas ou retourne 404, retourner un observable vide
+        if (error.status === 404) {
+          console.log(`Aucune image trouvée pour le produit ${produitId}`);
+          return of(null as any);
+        }
+        // Pour les autres erreurs, les propager
+        throw error;
+      })
+    );
   }
 
   /**
@@ -296,6 +368,7 @@ export class ProduitService {
             return produit;
           }),
           catchError(error => {
+            console.log(`Aucune image trouvée pour le produit ${produit.id}`);
             produit._loadingImage = false;
             return of(produit);
           })
@@ -381,5 +454,55 @@ export class ProduitService {
       return produit.imageUrl;
     }
     return null;
+  }
+
+  /**
+   * Convertit un ProduitDTO en Produit
+   */
+  private convertDTOToProduit(dto: ProduitDTO): Produit {
+    console.log('🔄 Conversion DTO vers Produit:', dto);
+    
+    const produit: Produit = {
+      id: dto.id,
+      marque: dto.marque,
+      reference: dto.reference,
+      categorie: dto.categorie,
+      article: dto.article,
+      type: dto.type,
+      dimensions: dto.dimensions,
+      disponible: dto.disponible,
+      prix: dto.prix,
+      famille: dto.famille,
+      sousMarques: dto.sousMarques,
+      codeEAN: dto.codeEAN,
+      designationArticle: dto.designationArticle,
+      imageData: dto.imageData,
+      images: dto.images
+    };
+
+    // Si le DTO contient des données d'image, utiliser les URLs du backend
+    if (dto.imageData && dto.imageData.id && dto.id) {
+      // Utiliser les URLs du backend si disponibles
+      if (dto.imageUrl) {
+        produit.imageUrl = dto.imageUrl.startsWith('/api/') ? `http://localhost:8080${dto.imageUrl}` : dto.imageUrl;
+      } else {
+        produit.imageUrl = this.getImageUrl(dto.id, dto.imageData.id);
+      }
+      
+      if (dto.thumbnailUrl) {
+        produit.thumbnailUrl = dto.thumbnailUrl.startsWith('/api/') ? `http://localhost:8080${dto.thumbnailUrl}` : dto.thumbnailUrl;
+      } else {
+        produit.thumbnailUrl = this.getThumbnailUrl(dto.id, dto.imageData.id);
+      }
+      
+      console.log('✅ URLs d\'images construites pour le produit', dto.id, ':', {
+        imageUrl: produit.imageUrl,
+        thumbnailUrl: produit.thumbnailUrl
+      });
+    } else {
+      console.log('⚠️ Pas de données d\'image pour le produit', dto.id);
+    }
+
+    return produit;
   }
 }

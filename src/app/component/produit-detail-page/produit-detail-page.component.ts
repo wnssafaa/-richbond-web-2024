@@ -85,6 +85,25 @@ export class ProduitDetailPageComponent implements OnInit {
     this.produitService.getProduitById(id).subscribe({
       next: (produit) => {
         this.produit = produit;
+        
+        // Charger les métadonnées d'image si le produit n'en a pas encore
+        if (produit.id && !produit.imageData) {
+          this.produitService.getImageByProduit(produit.id).subscribe({
+            next: (imageData) => {
+              if (imageData && imageData.id && produit.id) {
+                this.produit!.imageData = imageData;
+                this.produit!.images = [imageData];
+                this.produit!.imageUrl = this.produitService.getImageUrl(produit.id, imageData.id);
+                this.produit!.thumbnailUrl = this.produitService.getThumbnailUrl(produit.id, imageData.id);
+              }
+            },
+            error: (error) => {
+              console.log('Aucune image trouvée pour le produit', id);
+              // Pas d'erreur, le produit n'a simplement pas d'image
+            }
+          });
+        }
+        
         this.loading = false;
       },
       error: (error) => {

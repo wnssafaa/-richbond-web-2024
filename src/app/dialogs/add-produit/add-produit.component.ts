@@ -97,9 +97,9 @@ export class AddProduitComponent implements OnInit {
   ];
  marques: string[] = Object.values(MarqueProduit);
   selectedFile: File | null = null;
+  currentImage: ProduitImageDTO | null = null;
   previewUrl: string | ArrayBuffer | null = null;
   isUploading = false;
-  currentImage: ProduitImageDTO | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -194,6 +194,11 @@ export class AddProduitComponent implements OnInit {
   }
 
   clearFile() {
+    // Nettoyer les URLs blob pour éviter les fuites mémoire
+    if (this.previewUrl && typeof this.previewUrl === 'string' && this.previewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(this.previewUrl);
+    }
+    
     this.selectedFile = null;
     this.previewUrl = null;
     this.currentImage = null;
@@ -269,26 +274,58 @@ export class AddProduitComponent implements OnInit {
       return;
     }
 
-    // Pour l'instant, on ne fait pas l'upload car l'API n'est pas encore disponible
-    // On convertit l'image en base64 pour la compatibilité avec l'ancien système
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64String = reader.result?.toString().split(',')[1];
-      this.isUploading = false;
-      this.snackBar.open('Produit ajouté avec succès (image en base64)', 'Fermer', { duration: 3000 });
-      this.dialogRef.close({ 
-        ...this.produitForm.value, 
-        id: produitId, 
-        image: base64String // Utiliser l'ancien système base64
-      });
-    };
-    reader.readAsDataURL(this.selectedFile);
+    // Utiliser le nouveau système d'upload de fichiers
+    this.produitService.uploadImage(produitId, this.selectedFile, 'Image principale du produit').subscribe({
+      next: (imageResponse) => {
+        this.isUploading = false;
+        const successMessage = this.isEditMode ? 'Produit modifié avec succès' : 'Produit ajouté avec succès';
+        this.snackBar.open(successMessage, 'Fermer', { duration: 3000 });
+        
+        // Retourner les données du produit avec les informations de l'image
+        this.dialogRef.close({ 
+          ...this.produitForm.value, 
+          id: produitId,
+          imageData: imageResponse,
+          imageUrl: this.produitService.getImageUrl(produitId, imageResponse.id!),
+          thumbnailUrl: this.produitService.getThumbnailUrl(produitId, imageResponse.id!)
+        });
+      },
+      error: (error) => {
+        this.isUploading = false;
+        console.error('Erreur lors de l\'upload de l\'image', error);
+        this.snackBar.open('Produit créé mais erreur lors de l\'upload de l\'image', 'Fermer', { duration: 5000 });
+        
+        // Fermer le dialog même en cas d'erreur d'upload d'image
+        this.dialogRef.close({ 
+          ...this.produitForm.value, 
+          id: produitId
+        });
+      }
+    });
   }
 
   private loadPrimaryImage(produitId: number): void {
-    // Pour l'instant, on ne charge pas d'image depuis l'API car elle n'est pas encore disponible
-    // Cette méthode sera utilisée quand l'API sera prête
-    console.log('Chargement d\'image pour le produit', produitId, '- API pas encore disponible');
+    // Charger l'image principale du produit depuis l'API
+    this.produitService.getImageByProduit(produitId).subscribe({
+      next: (imageData) => {
+        if (imageData && imageData.id) {
+          // Charger l'image comme blob URL pour l'affichage
+          this.produitService.loadImageAsBlobUrl(produitId, imageData.id).subscribe({
+            next: (blobUrl) => {
+              this.previewUrl = blobUrl;
+              this.currentImage = imageData;
+            },
+            error: (error) => {
+              console.warn('Impossible de charger l\'image blob pour le produit', produitId, error);
+            }
+          });
+        }
+      },
+      error: (error) => {
+        console.log('Aucune image trouvée pour le produit', produitId);
+        // Pas d'erreur, le produit n'a simplement pas d'image
+      }
+    });
   }
 
   onCancel(): void {

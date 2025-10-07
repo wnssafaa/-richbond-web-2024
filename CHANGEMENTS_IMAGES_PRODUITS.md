@@ -184,3 +184,4 @@ Surveillez les logs pour :
 - Échecs de création de blobs
 - Performances de chargement
 
+

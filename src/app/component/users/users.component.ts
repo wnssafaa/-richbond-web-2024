@@ -39,6 +39,7 @@ import { ExportService } from '../../services/export.service';
 import { UserDetailsDialogComponent } from '../../dialogs/user-details-dialog/user-details-dialog.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Region } from '../../enum/Region';
 const componentMap: { [key: string]: { component: any, dataKey: string } } = {
   SUPERVISEUR: { component: AddSupComponent, dataKey: 'superviseur' },
   MERCHANDISEUR_MONO: { component: AddMerchComponent, dataKey: 'Merchendiseur' },
@@ -75,7 +76,15 @@ export class UsersComponent implements OnInit {
   menuOpen = false;
   selectedRole: string = '';
   selectedStatus: string = '';
+  selectedRegion: string = '';
+  selectedCity: string = '';
+  selectedStore: string = '';
   // showFilters = false;
+  
+  // Available options for filters
+  availableRegions: string[] = Object.keys(Region).map(key => Region[key as keyof typeof Region]);
+  availableCities: string[] = [];
+  availableStores: string[] = [];
   componentMap: { [key: string]: { component: any, dataKey: string } } = {
     SUPERVISEUR: { component: AddSupComponent, dataKey: 'superviseur' },
     MERCHANDISEUR_MONO: { component: AddMerchComponent, dataKey: 'Merchendiseur' },
@@ -118,7 +127,7 @@ export class UsersComponent implements OnInit {
   status: string | undefined;
   searchTerm = '';
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = [ 'numero', 'nom', 'connexion', 'sessions', 'role', 'status', 'actions'];
+  displayedColumns: string[] = [ 'numero', 'nom', 'region', 'city', 'store', 'connexion', 'sessions', 'role', 'status', 'actions'];
   combinedDataSource = new MatTableDataSource<any>([]);
 
   constructor(
@@ -149,8 +158,11 @@ export class UsersComponent implements OnInit {
 
       const matchesRole = !filterObj.role || data.type === filterObj.role;
       const matchesStatus = !filterObj.status || data.status === filterObj.status;
+      const matchesRegion = !filterObj.region || data.region === filterObj.region;
+      const matchesCity = !filterObj.city || data.ville === filterObj.city;
+      const matchesStore = !filterObj.store || data.magasin === filterObj.store;
 
-      return matchesSearch && matchesRole && matchesStatus;
+      return matchesSearch && matchesRole && matchesStatus && matchesRegion && matchesCity && matchesStore;
     };
   }
 
@@ -170,16 +182,54 @@ export class UsersComponent implements OnInit {
         this.combinedDataSource.data = combined;
         this.combinedDataSource.sort = this.sort;
         this.combinedDataSource.paginator = this.paginator;
+        
+        // Populate available cities and stores
+        this.populateFilterOptions(combined);
       });
     });
+  }
+
+  private populateFilterOptions(users: any[]): void {
+    // Extract unique cities
+    const citySet = new Set(users.map(user => user.ville).filter(city => city));
+    this.availableCities = Array.from(citySet).sort();
+    
+    // Extract unique stores
+    const storeSet = new Set(users.map(user => user.magasin).filter(store => store));
+    this.availableStores = Array.from(storeSet).sort();
   }
 
   applyFilter(): void {
     this.combinedDataSource.filter = JSON.stringify({
       searchTerm: this.searchTerm.trim().toLowerCase(),
       role: this.selectedRole,
-      status: this.selectedStatus
+      status: this.selectedStatus,
+      region: this.selectedRegion,
+      city: this.selectedCity,
+      store: this.selectedStore
     });
+  }
+
+  clearAllFilters(): void {
+    this.selectedRole = '';
+    this.selectedStatus = '';
+    this.selectedRegion = '';
+    this.selectedCity = '';
+    this.selectedStore = '';
+    this.searchTerm = '';
+    this.applyFilter();
+  }
+
+  onRegionChange(): void {
+    // When region changes, we don't automatically clear city filter
+    // This makes region and city filters independent as requested
+    this.applyFilter();
+  }
+
+  onCityChange(): void {
+    // When city changes, we don't automatically clear region filter
+    // This makes region and city filters independent as requested
+    this.applyFilter();
   }
 
  
@@ -385,9 +435,3 @@ export class UsersComponent implements OnInit {
     }
   }
 }
-
-
-
-
-
-

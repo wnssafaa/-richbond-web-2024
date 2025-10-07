@@ -144,7 +144,7 @@ throw new Error('Method not implemented.');
       // Gestion de l'avatar : base64 ou URL
       this.avatarUrl = data.imagePath
         ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
-        : 'assets/default-avatar.png';
+        : 'assets/profil.webp';
     },
     error: (err) => {
       console.error('Erreur lors de la récupération des infos utilisateur :', err);
@@ -278,6 +278,9 @@ resetFilters(): void {
 }
   
     loadProduits(): void {
+      // Debug des images avant de charger les produits
+      this.produitService.debugProductImages();
+      
       // Test avec les données brutes
       this.produitService.testGetAllProduits().subscribe({
         next: (rawData: any) => {
@@ -481,37 +484,68 @@ onRowClick(event: MouseEvent, row: Produit): void {
 
   /**
    * Obtient l'URL d'affichage optimale pour un produit
-   * Utilise les URLs blob du service mis à jour
+   * Utilise les URLs d'images du backend directement
    */
   getProductImageUrl(produit: Produit): string {
-    console.log('🔍 Debug getProductImageUrl pour produit:', produit.id, produit.article);
-    console.log('📊 Données du produit:', {
-      imageUrl: produit.imageUrl,
-      thumbnailUrl: produit.thumbnailUrl,
-      imageData: produit.imageData,
-      images: produit.images,
-      _imageBlobUrl: produit._imageBlobUrl,
-      _thumbnailBlobUrl: produit._thumbnailBlobUrl
-    });
+    // Debug réduit - seulement si nécessaire
+    if (!produit.imageUrl && !produit.thumbnailUrl && !produit.imageData) {
+      console.log('🔍 Debug getProductImageUrl pour produit:', produit.id, produit.article);
+    }
+    
+    // Debug spécial pour les URLs relatives
+    if (produit.imageUrl && produit.imageUrl.startsWith('/api/')) {
+      const fullUrl = `http://localhost:8080${produit.imageUrl}`;
+      console.log('🔗 URL relative détectée, conversion en absolue:', fullUrl);
+      return fullUrl;
+    }
 
     // 1. Utiliser l'URL blob de la thumbnail si disponible (priorité)
     if (produit._thumbnailBlobUrl) {
-      console.log('✅ Utilisation de thumbnail blob URL');
       return produit._thumbnailBlobUrl;
     }
 
     // 2. Utiliser l'URL blob de l'image complète si disponible
     if (produit._imageBlobUrl) {
-      console.log('✅ Utilisation de image blob URL');
       return produit._imageBlobUrl;
     }
 
-    // 3. Si pas de blob URL mais qu'il y a des métadonnées d'image, charger la thumbnail
+    // 3. Utiliser l'URL directe de l'image principale (priorité sur thumbnail)
+    if (produit.imageUrl) {
+      if (produit.imageUrl.startsWith('/api/')) {
+        const fullUrl = `http://localhost:8080${produit.imageUrl}`;
+        return fullUrl;
+      }
+      return produit.imageUrl;
+    }
+
+    // 4. Utiliser l'URL directe de la thumbnail si disponible (fallback)
+    if (produit.thumbnailUrl) {
+      if (produit.thumbnailUrl.startsWith('/api/')) {
+        const fullUrl = `http://localhost:8080${produit.thumbnailUrl}`;
+        return fullUrl;
+      }
+      return produit.thumbnailUrl;
+    }
+
+    // 5. Si on a des métadonnées d'image mais pas d'URL, construire l'URL
+    if (produit.imageData?.id && produit.id) {
+      const imageUrl = `http://localhost:8080/api/produits/${produit.id}/images/${produit.imageData.id}`;
+      return imageUrl;
+    }
+
+    // 6. Si on a des images dans le tableau, utiliser la première
+    if (produit.images && produit.images.length > 0 && produit.id) {
+      const firstImage = produit.images[0];
+      if (firstImage.id) {
+        const imageUrl = `http://localhost:8080/api/produits/${produit.id}/images/${firstImage.id}`;
+        return imageUrl;
+      }
+    }
+
+    // 7. Si pas de blob URL mais qu'il y a des métadonnées d'image, charger la thumbnail
     if (produit.imageData?.id && produit.id && !produit._loadingImage) {
-      console.log('🔄 Chargement de la thumbnail blob pour le produit:', produit.id);
       this.produitService.loadThumbnailBlobForProduct(produit).subscribe({
         next: () => {
-          console.log('✅ Thumbnail blob chargée pour le produit:', produit.id);
           // Le composant se mettra à jour automatiquement grâce au binding
         },
         error: (error) => {
@@ -520,25 +554,7 @@ onRowClick(event: MouseEvent, row: Produit): void {
       });
     }
 
-    // 4. Fallback vers l'URL directe (pour les cas où les blobs ne fonctionnent pas)
-    if (produit.thumbnailUrl) {
-      console.log('✅ Utilisation de thumbnailUrl directe comme fallback:', produit.thumbnailUrl);
-      if (produit.thumbnailUrl.startsWith('/api/')) {
-        return `http://localhost:8080${produit.thumbnailUrl}`;
-      }
-      return produit.thumbnailUrl;
-    }
-
-    if (produit.imageUrl) {
-      console.log('✅ Utilisation de imageUrl directe comme fallback:', produit.imageUrl);
-      if (produit.imageUrl.startsWith('/api/')) {
-        return `http://localhost:8080${produit.imageUrl}`;
-      }
-      return produit.imageUrl;
-    }
-
-    // 5. Image par défaut
-    console.log('❌ Aucune image trouvée, utilisation du logo par défaut');
+    // 8. Image par défaut
     return 'assets/logo.png';
   }
 
@@ -550,6 +566,14 @@ onRowClick(event: MouseEvent, row: Produit): void {
     // Cette méthode sera utilisée quand l'API sera prête
     console.log('Chargement d\'image pour le produit', produit.id, '- API pas encore disponible');
   }
+
+  /**
+   * Gère les erreurs de chargement d'image
+   */
+  // onImageError(event: any): void {
+  //   console.log('❌ Erreur de chargement d\'image, utilisation du logo par défaut');
+  //   event.target.src = 'assets/logo.png';
+  // }
 
   /**
    * Obtient l'URL de la thumbnail d'un produit

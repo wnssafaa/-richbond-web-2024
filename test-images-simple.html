@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Images Produits</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-image { margin: 20px 0; border: 1px solid #ccc; padding: 10px; }
+        .test-image img { max-width: 200px; max-height: 200px; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test des Images de Produits</h1>
+    
+    <div class="test-image">
+        <h3>Produit 1 - Image WebP</h3>
+        <p>URL: <code>http://localhost:8080/api/produits/1/images/1</code></p>
+        <img src="http://localhost:8080/api/produits/1/images/1" 
+             alt="Produit 1" 
+             onload="this.nextElementSibling.textContent='✅ Image chargée avec succès'"
+             onerror="this.nextElementSibling.textContent='❌ Erreur de chargement'">
+        <p class="status">Chargement...</p>
+    </div>
+    
+    <div class="test-image">
+        <h3>Produit 2 - Image JPEG</h3>
+        <p>URL: <code>http://localhost:8080/api/produits/2/images/2</code></p>
+        <img src="http://localhost:8080/api/produits/2/images/2" 
+             alt="Produit 2" 
+             onload="this.nextElementSibling.textContent='✅ Image chargée avec succès'"
+             onerror="this.nextElementSibling.textContent='❌ Erreur de chargement'">
+        <p class="status">Chargement...</p>
+    </div>
+    
+    <div class="test-image">
+        <h3>Logo par défaut (fallback)</h3>
+        <p>URL: <code>assets/logo.png</code></p>
+        <img src="assets/logo.png" 
+             alt="Logo par défaut" 
+             onload="this.nextElementSibling.textContent='✅ Logo chargé avec succès'"
+             onerror="this.nextElementSibling.textContent='❌ Erreur de chargement du logo'">
+        <p class="status">Chargement...</p>
+    </div>
+    
+    <script>
+        console.log('🧪 Test des images démarré');
+        console.log('Vérifiez la console pour les erreurs CORS ou autres');
+    </script>
+</body>
+</html>
