@@ -222,9 +222,7 @@ export class ProduitService {
     });
   }
 
-  /**
-   * Définir une image comme principale (non utilisé avec OneToOne)
-   */
+ 
   setPrimaryImage(produitId: number, imageId: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/${produitId}/images/${imageId}/set-primary`, {});
   }
