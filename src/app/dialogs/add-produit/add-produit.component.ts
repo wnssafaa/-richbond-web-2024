@@ -178,6 +178,9 @@ export class AddProduitComponent implements OnInit {
 
   onSubmit() {
     if (this.produitForm.invalid) {
+      // Marquer tous les champs comme touchés pour afficher les erreurs
+      this.markFormGroupTouched(this.produitForm);
+      this.snackBar.open('Veuillez remplir tous les champs obligatoires', 'Fermer', { duration: 3000 });
       return;
     }
 
@@ -206,6 +209,7 @@ export class AddProduitComponent implements OnInit {
         },
         error: (error) => {
           console.error('Erreur lors de la modification du produit', error);
+          this.snackBar.open('Erreur lors de la modification du produit', 'Fermer', { duration: 3000 });
         }
       });
     } else {
@@ -216,9 +220,21 @@ export class AddProduitComponent implements OnInit {
   },
         error: (error) => {
           console.error('Erreur lors de l\'ajout du produit', error);
+          this.snackBar.open('Erreur lors de l\'ajout du produit', 'Fermer', { duration: 3000 });
         }
       });
     }
+  }
+
+  private markFormGroupTouched(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      control?.markAsTouched();
+
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 
   onCancel(): void {
