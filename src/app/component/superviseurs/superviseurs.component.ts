@@ -43,7 +43,6 @@ import {
 } from '../../services/merchendiseur.service';
 import { AuthService } from '../../services/auth.service';
 import { ExportService } from '../../services/export.service';
-import { SuperviseurDetailsDialogComponent } from '../../dialogs/superviseur-details-dialog/superviseur-details-dialog.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-superviseurs',
@@ -699,18 +698,6 @@ export class SuperviseursComponent implements OnInit {
 
   logout(): void {
     this.athService.logout();
-  }
-  openSuperviseurDetails(superviseur: any): void {
-    this.dialog.open(SuperviseurDetailsDialogComponent, {
-      data: superviseur,
-      width: '700px',
-    });
-  }
-  openDetails(superviseur: any): void {
-    this.dialog.open(SuperviseurDetailsDialogComponent, {
-      data: superviseur,
-      width: '800px',
-    });
   }
   onRowClick(event: MouseEvent, row: Superviseur): void {
     const target = event.target as HTMLElement;

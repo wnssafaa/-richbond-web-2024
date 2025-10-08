@@ -36,7 +36,6 @@ import { SelectRoleComponent } from '../../dialogs/select-role/select-role.compo
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { AuthService } from '../../services/auth.service';
 import { ExportService } from '../../services/export.service';
-import { UserDetailsDialogComponent } from '../../dialogs/user-details-dialog/user-details-dialog.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Region } from '../../enum/Region';
@@ -417,11 +416,20 @@ export class UsersComponent implements OnInit {
       return;
     }
 
-    this.dialog.open(UserDetailsDialogComponent, {
-      width: '800px',
-      data: row
-    });
+    // Ouvrir le bon dialog selon le type d'utilisateur
+    this.showUserDetails(row);
   }
+
+  showUserDetails(row: any): void {
+    if (row.type === 'SUPERVISEUR') {
+      this.router.navigate(['/superviseur-detail', row.id]);
+    } else if (row.type === 'MERCHENDISEUR' || row.type === 'MERCHANDISEUR_MONO' || row.type === 'MERCHANDISEUR_MULTI') {
+      this.router.navigate(['/merchendiseur-detail', row.id]);
+    } else {
+      console.warn('Type d\'utilisateur non reconnu:', row.type);
+    }
+  }
+
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
