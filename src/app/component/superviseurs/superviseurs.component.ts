@@ -44,6 +44,7 @@ import {
 import { AuthService } from '../../services/auth.service';
 import { ExportService } from '../../services/export.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-superviseurs',
   standalone: true,
@@ -125,7 +126,7 @@ export class SuperviseursComponent implements OnInit {
   exportToExcel(): void {
     this.exportService.exportSuperviseurs(this.dataSource.data, {
       filename: 'superviseurs',
-      sheetName: 'Superviseurs'
+      sheetName: 'Superviseurs',
     });
   }
   // Colonnes à afficher dans le tableau
@@ -150,14 +151,14 @@ export class SuperviseursComponent implements OnInit {
     { key: 'nom', label: 'Nom', visible: true },
     { key: 'prenom', label: 'Prénom', visible: true },
     { key: 'region', label: 'Région', visible: true },
-    { key: 'villeIntervention', label: 'Ville d\'intervention', visible: true },
+    { key: 'villeIntervention', label: "Ville d'intervention", visible: true },
     { key: 'magasin', label: 'Magasins', visible: true },
     { key: 'merchandiseurs', label: 'Merchandiseurs', visible: true },
     { key: 'enseigne', label: 'Enseigne', visible: true },
     { key: 'telephone', label: 'Téléphone', visible: true },
-    { key: 'dateIntegration', label: 'Date d\'intégration', visible: true },
+    { key: 'dateIntegration', label: "Date d'intégration", visible: true },
     { key: 'dateSortie', label: 'Date de sortie', visible: true },
-    { key: 'actions', label: 'Actions', visible: true }
+    { key: 'actions', label: 'Actions', visible: true },
   ];
   showFilters: boolean = false;
   selectedRegion: string = '';
@@ -355,7 +356,7 @@ export class SuperviseursComponent implements OnInit {
   loadAllVilles(): void {
     // Charger toutes les villes de toutes les régions
     this.allVilles = [];
-    Object.values(this.regionVillesMap).forEach(villes => {
+    Object.values(this.regionVillesMap).forEach((villes) => {
       this.allVilles.push(...villes);
     });
     // Supprimer les doublons
@@ -456,28 +457,30 @@ export class SuperviseursComponent implements OnInit {
     );
   }
   getMerchandiseurEnseignes(superviseur: Superviseur): string[] {
-    if (!superviseur.merchendiseurs || superviseur.merchendiseurs.length === 0) return [];
-    
+    if (!superviseur.merchendiseurs || superviseur.merchendiseurs.length === 0)
+      return [];
+
     const enseignes: string[] = [];
-    superviseur.merchendiseurs.forEach(merch => {
+    superviseur.merchendiseurs.forEach((merch) => {
       if (merch.enseignes && merch.enseignes.length > 0) {
         enseignes.push(...merch.enseignes);
       }
     });
-    
+
     // Retourner les enseignes uniques
     return [...new Set(enseignes)];
   }
-    getMerchandiseurMagasins(superviseur: Superviseur): string[] {
-    if (!superviseur.merchendiseurs || superviseur.merchendiseurs.length === 0) return [];
-    
+  getMerchandiseurMagasins(superviseur: Superviseur): string[] {
+    if (!superviseur.merchendiseurs || superviseur.merchendiseurs.length === 0)
+      return [];
+
     const magasins: string[] = [];
-    superviseur.merchendiseurs.forEach(merch => {
+    superviseur.merchendiseurs.forEach((merch) => {
       if (merch.magasinNoms && merch.magasinNoms.length > 0) {
         magasins.push(...merch.magasinNoms);
       }
     });
-    
+
     // Retourner les magasins uniques
     return [...new Set(magasins)];
   }
@@ -723,12 +726,12 @@ export class SuperviseursComponent implements OnInit {
   // Méthodes pour la personnalisation des colonnes
   updateDisplayedColumns(): void {
     this.displayedColumns = this.columnConfig
-      .filter(col => col.visible)
-      .map(col => col.key);
+      .filter((col) => col.visible)
+      .map((col) => col.key);
   }
 
   toggleColumnVisibility(columnKey: string): void {
-    const column = this.columnConfig.find(col => col.key === columnKey);
+    const column = this.columnConfig.find((col) => col.key === columnKey);
     if (column) {
       column.visible = !column.visible;
       this.updateDisplayedColumns();

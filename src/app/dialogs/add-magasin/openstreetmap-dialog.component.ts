@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import * as L from 'leaflet';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-openstreetmap-dialog',
@@ -32,7 +33,7 @@ import * as L from 'leaflet';
             Sélectionner une localisation
           </mat-card-title>
           <mat-card-subtitle class="modern-subtitle">
-            Carte simple OpenStreetMap
+            Carte Thunderforest Neighbourhood
           </mat-card-subtitle>
         </mat-card-header>
         
@@ -169,10 +170,10 @@ export class OpenStreetMapDialogComponent implements OnInit, AfterViewInit, OnDe
         keyboard: false
       });
 
-      // Ajouter les tuiles
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19
+      // Ajouter les tuiles Thunderforest.Neighbourhood
+      L.tileLayer(`https://{s}.tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=${environment.thunderforestApiKey}`, {
+        attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 22
       }).addTo(this.map);
 
       // Écouter les clics sur la carte
