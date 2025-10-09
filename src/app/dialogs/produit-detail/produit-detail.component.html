@@ -7,14 +7,10 @@
 
   <div class="file-content">
     <div class="product-image-container">
-      <img [src]="'data:image/jpeg;base64,' + data.image" 
-           *ngIf="data.image; else noImage"
-           class="product-main-image">
-      <ng-template #noImage>
-        <div class="no-image-placeholder">
-          <mat-icon>image</mat-icon>
-        </div>
-      </ng-template>
+      <img [src]="getProductImageUrl(data)" 
+           class="product-main-image"
+           (error)="onImageError($event)"
+           alt="Image du produit {{ data.article }}">
     </div>
 
     <div class="info-grid">

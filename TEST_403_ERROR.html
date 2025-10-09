@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Erreur 403 - Ajout Produit</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #764ba2;
+            margin-top: 25px;
+        }
+        .test-section {
+            background: #f7f9fc;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        .result {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .warning {
+            background: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+        .info {
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .status-200 { background: #28a745; color: white; }
+        .status-201 { background: #28a745; color: white; }
+        .status-401 { background: #ffc107; color: #333; }
+        .status-403 { background: #dc3545; color: white; }
+        .status-404 { background: #6c757d; color: white; }
+        .status-500 { background: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Diagnostic Erreur 403 - Ajout de Produit</h1>
+        
+        <div class="test-section">
+            <h2>1️⃣ Vérification du Token JWT</h2>
+            <button onclick="checkToken()">Vérifier Token</button>
+            <div id="token-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>2️⃣ Test de connexion au Backend</h2>
+            <button onclick="testBackendConnection()">Tester Connexion</button>
+            <div id="connection-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>3️⃣ Test d'ajout de produit (avec token)</h2>
+            <button onclick="testAddProductWithToken()">Tester Ajout (avec token)</button>
+            <div id="add-with-token-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>4️⃣ Test d'ajout de produit (sans token)</h2>
+            <button onclick="testAddProductWithoutToken()">Tester Ajout (sans token)</button>
+            <div id="add-without-token-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>5️⃣ Test CORS</h2>
+            <button onclick="testCORS()">Tester CORS</button>
+            <div id="cors-result" class="result"></div>
+        </div>
+
+        <div class="test-section info">
+            <h3>📋 Instructions</h3>
+            <ol>
+                <li>Assurez-vous d'être <strong>connecté</strong> à l'application Angular</li>
+                <li>Cliquez sur les boutons de test dans l'ordre</li>
+                <li>Analysez les résultats pour identifier le problème</li>
+                <li>Consultez le fichier <code>BACKEND_FIX_403_ERROR.md</code> pour les solutions</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080/api/produits';
+
+        function checkToken() {
+            const resultDiv = document.getElementById('token-result');
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Aucun token trouvé</h3>
+                    <p>Vous devez vous connecter d'abord depuis l'application Angular.</p>
+                `;
+                return;
+            }
+
+            try {
+                // Décoder le token JWT
+                const parts = token.split('.');
+                const payload = JSON.parse(atob(parts[1]));
+                
+                const now = Math.floor(Date.now() / 1000);
+                const isExpired = payload.exp < now;
+                const expiresIn = payload.exp - now;
+                const expiresInMinutes = Math.floor(expiresIn / 60);
+                
+                const roles = payload.roles || payload.authorities || payload.role || 'Non spécifié';
+                const username = payload.sub || payload.username || 'Non spécifié';
+
+                resultDiv.className = isExpired ? 'result warning' : 'result success';
+                resultDiv.innerHTML = `
+                    <h3>${isExpired ? '⚠️' : '✅'} Token ${isExpired ? 'EXPIRÉ' : 'valide'}</h3>
+                    <pre>
+<strong>Username:</strong> ${username}
+<strong>Rôles:</strong> ${Array.isArray(roles) ? roles.join(', ') : roles}
+<strong>Expire dans:</strong> ${expiresInMinutes} minutes (${expiresIn} secondes)
+<strong>Statut:</strong> ${isExpired ? 'EXPIRÉ - Reconnectez-vous !' : 'VALIDE'}
+
+<strong>Token complet:</strong>
+${token.substring(0, 50)}...
+                    </pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Erreur de décodage du token</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+
+        async function testBackendConnection() {
+            const resultDiv = document.getElementById('connection-result');
+            resultDiv.className = 'result info';
+            resultDiv.innerHTML = '<h3>⏳ Test en cours...</h3>';
+
+            try {
+                const response = await fetch(`${API_URL}/all`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const status = response.status;
+                const statusClass = `status-${status}`;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <h3>✅ Backend accessible</h3>
+                        <span class="${statusClass} status-badge">Status: ${status}</span>
+                        <pre>
+<strong>URL:</strong> ${API_URL}/all
+<strong>Statut:</strong> ${status} ${response.statusText}
+<strong>Produits trouvés:</strong> ${data.length}
+                        </pre>
+                    `;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `
+                        <h3>❌ Erreur de connexion</h3>
+                        <span class="${statusClass} status-badge">Status: ${status}</span>
+                        <pre>
+<strong>URL:</strong> ${API_URL}/all
+<strong>Statut:</strong> ${status} ${response.statusText}
+                        </pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Impossible de se connecter au backend</h3>
+                    <pre>
+<strong>Erreur:</strong> ${error.message}
+<strong>Solution:</strong> Vérifiez que le backend est démarré sur http://localhost:8080
+                    </pre>
+                `;
+            }
+        }
+
+        async function testAddProductWithToken() {
+            const resultDiv = document.getElementById('add-with-token-result');
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = '<h3>❌ Connectez-vous d\'abord (pas de token)</h3>';
+                return;
+            }
+
+            resultDiv.className = 'result info';
+            resultDiv.innerHTML = '<h3>⏳ Test en cours...</h3>';
+
+            const testProduct = {
+                marque: 'Sealy',
+                reference: 'TEST-' + Date.now(),
+                categorie: 'Matelas',
+                article: 'Test Produit',
+                type: 'Standard',
+                dimensions: '140x190',
+                prix: 1999.99,
+                famille: 'MATELAS',
+                sousMarques: 'R VITAL',
+                codeEAN: '1234567890',
+                designationArticle: 'Produit de test',
+                disponible: true
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(testProduct)
+                });
+
+                const status = response.status;
+                const statusClass = `status-${status}`;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <h3>✅ Produit ajouté avec succès !</h3>
+                        <span class="${statusClass} status-badge">Status: ${status}</span>
+                        <pre>
+<strong>URL:</strong> ${API_URL}/add
+<strong>Statut:</strong> ${status} ${response.statusText}
+<strong>Produit créé:</strong>
+${JSON.stringify(data, null, 2)}
+                        </pre>
+                        <p><strong>✅ Le problème 403 est résolu !</strong></p>
+                    `;
+                } else {
+                    const errorText = await response.text();
+                    resultDiv.className = 'result error';
+                    
+                    let solutionText = '';
+                    if (status === 403) {
+                        solutionText = `
+<strong>🔧 SOLUTIONS :</strong>
+1. Vérifiez la configuration Spring Security (désactivez CSRF)
+2. Ajoutez @CrossOrigin sur le contrôleur
+3. Vérifiez que l'utilisateur a les permissions nécessaires
+4. Consultez le fichier BACKEND_FIX_403_ERROR.md pour plus de détails
+                        `;
+                    } else if (status === 401) {
+                        solutionText = `
+<strong>🔧 SOLUTION :</strong>
+Token invalide ou expiré. Reconnectez-vous.
+                        `;
+                    }
+                    
+                    resultDiv.innerHTML = `
+                        <h3>❌ Erreur lors de l'ajout</h3>
+                        <span class="${statusClass} status-badge">Status: ${status}</span>
+                        <pre>
+<strong>URL:</strong> ${API_URL}/add
+<strong>Statut:</strong> ${status} ${response.statusText}
+<strong>Erreur:</strong>
+${errorText}
+${solutionText}
+                        </pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Erreur de requête</h3>
+                    <pre>
+<strong>Erreur:</strong> ${error.message}
+<strong>Solution:</strong> Vérifiez que le backend est démarré
+                    </pre>
+                `;
+            }
+        }
+
+        async function testAddProductWithoutToken() {
+            const resultDiv = document.getElementById('add-without-token-result');
+            resultDiv.className = 'result info';
+            resultDiv.innerHTML = '<h3>⏳ Test en cours...</h3>';
+
+            const testProduct = {
+                marque: 'Sealy',
+                reference: 'TEST-NO-TOKEN-' + Date.now(),
+                categorie: 'Matelas',
+                article: 'Test Produit Sans Token',
+                type: 'Standard',
+                dimensions: '140x190',
+                prix: 1999.99,
+                famille: 'MATELAS',
+                sousMarques: 'R VITAL',
+                codeEAN: '1234567890',
+                designationArticle: 'Produit de test sans token',
+                disponible: true
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                        // Pas de header Authorization
+                    },
+                    body: JSON.stringify(testProduct)
+                });
+
+                const status = response.status;
+                const statusClass = `status-${status}`;
+                
+                if (response.ok) {
+                    resultDiv.className = 'result warning';
+                    resultDiv.innerHTML = `
+                        <h3>⚠️ Produit ajouté SANS token</h3>
+                        <span class="${statusClass} status-badge">Status: ${status}</span>
+                        <p><strong>Attention :</strong> L'endpoint /api/produits/add est accessible sans authentification.
+                        Cela peut être un problème de sécurité !</p>
+                    `;
+                } else {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <h3>✅ Requête refusée (comportement normal)</h3>
+                        <span class="${statusClass} status-badge">Status: ${status}</span>
+                        <p>L'endpoint est bien protégé. Les requêtes sans token sont refusées.</p>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Erreur de requête</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+
+        async function testCORS() {
+            const resultDiv = document.getElementById('cors-result');
+            resultDiv.className = 'result info';
+            resultDiv.innerHTML = '<h3>⏳ Test CORS en cours...</h3>';
+
+            try {
+                // Test OPTIONS preflight
+                const response = await fetch(`${API_URL}/add`, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Origin': 'http://localhost:4200',
+                        'Access-Control-Request-Method': 'POST',
+                        'Access-Control-Request-Headers': 'content-type,authorization'
+                    }
+                });
+
+                const allowOrigin = response.headers.get('Access-Control-Allow-Origin');
+                const allowMethods = response.headers.get('Access-Control-Allow-Methods');
+                const allowHeaders = response.headers.get('Access-Control-Allow-Headers');
+                
+                if (allowOrigin && allowOrigin.includes('localhost:4200')) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <h3>✅ CORS configuré correctement</h3>
+                        <pre>
+<strong>Access-Control-Allow-Origin:</strong> ${allowOrigin}
+<strong>Access-Control-Allow-Methods:</strong> ${allowMethods}
+<strong>Access-Control-Allow-Headers:</strong> ${allowHeaders}
+                        </pre>
+                    `;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `
+                        <h3>❌ Problème de configuration CORS</h3>
+                        <pre>
+<strong>Access-Control-Allow-Origin:</strong> ${allowOrigin || 'Non configuré'}
+<strong>Access-Control-Allow-Methods:</strong> ${allowMethods || 'Non configuré'}
+<strong>Access-Control-Allow-Headers:</strong> ${allowHeaders || 'Non configuré'}
+
+<strong>Solution:</strong> Configurez CORS dans SecurityConfig.java (voir BACKEND_FIX_403_ERROR.md)
+                        </pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Erreur de test CORS</h3>
+                    <pre>
+<strong>Erreur:</strong> ${error.message}
+<strong>Cause possible:</strong> Le backend bloque les requêtes OPTIONS (preflight)
+                    </pre>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
+

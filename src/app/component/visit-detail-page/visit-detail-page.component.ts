@@ -44,9 +44,11 @@ export class VisitDetailPageComponent implements OnInit {
   visit: VisitDTO | null = null;
   loading = true;
   error: string | null = null;
+  imageUrls: Map<number, string> = new Map(); // Stocker les URLs des images
+  thumbnailUrls: Map<number, string> = new Map(); // Stocker les URLs des thumbnails
 
   // Propriétés pour le header et sidebar
-  menuOpen = true;
+  menuOpen = false;
   currentLanguage = 'fr';
   username: any; email: any; role: any; nom: string | undefined; prenom: string | undefined;
   telephone: string | undefined; avatarUrl: string | undefined; imagePath: string | undefined;
@@ -85,20 +87,24 @@ export class VisitDetailPageComponent implements OnInit {
     // Essayer d'abord avec getVisitById
     this.visitService.getVisitById(id).subscribe({
       next: (visit) => {
-        console.log('Visite chargée via getVisitById:', visit);
+        console.log('✅ Visite chargée via getVisitById:', visit);
         this.visit = visit;
+        // Charger les images de la visite
+        this.loadVisitImages(id);
         this.loading = false;
       },
       error: (error) => {
-        console.warn('Erreur avec getVisitById, essai avec getAllVisits:', error);
+        console.warn('⚠️ Erreur avec getVisitById, essai avec getAllVisits:', error);
         // Fallback: récupérer toutes les visites et filtrer par ID
         this.visitService.getAllVisits().subscribe({
           next: (visits) => {
-            console.log('Toutes les visites chargées:', visits);
+            console.log('📊 Toutes les visites chargées:', visits);
             const visit = visits.find(v => v.id === id);
             if (visit) {
-              console.log('Visite trouvée dans la liste:', visit);
+              console.log('✅ Visite trouvée dans la liste:', visit);
               this.visit = visit;
+              // Charger les images de la visite
+              this.loadVisitImages(id);
               this.loading = false;
             } else {
               this.error = 'Visite non trouvée';
@@ -106,11 +112,56 @@ export class VisitDetailPageComponent implements OnInit {
             }
           },
           error: (fallbackError) => {
-            console.error('Erreur lors du chargement des visites:', fallbackError);
+            console.error('❌ Erreur lors du chargement des visites:', fallbackError);
             this.error = 'Erreur lors du chargement de la visite';
             this.loading = false;
           }
         });
+      }
+    });
+  }
+
+  // ✅ Charger les images de la visite depuis le backend
+  loadVisitImages(visitId: number): void {
+    console.log(`🖼️ Chargement des images pour la visite ${visitId}...`);
+    
+    this.visitService.getVisitImages(visitId).subscribe({
+      next: (images) => {
+        console.log(`✅ ${images.length} image(s) récupérée(s):`, images);
+        
+        if (this.visit) {
+          // Ajouter les images à la visite avec les URLs construites
+          this.visit.images = images.map(img => {
+            const imageUrl = this.visitService.getVisitImageUrl(visitId, img.id!);
+            const thumbnailUrl = this.visitService.getVisitImageThumbnailUrl(visitId, img.id!);
+            
+            console.log(`🔗 URL Image ${img.id}:`, imageUrl);
+            console.log(`🔗 URL Thumbnail ${img.id}:`, thumbnailUrl);
+            
+            return {
+              ...img,
+              imageUrl,
+              thumbnailUrl
+            };
+          });
+          
+          console.log('📸 Images avec URLs:', this.visit.images);
+          
+          // Stocker les URLs dans les Maps pour un accès rapide
+          images.forEach(img => {
+            if (img.id) {
+              this.imageUrls.set(img.id, this.visitService.getVisitImageUrl(visitId, img.id));
+              this.thumbnailUrls.set(img.id, this.visitService.getVisitImageThumbnailUrl(visitId, img.id));
+            }
+          });
+        }
+      },
+      error: (err) => {
+        console.warn('⚠️ Erreur lors du chargement des images (peut être normal si pas d\'images):', err);
+        // Ne pas afficher d'erreur si pas d'images, c'est normal
+        if (this.visit) {
+          this.visit.images = [];
+        }
       }
     });
   }
@@ -283,7 +334,48 @@ export class VisitDetailPageComponent implements OnInit {
     }
   }
 
-  openImageModal(imageData: string): void {
+  // ✅ Obtenir l'URL de l'image (thumbnail pour affichage, URL complète pour modal)
+  getImageUrl(image: any, useThumbnail: boolean = true): string {
+    console.log('🖼️ getImageUrl appelé pour image:', image, 'useThumbnail:', useThumbnail);
+    
+    // Si l'image a un ID et qu'on a l'ID de la visite, construire l'URL
+    if (image.id && this.visit?.id) {
+      const url = useThumbnail 
+        ? this.visitService.getVisitImageThumbnailUrl(this.visit.id, image.id)
+        : this.visitService.getVisitImageUrl(this.visit.id, image.id);
+      console.log('🔗 URL générée:', url);
+      return url;
+    }
+    
+    // Si l'image a une URL pré-construite, l'utiliser
+    if (useThumbnail && image.thumbnailUrl) {
+      console.log('🔗 URL thumbnail pré-construite:', image.thumbnailUrl);
+      return image.thumbnailUrl;
+    }
+    if (!useThumbnail && image.imageUrl) {
+      console.log('🔗 URL image pré-construite:', image.imageUrl);
+      return image.imageUrl;
+    }
+    
+    // Fallback: utiliser imageData si disponible (compatibilité base64)
+    if (image.imageData) {
+      console.log('🔗 Utilisation imageData base64');
+      return image.imageData;
+    }
+    
+    // Dernier fallback
+    console.warn('⚠️ Aucune URL trouvée pour l\'image:', image);
+    return '';
+  }
+
+  openImageModal(image: any): void {
+    const imageUrl = this.getImageUrl(image, false); // Utiliser l'image complète, pas la thumbnail
+    
+    if (!imageUrl) {
+      console.error('❌ Impossible d\'ouvrir l\'image: pas d\'URL disponible');
+      return;
+    }
+    
     const newWindow = window.open('', '_blank', 'width=800,height=600');
     if (newWindow) {
       newWindow.document.write(`
@@ -309,7 +401,7 @@ export class VisitDetailPageComponent implements OnInit {
             </style>
           </head>
           <body>
-            <img src="${imageData}" alt="Image de la visite">
+            <img src="${imageUrl}" alt="Image de la visite">
           </body>
         </html>
       `);
@@ -317,7 +409,32 @@ export class VisitDetailPageComponent implements OnInit {
   }
 
   onImageError(event: any): void {
-    event.target.src = this.getDefaultAvatar();
+    console.error('❌ Erreur de chargement d\'image:', event.target.src);
+    
+    // Essayer l'URL complète si la thumbnail échoue
+    const currentSrc = event.target.src;
+    if (currentSrc.includes('/thumbnail')) {
+      const fullImageUrl = currentSrc.replace('/thumbnail', '');
+      console.log('🔄 Tentative avec URL complète:', fullImageUrl);
+      event.target.src = fullImageUrl;
+    } else {
+      // Essayer avec l'URL directe du fichier si disponible
+      const imgElement = event.target;
+      const imageData = imgElement.getAttribute('data-original-src');
+      if (imageData && imageData !== '') {
+        console.log('🔄 Tentative avec data-original-src:', imageData);
+        event.target.src = imageData;
+      } else {
+        // Afficher une image par défaut avec plus d'informations
+        const errorImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDA0L3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+Cjx0ZXh0IHg9IjUwJSIgeT0iMjAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5IiBmb250LXNpemU9IjEyIj5JbWFnZSBub24gZGlzcG9uaWJsZTwvdGV4dD4KPHRleHQgeD0iNTAlIiB5PSI0MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM5OTkiIGZvbnQtc2l6ZT0iMTAiPkVycmV1ciBkZSBjaGFyZ2VtZW50PC90ZXh0Pgo8dGV4dCB4PSI1MCUiIHk9IjYwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzk5OSIgZm9udC1zaXplPSI4Ij5VUkw6IDwvdGV4dD4KPC9zdmc+';
+        event.target.src = errorImage;
+        console.log('❌ Toutes les tentatives ont échoué, affichage de l\'image d\'erreur');
+      }
+    }
+  }
+
+  onImageLoad(event: any): void {
+    console.log('✅ Image chargée avec succès:', event.target.src);
   }
 
   onMerchandiseurImageError(event: any): void {

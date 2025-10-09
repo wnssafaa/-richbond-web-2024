@@ -1,0 +1,114 @@
+<div class="import-dialog-container">
+  <h2 mat-dialog-title>
+    <mat-icon>upload_file</mat-icon>
+    Importer des {{ config.entityNamePlural }}
+  </h2>
+
+  <mat-dialog-content>
+    <!-- Section de sélection de fichier -->
+    <div class="file-upload-section" *ngIf="importedData.length === 0">
+      <div class="upload-area">
+        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+        <h3>Glissez-déposez votre fichier ici</h3>
+        <p>ou</p>
+        <input 
+          type="file" 
+          #fileInput 
+          (change)="onFileSelected($event)" 
+          accept=".xlsx,.xls,.csv"
+          style="display: none;">
+        <button mat-raised-button color="primary" (click)="fileInput.click()">
+          <mat-icon>folder_open</mat-icon>
+          Sélectionner un fichier
+        </button>
+        <p class="file-info">Formats acceptés : Excel (.xlsx, .xls) ou CSV (.csv)</p>
+      </div>
+
+      <div class="template-section">
+        <mat-icon>info</mat-icon>
+        <p>Besoin d'un modèle ? Téléchargez le template Excel</p>
+        <button mat-stroked-button color="accent" (click)="downloadTemplate()">
+          <mat-icon>download</mat-icon>
+          Télécharger le Template
+        </button>
+      </div>
+    </div>
+
+    <!-- Barre de progression -->
+    <mat-progress-bar 
+      *ngIf="isLoading" 
+      mode="indeterminate" 
+      color="primary">
+    </mat-progress-bar>
+
+    <!-- Section de prévisualisation -->
+    <div class="preview-section" *ngIf="importedData.length > 0 && !isLoading">
+      <div class="preview-header">
+        <h3>Prévisualisation des données</h3>
+        <div class="stats">
+          <span class="stat-valid">
+            <mat-icon>check_circle</mat-icon>
+            {{ validCount }} valides
+          </span>
+          <span class="stat-invalid">
+            <mat-icon>error</mat-icon>
+            {{ invalidCount }} invalides
+          </span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="importedData" class="import-table">
+          <!-- Colonnes dynamiques -->
+          <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
+            <th mat-header-cell *matHeaderCellDef>{{ getColumnLabel(col) }}</th>
+            <td mat-cell *matCellDef="let element">
+              <span *ngIf="col === 'status'">
+                <span 
+                  class="status-badge" 
+                  [class.valid]="element.valid" 
+                  [class.invalid]="!element.valid">
+                  {{ element.valid ? 'Valide' : 'Invalide' }}
+                </span>
+              </span>
+              <span *ngIf="col === 'errors'">
+                <span *ngIf="element.errors && element.errors.length > 0" class="errors-list">
+                  {{ element.errors.join(', ') }}
+                </span>
+                <mat-icon *ngIf="element.valid" color="primary">check</mat-icon>
+              </span>
+              <span *ngIf="col !== 'status' && col !== 'errors'">
+                {{ element[col] }}
+              </span>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr 
+            mat-row 
+            *matRowDef="let row; columns: displayedColumns;"
+            [class.invalid-row]="!row.valid">
+          </tr>
+        </table>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+      Annuler
+    </button>
+
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="onImport()" 
+      [disabled]="validCount === 0 || isLoading"
+      *ngIf="importedData.length > 0">
+      <mat-icon>upload</mat-icon>
+      Importer {{ validCount }} {{ validCount > 1 ? config.entityNamePlural.toLowerCase() : config.entityName.toLowerCase() }}
+    </button>
+  </mat-dialog-actions>
+</div>
+

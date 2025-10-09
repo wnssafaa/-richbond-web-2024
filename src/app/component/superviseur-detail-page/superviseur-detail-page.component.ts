@@ -42,7 +42,7 @@ export class SuperviseurDetailPageComponent implements OnInit {
   error: string | null = null;
 
   // Propriétés pour le header et sidebar
-  menuOpen = true;
+  menuOpen = false;
   currentLanguage = 'fr';
   username: any; email: any; role: any; nom: string | undefined; prenom: string | undefined;
   telephone: string | undefined; avatarUrl: string | undefined; imagePath: string | undefined;

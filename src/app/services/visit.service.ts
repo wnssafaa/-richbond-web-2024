@@ -4,10 +4,20 @@ import { Observable } from 'rxjs';
 
 export interface VisitImage {
   id?: number;
-  imageData: string; // Base64 string
+  imageData?: string; // Base64 string (optionnel pour compatibilité)
   fileName?: string;
+  originalFileName?: string;
+  filePath?: string;
+  thumbnailPath?: string;
+  mimeType?: string;
+  fileSize?: number;
+  width?: number;
+  height?: number;
   contentType?: string;
-  uploadDate?: Date;
+  uploadDate?: Date | string;
+  description?: string;
+  imageUrl?: string; // URL pour récupérer l'image depuis le backend
+  thumbnailUrl?: string; // URL pour récupérer la thumbnail
 }
 
 export interface Produit {
@@ -130,6 +140,44 @@ export class VisitService {
   // 📌 Supprimer une image d'une visite
   deleteImageFromVisit(visitId: number, imageId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${visitId}/images/${imageId}`);
+  }
+
+  // ✅ Récupérer toutes les images d'une visite
+  getVisitImages(visitId: number): Observable<VisitImage[]> {
+    return this.http.get<VisitImage[]>(`${this.apiUrl}/${visitId}/images`);
+  }
+
+  // ✅ Uploader une image pour une visite (multipart/form-data)
+  uploadVisitImage(visitId: number, file: File, description?: string): Observable<VisitImage> {
+    const formData = new FormData();
+    formData.append('image', file);
+    if (description) {
+      formData.append('description', description);
+    }
+    
+    console.log(`📤 Upload image pour visite ${visitId}:`, file.name);
+    return this.http.post<VisitImage>(`${this.apiUrl}/${visitId}/images`, formData);
+  }
+
+  // ✅ Construire l'URL de l'image complète
+  getVisitImageUrl(visitId: number, imageId: number): string {
+    const url = `http://localhost:8080/api/visits/${visitId}/images/${imageId}`;
+    console.log(`🔗 Construction URL image complète: ${url}`);
+    return url;
+  }
+
+  // ✅ Construire l'URL de la thumbnail
+  getVisitImageThumbnailUrl(visitId: number, imageId: number): string {
+    const url = `http://localhost:8080/api/visits/${visitId}/images/${imageId}/thumbnail`;
+    console.log(`🔗 Construction URL thumbnail: ${url}`);
+    return url;
+  }
+
+  // ✅ Télécharger une image
+  downloadVisitImage(visitId: number, imageId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${visitId}/images/${imageId}/download`, {
+      responseType: 'blob'
+    });
   }
 
   // 📌 Convertir un fichier en base64

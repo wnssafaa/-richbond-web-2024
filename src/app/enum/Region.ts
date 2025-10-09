@@ -1,5 +1,4 @@
 export enum Region {
-
   TANGER_TETOUAN_AL_HOCEIMA = 'Tanger-Tétouan-Al Hoceïma',
   ORIENTAL = "L'Oriental",
   FES_MEKNES = 'Fès-Meknès',
@@ -11,7 +10,8 @@ export enum Region {
   SOUSS_MASSA = 'Souss-Massa',
   GUELMIM_OUED_NOUN = 'Guelmim-Oued Noun',
   LAAYOUNE_SAKIA_EL_HAMRA = 'Laâyoune-Sakia El Hamra',
-  DAKHLA_OUED_ED_DAHAB = 'Dakhla-Oued Ed Dahab',  SUD = 'Sud',
+  DAKHLA_OUED_ED_DAHAB = 'Dakhla-Oued Ed Dahab',
+  SUD = 'Sud',
   NORD = 'Nord',
   ORIENT = 'Orient',
   CENTRE = 'Centre',

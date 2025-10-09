@@ -288,11 +288,21 @@
 
               <button
                 mat-raised-button
+                class="import-button"
+                 style="background-color: #455e98; color: white; margin-right: 12px; padding: 10px 15px;
+  border-radius: 20px;"
+                (click)="openImportDialog()">
+                <mat-icon style="color:white">upload_file</mat-icon>
+               Importer
+              </button>
+
+              <button
+                mat-raised-button
                 class="add-user-button"
                 style="background-color: #0a2681; color: white"
                 (click)="ajouterProduit()"
               >
-                {{ "PRODUCTS.ADD_PRODUCT" | translate }}
+               Ajouter
               </button>
             </div>
           </div>
@@ -502,15 +512,11 @@
             </th>
             <td mat-cell *matCellDef="let produit">
               <img
-                [src]="'data:image/jpeg;base64,' + produit.image"
-                *ngIf="produit.image; else noImage"
+                [src]="getProductImageUrl(produit)"
                 class="product-image"
+                (error)="onImageError($event)"
+                alt="Image du produit {{ produit.article }}"
               />
-              <ng-template #noImage>
-                <div class="no-image-placeholder">
-                  <mat-icon>image</mat-icon>
-                </div>
-              </ng-template>
             </td>
           </ng-container>
 

@@ -159,13 +159,16 @@ export class AddProduitComponent implements OnInit {
     if (file) {
       this.selectedFile = file;
 
+      // Créer un aperçu de l'image UNIQUEMENT (ne pas mettre en base64 dans le formulaire)
       const reader = new FileReader();
       reader.onload = () => {
-        const base64String = reader.result?.toString().split(',')[1];
-        this.previewUrl = reader.result;
-        this.produitForm.patchValue({ image: base64String });
+        this.previewUrl = reader.result; // Juste pour l'affichage
+        // ❌ NE PLUS METTRE L'IMAGE BASE64 DANS LE FORMULAIRE
+        // Le fichier sera envoyé séparément avec FormData après la création du produit
       };
       reader.readAsDataURL(file);
+      
+      console.log('📁 Fichier sélectionné:', file.name, 'Taille:', file.size, 'bytes');
     }
   }
 
@@ -184,6 +187,7 @@ export class AddProduitComponent implements OnInit {
       return;
     }
 
+    // ⚠️ NE PAS INCLURE L'IMAGE BASE64 DANS LE JSON
     const produit: Produit = {
       marque: this.produitForm.get('marque')?.value,
       reference: this.produitForm.get('reference')?.value,
@@ -197,15 +201,22 @@ export class AddProduitComponent implements OnInit {
       codeEAN: this.produitForm.get('codeEAN')?.value,
       designationArticle: this.produitForm.get('designationArticle')?.value,
       disponible: this.produitForm.get('disponible')?.value,
-      image: this.produitForm.get('image')?.value,
+      // ❌ NE PAS ENVOYER image en base64
+      // image: this.produitForm.get('image')?.value,
       id: this.isEditMode ? this.editId : undefined
     };
 
     if (this.isEditMode) {
+      // Mode édition
       this.produitService.updateProduit(this.editId, produit).subscribe({
         next: (response) => {
-          this.snackBar.open('Produit modifié avec succès', 'Fermer', { duration: 3000 });
-         this.dialogRef.close(response); 
+          // Si un nouveau fichier a été sélectionné, l'uploader
+          if (this.selectedFile) {
+            this.uploadImageForProduct(response.id!);
+          } else {
+            this.snackBar.open('Produit modifié avec succès', 'Fermer', { duration: 3000 });
+            this.dialogRef.close(response);
+          }
         },
         error: (error) => {
           console.error('Erreur lors de la modification du produit', error);
@@ -213,19 +224,59 @@ export class AddProduitComponent implements OnInit {
         }
       });
     } else {
-     this.produitService.createProduit(produit).subscribe({
-  next: (response) => {
-    this.snackBar.open('Produit ajouté avec succès', 'Fermer', { duration: 3000 });
-    this.dialogRef.close(response); // on retourne le produit
-  },
+      // Mode création
+      this.produitService.createProduit(produit).subscribe({
+        next: (response) => {
+          console.log('✅ Produit créé avec succès:', response);
+          
+          // Si un fichier image a été sélectionné, l'uploader maintenant
+          if (this.selectedFile && response.id) {
+            this.uploadImageForProduct(response.id);
+          } else {
+            this.snackBar.open('Produit ajouté avec succès', 'Fermer', { duration: 3000 });
+            this.dialogRef.close(response);
+          }
+        },
         error: (error) => {
           console.error('Erreur lors de l\'ajout du produit', error);
+<<<<<<< HEAD
           this.snackBar.open('Erreur lors de l\'ajout du produit', 'Fermer', { duration: 3000 });
+=======
+          this.snackBar.open('Erreur lors de l\'ajout du produit: ' + (error.error?.message || error.message), 'Fermer', { duration: 5000 });
+>>>>>>> main-web-app
         }
       });
     }
   }
 
+<<<<<<< HEAD
+=======
+  /**
+   * Uploader l'image pour un produit (après sa création/modification)
+   */
+  private uploadImageForProduct(produitId: number): void {
+    if (!this.selectedFile) {
+      return;
+    }
+
+    console.log('📤 Upload de l\'image pour le produit:', produitId);
+    
+    this.produitService.uploadImage(produitId, this.selectedFile).subscribe({
+      next: (imageResponse) => {
+        console.log('✅ Image uploadée avec succès:', imageResponse);
+        this.snackBar.open('Produit et image ajoutés avec succès', 'Fermer', { duration: 3000 });
+        this.dialogRef.close({ id: produitId, image: imageResponse });
+      },
+      error: (error) => {
+        console.error('❌ Erreur lors de l\'upload de l\'image:', error);
+        this.snackBar.open('Produit ajouté mais erreur lors de l\'upload de l\'image', 'Fermer', { duration: 5000 });
+        // Fermer quand même le dialog avec le produit créé
+        this.dialogRef.close({ id: produitId });
+      }
+    });
+  }
+
+>>>>>>> main-web-app
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);

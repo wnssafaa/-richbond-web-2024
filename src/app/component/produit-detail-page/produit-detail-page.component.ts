@@ -38,7 +38,7 @@ export class ProduitDetailPageComponent implements OnInit {
   produit: Produit | null = null;
   loading = true;
   error: string | null = null;
-  menuOpen = true;
+  menuOpen = false;
   currentLanguage = 'fr';
   
   // User info
@@ -85,6 +85,25 @@ export class ProduitDetailPageComponent implements OnInit {
     this.produitService.getProduitById(id).subscribe({
       next: (produit) => {
         this.produit = produit;
+        
+        // Charger les métadonnées d'image si le produit n'en a pas encore
+        if (produit.id && !produit.imageData) {
+          this.produitService.getImageByProduit(produit.id).subscribe({
+            next: (imageData) => {
+              if (imageData && imageData.id && produit.id) {
+                this.produit!.imageData = imageData;
+                this.produit!.images = [imageData];
+                this.produit!.imageUrl = this.produitService.getImageUrl(produit.id, imageData.id);
+                this.produit!.thumbnailUrl = this.produitService.getThumbnailUrl(produit.id, imageData.id);
+              }
+            },
+            error: (error) => {
+              console.log('Aucune image trouvée pour le produit', id);
+              // Pas d'erreur, le produit n'a simplement pas d'image
+            }
+          });
+        }
+        
         this.loading = false;
       },
       error: (error) => {
@@ -172,5 +191,73 @@ export class ProduitDetailPageComponent implements OnInit {
         this.logout();
       }
     });
+  }
+
+  /**
+   * Obtient l'URL de l'image d'un produit
+   */
+  getProductImageUrl(produit: Produit): string {
+    // 1. Utiliser l'imageUrl directe si disponible
+    if (produit.imageUrl) {
+      // Si c'est une URL relative, ajouter le base URL
+      if (produit.imageUrl.startsWith('/api/')) {
+        return `http://localhost:8080${produit.imageUrl}`;
+      }
+      return produit.imageUrl;
+    }
+
+    // 2. Utiliser thumbnailUrl si disponible
+    if (produit.thumbnailUrl) {
+      if (produit.thumbnailUrl.startsWith('/api/')) {
+        return `http://localhost:8080${produit.thumbnailUrl}`;
+      }
+      return produit.thumbnailUrl;
+    }
+
+    // 3. Utiliser imageData si disponible
+    if (produit.imageData && produit.imageData.imageUrl) {
+      if (produit.imageData.imageUrl.startsWith('/api/')) {
+        return `http://localhost:8080${produit.imageData.imageUrl}`;
+      }
+      return produit.imageData.imageUrl;
+    }
+
+    // 4. Utiliser les images du tableau
+    if (produit.images && produit.images.length > 0) {
+      const primaryImage = produit.images.find(img => img.primary || img.isPrimary) || produit.images[0];
+      if (primaryImage.imageUrl) {
+        if (primaryImage.imageUrl.startsWith('/api/')) {
+          return `http://localhost:8080${primaryImage.imageUrl}`;
+        }
+        return primaryImage.imageUrl;
+      }
+    }
+
+    // 5. Fallback vers l'ancien système base64 si disponible
+    if (produit.image && produit.image.startsWith('data:image')) {
+      return produit.image;
+    }
+
+    // 6. Image par défaut
+    return 'assets/logo.png';
+  }
+
+  /**
+   * Charge l'image d'un produit depuis la base de données
+   */
+  private loadProductImage(produit: Produit): void {
+    // Pour l'instant, on ne charge pas d'image depuis l'API car elle n'est pas encore disponible
+    // Cette méthode sera utilisée quand l'API sera prête
+    console.log('Chargement d\'image pour le produit', produit.id, '- API pas encore disponible');
+  }
+
+  /**
+   * Gère les erreurs de chargement d'image
+   */
+  onImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    if (target) {
+      target.src = 'assets/logo.png';
+    }
   }
 }

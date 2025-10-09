@@ -5,6 +5,23 @@ import { Region } from '../enum/Region';
 import { Magasin } from './magasin.service';
 import { Role } from '../enum/Role';
 
+// ✅ Enum pour les statuts d'invitation
+export enum InviteStatus {
+  EN_ATTENTE = 'EN_ATTENTE',
+  ACCEPTE = 'ACCEPTE',
+  REFUSE = 'REFUSE',
+  EXPIRE = 'EXPIRE'
+}
+
+// ✅ Options pour le select d'invitation
+export const INVITE_STATUS_OPTIONS = [
+  { value: null, label: 'Aucune invitation', description: 'Merchandiseur actif normal' },
+  { value: 'EN_ATTENTE', label: 'En attente', description: 'En attente d\'acceptation' },
+  { value: 'ACCEPTE', label: 'Accepté', description: 'Invitation acceptée' },
+  { value: 'REFUSE', label: 'Refusé', description: 'Invitation refusée' },
+  { value: 'EXPIRE', label: 'Expiré', description: 'Invitation expirée' }
+];
+
 export interface Merchendiseur {
   magasinNoms?: string[];
   superviseurPrenom?: string;
@@ -34,6 +51,10 @@ export interface Merchendiseur {
    dateDebutIntegration?: string; // 🆕 Date d'intégration du superviseur
   dateSortie?: string; 
   imagePath?: string;  // ou un type détaillé si tu veux
+  
+  // ✅ Nouveaux champs pour les invitations
+  inviteStatus?: InviteStatus | null;
+  dateInvitation?: string;
 }
 
 

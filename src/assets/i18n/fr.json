@@ -55,7 +55,11 @@
     "EDIT_USER": "Modifier le utilisateur",
     "DELETE_USER": "Supprimer le utilisateur",
     "FULL_NAME": "Nom complet",
+<<<<<<< HEAD
     "FUNCTION": "Fonction",
+=======
+    "ROLE": "Fonction",
+>>>>>>> main-web-app
     "STATUS": "Statut",
     "LAST_LOGIN": "Dernière connexion",
     "ACTIONS": "Actions",
@@ -85,7 +89,12 @@
       "Nord": "Nord",
       "Orient": "Orient",
       "Centre": "Centre"
+<<<<<<< HEAD
     }
+=======
+    },
+    "IMPORT_USERS": "Importer des utilisateurs"
+>>>>>>> main-web-app
   },
   "LOGIN_HISTORY": {
     "TITLE": "Historique des connexions",
@@ -115,6 +124,7 @@
   "SUPERVISORS": {
     "TITLE": "Gestion des superviseurs",
     "ADD_SUPERVISOR": "Ajouter un superviseur",
+    "IMPORT_SUPER": "Importer des superviseurs",
     "EDIT_SUPERVISOR": "Modifier le superviseur",
     "DELETE_SUPERVISOR": "Supprimer le superviseur",
     "NAME": "Nom",
@@ -126,6 +136,7 @@
   "MERCHANDISERS": {
     "TITLE": "Gestion des merchandiseurs",
     "ADD_MERCH": "Ajouter un merchandiseur",
+    "IMPORT_MERCH": "Importer des merchandiseurs",
     "EDIT_MERCH": "Modifier le merchandiseur",
     "DELETE_MERCH": "Supprimer le merchandiseur",
     "NAME": "Nom",
@@ -153,6 +164,7 @@
     "TYPE": "Type",
     "BRAND": "Enseigne",
     "ASSIGNED_MERCH": "Merchandiseur assigné",
+<<<<<<< HEAD
     "SUPERVISOR": "Superviseur",
     "FILTERS": {
       "ALL_TYPES": "Tous les types",
@@ -162,6 +174,9 @@
       "ALL_REGIONS": "Toutes les régions",
       "ALL_BRANDS": "Toutes les enseignes"
     }
+=======
+    "IMPORT_STORES": "Importer des magasins"
+>>>>>>> main-web-app
   },
   "PRODUCTS": {
     "TITLE": "Gestion des produits",
@@ -178,7 +193,8 @@
     "TYPE": "Type",
     "DIMENSIONS": "Dimensions",
     "ARTICLE": "Article",
-    "VIEW": "Voir"
+    "VIEW": "Voir",
+    "IMPORT_PRODUCTS": "Importer des produits"
   },
   "PLANNING": {
     "TITLE": "Planification des visites",

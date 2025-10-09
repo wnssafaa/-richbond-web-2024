@@ -28,6 +28,8 @@ import {
   Superviseur,
 } from '../../services/superveseur.service';
 import { AddSupComponent } from '../../dialogs/add-sup/add-sup.component';
+import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
+import { ImportConfigService } from '../../services/import-config.service';
 import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -392,7 +394,8 @@ export class SuperviseursComponent implements OnInit {
     private translate: TranslateService,
     private magasinService: MagasinService,
     private merchandiserService: MerchendiseurService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    private importConfigService: ImportConfigService
   ) {
     this.translate.setDefaultLang('fr');
     this.translate.use('fr');
@@ -702,6 +705,53 @@ export class SuperviseursComponent implements OnInit {
   logout(): void {
     this.athService.logout();
   }
+<<<<<<< HEAD
+=======
+
+  // ✅ Méthode pour ouvrir le dialog d'importation
+  openImportDialog(): void {
+    const config = this.importConfigService.getSuperviseurImportConfig();
+    
+    const dialogRef = this.dialog.open(GenericImportDialogComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      data: { config }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.success) {
+        // Recharger la liste des superviseurs
+        this.superviseurService.getAll().subscribe(
+          (data) => {
+            this.superviseurs = data;
+            this.dataSource.data = this.superviseurs;
+          }
+        );
+        
+        this.snackBar.open(
+          `${result.count} superviseurs importés avec succès`,
+          'Fermer',
+          {
+            duration: 5000,
+            panelClass: ['success-snackbar']
+          }
+        );
+      }
+    });
+  }
+  openSuperviseurDetails(superviseur: any): void {
+    this.dialog.open(SuperviseurDetailsDialogComponent, {
+      data: superviseur,
+      width: '700px',
+    });
+  }
+  openDetails(superviseur: any): void {
+    this.dialog.open(SuperviseurDetailsDialogComponent, {
+      data: superviseur,
+      width: '800px',
+    });
+  }
+>>>>>>> main-web-app
   onRowClick(event: MouseEvent, row: Superviseur): void {
     const target = event.target as HTMLElement;
 

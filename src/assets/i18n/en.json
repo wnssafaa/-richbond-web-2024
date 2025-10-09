@@ -55,7 +55,11 @@
     "EDIT_USER": "Edit User",
     "DELETE_USER": "Delete User",
     "FULL_NAME": "Full Name",
+<<<<<<< HEAD
     "FUNCTION": "Function",
+=======
+    "ROLE": "Function",
+>>>>>>> main-web-app
     "STATUS": "Status",
     "LAST_LOGIN": "Last Login",
     "ACTIONS": "Actions",
@@ -85,7 +89,12 @@
       "Nord": "North",
       "Orient": "East",
       "Centre": "Center"
+<<<<<<< HEAD
     }
+=======
+    },
+    "IMPORT_USERS": "Import Users"
+>>>>>>> main-web-app
   },
   "LOGIN_HISTORY": {
     "TITLE": "Login History",
@@ -115,6 +124,7 @@
   "SUPERVISORS": {
     "TITLE": "Supervisor Management",
     "ADD_SUPERVISOR": "Add Supervisor",
+    "IMPORT_SUPER": "Import Supervisors",
     "EDIT_SUPERVISOR": "Edit Supervisor",
     "DELETE_SUPERVISOR": "Delete Supervisor",
     "NAME": "Name",
@@ -126,6 +136,7 @@
   "MERCHANDISERS": {
     "TITLE": "Merchandiser Management",
     "ADD_MERCH": "Add Merchandiser",
+    "IMPORT_MERCH": "Import Merchandisers",
     "EDIT_MERCH": "Edit Merchandiser",
     "DELETE_MERCH": "Delete Merchandiser",
     "NAME": "Name",
@@ -153,6 +164,7 @@
     "TYPE": "Type",
     "BRAND": "Brand",
     "ASSIGNED_MERCH": "Assigned Merchandiser",
+<<<<<<< HEAD
     "SUPERVISOR": "Supervisor",
     "FILTERS": {
       "ALL_TYPES": "All types",
@@ -162,6 +174,9 @@
       "ALL_REGIONS": "All regions",
       "ALL_BRANDS": "All brands"
     }
+=======
+    "IMPORT_STORES": "Import Stores"
+>>>>>>> main-web-app
   },
   "PRODUCTS": {
     "TITLE": "Product Management",
@@ -178,7 +193,8 @@
     "TYPE": "Type",
     "DIMENSIONS": "Dimensions",
     "ARTICLE": "Article",
-    "VIEW": "View"
+    "VIEW": "View",
+    "IMPORT_PRODUCTS": "Import Products"
   },
   "PLANNING": {
     "TITLE": "Visit Planning",

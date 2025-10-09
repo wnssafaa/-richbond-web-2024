@@ -45,7 +45,7 @@ export class MagasinDetailPageComponent implements OnInit {
   error: string | null = null;
   
   // Propriétés pour la sidebar et l'utilisateur
-  menuOpen = true;
+  menuOpen = false;
   username: string = '';
   role: string = '';
   email: string = '';

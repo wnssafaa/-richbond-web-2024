@@ -162,15 +162,10 @@
            <!-- Section Image -->
            <div class="image-section">
              <div class="image-container">
-               <img [src]="'data:image/jpeg;base64,' + produit.image" 
-                    *ngIf="produit.image; else noImage"
-                    class="produit-image">
-               <ng-template #noImage>
-                 <div class="no-image-placeholder">
-                   <mat-icon>image_not_supported</mat-icon>
-                   <span>Aucune image disponible</span>
-                 </div>
-               </ng-template>
+               <img [src]="getProductImageUrl(produit)" 
+                    class="produit-image"
+                    (error)="onImageError($event)"
+                    alt="Image du produit {{ produit.article }}">
              </div>
            </div>
 

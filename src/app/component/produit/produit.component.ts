@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProduitService, Produit } from '../../services/produit.service';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { ProduitService, Produit, ProduitImageDTO } from '../../services/produit.service';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -42,6 +42,8 @@ import { ExportService } from '../../services/export.service';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { ProduitDetailComponent } from '../../dialogs/produit-detail/produit-detail.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
+import { ImportConfigService } from '../../services/import-config.service';
 
 @Component({
   selector: 'app-produit',
@@ -50,12 +52,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     CommonModule, MatSortModule, MatSidenavModule, MatCardModule, FormsModule, MatDialogModule,TranslateModule,
     MatCheckboxModule, MatToolbarModule, MatTableModule, MatIconModule, MatButtonModule,
     MatInputModule, MatFormFieldModule, MatSelectModule, MatBadgeModule, MatChipsModule,MatTooltipModule,
-    MatSlideToggleModule, MatMenuModule, MatListModule, HttpClientModule,RouterLink,MatPaginatorModule,RouterModule
+    MatSlideToggleModule, MatMenuModule, MatListModule, HttpClientModule,RouterLink,MatPaginatorModule,RouterModule,
+    GenericImportDialogComponent
   ],
   templateUrl: './produit.component.html',
   styleUrls: ['./produit.component.css']
 })
-export class ProduitComponent implements OnInit, AfterViewInit {
+export class ProduitComponent implements OnInit, OnDestroy, AfterViewInit {
 openUserDetails(_t288: any) {
 throw new Error('Method not implemented.');
 }
@@ -78,7 +81,7 @@ throw new Error('Method not implemented.');
     dataSource = new MatTableDataSource<Produit>();
     selection = new SelectionModel<Produit>(true, []);
     showFilters = false;
-    menuOpen = true;
+    menuOpen = false;
     searchText = '';
   
     // Configuration des filtres
@@ -111,7 +114,8 @@ throw new Error('Method not implemented.');
       private athService:AuthService,
       private router: Router,
       private translate: TranslateService,
-      private exportService: ExportService
+      private exportService: ExportService,
+      private importConfigService: ImportConfigService
     ) {
           this.translate.setDefaultLang('fr');
   this.translate.use('fr');
@@ -144,7 +148,7 @@ throw new Error('Method not implemented.');
       // Gestion de l'avatar : base64 ou URL
       this.avatarUrl = data.imagePath
         ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
-        : 'assets/default-avatar.png';
+        : 'assets/profil.webp';
     },
     error: (err) => {
       console.error('Erreur lors de la récupération des infos utilisateur :', err);
@@ -278,14 +282,81 @@ resetFilters(): void {
 }
   
     loadProduits(): void {
+      // Debug des images avant de charger les produits
+      this.produitService.debugProductImages();
+      
+      // Test avec les données brutes
+      this.produitService.testGetAllProduits().subscribe({
+        next: (rawData: any) => {
+          console.log('🔍 DONNÉES BRUTES DE L\'API:', rawData);
+          console.log('🔍 TYPE DE DONNÉES:', typeof rawData);
+          console.log('🔍 EST UN TABLEAU?', Array.isArray(rawData));
+        },
+        error: (error) => {
+          console.error('❌ Erreur test données brutes:', error);
+        }
+      });
+
       this.produitService.getAllProduits().subscribe({
         next: (produits: Produit[]) => {
+          console.log('📦 Produits reçus de l\'API:', produits);
+          console.log('🔍 Premier produit détaillé:', produits[0]);
+          
           this.dataSource.data = produits;
           // Charger les articles uniques pour le filtre
           this.articles = [...new Set(produits.map(p => p.article).filter(article => article))];
+          
+          // Charger les images pour tous les produits en parallèle
+          this.loadImagesForAllProducts(produits);
         },
-        error: () => {
+        error: (error) => {
+          console.error('❌ Erreur lors du chargement des produits:', error);
           this.snackBar.open("Erreur lors du chargement des produits.", 'Fermer', { duration: 3000 });
+        }
+      });
+    }
+
+    /**
+     * Charge les images pour tous les produits
+     */
+    private loadImagesForAllProducts(produits: Produit[]): void {
+      console.log('🔄 Chargement des métadonnées d\'images pour', produits.length, 'produits');
+      
+      // Charger d'abord les métadonnées des images
+      this.produitService.loadImageMetadataForProducts(produits).subscribe({
+        next: (produitsWithMetadata) => {
+          console.log('✅ Métadonnées d\'images chargées pour', produitsWithMetadata.length, 'produits');
+          this.dataSource.data = produitsWithMetadata;
+          
+          // Optionnel: Charger les blobs pour les premiers produits visibles
+          // (pour optimiser les performances)
+          this.loadBlobsForVisibleProducts(produitsWithMetadata);
+        },
+        error: (error) => {
+          console.warn('⚠️ Erreur lors du chargement des métadonnées d\'images:', error);
+          // Continuer sans les images
+          this.dataSource.data = produits;
+        }
+      });
+    }
+
+    /**
+     * Charge les blobs pour les produits visibles (optimisation)
+     */
+    private loadBlobsForVisibleProducts(produits: Produit[]): void {
+      // Charger les thumbnails pour les premiers produits (lazy loading)
+      const visibleProducts = produits.slice(0, 10); // Premiers 10 produits
+      
+      visibleProducts.forEach(produit => {
+        if (produit.imageData?.id && produit.id) {
+          this.produitService.loadThumbnailBlobForProduct(produit).subscribe({
+            next: () => {
+              console.log('✅ Thumbnail blob chargée pour le produit:', produit.id);
+            },
+            error: (error) => {
+              console.warn('❌ Erreur lors du chargement de la thumbnail blob pour le produit:', produit.id, error);
+            }
+          });
         }
       });
     }
@@ -297,9 +368,16 @@ resetFilters(): void {
           data: { mode: 'add' }
         });
     
+        // ✅ Recharger la liste automatiquement après fermeture du dialog
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
+<<<<<<< HEAD
             // Le produit a déjà été créé dans le dialog, on recharge juste la liste
+=======
+            // Le produit est déjà créé dans AddProduitComponent
+            // On recharge juste la liste pour afficher le nouveau produit
+            console.log('🔄 Rechargement de la liste après ajout de produit');
+>>>>>>> main-web-app
             this.loadProduits();
           }
         });
@@ -318,17 +396,13 @@ resetFilters(): void {
           data: { mode: 'edit', produit }
         });
     
+        // ✅ Recharger la liste automatiquement après fermeture du dialog
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
-            this.produitService.updateProduit(produit.id!, result).subscribe({
-              next: () => {
-                this.snackBar.open('Produit modifié avec succès', 'Fermer', { duration: 3000 });
-                this.loadProduits();
-              },
-              error: () => {
-                this.snackBar.open('Erreur lors de la modification', 'Fermer', { duration: 3000 });
-              }
-            });
+            // Le produit est déjà modifié dans AddProduitComponent
+            // On recharge juste la liste pour afficher les modifications
+            console.log('🔄 Rechargement de la liste après modification de produit');
+            this.loadProduits();
           }
         });
       }
@@ -407,4 +481,198 @@ onRowClick(event: MouseEvent, row: Produit): void {
   this.router.navigate(['/produit-detail', row.id]);
 }
  userMenuOpen = false;
+
+  /**
+   * Obtient l'URL d'affichage optimale pour un produit
+   * Utilise les URLs d'images du backend directement
+   */
+  getProductImageUrl(produit: Produit): string {
+    // Debug réduit - seulement si nécessaire
+    if (!produit.imageUrl && !produit.thumbnailUrl && !produit.imageData) {
+      console.log('🔍 Debug getProductImageUrl pour produit:', produit.id, produit.article);
     }
+    
+    // Debug spécial pour les URLs relatives
+    if (produit.imageUrl && produit.imageUrl.startsWith('/api/')) {
+      const fullUrl = `http://localhost:8080${produit.imageUrl}`;
+      console.log('🔗 URL relative détectée, conversion en absolue:', fullUrl);
+      return fullUrl;
+    }
+
+    // 1. Utiliser l'URL blob de la thumbnail si disponible (priorité)
+    if (produit._thumbnailBlobUrl) {
+      return produit._thumbnailBlobUrl;
+    }
+
+    // 2. Utiliser l'URL blob de l'image complète si disponible
+    if (produit._imageBlobUrl) {
+      return produit._imageBlobUrl;
+    }
+
+    // 3. Utiliser l'URL directe de l'image principale (priorité sur thumbnail)
+    if (produit.imageUrl) {
+      if (produit.imageUrl.startsWith('/api/')) {
+        const fullUrl = `http://localhost:8080${produit.imageUrl}`;
+        return fullUrl;
+      }
+      return produit.imageUrl;
+    }
+
+    // 4. Utiliser l'URL directe de la thumbnail si disponible (fallback)
+    if (produit.thumbnailUrl) {
+      if (produit.thumbnailUrl.startsWith('/api/')) {
+        const fullUrl = `http://localhost:8080${produit.thumbnailUrl}`;
+        return fullUrl;
+      }
+      return produit.thumbnailUrl;
+    }
+
+    // 5. Si on a des métadonnées d'image mais pas d'URL, construire l'URL
+    if (produit.imageData?.id && produit.id) {
+      const imageUrl = `http://localhost:8080/api/produits/${produit.id}/images/${produit.imageData.id}`;
+      return imageUrl;
+    }
+
+    // 6. Si on a des images dans le tableau, utiliser la première
+    if (produit.images && produit.images.length > 0 && produit.id) {
+      const firstImage = produit.images[0];
+      if (firstImage.id) {
+        const imageUrl = `http://localhost:8080/api/produits/${produit.id}/images/${firstImage.id}`;
+        return imageUrl;
+      }
+    }
+
+    // 7. Si pas de blob URL mais qu'il y a des métadonnées d'image, charger la thumbnail
+    if (produit.imageData?.id && produit.id && !produit._loadingImage) {
+      this.produitService.loadThumbnailBlobForProduct(produit).subscribe({
+        next: () => {
+          // Le composant se mettra à jour automatiquement grâce au binding
+        },
+        error: (error) => {
+          console.warn('❌ Erreur lors du chargement de la thumbnail blob:', error);
+        }
+      });
+    }
+
+    // 8. Image par défaut
+    return 'assets/logo.png';
+  }
+
+  /**
+   * Charge l'image d'un produit depuis la base de données
+   */
+  private loadProductImage(produit: Produit): void {
+    // Pour l'instant, on ne charge pas d'image depuis l'API car elle n'est pas encore disponible
+    // Cette méthode sera utilisée quand l'API sera prête
+    console.log('Chargement d\'image pour le produit', produit.id, '- API pas encore disponible');
+  }
+
+  /**
+   * Gère les erreurs de chargement d'image
+   */
+  // onImageError(event: any): void {
+  //   console.log('❌ Erreur de chargement d\'image, utilisation du logo par défaut');
+  //   event.target.src = 'assets/logo.png';
+  // }
+
+  /**
+   * Obtient l'URL de la thumbnail d'un produit
+   */
+  getProductThumbnailUrl(produit: Produit): string {
+    // 1. Utiliser thumbnailUrl directe si disponible
+    if (produit.thumbnailUrl) {
+      if (produit.thumbnailUrl.startsWith('/api/')) {
+        return `http://localhost:8080${produit.thumbnailUrl}`;
+      }
+      return produit.thumbnailUrl;
+    }
+
+    // 2. Utiliser imageData.thumbnailUrl si disponible
+    if (produit.imageData && produit.imageData.thumbnailUrl) {
+      if (produit.imageData.thumbnailUrl.startsWith('/api/')) {
+        return `http://localhost:8080${produit.imageData.thumbnailUrl}`;
+      }
+      return produit.imageData.thumbnailUrl;
+    }
+
+    // 3. Utiliser les images du tableau
+    if (produit.images && produit.images.length > 0) {
+      const primaryImage = produit.images.find(img => img.primary || img.isPrimary) || produit.images[0];
+      if (primaryImage.thumbnailUrl) {
+        if (primaryImage.thumbnailUrl.startsWith('/api/')) {
+          return `http://localhost:8080${primaryImage.thumbnailUrl}`;
+        }
+        return primaryImage.thumbnailUrl;
+      }
+    }
+
+    // 4. Fallback vers l'image normale
+    return this.getProductImageUrl(produit);
+  }
+
+  /**
+   * Gère les erreurs de chargement d'image
+   */
+  onImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    if (target) {
+      console.warn('❌ Erreur de chargement d\'image pour l\'URL:', target.src);
+      
+      // Essayer de charger l'image blob si l'URL directe a échoué
+      const produit = this.dataSource.data.find(p => 
+        p.imageUrl === target.src || 
+        p.thumbnailUrl === target.src ||
+        (p.imageData?.imageUrl && target.src.includes(p.imageData.imageUrl!))
+      );
+      
+      if (produit && produit.id && produit.imageData?.id && !produit._loadingImage) {
+        console.log('🔄 Tentative de chargement de l\'image blob pour le produit:', produit.id);
+        
+        // Essayer de charger la thumbnail blob
+        this.produitService.loadThumbnailBlobForProduct(produit).subscribe({
+          next: () => {
+            console.log('✅ Image blob chargée avec succès pour le produit:', produit.id);
+            // L'image se mettra à jour automatiquement grâce au binding
+          },
+          error: (error) => {
+            console.warn('❌ Échec du chargement de l\'image blob pour le produit:', produit.id, error);
+            // Fallback vers l'image par défaut
+            target.src = 'assets/logo.png';
+          }
+        });
+      } else {
+        // Fallback direct vers l'image par défaut
+        target.src = 'assets/logo.png';
+      }
+    }
+  }
+
+  /**
+   * Nettoyage lors de la destruction du composant
+   */
+  ngOnDestroy(): void {
+    // Nettoyer les URLs blob pour éviter les fuites mémoire
+    if (this.dataSource.data && this.dataSource.data.length > 0) {
+      this.produitService.cleanupBlobUrls(this.dataSource.data);
+    }
+  }
+
+  openImportDialog(): void {
+    const config = this.importConfigService.getProduitImportConfig();
+    const dialogRef = this.dialog.open(GenericImportDialogComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      data: { config }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.success) {
+        this.loadProduits();
+        this.snackBar.open(
+          `${result.count} produits importés avec succès`,
+          'Fermer',
+          { duration: 5000, panelClass: ['success-snackbar'] }
+        );
+      }
+    });
+  }
+}
