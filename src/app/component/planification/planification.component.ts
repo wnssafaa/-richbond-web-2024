@@ -606,11 +606,28 @@ export class PlanificationComponent {
 
   // Méthode pour extraire les régions et villes des magasins
   extractRegionsAndVilles(): void {
+    console.log('🔍 Extraction des régions et villes...');
+    console.log(`📊 Nombre de magasins: ${this.magasins.length}`);
+    
     if (this.magasins.length > 0) {
-      this.regions = [...new Set(this.magasins.map((m) => m.region))].sort();
-      this.villes = [
-        ...new Set(this.magasins.map((m) => m.ville).filter((v) => v)),
-      ].sort();
+      // Extraire les régions en filtrant les valeurs nulles/vides
+      const regionsFiltered = this.magasins
+        .map((m) => m.region)
+        .filter((r) => r && r.trim() !== '');
+      
+      this.regions = [...new Set(regionsFiltered)].sort();
+      
+      // Extraire les villes en filtrant les valeurs nulles/vides
+      const villesFiltered = this.magasins
+        .map((m) => m.ville)
+        .filter((v) => v && v.trim() !== '');
+      
+      this.villes = [...new Set(villesFiltered)].sort();
+      
+      console.log('✅ Régions extraites:', this.regions);
+      console.log('✅ Villes extraites:', this.villes);
+    } else {
+      console.log('⚠️ Aucun magasin disponible pour extraire les régions et villes');
     }
   }
 
@@ -776,6 +793,9 @@ export class PlanificationComponent {
   merchandiseursOptions: FilterOption[] = [];
   magasinsOptions: FilterOption[] = [];
   superviseursOptions: FilterOption[] = [];
+  villesOptions: FilterOption[] = [];
+  enseigneOptions: FilterOption[] = [];
+  marqueOptions: FilterOption[] = [];
 
   // Nouvelles propriétés pour les filtres
   regions: string[] = [];
@@ -885,7 +905,7 @@ export class PlanificationComponent {
     this.loadMagasins();
     this.loadPlanificationsForTable();
     this.loadSuperviseurs();
-    this.extractRegionsAndVilles();
+    // Note: extractRegionsAndVilles() est maintenant appelé dans loadMagasins()
     this.updateDisplayedColumns();
 
     // Forcer le chargement des magasins après un délai pour s'assurer que tout est initialisé
@@ -1741,12 +1761,46 @@ export class PlanificationComponent {
         });
 
         this.magasins = magasins;
+        
+        // 🔍 DEBUG: Vérifier la structure des magasins
+        if (magasins.length > 0) {
+          console.log('🔍 Premier magasin pour debug:', magasins[0]);
+          console.log('🔍 Régions dans les magasins:', magasins.map(m => m.region));
+        }
+        
         this.magasinsOptions = magasins.map((magasin) => ({
           value: magasin.id,
           label: `${magasin.nom} - ${magasin.ville}`,
         }));
 
+        // Initialiser les options de villes
+        const villesUniques = [...new Set(magasins.map(m => m.ville).filter(v => v))].sort();
+        this.villesOptions = villesUniques.map(ville => ({
+          value: ville,
+          label: ville
+        }));
+
+        // Initialiser les options d'enseignes
+        const enseignesUniques = [...new Set(magasins.map(m => m.enseigne).filter(e => e))].sort();
+        this.enseigneOptions = enseignesUniques.map(enseigne => ({
+          value: enseigne,
+          label: enseigne
+        }));
+
+        // Initialiser les options de marques (à partir de l'enum MarqueProduit si disponible)
+        this.marqueOptions = this.marques.map(marque => ({
+          value: marque,
+          label: marque
+        }));
+
+        // 🔧 EXTRACTION DES RÉGIONS ET VILLES APRÈS CHARGEMENT DES MAGASINS
+        this.extractRegionsAndVilles();
+
         console.log('Options des magasins:', this.magasinsOptions);
+        console.log('Options des villes:', this.villesOptions);
+        console.log('Options des enseignes:', this.enseigneOptions);
+        console.log('Options des marques:', this.marqueOptions);
+        console.log('Régions disponibles:', this.regions);
 
         // Vérifier si des magasins ont des coordonnées GPS
         const magasinsWithCoords = magasins.filter(
@@ -1966,9 +2020,70 @@ export class PlanificationComponent {
       }
     });
 
-    console.log(`🧪 Test avec ${this.magasins.length} magasins...`);
+    // 🔍 APPLIQUER LES FILTRES SUR LES MAGASINS
+    let magasinsFiltered = [...this.magasins];
 
-    this.magasins.forEach((magasin, index) => {
+    // Filtrer par région
+    if (this.selectedRegion) {
+      magasinsFiltered = magasinsFiltered.filter(
+        (m) => m.region === this.selectedRegion
+      );
+      console.log(`🔍 Filtre région "${this.selectedRegion}" appliqué: ${magasinsFiltered.length} magasins`);
+    }
+
+    // Filtrer par ville
+    if (this.selectedVille) {
+      magasinsFiltered = magasinsFiltered.filter(
+        (m) => m.ville === this.selectedVille
+      );
+      console.log(`🔍 Filtre ville "${this.selectedVille}" appliqué: ${magasinsFiltered.length} magasins`);
+    }
+
+    // Filtrer par enseigne
+    if (this.selectedEnseigne) {
+      magasinsFiltered = magasinsFiltered.filter(
+        (m) => m.enseigne === this.selectedEnseigne
+      );
+      console.log(`🔍 Filtre enseigne "${this.selectedEnseigne}" appliqué: ${magasinsFiltered.length} magasins`);
+    }
+
+    // Filtrer par magasin spécifique
+    if (this.selectedMagasin) {
+      magasinsFiltered = magasinsFiltered.filter(
+        (m) => m.id === this.selectedMagasin
+      );
+      console.log(`🔍 Filtre magasin ID ${this.selectedMagasin} appliqué: ${magasinsFiltered.length} magasins`);
+    }
+
+    // Filtrer par merchandiseur
+    if (this.selectedMerchandiseur) {
+      magasinsFiltered = magasinsFiltered.filter(
+        (m) => m.merchandiseur && m.merchandiseur.id === this.selectedMerchandiseur
+      );
+      console.log(`🔍 Filtre merchandiseur ID ${this.selectedMerchandiseur} appliqué: ${magasinsFiltered.length} magasins`);
+    }
+
+    // Filtrer par marque (note: filtre désactivé car la structure Magasin n'a pas de propriété 'marques' directe)
+    // Si vous voulez filtrer par marque, il faut vérifier les produits du magasin
+    if (this.selectedMarque) {
+      magasinsFiltered = magasinsFiltered.filter(
+        (m) => m.produits && m.produits.some((p: any) => p.marque === this.selectedMarque)
+      );
+      console.log(`🔍 Filtre marque "${this.selectedMarque}" appliqué: ${magasinsFiltered.length} magasins`);
+    }
+
+    console.log(`🧪 Affichage de ${magasinsFiltered.length} magasins filtrés sur ${this.magasins.length} au total`);
+
+    // Si aucun magasin après filtrage, afficher un message
+    if (magasinsFiltered.length === 0) {
+      this.snackBar.open('Aucun magasin ne correspond aux filtres sélectionnés.', 'Fermer', {
+        duration: 3000,
+        panelClass: ['warning-snackbar'],
+      });
+      return;
+    }
+
+    magasinsFiltered.forEach((magasin, index) => {
       console.log(`🧪 Magasin ${index + 1}: ${magasin.nom}`);
       console.log(`   - Ville: ${magasin.ville}`);
       console.log(`   - Latitude: ${magasin.latitude}`);
@@ -2106,14 +2221,15 @@ export class PlanificationComponent {
       }
     });
 
-    this.snackBar.open(
-      `${this.magasins.length} magasin(s) affiché(s) avec coordonnées réelles !`,
-      'Fermer',
-      {
-        duration: 3000,
-        panelClass: ['success-snackbar'],
-      }
-    );
+    // Message adapté selon les filtres
+    const messageFiltre = (this.selectedRegion || this.selectedVille || this.selectedEnseigne || this.selectedMagasin || this.selectedMerchandiseur || this.selectedMarque)
+      ? `${magasinsFiltered.length} magasin(s) affiché(s) (filtré(s) sur ${this.magasins.length})`
+      : `${magasinsFiltered.length} magasin(s) affiché(s)`;
+
+    this.snackBar.open(messageFiltre, 'Fermer', {
+      duration: 3000,
+      panelClass: ['success-snackbar'],
+    });
   }
   private calculateStatistics(
     filteredPlanifs: Planification[],
