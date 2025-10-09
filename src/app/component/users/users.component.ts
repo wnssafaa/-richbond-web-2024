@@ -401,29 +401,6 @@ export class UsersComponent implements OnInit {
         sheetName: 'Utilisateurs',
       }
     );
-<<<<<<< HEAD
-=======
-  }
-
-  openImportDialog(): void {
-    const config = this.importConfigService.getUserImportConfig();
-    const dialogRef = this.dialog.open(GenericImportDialogComponent, {
-      width: '900px',
-      maxWidth: '95vw', 
-      data: { config }
-    });
-    
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result.success) {
-        this.loadUsers(); // Recharger la liste des utilisateurs
-        this.snackBar.open(
-          `${result.count} utilisateurs importés avec succès`,
-          'Fermer',
-          { duration: 5000, panelClass: ['success-snackbar'] }
-        );
-      }
-    });
->>>>>>> main-web-app
   }
 
   deleteUser(userId: number, type: string): void {
