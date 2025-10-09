@@ -129,3 +129,4 @@ curl -I http://localhost:8080/api/produits/1/images/1
 - [ ] Style des images appliqué (bordures, hover)
 
 **Votre problème d'affichage des images est maintenant résolu !** 🎉
+

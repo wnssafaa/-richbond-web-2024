@@ -38,7 +38,7 @@ export class ProduitDetailPageComponent implements OnInit {
   produit: Produit | null = null;
   loading = true;
   error: string | null = null;
-  menuOpen = true;
+  menuOpen = false;
   currentLanguage = 'fr';
   
   // User info

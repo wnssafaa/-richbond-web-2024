@@ -45,6 +45,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
 import { ExportService } from '../../services/export.service';
+import { environment } from '../../../environments/environment';
 
 // Add this before initializing your map
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -713,7 +714,7 @@ progressParMerch: number | null = null;
   ];
 
   // UI
-  menuOpen = true;
+  menuOpen = false;
   dashboardView = false;
   loadingPlanifications = false;
   username: string = '';
@@ -1112,43 +1113,48 @@ renderEventContent(arg: any): any {
   }
 
 
-   private initMap(): void {
-   
+  private initMap(): void {
     if (this.map) {
-      console.log('🗑️ Suppression de l\'ancienne carte');
+      console.log("🗑️ Suppression de l'ancienne carte");
       this.map.remove();
       this.map = null;
     }
-    
+
     const mapContainer = document.getElementById('maroc-map');
     if (!mapContainer) {
       console.error('❌ Conteneur de carte non trouvé');
       return;
     }
-    
+
     console.log('✅ Conteneur de carte trouvé');
-    
+
     this.map = L.map('maroc-map', {
       center: [31.7917, -7.0926],
-      zoom: 6
+      zoom: 6,
     });
-    
+
     console.log('✅ Carte Leaflet créée');
-    
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(this.map);
-    
-    console.log('✅ Couche de tuiles ajoutée');
-    
-         // Attendre un peu avant de mettre à jour les marqueurs
+
+    L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      }
+    ).addTo(this.map);
+
+    console.log('✅ Couche de tuiles OpenStreetMap ajoutée');
+
+    // Attendre un peu avant de mettre à jour les marqueurs
     setTimeout(() => {
-       console.log('🔄 Mise à jour des marqueurs après initialisation...');
-       // Utiliser la logique de testShowMagasinsWithRealCoords par défaut
-       this.testShowMagasinsWithRealCoords();
+      console.log('🔄 Mise à jour des marqueurs après initialisation...');
+      // Utiliser la logique de testShowMagasinsWithRealCoords par défaut
+      this.testShowMagasinsWithRealCoords();
       this.map?.invalidateSize();
-     }, 500);
+    }, 500);
   }
+
 
 deletePlanification(eventId: string): void {
   if (confirm('Voulez-vous vraiment supprimer cette planification ?')) {

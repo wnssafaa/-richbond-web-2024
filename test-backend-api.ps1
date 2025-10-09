@@ -45,3 +45,4 @@ Write-Host "`n📋 Résumé:" -ForegroundColor Cyan
 Write-Host "- Si l'API Produits fonctionne mais pas l'API Images: Normal (endpoint pas encore implémenté)" -ForegroundColor Gray
 Write-Host "- Si aucune API ne fonctionne: Le backend n'est pas démarré" -ForegroundColor Gray
 Write-Host "- Pour démarrer le backend: mvn spring-boot:run" -ForegroundColor Gray
+

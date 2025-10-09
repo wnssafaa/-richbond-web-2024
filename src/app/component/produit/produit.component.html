@@ -288,6 +288,16 @@
 
               <button
                 mat-raised-button
+                class="import-button"
+                 style="background-color: #455e98; color: white; margin-right: 12px; padding: 10px 15px;
+  border-radius: 20px;"
+                (click)="openImportDialog()">
+                <mat-icon style="color:white">upload_file</mat-icon>
+               Importer
+              </button>
+
+              <button
+                mat-raised-button
                 class="add-user-button"
                 style="background-color: #0a2681; color: white"
                 (click)="ajouterProduit()"

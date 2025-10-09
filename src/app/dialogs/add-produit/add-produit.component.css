@@ -210,32 +210,6 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  .upload-progress {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: #f0f8ff;
-    border-radius: 8px;
-    border: 1px solid #e3f2fd;
-  }
-
-  .upload-progress span {
-    color: #1976d2;
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  .upload-help {
-    text-align: center;
-    margin-top: 8px;
-  }
-
-  .upload-help small {
-    color: #666;
-    font-style: italic;
-  }
-
   /* Responsive design pour les petits écrans */
   @media (max-width: 768px) {
     .user-form-container {

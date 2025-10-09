@@ -42,6 +42,8 @@ import { ExportService } from '../../services/export.service';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { ProduitDetailComponent } from '../../dialogs/produit-detail/produit-detail.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
+import { ImportConfigService } from '../../services/import-config.service';
 
 @Component({
   selector: 'app-produit',
@@ -50,7 +52,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     CommonModule, MatSortModule, MatSidenavModule, MatCardModule, FormsModule, MatDialogModule,TranslateModule,
     MatCheckboxModule, MatToolbarModule, MatTableModule, MatIconModule, MatButtonModule,
     MatInputModule, MatFormFieldModule, MatSelectModule, MatBadgeModule, MatChipsModule,MatTooltipModule,
-    MatSlideToggleModule, MatMenuModule, MatListModule, HttpClientModule,RouterLink,MatPaginatorModule,RouterModule
+    MatSlideToggleModule, MatMenuModule, MatListModule, HttpClientModule,RouterLink,MatPaginatorModule,RouterModule,
+    GenericImportDialogComponent
   ],
   templateUrl: './produit.component.html',
   styleUrls: ['./produit.component.css']
@@ -78,7 +81,7 @@ throw new Error('Method not implemented.');
     dataSource = new MatTableDataSource<Produit>();
     selection = new SelectionModel<Produit>(true, []);
     showFilters = false;
-    menuOpen = true;
+    menuOpen = false;
     searchText = '';
   
     // Configuration des filtres
@@ -111,7 +114,8 @@ throw new Error('Method not implemented.');
       private athService:AuthService,
       private router: Router,
       private translate: TranslateService,
-      private exportService: ExportService
+      private exportService: ExportService,
+      private importConfigService: ImportConfigService
     ) {
           this.translate.setDefaultLang('fr');
   this.translate.use('fr');
@@ -364,17 +368,13 @@ resetFilters(): void {
           data: { mode: 'add' }
         });
     
+        // ✅ Recharger la liste automatiquement après fermeture du dialog
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
-            this.produitService.createProduit(result).subscribe({
-              next: () => {
-                this.snackBar.open('Produit ajouté avec succès', 'Fermer', { duration: 3000 });
-                this.loadProduits();
-              },
-              error: () => {
-                this.snackBar.open("Erreur lors de l'ajout du produit", 'Fermer', { duration: 3000 });
-              }
-            });
+            // Le produit est déjà créé dans AddProduitComponent
+            // On recharge juste la liste pour afficher le nouveau produit
+            console.log('🔄 Rechargement de la liste après ajout de produit');
+            this.loadProduits();
           }
         });
       }
@@ -392,17 +392,13 @@ resetFilters(): void {
           data: { mode: 'edit', produit }
         });
     
+        // ✅ Recharger la liste automatiquement après fermeture du dialog
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
-            this.produitService.updateProduit(produit.id!, result).subscribe({
-              next: () => {
-                this.snackBar.open('Produit modifié avec succès', 'Fermer', { duration: 3000 });
-                this.loadProduits();
-              },
-              error: () => {
-                this.snackBar.open('Erreur lors de la modification', 'Fermer', { duration: 3000 });
-              }
-            });
+            // Le produit est déjà modifié dans AddProduitComponent
+            // On recharge juste la liste pour afficher les modifications
+            console.log('🔄 Rechargement de la liste après modification de produit');
+            this.loadProduits();
           }
         });
       }
@@ -655,5 +651,24 @@ onRowClick(event: MouseEvent, row: Produit): void {
     if (this.dataSource.data && this.dataSource.data.length > 0) {
       this.produitService.cleanupBlobUrls(this.dataSource.data);
     }
+  }
+
+  openImportDialog(): void {
+    const config = this.importConfigService.getProduitImportConfig();
+    const dialogRef = this.dialog.open(GenericImportDialogComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      data: { config }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.success) {
+        this.loadProduits();
+        this.snackBar.open(
+          `${result.count} produits importés avec succès`,
+          'Fermer',
+          { duration: 5000, panelClass: ['success-snackbar'] }
+        );
+      }
+    });
   }
 }

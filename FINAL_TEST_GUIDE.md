@@ -127,3 +127,4 @@ Si tous les tests passent, votre système d'images de produits est maintenant **
 - ✅ **UX** : Images avec style et effets
 
 **Votre problème d'affichage des images est définitivement résolu !** 🚀
+

@@ -30,6 +30,7 @@ import {
   Merchendiseur,
 } from '../../services/merchendiseur.service';
 import { AddMerchComponent } from '../../dialogs/add-merch/add-merch.component';
+import { ImportMerchDialogComponent } from '../../dialogs/import-merch-dialog/import-merch-dialog.component';
 import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -838,6 +839,35 @@ export class MerchendiseurComponent implements OnInit {
           err
         );
       },
+    });
+  }
+
+  // ✅ Méthode pour ouvrir le dialog d'importation
+  openImportDialog(): void {
+    const dialogRef = this.dialog.open(ImportMerchDialogComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.success) {
+        // Recharger la liste des merchandiseurs
+        this.merchendiseurService.getAllMerchendiseurs().subscribe(
+          (data) => {
+            this.merchandiseurs = data;
+            this.dataSource.data = this.merchandiseurs;
+          }
+        );
+        this.snackBar.open(
+          `${result.count} merchandiseurs importés avec succès`,
+          'Fermer',
+          {
+            duration: 5000,
+            panelClass: ['success-snackbar']
+          }
+        );
+      }
     });
   }
 

@@ -139,3 +139,4 @@ Si des problèmes surviennent, vous pouvez temporairement désactiver le chargem
 ```
 
 Le système continuera de fonctionner avec les images par défaut.
+

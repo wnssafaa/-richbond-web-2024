@@ -194,3 +194,4 @@ mvn spring-boot:run
 - [ ] Modification de produit fonctionne
 
 Votre application est maintenant entièrement compatible avec votre backend Spring Boot !
+

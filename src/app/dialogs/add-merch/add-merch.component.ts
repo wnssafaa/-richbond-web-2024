@@ -23,7 +23,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MerchendiseurService, Merchendiseur } from '../../services/merchendiseur.service';
+import { MerchendiseurService, Merchendiseur, InviteStatus, INVITE_STATUS_OPTIONS } from '../../services/merchendiseur.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Role } from '../../enum/Role';
 import { Validators } from '@angular/forms';
@@ -199,6 +199,11 @@ regionVillesMap: { [key in Region]: string[] } = {
     { label: 'MERCHANDISEUR_MULTI', value: Role.MERCHANDISEUR_MULTI }
   ];
 
+  // ✅ Nouvelles propriétés pour l'invitation
+  inviteStatusOptions = INVITE_STATUS_OPTIONS;
+  selectedInviteStatus: InviteStatus | null = null;
+  dateInvitation: string | null = null;
+
   marques = ['Richbond', 'Simmons', 'Révey', 'Atlas', 'Total Rayons'];
   enseignes = ['Carrefour',
     'Marjane',
@@ -319,7 +324,11 @@ if (this.data && this.data.Merchendiseur) {
         ...this.merchForm.value,
         status: this.merchForm.value.status,
         magasinIds: this.merchForm.value.magasinIds.map((id: any) => Number(id)),
-        superviseur: this.merchForm.value.superviseurId ? { id: this.merchForm.value.superviseurId } : null
+        superviseur: this.merchForm.value.superviseurId ? { id: this.merchForm.value.superviseurId } : null,
+        
+        // ✅ Ajouter les champs d'invitation
+        inviteStatus: this.selectedInviteStatus,
+        dateInvitation: this.dateInvitation
       };
 
       if (this.isEditMode) {
@@ -393,6 +402,11 @@ if (this.data && this.data.Merchendiseur) {
       ...merch,
       magasinIds: merch.magasinIds || []
     });
+    
+    // ✅ Charger les valeurs d'invitation
+    this.selectedInviteStatus = merch.inviteStatus || null;
+    this.dateInvitation = merch.dateInvitation || null;
+    
     this.editId = merch.id!;
     this.isEditMode = true;
   }
@@ -439,6 +453,45 @@ if (this.data && this.data.Merchendiseur) {
       next: (data) => { this.superviseurs = data; },
       error: (err) => { console.error('Erreur chargement superviseurs', err); }
     });
+  }
+
+  // ✅ Méthodes pour gérer l'invitation
+  onInviteStatusChange(): void {
+    if (this.selectedInviteStatus === 'EN_ATTENTE') {
+      // Si on passe en "en attente", définir la date d'invitation
+      this.dateInvitation = new Date().toISOString().split('T')[0];
+    } else if (this.selectedInviteStatus === null) {
+      // Si on revient à null, effacer la date
+      this.dateInvitation = null;
+    }
+  }
+
+  // ✅ Obtenir l'icône selon le statut
+  getStatusIcon(status: string | null): string {
+    switch (status) {
+      case 'EN_ATTENTE': return 'schedule';
+      case 'ACCEPTE': return 'check_circle';
+      case 'REFUSE': return 'cancel';
+      case 'EXPIRE': return 'schedule';
+      default: return 'person';
+    }
+  }
+
+  // ✅ Obtenir la classe CSS selon le statut
+  getStatusClass(status: string | null): string {
+    switch (status) {
+      case 'EN_ATTENTE': return 'status-pending';
+      case 'ACCEPTE': return 'status-accepted';
+      case 'REFUSE': return 'status-refused';
+      case 'EXPIRE': return 'status-expired';
+      default: return 'status-normal';
+    }
+  }
+
+  // ✅ Obtenir le texte du statut
+  getStatusText(status: string | null): string {
+    const option = this.inviteStatusOptions.find(opt => opt.value === status);
+    return option ? option.label : 'Aucune invitation';
   }
 
  

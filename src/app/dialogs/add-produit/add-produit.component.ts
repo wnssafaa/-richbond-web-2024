@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { ProduitService, Produit, ProduitImageDTO } from '../../services/produit.service';
+import { ProduitService, Produit } from '../../services/produit.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,7 +10,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MarqueProduit } from '../../enum/MarqueProduit';
 
 @Component({
@@ -26,8 +25,7 @@ import { MarqueProduit } from '../../enum/MarqueProduit';
     MatButtonModule,
     CommonModule,
     MatInputModule,
-    MatIconModule,
-    MatProgressSpinnerModule
+    MatIconModule
   ],
   templateUrl: './add-produit.component.html',
   styleUrls: ['./add-produit.component.css']
@@ -97,9 +95,7 @@ export class AddProduitComponent implements OnInit {
   ];
  marques: string[] = Object.values(MarqueProduit);
   selectedFile: File | null = null;
-  currentImage: ProduitImageDTO | null = null;
   previewUrl: string | ArrayBuffer | null = null;
-  isUploading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -128,12 +124,13 @@ export class AddProduitComponent implements OnInit {
           sousMarques: produit.sousMarques,
           codeEAN: produit.codeEAN,
           designationArticle: produit.designationArticle,
-          disponible: produit.disponible
+          disponible: produit.disponible,
+          image: produit.image // base64 string
         });
 
-        // Charger l'image principale si elle existe
-        if (produit.id) {
-          this.loadPrimaryImage(produit.id);
+        // Affichage image existante
+        if (produit.image) {
+          this.previewUrl = 'data:image/jpeg;base64,' + produit.image;
         }
       });
     }
@@ -144,9 +141,10 @@ export class AddProduitComponent implements OnInit {
       marque: ['', Validators.required],
       reference: [''],
       categorie: ['', Validators.required],
+      image: [''],
       article: ['', Validators.required],
       type: ['', Validators.required],
-      dimensions: [''],
+      dimensions: ['', Validators.required],
       prix: ['', [Validators.required, Validators.min(0.01)]],
       famille: ['', Validators.required],
       sousMarques: ['', Validators.required],
@@ -159,58 +157,37 @@ export class AddProduitComponent implements OnInit {
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      // Validation du fichier
-      if (!this.validateImageFile(file)) {
-        return;
-      }
-
       this.selectedFile = file;
 
-      // Créer une preview locale
+      // Créer un aperçu de l'image UNIQUEMENT (ne pas mettre en base64 dans le formulaire)
       const reader = new FileReader();
       reader.onload = () => {
-        this.previewUrl = reader.result;
+        this.previewUrl = reader.result; // Juste pour l'affichage
+        // ❌ NE PLUS METTRE L'IMAGE BASE64 DANS LE FORMULAIRE
+        // Le fichier sera envoyé séparément avec FormData après la création du produit
       };
       reader.readAsDataURL(file);
+      
+      console.log('📁 Fichier sélectionné:', file.name, 'Taille:', file.size, 'bytes');
     }
-  }
-
-  private validateImageFile(file: File): boolean {
-    // Vérifier le type de fichier
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      this.snackBar.open('Type de fichier non supporté. Utilisez JPG, PNG, GIF ou WebP.', 'Fermer', { duration: 3000 });
-      return false;
-    }
-
-    // Vérifier la taille (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
-      this.snackBar.open('Fichier trop volumineux. Taille maximale: 5MB.', 'Fermer', { duration: 3000 });
-      return false;
-    }
-
-    return true;
   }
 
   clearFile() {
-    // Nettoyer les URLs blob pour éviter les fuites mémoire
-    if (this.previewUrl && typeof this.previewUrl === 'string' && this.previewUrl.startsWith('blob:')) {
-      URL.revokeObjectURL(this.previewUrl);
-    }
-    
     this.selectedFile = null;
     this.previewUrl = null;
-    this.currentImage = null;
+    this.produitForm.patchValue({ image: null });
+    this.produitForm.get('image')?.updateValueAndValidity();
   }
 
   onSubmit() {
     if (this.produitForm.invalid) {
+      // Marquer tous les champs comme touchés pour afficher les erreurs
+      this.markFormGroupTouched(this.produitForm);
+      this.snackBar.open('Veuillez remplir tous les champs obligatoires', 'Fermer', { duration: 3000 });
       return;
     }
 
-    this.isUploading = true;
-
+    // ⚠️ NE PAS INCLURE L'IMAGE BASE64 DANS LE JSON
     const produit: Produit = {
       marque: this.produitForm.get('marque')?.value,
       reference: this.produitForm.get('reference')?.value,
@@ -224,6 +201,8 @@ export class AddProduitComponent implements OnInit {
       codeEAN: this.produitForm.get('codeEAN')?.value,
       designationArticle: this.produitForm.get('designationArticle')?.value,
       disponible: this.produitForm.get('disponible')?.value,
+      // ❌ NE PAS ENVOYER image en base64
+      // image: this.produitForm.get('image')?.value,
       id: this.isEditMode ? this.editId : undefined
     };
 
@@ -231,99 +210,73 @@ export class AddProduitComponent implements OnInit {
       // Mode édition
       this.produitService.updateProduit(this.editId, produit).subscribe({
         next: (response) => {
-          // Si une nouvelle image est sélectionnée, l'uploader
+          // Si un nouveau fichier a été sélectionné, l'uploader
           if (this.selectedFile) {
             this.uploadImageForProduct(response.id!);
           } else {
-            this.isUploading = false;
-          this.snackBar.open('Produit modifié avec succès', 'Fermer', { duration: 3000 });
-         this.dialogRef.close(response); 
+            this.snackBar.open('Produit modifié avec succès', 'Fermer', { duration: 3000 });
+            this.dialogRef.close(response);
           }
         },
         error: (error) => {
-          this.isUploading = false;
           console.error('Erreur lors de la modification du produit', error);
           this.snackBar.open('Erreur lors de la modification du produit', 'Fermer', { duration: 3000 });
         }
       });
     } else {
       // Mode création
-     this.produitService.createProduit(produit).subscribe({
-  next: (response) => {
-          // Si une image est sélectionnée, l'uploader
-          if (this.selectedFile) {
-            this.uploadImageForProduct(response.id!);
+      this.produitService.createProduit(produit).subscribe({
+        next: (response) => {
+          console.log('✅ Produit créé avec succès:', response);
+          
+          // Si un fichier image a été sélectionné, l'uploader maintenant
+          if (this.selectedFile && response.id) {
+            this.uploadImageForProduct(response.id);
           } else {
-            this.isUploading = false;
-    this.snackBar.open('Produit ajouté avec succès', 'Fermer', { duration: 3000 });
+            this.snackBar.open('Produit ajouté avec succès', 'Fermer', { duration: 3000 });
             this.dialogRef.close(response);
           }
-  },
+        },
         error: (error) => {
-          this.isUploading = false;
           console.error('Erreur lors de l\'ajout du produit', error);
-          this.snackBar.open('Erreur lors de l\'ajout du produit', 'Fermer', { duration: 3000 });
+          this.snackBar.open('Erreur lors de l\'ajout du produit: ' + (error.error?.message || error.message), 'Fermer', { duration: 5000 });
         }
       });
     }
   }
 
+  /**
+   * Uploader l'image pour un produit (après sa création/modification)
+   */
   private uploadImageForProduct(produitId: number): void {
     if (!this.selectedFile) {
-      this.isUploading = false;
       return;
     }
 
-    // Utiliser le nouveau système d'upload de fichiers
-    this.produitService.uploadImage(produitId, this.selectedFile, 'Image principale du produit').subscribe({
+    console.log('📤 Upload de l\'image pour le produit:', produitId);
+    
+    this.produitService.uploadImage(produitId, this.selectedFile).subscribe({
       next: (imageResponse) => {
-        this.isUploading = false;
-        const successMessage = this.isEditMode ? 'Produit modifié avec succès' : 'Produit ajouté avec succès';
-        this.snackBar.open(successMessage, 'Fermer', { duration: 3000 });
-        
-        // Retourner les données du produit avec les informations de l'image
-        this.dialogRef.close({ 
-          ...this.produitForm.value, 
-          id: produitId,
-          imageData: imageResponse,
-          imageUrl: this.produitService.getImageUrl(produitId, imageResponse.id!),
-          thumbnailUrl: this.produitService.getThumbnailUrl(produitId, imageResponse.id!)
-        });
+        console.log('✅ Image uploadée avec succès:', imageResponse);
+        this.snackBar.open('Produit et image ajoutés avec succès', 'Fermer', { duration: 3000 });
+        this.dialogRef.close({ id: produitId, image: imageResponse });
       },
       error: (error) => {
-        this.isUploading = false;
-        console.error('Erreur lors de l\'upload de l\'image', error);
-        this.snackBar.open('Produit créé mais erreur lors de l\'upload de l\'image', 'Fermer', { duration: 5000 });
-        
-        // Fermer le dialog même en cas d'erreur d'upload d'image
-        this.dialogRef.close({ 
-          ...this.produitForm.value, 
-          id: produitId
-        });
+        console.error('❌ Erreur lors de l\'upload de l\'image:', error);
+        this.snackBar.open('Produit ajouté mais erreur lors de l\'upload de l\'image', 'Fermer', { duration: 5000 });
+        // Fermer quand même le dialog avec le produit créé
+        this.dialogRef.close({ id: produitId });
       }
     });
   }
 
-  private loadPrimaryImage(produitId: number): void {
-    // Charger l'image principale du produit depuis l'API
-    this.produitService.getImageByProduit(produitId).subscribe({
-      next: (imageData) => {
-        if (imageData && imageData.id) {
-          // Charger l'image comme blob URL pour l'affichage
-          this.produitService.loadImageAsBlobUrl(produitId, imageData.id).subscribe({
-            next: (blobUrl) => {
-              this.previewUrl = blobUrl;
-              this.currentImage = imageData;
-            },
-            error: (error) => {
-              console.warn('Impossible de charger l\'image blob pour le produit', produitId, error);
-            }
-          });
-        }
-      },
-      error: (error) => {
-        console.log('Aucune image trouvée pour le produit', produitId);
-        // Pas d'erreur, le produit n'a simplement pas d'image
+  private markFormGroupTouched(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      control?.markAsTouched();
+
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
       }
     });
   }

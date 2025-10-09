@@ -87,6 +87,32 @@
             </mat-select>
             <mat-error *ngIf="merchForm.get('superviseurId')?.hasError('required')">Le superviseur est obligatoire</mat-error>
           </mat-form-field>
+                      <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Statut d'Invitation</mat-label>
+              <mat-select 
+                [(ngModel)]="selectedInviteStatus" 
+                (selectionChange)="onInviteStatusChange()"
+                placeholder="Sélectionner un statut">
+                
+                <!-- Option null (aucune invitation) -->
+                <mat-option [value]="null">
+                  <span class="status-option">
+                    <mat-icon>person</mat-icon>
+                    <span>Aucune invitation</span>
+                    <small>Merchandiseur actif normal</small>
+                  </span>
+                </mat-option>
+                
+                <!-- Options avec statuts -->
+                <mat-option *ngFor="let option of inviteStatusOptions.slice(1)" [value]="option.value">
+                  <span class="status-option">
+                    <mat-icon [class]="getStatusClass(option.value)">{{ getStatusIcon(option.value) }}</mat-icon>
+                    <span>{{ option.label }}</span>
+                    <small>{{ option.description }}</small>
+                  </span>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
         </div>
 
         <div class="form-row">
@@ -145,7 +171,7 @@
     </mat-error>
   </mat-form-field>
 </div>
-        <!-- BUTTONS -->
+
         <div class="form-actions">
           <button mat-raised-button color="primary" type="submit">
             {{ isEditMode ? 'Modifier' : 'Ajouter' }}

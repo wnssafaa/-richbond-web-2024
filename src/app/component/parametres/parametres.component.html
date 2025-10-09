@@ -1,7 +1,7 @@
 <div class="header">
   <img src="assets/logo.png" alt="Richbond Logo" class="logo" />
   <div class="header-icons">
-    <mat-icon style="color: #0e6af4 !important">notifications_none</mat-icon>
+    <mat-icon>notifications_none</mat-icon>
 
     <!-- Bouton de changement de langue -->
     <button mat-button [matMenuTriggerFor]="languageMenu" class="lang-button">
@@ -25,7 +25,7 @@
       </button>
     </mat-menu>
 
-    <mat-icon style="color: #0e6af4 !important">settings</mat-icon>
+    <mat-icon>settings</mat-icon>
   </div>
 </div>
 <div class="container">
@@ -63,13 +63,6 @@
             "COMMON.DASHBOARD" | translate
           }}</span>
         </a>
-
-        <!-- <a mat-list-item (click)="userMenuOpen = !userMenuOpen" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.USERS' | translate) : ''" matTooltipPosition="right">
-          <mat-icon matListItemIcon>people</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.USERS' | translate }}</span>
-          <mat-icon style="margin-left:auto;" [class.text-hidden]="!menuOpen">{{ userMenuOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
-        </a> -->
         <a
           mat-list-item
           routerLink="/login-history"
@@ -83,6 +76,7 @@
             "LOGIN_HISTORY.TITLE" | translate
           }}</span>
         </a>
+
         <a
           mat-list-item
           routerLink="/users"
@@ -225,7 +219,6 @@
         </a>
       </mat-nav-list>
     </div>
-
     <div class="content">
       <div class="page-header">
         <div class="page-header-left">
@@ -242,9 +235,7 @@
       </div>
 
       <mat-card>
-        <mat-card-header>
-          <mat-card-title>Paramètres</mat-card-title>
-        </mat-card-header>
+     
 
         <mat-card-content>
           <!-- Affiche le formulaire de modification du profil si showProfile est vrai -->

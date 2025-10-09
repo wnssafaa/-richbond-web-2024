@@ -253,3 +253,4 @@ Voir le fichier `src/app/services/produit-image-usage-example.ts` pour un exempl
 - CORS configuré pour localhost:4200 et localhost:8081
 
 
+

@@ -91,3 +91,4 @@ http://localhost:8080/api/produits/2/images/2
 2. **Si ça ne marche pas :** Le problème est dans le backend Spring Boot
 
 **Dites-moi le résultat de vos tests et je vous donnerai la solution appropriée !**
+

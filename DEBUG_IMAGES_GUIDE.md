@@ -134,3 +134,4 @@ Si les URLs sont correctes mais les images ne se chargent pas :
 - [ ] URLs d'images testées dans le navigateur
 
 Une fois que vous aurez testé cela, partagez-moi les logs de la console pour que je puisse identifier précisément le problème !
+

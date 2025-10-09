@@ -107,9 +107,12 @@
 </div>
 
        <div class="form-actions">
+          <!-- <button mat-raised-button color="primary" type="submit">
+            {{ isEditMode ? 'Modifier' : 'Ajouter' }}
+          </button> -->
     <button mat-raised-button 
-            color="primary" 
-            type="button"
+          
+            type="submit"
             [disabled]="isSubmitting || submitInProgress || submissionCompleted || superviseurForm.invalid"
             (click)="onSubmit($event)">
       <mat-spinner diameter="20" *ngIf="isSubmitting"></mat-spinner>

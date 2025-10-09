@@ -89,3 +89,4 @@ Votre tableau devrait maintenant afficher :
 **Votre problème d'affichage des images est maintenant résolu !** 🎉
 
 Les images des produits devraient s'afficher correctement dans votre tableau.
+

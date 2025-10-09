@@ -74,3 +74,4 @@ Write-Host "- Si l'API Produits retourne des imageData: Les images devraient s'a
 Write-Host "- Si les URLs d'images sont accessibles: Le frontend peut les charger" -ForegroundColor Gray
 Write-Host "- Si les thumbnails sont accessibles: Affichage optimisé" -ForegroundColor Gray
 Write-Host "- Vérifiez la console du navigateur pour les logs de debug" -ForegroundColor Gray
+

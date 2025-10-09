@@ -341,29 +341,37 @@
                  </div>
                </div>
 
-               <!-- Section Images -->
-               <div class="merchandiseurs-section" *ngIf="visit.images && visit.images.length > 0">
-                 <div class="section-title">
-                   <mat-icon class="section-icon">photo_library</mat-icon>
-                   <span>Photos de la Visite ({{ visit.images.length }})</span>
-                 </div>
-                 
-                 <div class="images-gallery">
-                   <div class="image-item" *ngFor="let image of visit.images; let i = index">
-                     <img 
-                       [src]="image.imageData" 
-                       [alt]="'Photo ' + (i + 1)"
-                       class="visit-image"
-                       (click)="openImageModal(image.imageData)">
-                     <div class="image-info">
-                       <span class="image-name">{{ image.fileName || 'Photo ' + (i + 1) }}</span>
-                       <span class="image-date" *ngIf="image.uploadDate">
-                         {{ formatDate(image.uploadDate.toString()) }}
-                       </span>
-                     </div>
-                   </div>
-                 </div>
-               </div>
+              <!-- Section Images -->
+              <div class="merchandiseurs-section" *ngIf="visit.images && visit.images.length > 0">
+                <div class="section-title">
+                  <mat-icon class="section-icon">photo_library</mat-icon>
+                  <span>Photos de la Visite ({{ visit.images.length }})</span>
+                </div>
+                
+                <div class="images-gallery">
+                  <div class="image-item" *ngFor="let image of visit.images; let i = index">
+                    <img 
+                      [src]="getImageUrl(image, true)" 
+                      [alt]="image.fileName || 'Photo ' + (i + 1)"
+                      attr.data-original-src="{{getImageUrl(image, false)}}"
+                      attr.data-image-id="{{image.id}}"
+                      attr.data-visit-id="{{visit?.id}}"
+                      class="visit-image"
+                      (click)="openImageModal(image)"
+                      (error)="onImageError($event)"
+                      (load)="onImageLoad($event)">
+                    <div class="image-info">
+                      <span class="image-name">{{ image.originalFileName || image.fileName || 'Photo ' + (i + 1) }}</span>
+                      <span class="image-date" *ngIf="image.uploadDate">
+                        {{ formatDate(image.uploadDate.toString()) }}
+                      </span>
+                      <span class="image-size" *ngIf="image.fileSize">
+                        {{ (image.fileSize / 1024).toFixed(1) }} KB
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
                <!-- Section Produits -->
                <div class="merchandiseurs-section" *ngIf="visit.produits && visit.produits.length > 0">

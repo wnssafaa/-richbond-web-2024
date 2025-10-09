@@ -281,7 +281,7 @@
                 "
               >
                 <span>Export </span>
-                <mat-icon>file_download</mat-icon>
+                <mat-icon style="color:white">file_download</mat-icon>
               </button>
  <button
           mat-raised-button
@@ -294,13 +294,25 @@
           <mat-icon style="color:white">view_column</mat-icon>
         </button>
 
+              <!-- ✅ Bouton d'importation -->
+              <button
+                mat-raised-button
+                class="import-button"
+                style="background-color: #455e98; color: white; margin-right: 12px; padding: 10px 15px;
+  border-radius: 20px;"
+                (click)="openImportDialog()"
+              >
+                <mat-icon style="color:white">upload_file</mat-icon>
+             Imorter
+              </button>
+
               <button
                 mat-raised-button
                 class="add-user-button"
                 style="background-color: #0a2681; color: white"
                 (click)="openAddUserDialog()"
               >
-                {{ "MERCHANDISERS.ADD_MERCH" | translate }}
+               Ajouter
               </button>
             </div>
           </div>

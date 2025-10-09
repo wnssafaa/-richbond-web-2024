@@ -129,3 +129,4 @@ Une fois que vous aurez effectué ces tests, partagez-moi :
 3. **Le résultat du test HTML** (les images s'affichent-elles ?)
 
 Avec ces informations, je pourrai identifier précisément le problème et vous donner la solution exacte !
+

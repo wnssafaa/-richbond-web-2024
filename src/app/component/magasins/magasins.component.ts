@@ -37,6 +37,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SuperveseurService } from '../../services/superveseur.service';
 import { MerchendiseurService, Merchendiseur } from '../../services/merchendiseur.service';
 import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
+import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
+import { ImportConfigService } from '../../services/import-config.service';
 @Component({
   selector: 'app-magasins',
   standalone: true,
@@ -67,7 +69,8 @@ import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customiz
     MatPaginatorModule,
     RouterModule,
     MatTooltipModule,
-    ColumnCustomizationPanelComponent
+    ColumnCustomizationPanelComponent,
+    GenericImportDialogComponent
   ],
   templateUrl: './magasins.component.html',
   styleUrl: './magasins.component.css'
@@ -226,7 +229,8 @@ enseignes = [
       private athService: AuthService,
       private superviseurService: SuperveseurService,
       private merchendiseurService: MerchendiseurService,
-      private exportService: ExportService
+      private exportService: ExportService,
+      private importConfigService: ImportConfigService
     ) {
 
 this.translate.setDefaultLang('fr');
@@ -622,6 +626,25 @@ openAddMagasinDialog(): void {
     onColumnCustomizationSave(columnConfig: any[]): void {
       this.columnConfig = columnConfig;
       this.updateDisplayedColumns();
+    }
+
+    openImportDialog(): void {
+      const config = this.importConfigService.getMagasinImportConfig();
+      const dialogRef = this.dialog.open(GenericImportDialogComponent, {
+        width: '900px',
+        maxWidth: '95vw',
+        data: { config }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result && result.success) {
+          this.loadMagasins();
+          this.snackBar.open(
+            `${result.count} magasins importés avec succès`,
+            'Fermer',
+            { duration: 5000, panelClass: ['success-snackbar'] }
+          );
+        }
+      });
     }
 
      userMenuOpen: boolean = false;

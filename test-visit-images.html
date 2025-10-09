@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Images Visites - Diagnostic</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { border-color: #4CAF50; background-color: #f1f8e9; }
+        .error { border-color: #f44336; background-color: #ffebee; }
+        .warning { border-color: #ff9800; background-color: #fff3e0; }
+        button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background-color: #1976D2; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .image-test {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .image-test img {
+            max-width: 200px;
+            max-height: 150px;
+            border: 1px solid #ddd;
+            margin: 5px;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-success { background-color: #4CAF50; }
+        .status-error { background-color: #f44336; }
+        .status-warning { background-color: #ff9800; }
+        .status-pending { background-color: #ccc; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Diagnostic des Images de Visites</h1>
+    
+    <div class="container">
+        <h2>📋 Instructions</h2>
+        <ol>
+            <li><strong>Connectez-vous</strong> sur <a href="http://localhost:4200" target="_blank">http://localhost:4200</a></li>
+            <li><strong>Copiez votre token</strong> depuis la console (F12 → Application → Local Storage → token)</li>
+            <li><strong>Collez le token</strong> dans le champ ci-dessous</li>
+            <li><strong>Lancez les tests</strong> pour diagnostiquer le problème</li>
+        </ol>
+        
+        <div class="test-section">
+            <h3>🔑 Configuration</h3>
+            <label for="token">Token d'authentification :</label><br>
+            <textarea id="token" rows="3" cols="80" placeholder="Collez votre token JWT ici..."></textarea><br><br>
+            
+            <label for="visitId">ID de la visite à tester :</label><br>
+            <input type="number" id="visitId" value="1" min="1">
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>🧪 Tests de Diagnostic</h2>
+        
+        <div class="test-section">
+            <h3><span class="status-indicator status-pending"></span>Test 1: Backend Accessible</h3>
+            <button onclick="testBackendAccess()">Tester l'accès au backend</button>
+            <div id="backendResult" class="result" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3><span class="status-indicator status-pending"></span>Test 2: Visites Disponibles</h3>
+            <button onclick="testVisitsList()">Lister toutes les visites</button>
+            <div id="visitsResult" class="result" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3><span class="status-indicator status-pending"></span>Test 3: Images d'une Visite</h3>
+            <button onclick="testVisitImages()">Récupérer les images de la visite</button>
+            <div id="imagesResult" class="result" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3><span class="status-indicator status-pending"></span>Test 4: URLs des Images</h3>
+            <button onclick="testImageUrls()">Tester les URLs des images</button>
+            <div id="urlsResult" class="result" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3><span class="status-indicator status-pending"></span>Test 5: Affichage des Images</h3>
+            <button onclick="testImageDisplay()">Tester l'affichage des images</button>
+            <div id="displayResult" class="result" style="display: none;"></div>
+            <div id="imageDisplay" style="display: none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>🔧 Tests Rapides</h2>
+        <button onclick="runAllTests()" style="background-color: #4CAF50;">🚀 Lancer Tous les Tests</button>
+        <button onclick="clearResults()" style="background-color: #ff9800;">🧹 Effacer les Résultats</button>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+        
+        function getToken() {
+            const token = document.getElementById('token').value.trim();
+            if (!token) {
+                alert('⚠️ Veuillez d\'abord coller votre token d\'authentification !');
+                return null;
+            }
+            return token;
+        }
+        
+        function getVisitId() {
+            return document.getElementById('visitId').value;
+        }
+        
+        function updateStatus(sectionId, status, message) {
+            const indicator = document.querySelector(`#${sectionId}`).previousElementSibling.querySelector('.status-indicator');
+            indicator.className = `status-indicator status-${status}`;
+        }
+        
+        function showResult(elementId, content, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.textContent = content;
+            element.className = `result ${type}`;
+        }
+        
+        async function testBackendAccess() {
+            const resultDiv = 'backendResult';
+            showResult(resultDiv, '🔄 Test en cours...', 'warning');
+            updateStatus(resultDiv, 'pending', '');
+            
+            try {
+                const response = await fetch(`${API_BASE}/visits`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    showResult(resultDiv, `✅ Backend accessible !\nStatus: ${response.status}\nHeaders: ${JSON.stringify([...response.headers.entries()], null, 2)}`, 'success');
+                    updateStatus(resultDiv, 'success', '');
+                } else {
+                    showResult(resultDiv, `❌ Erreur backend !\nStatus: ${response.status}\nMessage: ${response.statusText}`, 'error');
+                    updateStatus(resultDiv, 'error', '');
+                }
+            } catch (error) {
+                showResult(resultDiv, `❌ Impossible d'accéder au backend !\nErreur: ${error.message}\n\nVérifiez que:\n- Le backend Spring Boot est démarré\n- Le port 8080 est accessible`, 'error');
+                updateStatus(resultDiv, 'error', '');
+            }
+        }
+        
+        async function testVisitsList() {
+            const token = getToken();
+            if (!token) return;
+            
+            const resultDiv = 'visitsResult';
+            showResult(resultDiv, '🔄 Récupération des visites...', 'warning');
+            updateStatus(resultDiv, 'pending', '');
+            
+            try {
+                const response = await fetch(`${API_BASE}/visits`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const visits = await response.json();
+                    showResult(resultDiv, `✅ ${visits.length} visite(s) trouvée(s) !\n\n${JSON.stringify(visits, null, 2)}`, 'success');
+                    updateStatus(resultDiv, 'success', '');
+                } else {
+                    showResult(resultDiv, `❌ Erreur lors de la récupération des visites !\nStatus: ${response.status}\nMessage: ${response.statusText}`, 'error');
+                    updateStatus(resultDiv, 'error', '');
+                }
+            } catch (error) {
+                showResult(resultDiv, `❌ Erreur !\n${error.message}`, 'error');
+                updateStatus(resultDiv, 'error', '');
+            }
+        }
+        
+        async function testVisitImages() {
+            const token = getToken();
+            if (!token) return;
+            
+            const visitId = getVisitId();
+            const resultDiv = 'imagesResult';
+            showResult(resultDiv, `🔄 Récupération des images pour la visite ${visitId}...`, 'warning');
+            updateStatus(resultDiv, 'pending', '');
+            
+            try {
+                const response = await fetch(`${API_BASE}/visits/${visitId}/images`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const images = await response.json();
+                    showResult(resultDiv, `✅ ${images.length} image(s) trouvée(s) pour la visite ${visitId} !\n\n${JSON.stringify(images, null, 2)}`, 'success');
+                    updateStatus(resultDiv, 'success', '');
+                } else if (response.status === 404) {
+                    showResult(resultDiv, `⚠️ Aucune image trouvée pour la visite ${visitId}\nStatus: ${response.status}\n\nC'est normal si cette visite n'a pas d'images.`, 'warning');
+                    updateStatus(resultDiv, 'warning', '');
+                } else {
+                    showResult(resultDiv, `❌ Erreur lors de la récupération des images !\nStatus: ${response.status}\nMessage: ${response.statusText}`, 'error');
+                    updateStatus(resultDiv, 'error', '');
+                }
+            } catch (error) {
+                showResult(resultDiv, `❌ Erreur !\n${error.message}`, 'error');
+                updateStatus(resultDiv, 'error', '');
+            }
+        }
+        
+        async function testImageUrls() {
+            const token = getToken();
+            if (!token) return;
+            
+            const visitId = getVisitId();
+            const resultDiv = 'urlsResult';
+            showResult(resultDiv, `🔄 Test des URLs d'images pour la visite ${visitId}...`, 'warning');
+            updateStatus(resultDiv, 'pending', '');
+            
+            try {
+                // D'abord récupérer la liste des images
+                const imagesResponse = await fetch(`${API_BASE}/visits/${visitId}/images`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!imagesResponse.ok) {
+                    showResult(resultDiv, `❌ Impossible de récupérer la liste des images !\nStatus: ${imagesResponse.status}`, 'error');
+                    updateStatus(resultDiv, 'error', '');
+                    return;
+                }
+                
+                const images = await imagesResponse.json();
+                let results = `📊 Test de ${images.length} URL(s) d'image(s) :\n\n`;
+                
+                for (const image of images) {
+                    const imageUrl = `${API_BASE}/visits/${visitId}/images/${image.id}`;
+                    const thumbnailUrl = `${API_BASE}/visits/${visitId}/images/${image.id}/thumbnail`;
+                    
+                    results += `🖼️ Image ${image.id}:\n`;
+                    results += `  - URL complète: ${imageUrl}\n`;
+                    results += `  - URL thumbnail: ${thumbnailUrl}\n`;
+                    
+                    // Tester l'URL de l'image complète
+                    try {
+                        const imgResponse = await fetch(imageUrl, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        results += `  - Image complète: ${imgResponse.ok ? '✅ OK' : '❌ Erreur ' + imgResponse.status}\n`;
+                    } catch (e) {
+                        results += `  - Image complète: ❌ ${e.message}\n`;
+                    }
+                    
+                    // Tester l'URL de la thumbnail
+                    try {
+                        const thumbResponse = await fetch(thumbnailUrl, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        results += `  - Thumbnail: ${thumbResponse.ok ? '✅ OK' : '❌ Erreur ' + thumbResponse.status}\n`;
+                    } catch (e) {
+                        results += `  - Thumbnail: ❌ ${e.message}\n`;
+                    }
+                    
+                    results += `\n`;
+                }
+                
+                showResult(resultDiv, results, 'success');
+                updateStatus(resultDiv, 'success', '');
+                
+            } catch (error) {
+                showResult(resultDiv, `❌ Erreur lors du test des URLs !\n${error.message}`, 'error');
+                updateStatus(resultDiv, 'error', '');
+            }
+        }
+        
+        async function testImageDisplay() {
+            const token = getToken();
+            if (!token) return;
+            
+            const visitId = getVisitId();
+            const resultDiv = 'displayResult';
+            const displayDiv = 'imageDisplay';
+            
+            showResult(resultDiv, `🔄 Test d'affichage des images pour la visite ${visitId}...`, 'warning');
+            updateStatus(resultDiv, 'pending', '');
+            
+            try {
+                const imagesResponse = await fetch(`${API_BASE}/visits/${visitId}/images`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!imagesResponse.ok) {
+                    showResult(resultDiv, `❌ Impossible de récupérer les images !\nStatus: ${imagesResponse.status}`, 'error');
+                    updateStatus(resultDiv, 'error', '');
+                    return;
+                }
+                
+                const images = await imagesResponse.json();
+                let results = `📸 Test d'affichage de ${images.length} image(s) :\n\n`;
+                
+                // Afficher les images
+                const displayElement = document.getElementById(displayDiv);
+                displayElement.style.display = 'block';
+                displayElement.innerHTML = '';
+                
+                for (const image of images) {
+                    const imageUrl = `${API_BASE}/visits/${visitId}/images/${image.id}`;
+                    const thumbnailUrl = `${API_BASE}/visits/${visitId}/images/${image.id}/thumbnail`;
+                    
+                    results += `🖼️ Image ${image.id}: ${image.originalFileName || image.fileName || 'Sans nom'}\n`;
+                    
+                    // Créer un conteneur pour chaque image
+                    const imageContainer = document.createElement('div');
+                    imageContainer.className = 'image-test';
+                    imageContainer.innerHTML = `
+                        <h4>Image ${image.id}</h4>
+                        <p><strong>Fichier:</strong> ${image.originalFileName || image.fileName || 'Sans nom'}</p>
+                        <p><strong>URL Thumbnail:</strong> ${thumbnailUrl}</p>
+                        <p><strong>URL Complète:</strong> ${imageUrl}</p>
+                        
+                        <h5>Thumbnail:</h5>
+                        <img src="${thumbnailUrl}" alt="Thumbnail ${image.id}" 
+                             onload="console.log('✅ Thumbnail ${image.id} chargée')"
+                             onerror="console.log('❌ Erreur thumbnail ${image.id}')">
+                        
+                        <h5>Image Complète:</h5>
+                        <img src="${imageUrl}" alt="Image ${image.id}" 
+                             onload="console.log('✅ Image ${image.id} chargée')"
+                             onerror="console.log('❌ Erreur image ${image.id}')">
+                    `;
+                    
+                    displayElement.appendChild(imageContainer);
+                }
+                
+                showResult(resultDiv, results, 'success');
+                updateStatus(resultDiv, 'success', '');
+                
+            } catch (error) {
+                showResult(resultDiv, `❌ Erreur lors du test d'affichage !\n${error.message}`, 'error');
+                updateStatus(resultDiv, 'error', '');
+            }
+        }
+        
+        async function runAllTests() {
+            const token = getToken();
+            if (!token) return;
+            
+            showResult('backendResult', '🚀 Lancement de tous les tests...', 'warning');
+            
+            await testBackendAccess();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testVisitsList();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testVisitImages();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testImageUrls();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testImageDisplay();
+            
+            showResult('backendResult', '🎉 Tous les tests terminés ! Consultez les résultats ci-dessous.', 'success');
+        }
+        
+        function clearResults() {
+            const resultDivs = ['backendResult', 'visitsResult', 'imagesResult', 'urlsResult', 'displayResult'];
+            resultDivs.forEach(id => {
+                document.getElementById(id).style.display = 'none';
+                document.getElementById(id).textContent = '';
+            });
+            
+            document.getElementById('imageDisplay').style.display = 'none';
+            document.getElementById('imageDisplay').innerHTML = '';
+            
+            // Reset status indicators
+            const indicators = document.querySelectorAll('.status-indicator');
+            indicators.forEach(indicator => {
+                indicator.className = 'status-indicator status-pending';
+            });
+        }
+        
+        // Auto-focus sur le champ token
+        document.getElementById('token').focus();
+    </script>
+</body>
+</html>

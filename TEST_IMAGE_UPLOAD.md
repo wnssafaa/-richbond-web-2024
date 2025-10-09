@@ -110,3 +110,4 @@ private uploadImageForProduct(produitId: number): void {
 - Le système est compatible avec l'ancien format base64 (fallback)
 - Les thumbnails sont générées automatiquement
 - La taille maximale des images est de 5MB
+
