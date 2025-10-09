@@ -404,7 +404,7 @@ export class UsersComponent implements OnInit {
     const config = this.importConfigService.getUserImportConfig();
     const dialogRef = this.dialog.open(GenericImportDialogComponent, {
       width: '900px',
-      maxWidth: '95vw',
+      maxWidth: '95vw', 
       data: { config }
     });
     
