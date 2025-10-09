@@ -47,6 +47,8 @@ import { MerchandiserDetailsDialogComponent } from '../../dialogs/merchandiser-d
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Region } from '../../enum/Region';
+import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
+import { ImportConfigService } from '../../services/import-config.service';
 const componentMap: { [key: string]: { component: any; dataKey: string } } = {
   SUPERVISEUR: { component: AddSupComponent, dataKey: 'superviseur' },
   MERCHANDISEUR_MONO: {
@@ -187,7 +189,8 @@ export class UsersComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private authService: AuthService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    private importConfigService: ImportConfigService
   ) {
     this.translate.setDefaultLang('fr');
     this.translate.use('fr');
@@ -395,6 +398,26 @@ export class UsersComponent implements OnInit {
         sheetName: 'Utilisateurs',
       }
     );
+  }
+
+  openImportDialog(): void {
+    const config = this.importConfigService.getUserImportConfig();
+    const dialogRef = this.dialog.open(GenericImportDialogComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      data: { config }
+    });
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.success) {
+        this.loadUsers(); // Recharger la liste des utilisateurs
+        this.snackBar.open(
+          `${result.count} utilisateurs importés avec succès`,
+          'Fermer',
+          { duration: 5000, panelClass: ['success-snackbar'] }
+        );
+      }
+    });
   }
 
   deleteUser(userId: number, type: string): void {

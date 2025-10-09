@@ -85,7 +85,8 @@
       "Nord": "North",
       "Orient": "East",
       "Centre": "Center"
-    }
+    },
+    "IMPORT_USERS": "Import Users"
   },
   "LOGIN_HISTORY": {
     "TITLE": "Login History",
