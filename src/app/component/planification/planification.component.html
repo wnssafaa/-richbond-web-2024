@@ -3,7 +3,6 @@
   <div class="header-icons">
     <mat-icon style="color: #0e6af4 !important">notifications_none</mat-icon>
 
-    <!-- Bouton de changement de langue -->
     <button mat-button [matMenuTriggerFor]="languageMenu" class="lang-button">
       <img
         [src]="'assets/' + (currentLanguage === 'fr' ? 'OIP.webp' : 'usa.png')"
@@ -33,7 +32,7 @@
     <!-- ✅ SIDEBAR NAVIGATION -->
     <div class="sidebar" [class.sidebar-collapsed]="!menuOpen">
       <div class="user-profile" [class.user-profile-collapsed]="!menuOpen">
-        <!-- Image dynamique : avatarUrl ou imagePath -->
+      
         <img
           [src]="avatarUrl"
           alt="Avatar"
