@@ -346,8 +346,17 @@ export class MerchendiseurComponent implements OnInit {
 
   onRegionChange(region: string) {
     this.villes = this.villesParRegion[region] || [];
-    this.selectedVille = '';
+    // Ne pas réinitialiser selectedVille pour rendre les filtres indépendants
     this.applyFilters();
+  }
+
+  initializeAllVilles(): void {
+    // Initialiser avec toutes les villes de toutes les régions pour rendre les filtres indépendants
+    const allVilles: string[] = [];
+    Object.values(this.villesParRegion).forEach(regionVilles => {
+      allVilles.push(...regionVilles);
+    });
+    this.villes = [...new Set(allVilles)]; // Supprimer les doublons
   }
 
   showFilters: any;
@@ -409,6 +418,7 @@ export class MerchendiseurComponent implements OnInit {
 
     this.loadSuperviseurs();
     this.updateDisplayedColumns();
+    this.initializeAllVilles();
   }
 
   private setupCustomFilter() {

@@ -1183,33 +1183,18 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
 }
 
 .filters-content {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  align-items: stretch;
+  align-items: start;
   width: 100%;
+  padding: 0 16px;
 }
 
-/* Styles pour les lignes de filtres */
-.filters-row {
-  display: flex;
-  gap: 16px;
-  align-items: center;
+/* Styles pour les champs de filtre */
+.filters-content mat-form-field {
   width: 100%;
-}
-
-.filters-row-1 {
-  /* Première ligne : 4 filtres */
-}
-
-.filters-row-2 {
-  /* Deuxième ligne : 4 filtres + bouton fermer */
-  justify-content: space-between;
-}
-
-.filters-row mat-form-field {
-  flex: 1 1 22%; /* 4 filtres par ligne (22% chacun) */
-  min-width: 180px;
+  min-width: 200px;
 }
 
 .filters-row .close-filters {
@@ -1218,9 +1203,10 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
 }
 
 .filters-content .close-filters {
-  align-self: center;
+  grid-column: 1 / -1; /* Prend toute la largeur de la grille */
+  justify-self: center;
   height: 40px;
-  margin-bottom: 20px;
+  margin-top: 16px;
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -1228,7 +1214,10 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  padding: 8px 16px;
 }
 
 /* Style pour les boutons de suppression de filtre à l'intérieur du champ */
@@ -1280,8 +1269,9 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
     margin-left: 0;
   }
 
-  .filters-content mat-form-field {
-    flex: 1 1 45%; /* deux par ligne si possible */
+  /* Grille 3 colonnes sur tablettes */
+  .filters-content {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -1311,13 +1301,13 @@ mat-nav-list a[mat-list-item]:has(mat-icon[style*="color: #ff0022"]) span[matLis
     padding: 12px 0;
   }
 
-  .filters-row {
-    flex-direction: column;
+  /* Grille 1 colonne sur mobiles */
+  .filters-content {
+    grid-template-columns: 1fr;
     gap: 12px;
   }
 
-  .filters-row mat-form-field {
-    flex: 1 1 100%; /* 1 par ligne */
+  .filters-content mat-form-field {
     min-width: 100%;
   }
 

@@ -612,17 +612,36 @@
 
       <div *ngIf="selectedTab === 'map'">
         <div class="map-section">
-          <div
-            class="map-header"
-            style="
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              margin-bottom: 15px;
-            "
-          >
-            <h3 style="margin: 0; color: #333">Carte des magasins</h3>
-            <div style="display: flex; gap: 10px">
+          <!-- 🔍 Barre de filtres pour la carte -->
+          <div class="filters-container">
+            <div class="main-toolbar">
+              <div class="main-toolbar-content">
+                <!-- Section gauche : Recherche et Filtre -->
+                <div class="left-controls">
+                  <div class="custom-search-box">
+                    <input
+                      type="text"
+                      placeholder="Rechercher un magasin..."
+                      [(ngModel)]="searchTerm"
+                      (keyup)="onSearchChange()"
+                    />
+                    <button>
+                      <span class="material-icons" style="font-weight: bold">search</span>
+                    </button>
+                  </div>
+
+                  <button
+                    mat-stroked-button
+                    class="filter-button-custom"
+                    (click)="showAdvancedFilters = !showAdvancedFilters"
+                  >
+                    <mat-icon style="color: #8192a6; font-size: 18px">filter_list</mat-icon>
+                    <span style="color: #8192a6">{{ showAdvancedFilters ? 'Masquer les filtres' : 'Afficher les filtres' }}</span>
+                  </button>
+                </div>
+
+                <!-- Section droite : Boutons d'action -->
+                <div class="right-controls">
               <button
                 mat-icon-button
                 matTooltip="Recharger la carte et les magasins"
@@ -633,12 +652,197 @@
               </button>
               <button
                 mat-icon-button
-                matTooltip="Afficher tous les magasins sur la carte"
+                    matTooltip="Réinitialiser tous les filtres"
                 class="menu-toggle"
-                (click)="forceShowAllMagasins()"
+                    (click)="resetFilters()"
+                    *ngIf="selectedRegion || selectedVille || selectedMagasin || selectedMerchandiseur || selectedEnseigne || selectedMarque"
               >
-                <mat-icon>store</mat-icon>
+                    <mat-icon>clear_all</mat-icon>
               </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Filtres avancés (affichés conditionnellement) -->
+            <div *ngIf="showAdvancedFilters" class="filters-toolbar">
+              <div class="filters-content">
+                <!-- Première ligne : 3 filtres -->
+                <div class="filters-row filters-row-1">
+                  <!-- Filtre par région -->
+                  <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>Région</mat-label>
+                    <mat-select
+                      panelClass="filter-select"
+                      [(value)]="selectedRegion"
+                      (selectionChange)="applyFilters()"
+                    >
+                      <mat-option [value]="null">Toutes les régions</mat-option>
+                      <mat-option *ngFor="let region of regions" [value]="region">
+                        {{ region }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedRegion = null; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      *ngIf="selectedRegion"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+
+                  <!-- Filtre par ville -->
+                  <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>Ville</mat-label>
+                    <mat-select
+                      panelClass="filter-select"
+                      [(value)]="selectedVille"
+                      (selectionChange)="applyFilters()"
+                    >
+                      <mat-option [value]="null">Toutes les villes</mat-option>
+                      <mat-option *ngFor="let ville of villesOptions" [value]="ville.value">
+                        {{ ville.label }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedVille = null; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      *ngIf="selectedVille"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+
+                  <!-- Filtre par enseigne -->
+                  <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>Enseigne</mat-label>
+                    <mat-select
+                      panelClass="filter-select"
+                      [(value)]="selectedEnseigne"
+                      (selectionChange)="applyFilters()"
+                    >
+                      <mat-option [value]="null">Toutes les enseignes</mat-option>
+                      <mat-option *ngFor="let enseigne of enseigneOptions" [value]="enseigne.value">
+                        {{ enseigne.label }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedEnseigne = null; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      *ngIf="selectedEnseigne"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+
+                <!-- Deuxième ligne : 3 filtres -->
+                <div class="filters-row filters-row-2">
+                  <!-- Filtre par magasin -->
+                  <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>Magasin</mat-label>
+                    <mat-select
+                      panelClass="filter-select"
+                      [(value)]="selectedMagasin"
+                      (selectionChange)="applyFilters()"
+                    >
+                      <mat-option [value]="null">Tous les magasins</mat-option>
+                      <mat-option *ngFor="let magasin of magasinsOptions" [value]="magasin.value">
+                        {{ magasin.label }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedMagasin = null; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      *ngIf="selectedMagasin"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+
+                  <!-- Filtre par merchandiseur -->
+                  <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>Merchandiseur</mat-label>
+                    <mat-select
+                      panelClass="filter-select"
+                      [(value)]="selectedMerchandiseur"
+                      (selectionChange)="applyFilters()"
+                    >
+                      <mat-option [value]="null">Tous les merchandiseurs</mat-option>
+                      <mat-option *ngFor="let merch of merchandiseursOptions" [value]="merch.value">
+                        {{ merch.label }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedMerchandiseur = null; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      *ngIf="selectedMerchandiseur"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+
+                  <!-- Filtre par marque -->
+                  <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>Marque</mat-label>
+                    <mat-select
+                      panelClass="filter-select"
+                      [(value)]="selectedMarque"
+                      (selectionChange)="applyFilters()"
+                    >
+                      <mat-option [value]="null">Toutes les marques</mat-option>
+                      <mat-option *ngFor="let marque of marqueOptions" [value]="marque.value">
+                        {{ marque.label }}
+                      </mat-option>
+                    </mat-select>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      (click)="selectedMarque = null; applyFilters()"
+                      class="clear-filter-btn"
+                      tabindex="-1"
+                      *ngIf="selectedMarque"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="map-header"
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 15px;
+              margin-top: 15px;
+            "
+          >
+            <h3 style="margin: 0; color: #333">
+              🗺️ Carte des magasins
+              <span *ngIf="selectedRegion || selectedVille || selectedMagasin || selectedMerchandiseur || selectedEnseigne || selectedMarque" 
+                    style="font-size: 0.8em; color: #3b45ca; font-weight: normal;">
+                (filtré)
+              </span>
+            </h3>
+            <div style="display: flex; gap: 10px">
               <button
                 mat-icon-button
                 matTooltip="Afficher les magasins avec coordonnées espacées (test)"
@@ -654,14 +858,6 @@
                 (click)="testShowMagasinsWithRealCoords()"
               >
                 <mat-icon>location_on</mat-icon>
-              </button>
-              <button
-                mat-icon-button
-                matTooltip="Utiliser l'ancienne logique de marqueurs"
-                class="menu-toggle"
-                (click)="updateMapMarkers()"
-              >
-                <mat-icon>restore</mat-icon>
               </button>
               <button
                 mat-icon-button

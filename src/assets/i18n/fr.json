@@ -134,7 +134,16 @@
     "NAME": "Nom",
     "SUPERVISOR": "Superviseur",
     "ASSIGNED_STORES": "Magasins assignés",
-    "PERFORMANCE": "Performance"
+    "PERFORMANCE": "Performance",
+    "FILTERS": {
+      "REGION": "Région",
+      "CITY": "Ville",
+      "BRAND": "Enseigne",
+      "STORE": "Magasin",
+      "PRODUCT_BRAND": "Marque",
+      "FUNCTION": "Fonction",
+      "SUPERVISOR": "Superviseur"
+    }
   },
   "STORES": {
     "TITLE": "Gestion des magasins",
@@ -147,6 +156,15 @@
     "TYPE": "Type",
     "BRAND": "Enseigne",
     "ASSIGNED_MERCH": "Merchandiseur assigné",
+    "SUPERVISOR": "Superviseur",
+    "FILTERS": {
+      "ALL_TYPES": "Tous les types",
+      "ALL_SUPERVISORS": "Tous les superviseurs",
+      "ALL_MERCHANDISERS": "Tous les merchandiseurs",
+      "ALL_CITIES": "Toutes les villes",
+      "ALL_REGIONS": "Toutes les régions",
+      "ALL_BRANDS": "Toutes les enseignes"
+    },
     "IMPORT_STORES": "Importer des magasins"
   },
   "PRODUCTS": {

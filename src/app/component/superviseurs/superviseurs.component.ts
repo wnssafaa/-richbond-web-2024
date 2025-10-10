@@ -31,6 +31,7 @@ import { AddSupComponent } from '../../dialogs/add-sup/add-sup.component';
 import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
 import { ImportConfigService } from '../../services/import-config.service';
 import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
+import { SuperviseurDetailsDialogComponent } from '../../dialogs/superviseur-details-dialog/superviseur-details-dialog.component';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Region } from '../../enum/Region';
@@ -38,8 +39,6 @@ import { MarqueProduit } from '../../enum/MarqueProduit';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { MagasinService, Magasin } from '../../services/magasin.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 
 import {
   Merchendiseur,
@@ -47,8 +46,8 @@ import {
 } from '../../services/merchendiseur.service';
 import { AuthService } from '../../services/auth.service';
 import { ExportService } from '../../services/export.service';
-import { SuperviseurDetailsDialogComponent } from '../../dialogs/superviseur-details-dialog/superviseur-details-dialog.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-superviseurs',
   standalone: true,
@@ -62,8 +61,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     TranslateModule,
     MatCheckboxModule,
     MatTooltipModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     MatToolbarModule,
     MatTableModule,
     MatIconModule,
@@ -132,7 +129,7 @@ export class SuperviseursComponent implements OnInit {
   exportToExcel(): void {
     this.exportService.exportSuperviseurs(this.dataSource.data, {
       filename: 'superviseurs',
-      sheetName: 'Superviseurs'
+      sheetName: 'Superviseurs',
     });
   }
   // Colonnes à afficher dans le tableau
@@ -157,24 +154,26 @@ export class SuperviseursComponent implements OnInit {
     { key: 'nom', label: 'Nom', visible: true },
     { key: 'prenom', label: 'Prénom', visible: true },
     { key: 'region', label: 'Région', visible: true },
-    { key: 'villeIntervention', label: 'Ville d\'intervention', visible: true },
+    { key: 'villeIntervention', label: "Ville d'intervention", visible: true },
     { key: 'magasin', label: 'Magasins', visible: true },
     { key: 'merchandiseurs', label: 'Merchandiseurs', visible: true },
     { key: 'enseigne', label: 'Enseigne', visible: true },
     { key: 'telephone', label: 'Téléphone', visible: true },
-    { key: 'dateIntegration', label: 'Date d\'intégration', visible: true },
+    { key: 'dateIntegration', label: "Date d'intégration", visible: true },
     { key: 'dateSortie', label: 'Date de sortie', visible: true },
-    { key: 'actions', label: 'Actions', visible: true }
+    { key: 'actions', label: 'Actions', visible: true },
   ];
   showFilters: boolean = false;
   selectedRegion: string = '';
   selectedVille: string = '';
-  selectedEnseigne: string = '';
+
+  // selectedEnseigne: string = '';
+
   selectedMagasin: string = '';
+
   selectedMarque: string = '';
+
   selectedMerchandiseur: string = '';
-  selectedDateDebut: Date | null = null;
-  selectedDateSortie: Date | null = null;
 
   // Listes pour les filtres
 
@@ -217,6 +216,7 @@ export class SuperviseursComponent implements OnInit {
     }
   }
   villesDisponibles: string[] = [];
+  allVilles: string[] = [];
   regionVillesMap: { [key in Region]: string[] } = {
     [Region.SUD]: ['Assa', 'Zag', 'Tata', 'Akka', 'Foum Zguid'],
     [Region.NORD]: [
@@ -343,20 +343,27 @@ export class SuperviseursComponent implements OnInit {
 
     [Region.DAKHLA_OUED_ED_DAHAB]: ['Dakhla', 'Aousserd'],
   };
-  onRegionChange(selectedRegion: string): void {
+  onRegionChange(selectedRegion: Region): void {
     this.selectedRegion = selectedRegion;
-    // Ne pas vider selectedVille automatiquement, laisser l'utilisateur choisir
+    this.villes = this.regionVillesMap[selectedRegion] || [];
+    this.selectedVille = '';
     this.applyFilters();
   }
 
-  // Méthode pour initialiser toutes les villes disponibles
-  initializeAllVilles(): void {
-    const allVilles: string[] = [];
-    Object.values(this.regionVillesMap).forEach(villes => {
-      allVilles.push(...villes);
+  onRegionFilterChange(selectedRegion: Region): void {
+    this.selectedRegion = selectedRegion;
+    // Ne pas réinitialiser la ville sélectionnée pour rendre les filtres indépendants
+    this.applyFilters();
+  }
+
+  loadAllVilles(): void {
+    // Charger toutes les villes de toutes les régions
+    this.allVilles = [];
+    Object.values(this.regionVillesMap).forEach((villes) => {
+      this.allVilles.push(...villes);
     });
-    // Supprimer les doublons et trier
-    this.villesDisponibles = [...new Set(allVilles)].sort();
+    // Supprimer les doublons
+    this.allVilles = [...new Set(this.allVilles)];
   }
 
   applyFilters() {
@@ -364,17 +371,20 @@ export class SuperviseursComponent implements OnInit {
       searchText: this.searchText.toLowerCase(),
       region: this.selectedRegion,
       ville: this.selectedVille,
+
       enseigne: this.selectedEnseigne,
+
       magasin: this.selectedMagasin,
+
       marque: this.selectedMarque,
+
       marchandiseur: this.selectedMerchandiseur,
-      dateDebut: this.selectedDateDebut?.toISOString(),
-      dateSortie: this.selectedDateSortie?.toISOString(),
     });
   }
   regions: string[] = Object.values(Region);
   villes: string[] = [];
   profils: string[] = [];
+  selectedEnseigne: string = '';
   selectedProfil: string = '';
   constructor(
     @Inject(SuperveseurService) private superviseurService: SuperveseurService,
@@ -418,10 +428,10 @@ export class SuperviseursComponent implements OnInit {
     this.loadMagasins();
 
     this.loadMerchandisers();
+    this.loadAllVilles();
 
     this.setupCustomFilter();
     this.updateDisplayedColumns();
-    this.initializeAllVilles(); // Initialiser toutes les villes disponibles
   }
 
   ngAfterViewInit() {
@@ -430,52 +440,11 @@ export class SuperviseursComponent implements OnInit {
 
   loadSuperviseurs() {
     this.superviseurService.getAll().subscribe((data: Superviseur[]) => {
-      console.log('Superviseurs chargés :', data);
+      console.log('Superviseurs chargés :', data); // AJOUTE CECI
       this.superviseurs = data;
-      this.createExpandedDataSource();
+      this.dataSource.data = data;
+      this.dataSource.paginator = this.paginator;
     });
-  }
-
-  // Méthode pour créer une ligne par superviseur-merchandiser
-  createExpandedDataSource(): void {
-    const expandedData: any[] = [];
-
-    this.superviseurs.forEach((superviseur) => {
-      if (superviseur.merchendiseurs && superviseur.merchendiseurs.length > 0) {
-        // Si le superviseur a des merchandiseurs, créer une ligne pour chaque merchandiseur
-        superviseur.merchendiseurs.forEach((merchandiseur) => {
-          const expandedSuperviseur = {
-            ...superviseur,
-            uniqueKey: `${superviseur.id}_${merchandiseur.id}`, // Clé unique pour chaque ligne
-            merchandiseurId: merchandiseur.id,
-            merchandiseurNom: merchandiseur.nom,
-            merchandiseurPrenom: merchandiseur.prenom,
-            merchandiseurEmail: merchandiseur.email,
-            merchandiseurTelephone: merchandiseur.telephone,
-            merchandiseurRegion: merchandiseur.region,
-            merchandiseurVille: merchandiseur.ville
-          };
-          expandedData.push(expandedSuperviseur);
-        });
-      } else {
-        // Si le superviseur n'a pas de merchandiseurs, créer une ligne sans merchandiseur
-        const expandedSuperviseur = {
-          ...superviseur,
-          uniqueKey: `${superviseur.id}_no_merchandiseur`,
-          merchandiseurId: null,
-          merchandiseurNom: 'Aucun merchandiseur',
-          merchandiseurPrenom: '',
-          merchandiseurEmail: '',
-          merchandiseurTelephone: '',
-          merchandiseurRegion: '',
-          merchandiseurVille: ''
-        };
-        expandedData.push(expandedSuperviseur);
-      }
-    });
-
-    this.dataSource.data = expandedData;
-    this.dataSource.paginator = this.paginator;
   }
 
   loadMagasins(): void {
@@ -492,28 +461,30 @@ export class SuperviseursComponent implements OnInit {
     );
   }
   getMerchandiseurEnseignes(superviseur: Superviseur): string[] {
-    if (!superviseur.merchendiseurs || superviseur.merchendiseurs.length === 0) return [];
-    
+    if (!superviseur.merchendiseurs || superviseur.merchendiseurs.length === 0)
+      return [];
+
     const enseignes: string[] = [];
-    superviseur.merchendiseurs.forEach(merch => {
+    superviseur.merchendiseurs.forEach((merch) => {
       if (merch.enseignes && merch.enseignes.length > 0) {
         enseignes.push(...merch.enseignes);
       }
     });
-    
+
     // Retourner les enseignes uniques
     return [...new Set(enseignes)];
   }
-    getMerchandiseurMagasins(superviseur: Superviseur): string[] {
-    if (!superviseur.merchendiseurs || superviseur.merchendiseurs.length === 0) return [];
-    
+  getMerchandiseurMagasins(superviseur: Superviseur): string[] {
+    if (!superviseur.merchendiseurs || superviseur.merchendiseurs.length === 0)
+      return [];
+
     const magasins: string[] = [];
-    superviseur.merchendiseurs.forEach(merch => {
+    superviseur.merchendiseurs.forEach((merch) => {
       if (merch.magasinNoms && merch.magasinNoms.length > 0) {
         magasins.push(...merch.magasinNoms);
       }
     });
-    
+
     // Retourner les magasins uniques
     return [...new Set(magasins)];
   }
@@ -535,22 +506,21 @@ export class SuperviseursComponent implements OnInit {
   }
 
   private setupCustomFilter() {
-    this.dataSource.filterPredicate = (data: any, filter: string) => {
+    this.dataSource.filterPredicate = (data: Superviseur, filter: string) => {
       const filterObj = JSON.parse(filter);
 
       const matchesSearch =
         !filterObj.searchText ||
         data.nom?.toLowerCase().includes(filterObj.searchText) ||
         data.prenom?.toLowerCase().includes(filterObj.searchText) ||
-        data.email?.toLowerCase().includes(filterObj.searchText) ||
-        data.merchandiseurNom?.toLowerCase().includes(filterObj.searchText) ||
-        data.merchandiseurPrenom?.toLowerCase().includes(filterObj.searchText);
+        data.email?.toLowerCase().includes(filterObj.searchText);
 
       const matchesRegion =
         !filterObj.region || data.region === filterObj.region;
 
-      // Filtre ville indépendant de la région
       const matchesVille = !filterObj.ville || data.ville === filterObj.ville;
+
+      // Pour les superviseurs, on peut filtrer par magasin via la propriété magasin (string)
 
       const matchesMagasin =
         !filterObj.magasin ||
@@ -558,6 +528,8 @@ export class SuperviseursComponent implements OnInit {
           data.magasin &&
             data.magasin.toLowerCase().includes(filterObj.magasin.toLowerCase())
         );
+
+      // Logique de filtrage par marque
 
       const matchesMarque =
         !filterObj.marque ||
@@ -568,6 +540,8 @@ export class SuperviseursComponent implements OnInit {
               .includes(filterObj.marque.toLowerCase())
         );
 
+      // Pour les superviseurs, on peut filtrer par enseigne via la propriété magasin
+
       const matchesEnseigne =
         !filterObj.enseigne ||
         Boolean(
@@ -577,19 +551,18 @@ export class SuperviseursComponent implements OnInit {
               .includes(filterObj.enseigne.toLowerCase())
         );
 
+      // Logique de filtrage par marchandiseur
+
       const matchesMerchandiseur =
         !filterObj.merchandiseur ||
         Boolean(
-          data.merchandiseurNom &&
-            data.merchandiseurNom.toLowerCase().includes(filterObj.merchandiseur.toLowerCase())
+          data.merchendiseurs &&
+            data.merchendiseurs.some((merch) =>
+              `${merch.nom} ${merch.prenom}`
+                .toLowerCase()
+                .includes(filterObj.merchandiseur.toLowerCase())
+            )
         );
-
-      // Filtres par date
-      const matchesDateDebut = !filterObj.dateDebut || 
-        this.matchesExactDate(data.dateIntegration, filterObj.dateDebut);
-
-      const matchesDateSortie = !filterObj.dateSortie || 
-        this.matchesExactDate(data.dateSortie, filterObj.dateSortie);
 
       return (
         matchesSearch &&
@@ -598,25 +571,9 @@ export class SuperviseursComponent implements OnInit {
         matchesEnseigne &&
         matchesMagasin &&
         matchesMarque &&
-        matchesMerchandiseur &&
-        matchesDateDebut &&
-        matchesDateSortie
+        matchesMerchandiseur
       );
     };
-  }
-
-  // Méthode utilitaire pour vérifier si une date correspond exactement
-  private matchesExactDate(date: Date | string | null | undefined, filterDate: string | null): boolean {
-    if (!filterDate) return true;
-    if (!date) return false;
-
-    const checkDate = new Date(date);
-    const filter = new Date(filterDate);
-
-    // Comparer seulement l'année, le mois et le jour (ignorer l'heure)
-    return checkDate.getFullYear() === filter.getFullYear() &&
-           checkDate.getMonth() === filter.getMonth() &&
-           checkDate.getDate() === filter.getDate();
   }
 
   // Méthode pour la sélection/désélection de toutes les lignes
@@ -817,12 +774,12 @@ export class SuperviseursComponent implements OnInit {
   // Méthodes pour la personnalisation des colonnes
   updateDisplayedColumns(): void {
     this.displayedColumns = this.columnConfig
-      .filter(col => col.visible)
-      .map(col => col.key);
+      .filter((col) => col.visible)
+      .map((col) => col.key);
   }
 
   toggleColumnVisibility(columnKey: string): void {
-    const column = this.columnConfig.find(col => col.key === columnKey);
+    const column = this.columnConfig.find((col) => col.key === columnKey);
     if (column) {
       column.visible = !column.visible;
       this.updateDisplayedColumns();

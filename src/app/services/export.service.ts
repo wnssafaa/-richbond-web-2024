@@ -321,27 +321,82 @@ export class ExportService {
    * Exporte des superviseurs vers Excel
    */
   exportSuperviseurs(superviseurs: Superviseur[], options: ExportOptions = {}): void {
-    const exportData = superviseurs.map(sup => ({
+    const exportData = superviseurs.map(sup => {
+      // Récupérer les enseignes des merchandiseurs
+      const enseignes = this.getMerchandiseurEnseignes(sup);
+      
+      // Récupérer les magasins des merchandiseurs
+      const magasins = this.getMerchandiseurMagasins(sup);
+      
+      // Récupérer les noms des merchandiseurs
+      const merchandiseurs = sup.merchendiseurs && sup.merchendiseurs.length > 0
+        ? sup.merchendiseurs.map(m => `${m.nom} ${m.prenom}`).join(', ')
+        : 'Aucun merchandiser';
+      
+      return {
       'ID': sup.id,
       'Nom': sup.nom,
       'Prénom': sup.prenom,
-      'Email': sup.email,
-      'Téléphone': sup.telephone,
       'Région': sup.region,
       'Ville': sup.ville,
+        'Magasins': magasins,
+        'Merchandiseurs': merchandiseurs,
+        'Enseignes': enseignes,
+        'Téléphone': sup.telephone,
+        'Email': sup.email,
       'Statut': sup.status,
-      'Magasin': sup.magasin || '',
       'Marques couvertes': sup.marquesCouvertes || '',
       'Date d\'intégration': sup.dateIntegration ? this.formatDate(sup.dateIntegration) : '',
       'Date de sortie': sup.dateSortie ? this.formatDate(sup.dateSortie) : '',
       'Nombre de merchandisers': sup.merchendiseurs?.length || 0
-    }));
+      };
+    });
 
     this.exportToExcel(exportData, {
       filename: 'superviseurs',
       sheetName: 'Superviseurs',
       ...options
     });
+  }
+
+  /**
+   * Récupère les enseignes des merchandiseurs d'un superviseur
+   */
+  private getMerchandiseurEnseignes(superviseur: Superviseur): string {
+    if (!superviseur.merchendiseurs || superviseur.merchendiseurs.length === 0) {
+      return 'Aucune enseigne';
+    }
+
+    const enseignes: string[] = [];
+    superviseur.merchendiseurs.forEach((merch: any) => {
+      if (merch.enseignes && merch.enseignes.length > 0) {
+        enseignes.push(...merch.enseignes);
+      }
+    });
+
+    // Retourner les enseignes uniques
+    const uniqueEnseignes = [...new Set(enseignes)];
+    return uniqueEnseignes.length > 0 ? uniqueEnseignes.join(', ') : 'Aucune enseigne';
+  }
+
+  /**
+   * Récupère les magasins des merchandiseurs d'un superviseur
+   */
+  private getMerchandiseurMagasins(superviseur: Superviseur): string {
+    if (!superviseur.merchendiseurs || superviseur.merchendiseurs.length === 0) {
+      return 'Aucun magasin';
+    }
+
+    const magasins: string[] = [];
+    superviseur.merchendiseurs.forEach((merch: any) => {
+      if (merch.magasinNoms && merch.magasinNoms.length > 0) {
+        magasins.push(...merch.magasinNoms);
+      }
+    });
+
+    // Retourner les magasins uniques
+    const uniqueMagasins = [...new Set(magasins)];
+    return uniqueMagasins.length > 0 ? uniqueMagasins.join(', ') : 'Aucun magasin';
   }
 
   /**

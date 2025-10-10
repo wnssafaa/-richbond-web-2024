@@ -4011,24 +4011,25 @@ button[mat-icon-button]:active {
 
 /* Styles pour les lignes de filtres */
 .filters-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  align-items: center;
+  align-items: start;
   width: 100%;
+  margin-bottom: 16px;
 }
 
 .filters-row-1 {
-  /* Première ligne : 4 filtres */
+  /* Première ligne : 3 filtres */
 }
 
 .filters-row-2 {
-  /* Deuxième ligne : 4 filtres + bouton fermer */
-  justify-content: space-between;
+  /* Deuxième ligne : 3 filtres */
 }
 
 .filters-row mat-form-field {
-  flex: 1 1 22%; /* 4 filtres par ligne (22% chacun) */
-  min-width: 180px;
+  width: 100%;
+  min-width: 200px;
 }
 
 .filters-row .close-filters {
@@ -4155,8 +4156,9 @@ button[mat-icon-button]:active {
     margin-left: 0;
   }
 
-  .filters-content mat-form-field {
-    flex: 1 1 45%; /* deux par ligne si possible */
+  /* Grille 2 colonnes sur tablettes */
+  .filters-row {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -4186,8 +4188,9 @@ button[mat-icon-button]:active {
     padding: 12px 0;
   }
 
+  /* Grille 1 colonne sur mobiles */
   .filters-row {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     gap: 12px;
   }
 
