@@ -1133,18 +1133,12 @@ renderEventContent(arg: any): any {
       zoom: 6,
     });
 
-    console.log('✅ Carte Leaflet créée');
+    L.tileLayer(`https://{s}.tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=${environment.thunderforestApiKey}`, {
+        attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>',
+        maxZoom: 22
+      }).addTo(this.map);
 
-    L.tileLayer(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19,
-      }
-    ).addTo(this.map);
-
-    console.log('✅ Couche de tuiles OpenStreetMap ajoutée');
+  
 
     // Attendre un peu avant de mettre à jour les marqueurs
     setTimeout(() => {

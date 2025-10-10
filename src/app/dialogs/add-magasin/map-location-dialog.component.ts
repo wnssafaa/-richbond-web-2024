@@ -218,9 +218,9 @@ export class MapLocationDialogComponent implements AfterViewInit {
       zoomControl: false
     });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(this.map);
+    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //   attribution: '© OpenStreetMap contributors'
+    // }).addTo(this.map);
 
     // Ajout du contrôle de zoom personnalisé
     L.control.zoom({
