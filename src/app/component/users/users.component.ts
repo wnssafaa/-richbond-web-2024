@@ -47,11 +47,7 @@ import { MerchandiserDetailsDialogComponent } from '../../dialogs/merchandiser-d
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Region } from '../../enum/Region';
-<<<<<<< HEAD
-=======
-import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
 import { ImportConfigService } from '../../services/import-config.service';
->>>>>>> main-web-app
 const componentMap: { [key: string]: { component: any; dataKey: string } } = {
   SUPERVISEUR: { component: AddSupComponent, dataKey: 'superviseur' },
   MERCHANDISEUR_MONO: {
@@ -596,8 +592,4 @@ export class UsersComponent implements OnInit {
       this.drawer.close();
     }
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> main-web-app

@@ -239,18 +239,12 @@ export class AddProduitComponent implements OnInit {
         },
         error: (error) => {
           console.error('Erreur lors de l\'ajout du produit', error);
-<<<<<<< HEAD
-          this.snackBar.open('Erreur lors de l\'ajout du produit', 'Fermer', { duration: 3000 });
-=======
           this.snackBar.open('Erreur lors de l\'ajout du produit: ' + (error.error?.message || error.message), 'Fermer', { duration: 5000 });
->>>>>>> main-web-app
         }
       });
     }
   }
 
-<<<<<<< HEAD
-=======
   /**
    * Uploader l'image pour un produit (après sa création/modification)
    */
@@ -276,7 +270,6 @@ export class AddProduitComponent implements OnInit {
     });
   }
 
->>>>>>> main-web-app
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);

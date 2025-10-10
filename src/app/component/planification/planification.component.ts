@@ -1248,10 +1248,6 @@ export class PlanificationComponent {
     }
   }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> main-web-app
   private initMap(): void {
     if (this.map) {
       console.log("🗑️ Suppression de l'ancienne carte");
@@ -1275,17 +1271,6 @@ export class PlanificationComponent {
     console.log('✅ Carte Leaflet créée');
 
     L.tileLayer(
-<<<<<<< HEAD
-      `https://{s}.tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=${environment.thunderforestApiKey}`,
-      {
-        attribution:
-          '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 22,
-      }
-    ).addTo(this.map);
-
-    console.log('✅ Couche de tuiles Thunderforest ajoutée');
-=======
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
         attribution:
@@ -1295,7 +1280,6 @@ export class PlanificationComponent {
     ).addTo(this.map);
 
     console.log('✅ Couche de tuiles OpenStreetMap ajoutée');
->>>>>>> main-web-app
 
     // Attendre un peu avant de mettre à jour les marqueurs
     setTimeout(() => {
@@ -1306,7 +1290,6 @@ export class PlanificationComponent {
     }, 500);
   }
 
-<<<<<<< HEAD
   deletePlanification(eventId: string): void {
     if (confirm('Voulez-vous vraiment supprimer cette planification ?')) {
       this.planificationService.deletePlanification(Number(eventId)).subscribe({
@@ -1317,56 +1300,24 @@ export class PlanificationComponent {
           if (event) {
             event.remove();
           }
-
+          
           // Mettre à jour la liste des événements
-          this.currentEvents = this.currentEvents.filter(
-            (e) => e.id !== eventId
-          );
-
+          this.currentEvents = this.currentEvents.filter(e => e.id !== eventId);
+          
           this.snackBar.open('Planification supprimée avec succès', 'Fermer', {
             duration: 3000,
-            panelClass: ['success-snackbar'],
+            panelClass: ['success-snackbar']
           });
         },
         error: (err) => {
           console.error('Erreur lors de la suppression', err);
           this.snackBar.open('Erreur lors de la suppression', 'Fermer', {
             duration: 3000,
-            panelClass: ['error-snackbar'],
+            panelClass: ['error-snackbar']
           });
-        },
+        }
       });
     }
-=======
-
-deletePlanification(eventId: string): void {
-  if (confirm('Voulez-vous vraiment supprimer cette planification ?')) {
-    this.planificationService.deletePlanification(Number(eventId)).subscribe({
-      next: () => {
-        // Supprimer l'événement du calendrier
-        const calendarApi = this.calendarComponent.getApi();
-        const event = calendarApi.getEventById(eventId);
-        if (event) {
-          event.remove();
-        }
-        
-        // Mettre à jour la liste des événements
-        this.currentEvents = this.currentEvents.filter(e => e.id !== eventId);
-        
-        this.snackBar.open('Planification supprimée avec succès', 'Fermer', {
-          duration: 3000,
-          panelClass: ['success-snackbar']
-        });
-      },
-      error: (err) => {
-        console.error('Erreur lors de la suppression', err);
-        this.snackBar.open('Erreur lors de la suppression', 'Fermer', {
-          duration: 3000,
-          panelClass: ['error-snackbar']
-        });
-      }
-    });
->>>>>>> main-web-app
   }
 
   // Gestion des événements du calendrier

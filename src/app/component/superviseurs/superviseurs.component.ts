@@ -31,6 +31,7 @@ import { AddSupComponent } from '../../dialogs/add-sup/add-sup.component';
 import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
 import { ImportConfigService } from '../../services/import-config.service';
 import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
+import { SuperviseurDetailsDialogComponent } from '../../dialogs/superviseur-details-dialog/superviseur-details-dialog.component';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Region } from '../../enum/Region';
@@ -705,8 +706,6 @@ export class SuperviseursComponent implements OnInit {
   logout(): void {
     this.athService.logout();
   }
-<<<<<<< HEAD
-=======
 
   // ✅ Méthode pour ouvrir le dialog d'importation
   openImportDialog(): void {
@@ -751,7 +750,6 @@ export class SuperviseursComponent implements OnInit {
       width: '800px',
     });
   }
->>>>>>> main-web-app
   onRowClick(event: MouseEvent, row: Superviseur): void {
     const target = event.target as HTMLElement;
 

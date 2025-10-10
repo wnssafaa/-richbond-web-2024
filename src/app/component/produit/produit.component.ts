@@ -368,19 +368,15 @@ resetFilters(): void {
           data: { mode: 'add' }
         });
     
-        // ✅ Recharger la liste automatiquement après fermeture du dialog
-        dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-<<<<<<< HEAD
-            // Le produit a déjà été créé dans le dialog, on recharge juste la liste
-=======
-            // Le produit est déjà créé dans AddProduitComponent
-            // On recharge juste la liste pour afficher le nouveau produit
-            console.log('🔄 Rechargement de la liste après ajout de produit');
->>>>>>> main-web-app
-            this.loadProduits();
-          }
-        });
+    // ✅ Recharger la liste automatiquement après fermeture du dialog
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Le produit est déjà créé dans AddProduitComponent
+        // On recharge juste la liste pour afficher le nouveau produit
+        console.log('🔄 Rechargement de la liste après ajout de produit');
+        this.loadProduits();
+      }
+    });
       }
     
       viewProduit(produit: Produit): void {

@@ -55,11 +55,7 @@
     "EDIT_USER": "Modifier le utilisateur",
     "DELETE_USER": "Supprimer le utilisateur",
     "FULL_NAME": "Nom complet",
-<<<<<<< HEAD
-    "FUNCTION": "Fonction",
-=======
     "ROLE": "Fonction",
->>>>>>> main-web-app
     "STATUS": "Statut",
     "LAST_LOGIN": "Dernière connexion",
     "ACTIONS": "Actions",
@@ -89,12 +85,8 @@
       "Nord": "Nord",
       "Orient": "Orient",
       "Centre": "Centre"
-<<<<<<< HEAD
-    }
-=======
     },
     "IMPORT_USERS": "Importer des utilisateurs"
->>>>>>> main-web-app
   },
   "LOGIN_HISTORY": {
     "TITLE": "Historique des connexions",
@@ -164,7 +156,6 @@
     "TYPE": "Type",
     "BRAND": "Enseigne",
     "ASSIGNED_MERCH": "Merchandiseur assigné",
-<<<<<<< HEAD
     "SUPERVISOR": "Superviseur",
     "FILTERS": {
       "ALL_TYPES": "Tous les types",
@@ -173,10 +164,8 @@
       "ALL_CITIES": "Toutes les villes",
       "ALL_REGIONS": "Toutes les régions",
       "ALL_BRANDS": "Toutes les enseignes"
-    }
-=======
+    },
     "IMPORT_STORES": "Importer des magasins"
->>>>>>> main-web-app
   },
   "PRODUCTS": {
     "TITLE": "Gestion des produits",

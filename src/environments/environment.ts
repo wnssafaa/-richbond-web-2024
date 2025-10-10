@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-export const environment = {
-  production: true,
-  thunderforestApiKey: '149390220ffa418f8da30dc0ab42d849', // ⚠️ Remplacez par votre vraie clé API
-};
-=======
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
@@ -22,5 +16,3 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
-
->>>>>>> main-web-app
