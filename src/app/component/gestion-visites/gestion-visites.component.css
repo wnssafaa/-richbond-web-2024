@@ -40,6 +40,27 @@
   text-transform: none;
 }
 
+/* Styles pour la colonne Produits visités */
+.produits-visites {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.produits-count {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.no-produits {
+  color: #999;
+  font-style: italic;
+}
+
 .right-controls .refresh-button {
   background-color: #0a2681;
   color: white;

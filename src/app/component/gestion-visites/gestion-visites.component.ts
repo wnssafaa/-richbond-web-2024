@@ -40,6 +40,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AfterViewInit, OnInit } from '@angular/core';
+import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
 
 // import { VisitDetailDialogComponent } from '../../dialogs/visit-detail-dialog/visit-detail-dialog.component';
 
@@ -73,7 +74,7 @@ export interface Visit {
     MatButtonModule, MatInputModule, MatFormFieldModule, MatSelectModule, MatBadgeModule,
     MatChipsModule, MatSlideToggleModule, MatMenuModule, MatListModule, RouterLink, HttpClientModule,
     MatPaginatorModule, RouterModule, MatProgressSpinnerModule, MatDatepickerModule, MatNativeDateModule,
-    MatTooltipModule
+    MatTooltipModule, ColumnCustomizationPanelComponent
   ],
   templateUrl: './gestion-visites.component.html',
   styleUrls: ['./gestion-visites.component.css']
@@ -106,6 +107,7 @@ editVisit(visit: VisitDTO) {
     'heureArrivee',
     'heureDepart',
     'nombreFacings',
+    'produitsVisites',
     'prixNormal',
     'merchandiser',
     'magasin',
@@ -113,8 +115,23 @@ editVisit(visit: VisitDTO) {
     'actions'
   ];
 
+  // Configuration des colonnes pour la personnalisation
+  columnConfig = [
+    { key: 'id', label: 'ID', visible: true },
+    { key: 'heureArrivee', label: 'Heure d\'arrivée', visible: true },
+    { key: 'heureDepart', label: 'Heure de départ', visible: true },
+    { key: 'nombreFacings', label: 'Total Facings', visible: true },
+    { key: 'produitsVisites', label: 'Produits visités', visible: true },
+    { key: 'prixNormal', label: 'Prix normal', visible: true },
+    { key: 'merchandiser', label: 'Merchandiseur', visible: true },
+    { key: 'magasin', label: 'Magasin', visible: true },
+    { key: 'images', label: 'Images', visible: true },
+    { key: 'actions', label: 'Actions', visible: true }
+  ];
+
   dataSource = new MatTableDataSource<VisitDTO>([]);
   isLoading = false;
+  isColumnCustomizationOpen: boolean = false;
   
   // Filtres de recherche
   showFilters = false;
@@ -236,6 +253,7 @@ editVisit(visit: VisitDTO) {
     this.loadCurrentUser();
     this.loadMagasinsOptions();
     this.loadMerchandiseursOptions();
+    this.updateDisplayedColumns();
   }
 
   // Méthode pour enrichir les visites avec les données de planification
@@ -294,6 +312,42 @@ editVisit(visit: VisitDTO) {
           sheetName: 'Visites'
         });
       }
+
+  // Méthodes pour la personnalisation des colonnes
+  updateDisplayedColumns(): void {
+    this.displayedColumns = this.columnConfig
+      .filter(col => col.visible)
+      .map(col => col.key);
+  }
+
+  toggleColumnVisibility(columnKey: string): void {
+    const column = this.columnConfig.find(col => col.key === columnKey);
+    if (column) {
+      column.visible = !column.visible;
+      this.updateDisplayedColumns();
+    }
+  }
+
+  openColumnCustomizationPanel(): void {
+    this.isColumnCustomizationOpen = true;
+  }
+
+  closeColumnCustomizationPanel(): void {
+    this.isColumnCustomizationOpen = false;
+  }
+
+  onColumnCustomizationSave(columnConfig: any[]): void {
+    this.columnConfig = columnConfig;
+    this.updateDisplayedColumns();
+  }
+
+  // Méthode pour ouvrir le dialog d'importation (à implémenter selon vos besoins)
+  openImportDialog(): void {
+    // TODO: Implémenter le dialog d'importation pour les visites
+    this.snackBar.open('Fonctionnalité d\'importation à venir', 'Fermer', {
+      duration: 3000,
+    });
+  }
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

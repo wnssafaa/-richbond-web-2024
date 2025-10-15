@@ -627,7 +627,7 @@ private loadMerchandiseurs(): void {
 }
 
 private calculateProgress(merch: Merchendiseur): number {
-  const progress = merch.marques?.length * 10 || 0;
+  const progress = merch.marqueCouverte?.length * 10 || 0;
   return progress > 0 ? progress : 10; 
 }
 

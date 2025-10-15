@@ -25,6 +25,7 @@ import { AddPlanificationComponent } from './dialogs/add-planification/add-plani
 import { GestionVisitesComponent } from './component/gestion-visites/gestion-visites.component';
 import { VisitDetailPageComponent } from './component/visit-detail-page/visit-detail-page.component';
 import { LoginHistoryPageComponent } from './component/login-history-page/login-history-page.component';
+import { GestionStockComponent } from './component/gestion-stock/gestion-stock.component';
 
 export const routes: Routes = [
     {
@@ -110,6 +111,7 @@ export const routes: Routes = [
           { path: 'parametre', component: ParametresComponent ,canActivate: [AuthGuard]},
            { path: 'gestion-visites', component: GestionVisitesComponent, canActivate: [AuthGuard] },
            { path: 'visit-detail/:id', component: VisitDetailPageComponent, canActivate: [AuthGuard] },
+           { path: 'gestion-stock', component: GestionStockComponent, canActivate: [AuthGuard] },
            { path: 'profil', component: ProfilComponent, canActivate: [AuthGuard] },
            { path: 'login-history', component: LoginHistoryPageComponent, canActivate: [AuthGuard] },
 

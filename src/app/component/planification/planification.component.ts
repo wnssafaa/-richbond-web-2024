@@ -274,6 +274,16 @@ export class PlanificationComponent {
       filtered = filtered.filter((p) => p.statut === this.selectedStatut);
     }
 
+    if (this.selectedHeure) {
+      filtered = filtered.filter((p) => {
+        const visitDate = new Date(p.dateVisite);
+        const visitHour = visitDate.getHours().toString().padStart(2, '0');
+        const visitMinute = visitDate.getMinutes().toString().padStart(2, '0');
+        const visitTime = `${visitHour}:${visitMinute}`;
+        return visitTime.startsWith(this.selectedHeure!);
+      });
+    }
+
     if (this.selectedSemaine) {
       filtered = this.filterByWeek(filtered, this.selectedSemaine);
     }
@@ -402,6 +412,11 @@ export class PlanificationComponent {
   }
 
   filterByStatut(): void {
+    this.applyFilters();
+    this.applyTableFilters();
+  }
+
+  filterByHeure(): void {
     this.applyFilters();
     this.applyTableFilters();
   }
@@ -676,6 +691,7 @@ export class PlanificationComponent {
     this.selectedMagasin = null;
     this.selectedMerchandiseur = null;
     this.selectedStatut = null;
+    this.selectedHeure = null;
     this.selectedWeekDate = null;
     this.selectedDateRange = { start: null, end: null };
     this.showDatePicker = false;
@@ -760,6 +776,22 @@ export class PlanificationComponent {
     { value: StatutVisite.NON_ACCOMPLIE, label: 'Non accomplie' },
   ];
 
+  // Options pour le filtre par heure
+  heuresOptions = [
+    { value: null, label: 'Toutes les heures' },
+    { value: '08:00', label: '08:00' },
+    { value: '09:00', label: '09:00' },
+    { value: '10:00', label: '10:00' },
+    { value: '11:00', label: '11:00' },
+    { value: '12:00', label: '12:00' },
+    { value: '13:00', label: '13:00' },
+    { value: '14:00', label: '14:00' },
+    { value: '15:00', label: '15:00' },
+    { value: '16:00', label: '16:00' },
+    { value: '17:00', label: '17:00' },
+    { value: '18:00', label: '18:00' },
+  ];
+
   selectedRegion: string | null = null;
   selectedVille: string | null = null;
   selectedSuperviseur: number | null = null;
@@ -769,6 +801,7 @@ export class PlanificationComponent {
   selectedMagasin: number | null = null;
   selectedMerchandiseur: number | null = null;
   selectedStatut: StatutVisite | null = null;
+  selectedHeure: string | null = null;
 
   // Filtre par semaine avec calendrier
   selectedWeekDate: Date | null = null;
@@ -2367,6 +2400,16 @@ export class PlanificationComponent {
     }
     if (this.selectedStatut) {
       filtered = filtered.filter((p) => p.statut === this.selectedStatut);
+    }
+
+    if (this.selectedHeure) {
+      filtered = filtered.filter((p) => {
+        const visitDate = new Date(p.dateVisite);
+        const visitHour = visitDate.getHours().toString().padStart(2, '0');
+        const visitMinute = visitDate.getMinutes().toString().padStart(2, '0');
+        const visitTime = `${visitHour}:${visitMinute}`;
+        return visitTime.startsWith(this.selectedHeure!);
+      });
     }
 
     // Filtre par plage de dates personnalisée

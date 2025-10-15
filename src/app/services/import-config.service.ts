@@ -104,68 +104,89 @@ export class ImportConfigService {
   }
 
   // ✅ Configuration pour Magasins
-  getMagasinImportConfig(): ImportConfig {
-    const columns: ImportColumn[] = [
-      { key: 'nom', label: 'Nom', required: true, type: 'text' },
-      { key: 'ville', label: 'Ville', required: true, type: 'text' },
-      { 
-        key: 'region', 
-        label: 'Région', 
-        required: true, 
-        type: 'text',
-        parser: this.getRegionParser()
-      },
-      { key: 'adresse', label: 'Adresse', required: true, type: 'text' },
-      { key: 'enseigne', label: 'Enseigne', required: true, type: 'text' },
-      { key: 'type', label: 'Type', required: false, type: 'text' },
-      { key: 'telephone', label: 'Téléphone', required: false, type: 'phone' },
-      { key: 'email', label: 'Email', required: false, type: 'email' },
-      { key: 'surface', label: 'Surface', required: false, type: 'number' },
-      { key: 'horaire', label: 'Horaires', required: false, type: 'text' }
-    ];
+getMagasinImportConfig(): ImportConfig {
+  const columns: ImportColumn[] = [
+    { key: 'nom', label: 'Nom', required: true, type: 'text' },
+    { key: 'ville', label: 'Ville', required: true, type: 'text' },
+    { 
+      key: 'region', 
+      label: 'Région', 
+      required: true, 
+      type: 'text',
+      parser: this.getRegionParser()
+    },
+    { key: 'adresse', label: 'Adresse', required: true, type: 'text' },
+    { key: 'enseigne', label: 'Enseigne', required: true, type: 'text' },
+    { key: 'type', label: 'Type', required: false, type: 'text' },
+    { key: 'telephone', label: 'Téléphone', required: false, type: 'phone' },
+    { key: 'email', label: 'Email', required: false, type: 'email' },
+    { key: 'surface', label: 'Surface', required: false, type: 'number' },
+    { key: 'horaire', label: 'Horaires', required: false, type: 'text' },
+    { key: 'latitude', label: 'Latitude', required: false, type: 'number' },
+    { key: 'longitude', label: 'Longitude', required: false, type: 'number' },
+    { key: 'localisation', label: 'Localisation (adresse complète)', required: false, type: 'text' }
+  ];
 
-    const validationRules: ValidationRule[] = [
-      {
-        field: 'email',
-        validator: (value: string) => {
-          if (!value) return null;
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          return !emailRegex.test(value) ? 'Email invalide' : null;
-        }
-      },
-      {
-        field: 'telephone',
-        validator: (value: string) => {
-          if (!value) return null;
-          const phoneRegex = /^0[5-7][0-9]{8}$/;
-          return !phoneRegex.test(value) ? 'Téléphone invalide' : null;
-        }
+  const validationRules: ValidationRule[] = [
+    {
+      field: 'email',
+      validator: (value: string) => {
+        if (!value) return null;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return !emailRegex.test(value) ? 'Email invalide' : null;
       }
-    ];
+    },
+    {
+      field: 'telephone',
+      validator: (value: string) => {
+        if (!value) return null;
+        const phoneRegex = /^0[5-7][0-9]{8}$/;
+        return !phoneRegex.test(value) ? 'Téléphone invalide' : null;
+      }
+    },
+    {
+      field: 'latitude',
+      validator: (value: number) => {
+        if (!value) return null;
+        return (value < -90 || value > 90) ? 'Latitude doit être entre -90 et 90' : null;
+      }
+    },
+    {
+      field: 'longitude',
+      validator: (value: number) => {
+        if (!value) return null;
+        return (value < -180 || value > 180) ? 'Longitude doit être entre -180 et 180' : null;
+      }
+    }
+  ];
 
-    const templateData = {
-      'Nom': 'Marjane Californie',
-      'Ville': 'Casablanca',
-      'Région': 'Casablanca-Settat',
-      'Adresse': 'Boulevard de la Corniche',
-      'Enseigne': 'Marjane',
-      'Type': 'Hypermarché',
-      'Téléphone': '0522123456',
-      'Email': 'marjane.californie@marjane.ma',
-      'Surface': '5000',
-      'Horaires': '9h-22h'
-    };
+  const templateData = {
+    'Nom': 'Marjane Californie',
+    'Ville': 'Casablanca',
+    'Région': 'Casablanca-Settat',
+    'Adresse': 'Boulevard de la Corniche',
+    'Enseigne': 'Marjane',
+    'Type': 'Hypermarché',
+    'Téléphone': '0522123456',
+    'Email': 'marjane.californie@marjane.ma',
+    'Surface': '5000',
+    'Horaires': '9h-22h',
+    'Latitude': '33.5589',
+    'Longitude': '-7.6635',
+    'Localisation (adresse complète)': 'Boulevard de la Corniche, Casablanca, Maroc'
+  };
 
-    return {
-      entityName: 'Magasin',
-      entityNamePlural: 'Magasins',
-      columns,
-      validationRules,
-      templateData,
-      importService: this.magasinService,
-      importMethod: 'addMagasin'
-    };
-  }
+  return {
+    entityName: 'Magasin',
+    entityNamePlural: 'Magasins',
+    columns,
+    validationRules,
+    templateData,
+    importService: this.magasinService,
+    importMethod: 'addMagasin'
+  };
+}
+
 
   // ✅ Configuration pour Produits
   getProduitImportConfig(): ImportConfig {

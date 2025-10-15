@@ -281,9 +281,37 @@
                 mat-raised-button
                 class="export-button"
                 (click)="exportToExcel()"
+                style="
+                  background-color: #000000;
+                  color: white;
+                  margin-right: 8px;
+                "
               >
-                <span>{{ "ACTIONS.EXPORT" | translate }}</span>
-                <mat-icon>file_download</mat-icon>
+                <span>Export </span>
+                <mat-icon style="color:white">file_download</mat-icon>
+              </button>
+              
+              <button
+                mat-raised-button
+                class="export-button"
+                (click)="openColumnCustomizationPanel()"
+                style="background-color: #3b45ca; color: white; margin-right: 8px"
+                matTooltip="Personnaliser les colonnes"
+              >
+                <span>Colonnes</span>
+                <mat-icon style="color:white">view_column</mat-icon>
+              </button>
+
+              <!-- ✅ Bouton d'importation -->
+              <button
+                mat-raised-button
+                class="import-button"
+                style="background-color: #455e98; color: white; margin-right: 12px; padding: 10px 15px;
+  border-radius: 20px;"
+                (click)="openImportDialog()"
+              >
+                <mat-icon style="color:white">upload_file</mat-icon>
+                Importer
               </button>
             </div>
           </div>
@@ -443,12 +471,27 @@
             </td>
           </ng-container>
 
-          <!-- Facings -->
+          <!-- Total Facings -->
           <ng-container matColumnDef="nombreFacings">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{ "VISITS.COLUMNS.NOMBRE_FACINGS" | translate }}
+              Total Facings
             </th>
             <td mat-cell *matCellDef="let visit">{{ visit.nombreFacings }}</td>
+          </ng-container>
+
+          <!-- Produits visités -->
+          <ng-container matColumnDef="produitsVisites">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Produits visités
+            </th>
+            <td mat-cell *matCellDef="let visit">
+              <div class="produits-visites">
+                <span *ngIf="visit.produitsVisites?.length" class="produits-count">
+                  {{ visit.produitsVisites.length }} produit(s)
+                </span>
+                <span *ngIf="!visit.produitsVisites?.length" class="no-produits">-</span>
+              </div>
+            </td>
           </ng-container>
 
           <!-- Normal Price -->
@@ -568,10 +611,25 @@
         </table>
 
         <mat-paginator
-          [pageSizeOptions]="[5, 10, 25]"
+          [pageSizeOptions]="[5, 10, 25,100]"
           showFirstLastButtons
         ></mat-paginator>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Overlay pour fermer le panneau en cliquant à l'extérieur -->
+<div
+  class="panel-overlay"
+  [class.visible]="isColumnCustomizationOpen"
+  (click)="closeColumnCustomizationPanel()"
+></div>
+
+<!-- Panneau de personnalisation des colonnes -->
+<app-column-customization-panel
+  [isOpen]="isColumnCustomizationOpen"
+  [columnConfig]="columnConfig"
+  (close)="closeColumnCustomizationPanel()"
+  (save)="onColumnCustomizationSave($event)"
+></app-column-customization-panel>

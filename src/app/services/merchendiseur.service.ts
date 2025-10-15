@@ -40,7 +40,7 @@ export interface Merchendiseur {
   role: Role;
   email: string;
  magasinIds: number[];
-  marques: string[];
+  // marques: string[];
   superviseurId?: number | null;
  superviseur?: {
     id: number;

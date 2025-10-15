@@ -184,6 +184,18 @@
 
         <a
           mat-list-item
+          routerLink="/gestion-stock"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? 'Gestion de Stock' : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>warehouse</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">Gestion de Stock</span>
+        </a>
+
+        <a
+          mat-list-item
           routerLink="/parametre"
           routerLinkActive="active-link"
           [class.nav-item-collapsed]="!menuOpen"

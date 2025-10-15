@@ -26,7 +26,7 @@ export interface ImportedMerchandiseur {
   role: Role;
   superviseurId?: number;
   magasinIds?: number[];
-  marques?: string[];
+  // marques?: string[];
   enseignes?: string[];
   valid?: boolean;
   errors?: string[];
@@ -98,12 +98,15 @@ export class ImportMerchDialogComponent {
   }
 
   processData(jsonData: any[]): void {
-    this.importedData = jsonData.map((row: any) => {
+    console.log('📄 Données brutes du fichier:', jsonData);
+    
+    this.importedData = jsonData.map((row: any, index: number) => {
+      console.log(`🔄 Traitement ligne ${index + 1}:`, row);
       const merch: ImportedMerchandiseur = {
         prenom: row['Prénom'] || row['prenom'] || '',
         nom: row['Nom'] || row['nom'] || '',
         email: row['Email'] || row['email'] || '',
-        telephone: row['Téléphone'] || row['telephone'] || '',
+        telephone: this.cleanPhoneNumber(row['Téléphone'] || row['telephone'] || ''),
         region: this.parseRegion(row['Région'] || row['region'] || ''),
         ville: row['Ville'] || row['ville'] || '',
         marqueCouverte: row['Marque Couverte'] || row['marqueCouverte'] || '',
@@ -112,24 +115,34 @@ export class ImportMerchDialogComponent {
         type: row['Type'] || row['type'] || 'Mono',
         password: row['Mot de passe'] || row['password'] || 'Password123',
         role: this.parseRole(row['Rôle'] || row['role'] || 'MERCHANDISEUR_MONO'),
-        superviseurId: row['Superviseur ID'] || row['superviseurId'] || undefined,
-        magasinIds: this.parseArray(row['Magasin IDs'] || row['magasinIds'] || ''),
-        marques: this.parseArray(row['Marques'] || row['marques'] || ''),
+        superviseurId: this.parseSuperviseurId(row['Superviseur ID'] || row['superviseurId'] || ''),
+        magasinIds: this.parseMagasinIds(row['Magasin IDs'] || row['magasinIds'] || ''),
+        // marques: this.parseArray(row['Marques'] || row['marques'] || ''),
         enseignes: this.parseArray(row['Enseignes'] || row['enseignes'] || ''),
         valid: true,
         errors: []
       };
+
+      console.log(`📝 Merchandiseur traité ${index + 1}:`, merch);
 
       // Validation
       const errors = this.validateMerchandiseur(merch);
       merch.errors = errors;
       merch.valid = errors.length === 0;
 
+      console.log(`✅ Validation ${index + 1}:`, { valid: merch.valid, errors: errors });
+
       return merch;
     });
 
     this.validCount = this.importedData.filter(m => m.valid).length;
     this.invalidCount = this.importedData.filter(m => !m.valid).length;
+
+    console.log('📊 Résultats de validation:', {
+      total: this.importedData.length,
+      valides: this.validCount,
+      invalides: this.invalidCount
+    });
 
     this.snackBar.open(
       `${this.validCount} merchandiseurs valides, ${this.invalidCount} invalides`,
@@ -174,6 +187,66 @@ export class ImportMerchDialogComponent {
     return [];
   }
 
+  cleanPhoneNumber(phone: string): string {
+    if (!phone) return '';
+    
+    // Convertir en string et nettoyer
+    let cleanPhone = phone.toString().trim();
+    
+    // Gérer la notation scientifique (comme 2.12638E+11)
+    if (cleanPhone.includes('E+')) {
+      const num = parseFloat(cleanPhone);
+      if (!isNaN(num)) {
+        cleanPhone = Math.floor(num).toString();
+      }
+    }
+    
+    // Supprimer les espaces et tirets
+    cleanPhone = cleanPhone.replace(/[\s\-]/g, '');
+    
+    // Si le numéro commence par 212 sans +, ajouter le +
+    if (cleanPhone.startsWith('212') && !cleanPhone.startsWith('+212')) {
+      cleanPhone = '+' + cleanPhone;
+    }
+    
+    return cleanPhone;
+  }
+
+  parseSuperviseurId(value: string): number | undefined {
+    if (!value) return undefined;
+    
+    // Si c'est déjà un nombre, le retourner
+    const num = parseInt(value.toString().trim());
+    if (!isNaN(num)) {
+      return num;
+    }
+    
+    // Si c'est un nom, essayer de le convertir en ID (pour l'instant, retourner undefined)
+    console.warn('Superviseur ID non numérique:', value);
+    return undefined;
+  }
+
+  parseMagasinIds(value: string): number[] {
+    if (!value) return [];
+    
+    const values = value.toString().split(',').map(v => v.trim()).filter(v => v);
+    const ids: number[] = [];
+    
+    values.forEach(val => {
+      // Si c'est un nombre, l'ajouter
+      const num = parseInt(val);
+      if (!isNaN(num)) {
+        ids.push(num);
+      } else {
+        // Si c'est un nom de magasin, essayer de le convertir en ID
+        // Pour l'instant, on ignore les noms et on log un avertissement
+        console.warn('Nom de magasin ignoré (attendre un ID numérique):', val);
+      }
+    });
+    
+    return ids;
+  }
+
   validateMerchandiseur(merch: ImportedMerchandiseur): string[] {
     const errors: string[] = [];
 
@@ -190,10 +263,16 @@ export class ImportMerchDialogComponent {
       errors.push('Email invalide');
     }
 
-    // Validation du téléphone
-    const phoneRegex = /^0[5-7][0-9]{8}$/;
-    if (merch.telephone && !phoneRegex.test(merch.telephone)) {
-      errors.push('Téléphone invalide');
+    // Validation du téléphone - Support des formats marocains
+    if (merch.telephone) {
+      const cleanPhone = this.cleanPhoneNumber(merch.telephone);
+      
+      // Formats acceptés : +212XXXXXXXXX ou 0XXXXXXXXX
+      const phoneRegex = /^(\+212|0)[5-7][0-9]{8}$/;
+      
+      if (!phoneRegex.test(cleanPhone)) {
+        errors.push('Téléphone invalide');
+      }
     }
 
     return errors;
@@ -201,6 +280,12 @@ export class ImportMerchDialogComponent {
 
   onImport(): void {
     const validMerchandiseurs = this.importedData.filter(m => m.valid);
+
+    console.log('📊 Données à importer:', {
+      total: this.importedData.length,
+      valides: validMerchandiseurs.length,
+      invalides: this.importedData.length - validMerchandiseurs.length
+    });
 
     if (validMerchandiseurs.length === 0) {
       this.snackBar.open('Aucun merchandiseur valide à importer', 'Fermer', {
@@ -213,49 +298,69 @@ export class ImportMerchDialogComponent {
     this.isLoading = true;
 
     // Convertir les données importées en format Merchandiseur
-    const merchandiseurs: Merchendiseur[] = validMerchandiseurs.map(m => ({
-      prenom: m.prenom,
-      nom: m.nom,
-      email: m.email,
-      telephone: m.telephone,
-      region: m.region,
-      ville: m.ville,
-      marqueCouverte: m.marqueCouverte,
-      localisation: m.localisation,
-      status: m.status,
-      type: m.type,
-      password: m.password,
-      role: m.role,
-      superviseurId: m.superviseurId,
-      magasinIds: m.magasinIds || [],
-      marques: m.marques || [],
-      enseignes: m.enseignes || []
-    }));
+    const merchandiseurs: Merchendiseur[] = validMerchandiseurs.map(m => {
+      const merch: Merchendiseur = {
+        prenom: m.prenom,
+        nom: m.nom,
+        email: m.email,
+        telephone: m.telephone,
+        region: m.region,
+        ville: m.ville,
+        marqueCouverte: m.marqueCouverte || '',
+        localisation: m.localisation || '',
+        status: m.status || 'ACTIF',
+        // type: m.type || 'Mono', // Propriété non supportée par l'interface
+        password: m.password || 'Password123',
+        role: m.role,
+        superviseurId: m.superviseurId || null,
+        magasinIds: m.magasinIds || [],
+        enseignes: m.enseignes || []
+      };
+      
+      console.log('🔄 Conversion merchandiseur:', merch);
+      return merch;
+    });
+
+    console.log('📤 Merchandiseurs à importer:', merchandiseurs);
 
     // Importer les merchandiseurs un par un
     let successCount = 0;
     let errorCount = 0;
+    const errors: string[] = [];
 
-    const importPromises = merchandiseurs.map(merch => {
-      return this.merchService.addMerchendiseur(merch).toPromise()
-        .then(() => {
+    const importPromises = merchandiseurs.map((merch, index) => {
+      return this.merchService.addMerchendiseur(merch).subscribe({
+        next: (response) => {
+          console.log(`✅ Merchandiseur ${index + 1} importé avec succès:`, response);
           successCount++;
-        })
-        .catch((error) => {
-          console.error('Erreur lors de l\'ajout du merchandiseur:', error);
+        },
+        error: (error) => {
+          console.error(`❌ Erreur lors de l'ajout du merchandiseur ${index + 1}:`, error);
           errorCount++;
-        });
+          errors.push(`Merchandiseur ${merch.prenom} ${merch.nom}: ${error.message || 'Erreur inconnue'}`);
+        }
+      });
     });
 
-    Promise.all(importPromises).then(() => {
+    // Attendre que tous les imports soient terminés
+    setTimeout(() => {
       this.isLoading = false;
-      this.snackBar.open(
-        `${successCount} merchandiseurs importés avec succès, ${errorCount} erreurs`,
-        'Fermer',
-        { duration: 5000, panelClass: ['success-snackbar'] }
-      );
-      this.dialogRef.close({ success: true, count: successCount });
-    });
+      
+      if (successCount > 0) {
+        this.snackBar.open(
+          `${successCount} merchandiseurs importés avec succès${errorCount > 0 ? `, ${errorCount} erreurs` : ''}`,
+          'Fermer',
+          { duration: 5000, panelClass: ['success-snackbar'] }
+        );
+        this.dialogRef.close({ success: true, count: successCount });
+      } else {
+        this.snackBar.open(
+          `Aucun merchandiseur importé. Erreurs: ${errors.join(', ')}`,
+          'Fermer',
+          { duration: 7000, panelClass: ['error-snackbar'] }
+        );
+      }
+    }, 2000); // Attendre 2 secondes pour que les requêtes se terminent
   }
 
   onCancel(): void {
@@ -277,9 +382,9 @@ export class ImportMerchDialogComponent {
         'Type': 'Mono',
         'Mot de passe': 'Password123',
         'Rôle': 'MERCHANDISEUR_MONO',
-        'Superviseur ID': '',
+        'Superviseur ID': '1',
         'Magasin IDs': '1,2,3',
-        'Marques': 'Richbond,Simmons',
+        // 'Marques': 'Richbond,Simmons',
         'Enseignes': 'Carrefour,Marjane'
       }
     ];
@@ -307,4 +412,3 @@ export class ImportMerchDialogComponent {
     });
   }
 }
-

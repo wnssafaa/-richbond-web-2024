@@ -3786,15 +3786,58 @@ button[mat-icon-button]:active {
 
 .filters-content {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 8px;
   padding: 0 16px;
 }
 
-.filters-content mat-form-field {
+.filters-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.filters-row-1 {
+  /* Première ligne : 3 filtres */
+  justify-content: flex-start;
+}
+
+.filters-row-2 {
+  /* Deuxième ligne : 3 filtres */
+  justify-content: flex-start;
+}
+
+.filters-row-3 {
+  /* Troisième ligne : 3 filtres */
+  justify-content: flex-start;
+}
+
+.filters-content .filter-field {
   min-width: 200px;
   flex: 1;
+  max-width: 300px;
+}
+
+/* Responsive pour les filtres */
+@media (max-width: 1200px) {
+  .filters-content .filter-field {
+    min-width: 180px;
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .filters-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filters-content .filter-field {
+    min-width: 100%;
+    max-width: 100%;
+  }
 }
 
 .clear-filter-btn {

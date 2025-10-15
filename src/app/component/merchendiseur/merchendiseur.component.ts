@@ -351,7 +351,7 @@ export class MerchendiseurComponent implements OnInit {
   }
 
   initializeAllVilles(): void {
-    // Initialiser avec toutes les villes de toutes les régions pour rendre les filtres indépendants
+  
     const allVilles: string[] = [];
     Object.values(this.villesParRegion).forEach(regionVilles => {
       allVilles.push(...regionVilles);
@@ -381,19 +381,7 @@ export class MerchendiseurComponent implements OnInit {
   @ViewChild(MatDrawer) drawer!: MatDrawer;
   regions: string[] = Object.values(Region);
   menuOpen = false;
-  // loadCurrentUser(): void {
-  //   this.authService.getCurrentUserInfo().subscribe({
-  //     next: (data) => {
-  //       console.log('Utilisateur connecté :', data);
-  //       this.username = data.username;
-  //       this.role = data.role;
-  //       this.email=data.email
-  //     },
-  //     error: (err) => {
-  //       console.error('Erreur lors de la récupération des infos utilisateur :', err);
-  //     }
-  //   });
-  // }
+  
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }

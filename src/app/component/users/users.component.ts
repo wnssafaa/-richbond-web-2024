@@ -167,7 +167,7 @@ export class UsersComponent implements OnInit {
   searchTerm = '';
   selection = new SelectionModel<any>(true, []);
   displayedColumns: string[] = [
-    'numero',
+    // 'numero',
     'nom',
     'region',
     'city',
@@ -540,25 +540,8 @@ export class UsersComponent implements OnInit {
   }
 
   onRowClick(event: MouseEvent, row: any): void {
-    const target = event.target as HTMLElement;
-
-    // Vérifie spécifiquement les boutons edit/delete via leurs classes
-    const isEditOrDelete =
-      target.closest('.edit-button') ||
-      target.closest('.delete-button') ||
-      target
-        .closest('mat-icon')
-        ?.parentElement?.classList.contains('edit-button') ||
-      target
-        .closest('mat-icon')
-        ?.parentElement?.classList.contains('delete-button');
-
-    if (isEditOrDelete) {
-      return;
-    }
-
-    // Ouvrir le bon dialog selon le type d'utilisateur
-    this.showUserDetails(row);
+    // Popup supprimée - ne fait plus rien lors du clic sur une ligne
+    return;
   }
 
   showUserDetails(row: any): void {

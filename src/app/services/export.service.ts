@@ -210,7 +210,7 @@ export class ExportService {
       'Téléphone': merch.telephone,
       'Région': merch.region,
       'Ville': merch.ville,
-      'Marques': Array.isArray(merch.marques) ? merch.marques.join(', ') : merch.marques,
+      'Marques': Array.isArray(merch.marqueCouverte) ? merch.marqueCouverte.join(', ') : merch.marqueCouverte,
       'Rôle': merch.role,
       'Statut': merch.status,
       'Date d\'intégration': merch.dateDebutIntegration ? this.formatDate(merch.dateDebutIntegration) : '',
