@@ -188,44 +188,378 @@ getMagasinImportConfig(): ImportConfig {
 }
 
 
-  // ✅ Configuration pour Produits
+  // ✅ Configuration pour Produits (Structure Excel selon l'image)
   getProduitImportConfig(): ImportConfig {
     const columns: ImportColumn[] = [
-      { key: 'nom', label: 'Nom', required: true, type: 'text' },
-      { key: 'description', label: 'Description', required: true, type: 'text' },
-      { key: 'prix', label: 'Prix', required: true, type: 'number' },
-      { key: 'marque', label: 'Marque', required: true, type: 'text' },
-      { key: 'categorie', label: 'Catégorie', required: true, type: 'text' },
-      { key: 'reference', label: 'Référence', required: false, type: 'text' },
-      { key: 'stock', label: 'Stock', required: false, type: 'number' },
-      { key: 'prixPromo', label: 'Prix Promo', required: false, type: 'number' },
-      { key: 'enPromotion', label: 'En Promotion', required: false, type: 'text' },
-      { key: 'dateDebut', label: 'Date Début Promo', required: false, type: 'date' },
-      { key: 'dateFin', label: 'Date Fin Promo', required: false, type: 'date' }
+      { key: 'photo', label: 'Photo', required: false, type: 'text' },
+      { key: 'marque', label: 'Marque', required: false, type: 'text' }, // Pas obligatoire car hérité
+      { key: 'famille', label: 'Famille', required: false, type: 'text' }, // Pas obligatoire car hérité
+      { key: 'sousMarques', label: 'Sous marques', required: false, type: 'text' }, // Pas obligatoire car hérité
+      { key: 'codeEAN', label: 'CODE EAN', required: true, type: 'text' },
+      { key: 'designationArticle', label: 'Désignation article', required: true, type: 'text' },
+      { key: 'prix', label: 'PVC TTC', required: true, type: 'number' }
     ];
 
     const validationRules: ValidationRule[] = [
       {
         field: 'prix',
-        validator: (value: number) => {
-          return value && value <= 0 ? 'Prix doit être supérieur à 0' : null;
+        validator: (value: number, row: any) => {
+          // Vérifier si le prix est valide
+          if (!value || value <= 0) {
+            return 'Prix doit être supérieur à 0';
+          }
+          return null;
+        }
+      },
+      {
+        field: 'codeEAN',
+        validator: (value: string, row: any) => {
+          if (!value || value.trim() === '') {
+            return 'Code EAN requis';
+          }
+          // Validation du format EAN supprimée selon la demande utilisateur
+          return null;
+        }
+      },
+      {
+        field: 'famille',
+        validator: (value: string, row: any) => {
+          // Vérifier après héritage - si toujours vide, c'est une erreur
+          if (!value || value.trim() === '') {
+            return 'Famille requise (vérifiez l\'héritage des valeurs)';
+          }
+          return null;
+        }
+      },
+      {
+        field: 'sousMarques',
+        validator: (value: string, row: any) => {
+          // Vérifier après héritage - si toujours vide, c'est une erreur
+          if (!value || value.trim() === '') {
+            return 'Sous marque requise (vérifiez l\'héritage des valeurs)';
+          }
+          
+          // Accepter différentes variations de casse pour les sous-marques
+          // Inclure toutes les sous-marques possibles
+          const validSousMarques = [
+            // Sous-marques principales
+            'R VITAL', 'R ULTIMA', 'R HELLO', 'R PROTECT', 'R DORSAL', 'R CONFORETECH', 'R MEDICAL',
+            'R Ultima', 'R Hello', 'R Protect', 'R Dorsal', 'R Confortech', 'R Medical',
+            'R ULTIMA', 'R HELLO', 'R PROTECT', 'R DORSAL', 'R CONFORETECH', 'R MEDICAL',
+            
+            // CONFORT DORSAL et variantes
+            'CONFORT DORSAL', 'Confort Dorsal', 'Confort Dorsal Premium', 'confort dorsal',
+            
+            // COTONELLE et variantes
+            'COTONELLE', 'COTONELLE ECLATE', 'COTONELLE IMPRIMEE', 'COTONELLE RAYEE',
+            'COTONELLE BEIGE CLAIR', 'COTONELLE BLANC', 'COTONELLE GRIS COOL', 'COTONELLE NAVY BLEU',
+            'COTONELLE NOIR', 'COTONELLE ROSE DE BOIS', 'COTONELLE VERT CANARD', 'COTONELLE VIOLET',
+            'COTONELLE ECLATE BEIGE CLAIR', 'COTONELLE ECLATE BLANC', 'COTONELLE ECLATE GRIS COOL',
+            'COTONELLE ECLATE NAVY BLEU', 'COTONELLE ECLATE NOIR', 'COTONELLE ECLATE ROSE DE BOIS',
+            'COTONELLE ECLATE VERT CANARD', 'COTONELLE ECLATE VIOLET',
+            'COTONELLE IMPRIMEE ETHNIQUE CANARD', 'COTONELLE IMPRIMEE ETHNIQUE GRIS',
+            'COTONELLE IMPRIMEE ETHNIQUE ROSE', 'COTONELLE RAYEE SATINEE BLANCHE',
+            'COTONELLE RAYEE SATINEE NOIR', 'COTONELLE RAYEE SATINEE TAUPE',
+            
+            // COTON CARDE et variantes
+            'COTON CARDE', 'COTON CARDE BLANC', 'COTON CARDE BLEU BEBE', 'COTON CARDE GREIGE',
+            'COTON CARDE LAVANDE', 'COTON CARDE NATURE', 'COTON CARDE VERT EAU',
+            'COTON CARDE ECLATE BLANC', 'COTON CARDE ECLATE BLEU BEBE', 'COTON CARDE ECLATE GREIGE',
+            'COTON CARDE ECLATE LAVANDE', 'COTON CARDE ECLATE NATURE', 'COTON CARDE ECLATE VERT EAU',
+            
+            // DRAP HOUSSE et variantes
+            'DRAP HOUSSE', 'DRAP HOUSSE COTON CARDE BLANC', 'DRAP HOUSSE COTON CARDE BLEU BEBE',
+            'DRAP HOUSSE COTON CARDE GREIGE', 'DRAP HOUSSE COTON CARDE LAVANDE',
+            'DRAP HOUSSE COTON CARDE NATURE', 'DRAP HOUSSE COTON CARDE VERT EAU',
+            'DRAP HOUSSE COTONELLE BEIGE CLAIR', 'DRAP HOUSSE COTONELLE BLANC',
+            'DRAP HOUSSE COTONELLE GRIS COOL', 'DRAP HOUSSE COTONELLE NAVY BLEU',
+            'DRAP HOUSSE COTONELLE NOIR', 'DRAP HOUSSE COTONELLE ROSE DE BOIS',
+            'DRAP HOUSSE COTONELLE VERT CANARD', 'DRAP HOUSSE COTONELLE VIOLET',
+            
+            // DRAP PLAT et variantes
+            'DRAP PLAT', 'DRAP PLAT COTON CARDE BLANC', 'DRAP PLAT COTON CARDE BLEU BEBE',
+            'DRAP PLAT COTON CARDE GREIGE', 'DRAP PLAT COTON CARDE LAVANDE',
+            'DRAP PLAT COTON CARDE NATURE', 'DRAP PLAT COTON CARDE VERT EAU',
+            'DRAP PLAT COTONELLE BEIGE CLAIR', 'DRAP PLAT COTONELLE BLANC',
+            'DRAP PLAT COTONELLE GRIS COOL', 'DRAP PLAT COTONELLE NAVY BLEU',
+            'DRAP PLAT COTONELLE NOIR', 'DRAP PLAT COTONELLE ROSE DE BOIS',
+            'DRAP PLAT COTONELLE VERT CANARD', 'DRAP PLAT COTONELLE VIOLET',
+            
+            // R BICOLORE et variantes
+            'R BICOLORE', 'R BICOLORE MOUTARDE/GRIS CARBON', 'R BICOLORE NAVY BLUE/GRIS COOL',
+            'R BICOLORE ROSE DE BOIS/GRIS COOL', 'R BICOLORE VERT CANARD/VERT EAU',
+            'R BICOLORE VERT EAU/GRIS CARBON', 'R BICOLORE VERT EAU/NUDE ROSE',
+            'R BICOLORE VIOLET/NUDE ROSE',
+            
+            // R BLANCHE et variantes
+            'R BLANCHE', 'R BLANCHE 4 SAISON', 'R BLANCHE CHAUDE', 'R BLANCHE TEMPEREE',
+            
+            // R MONOCHROME et variantes
+            'R MONOCHROME', 'R MONOCHROME BEIGE FONCE', 'R MONOCHROME GRIS CLAIR',
+            'R MONOCHROME ROSE DE BOIS', 'R MONOCHROME TAUPE', 'R MONOCHROME TERACOTTA',
+            'R MONOCHROME VERT CANARD', 'R MONOCHROME VERT EAU', 'R MONOCHROME VIOLET',
+            
+            // R PROTECT et variantes
+            'R PROTECT ENFANT', 'R PROTECT FERME', 'R PROTECT MI-FERME', 'R PROTECT MOELLEUX',
+            
+            // R RAYEE et variantes
+            'R RAYEE', 'R RAYEE SATINEE BLANCHE', 'R RAYEE SATINEE BLEU MARINE',
+            'R RAYEE SATINEE CREME', 'R RAYEE SATINEE GRIS', 'R RAYEE SATINEE TAUPE',
+            
+            // ROSA et variantes
+            'ROSA', 'ROSA IMPRIMEE FLORAL', 'ROSA IMPRIMEE GEOMETRIQUE', 'ROSA IMPRIMEE NATURE',
+            'ROSA UNIE BEIGE CLAIRE', 'ROSA UNIE GRENAT', 'ROSA UNIE ROSE',
+            
+            // Autres marques
+            'BEAUTYDREAM', 'BeautyDream', 'COCOON COMFORT', 'Cocoon Comfort',
+            'DUO TOI ET MOI', 'DUOLUX', 'FIRST PILLOW COMFORT', 'First Pillow Comfort',
+            'HEAVEN COMFORT', 'Heaven Comfort', 'IMPERIAL', 'Imperial',
+            'SOFTYREST THERAPY', 'Softyrest Therapy', 'TOP HOME',
+            
+            // Variantes de couleurs et tailles
+            'HELLO', 'PROTECT', 'VITAL', 'ULTIMA', 'DORSAL', 'BLANC', 'BLEU BEBE', 'GREIGE',
+            'LAVANDE', 'NATURE', 'VERT EAU', 'BEIGE CLAIR', 'GRIS COOL', 'NAVY BLEU', 'NOIR',
+            'ROSE DE BOIS', 'VERT CANARD', 'VIOLET', 'MOUTARDE', 'GRIS CARBON', 'NUDE ROSE',
+            'BLEU MARINE', 'CREME', 'GRIS', 'TAUPE', 'BEIGE FONCE', 'GRIS CLAIR', 'TERACOTTA',
+            'SINGLE', 'DOUBLE', 'QUEEN', 'KING', 'SUPER KING'
+          ];
+          
+          // Diviser par virgules et vérifier chaque sous-marque
+          const sousMarquesArray = value.split(',').map(sm => sm.trim().toUpperCase());
+          const validSousMarquesUpper = validSousMarques.map(sm => sm.toUpperCase());
+          
+          // Vérifier si toutes les sous-marques sont valides
+          const invalidSousMarques = sousMarquesArray.filter(sm => 
+            sm && !validSousMarquesUpper.some(valid => 
+              valid.includes(sm) || sm.includes(valid)
+            )
+          );
+          
+          if (invalidSousMarques.length > 0) {
+            return `Sous marque invalide: ${invalidSousMarques.join(', ')}. Plus de 100 sous-marques acceptées (R VITAL, R ULTIMA, R HELLO, R PROTECT, R DORSAL, COTONELLE, COTON CARDE, DRAP HOUSSE, etc.)`;
+          }
+          
+          return null;
         }
       }
     ];
 
-    const templateData = {
-      'Nom': 'Matelas Richbond Excellence',
-      'Description': 'Matelas haute qualité 160x200',
-      'Prix': '4500',
-      'Marque': 'Richbond',
-      'Catégorie': 'Matelas',
-      'Référence': 'RB-EXC-160',
-      'Stock': '25',
-      'Prix Promo': '3900',
-      'En Promotion': 'true',
-      'Date Début Promo': '2024-01-01',
-      'Date Fin Promo': '2024-03-31'
-    };
+    // Template avec structure Excel réelle (valeurs héritées) - basé sur l'image fournie
+    const templateData = [
+      // Groupe R VITAL
+      {
+        'Photo': 'image_matelas_r_vital.jpg',
+        'Marque': 'RICHBOND',
+        'Famille': 'MATELAS',
+        'Sous marques': 'R VITAL',
+        'CODE EAN': '6111250526067',
+        'Désignation article': 'R VITAL 190X090',
+        'PVC TTC': '1 659,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '6111250526074',
+        'Désignation article': 'R VITAL 190X140',
+        'PVC TTC': '2 359,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '6111250526081',
+        'Désignation article': 'R VITAL 190X160',
+        'PVC TTC': '2 899,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '6111250526098',
+        'Désignation article': 'R VITAL 200x160',
+        'PVC TTC': '3 799,00'
+      },
+      // Groupe R ULTIMA
+      {
+        'Photo': 'image_matelas_r_ultima.jpg',
+        'Marque': 'RICHBOND',
+        'Famille': 'MATELAS',
+        'Sous marques': 'R Ultima',
+        'CODE EAN': '2000014520899',
+        'Désignation article': 'R ULTIMA 190X090',
+        'PVC TTC': '1 659,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '2000014520905',
+        'Désignation article': 'R ULTIMA 190X140',
+        'PVC TTC': '2 199,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '2000014520912',
+        'Désignation article': 'R ULTIMA 200x160',
+        'PVC TTC': '3 199,00'
+      },
+      // Groupe R HELLO
+      {
+        'Photo': 'image_matelas_r_hello.jpg',
+        'Marque': 'RICHBOND',
+        'Famille': 'MATELAS',
+        'Sous marques': 'R Hello',
+        'CODE EAN': '6111270385583',
+        'Désignation article': 'R HELLO 190x090',
+        'PVC TTC': '1 999,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '6111270385590',
+        'Désignation article': 'R HELLO 190x140',
+        'PVC TTC': '2 699,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '6111270385606',
+        'Désignation article': 'R HELLO 190x160',
+        'PVC TTC': '3 299,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '6111270385613',
+        'Désignation article': 'R HELLO 200x160',
+        'PVC TTC': '3 799,00'
+      },
+      // Groupe R PROTECT
+      {
+        'Photo': 'image_matelas_r_protect.jpg',
+        'Marque': 'RICHBOND',
+        'Famille': 'MATELAS',
+        'Sous marques': 'R Protect',
+        'CODE EAN': '6111250526029',
+        'Désignation article': 'R PROTECT 190X090',
+        'PVC TTC': '2 599,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '6111250526036',
+        'Désignation article': 'R PROTECT 190X160',
+        'PVC TTC': '3 599,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '6111250526043',
+        'Désignation article': 'R PROTECT 200x160',
+        'PVC TTC': '3 999,00'
+      },
+      // Groupe CONFORT DORSAL
+      {
+        'Photo': 'image_confort_dorsal.jpg',
+        'Marque': 'RICHBOND',
+        'Famille': 'MATELAS',
+        'Sous marques': 'CONFORT DORSAL',
+        'CODE EAN': '40038810',
+        'Désignation article': 'CONFORT DORSAL 190X140 BLANC',
+        'PVC TTC': '3 299,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '40038964',
+        'Désignation article': 'CONFORT DORSAL 190X160 BLANC',
+        'PVC TTC': '3 899,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '40039015',
+        'Désignation article': 'CONFORT DORSAL 200X160 BLANC',
+        'PVC TTC': '4 199,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '40039060',
+        'Désignation article': 'CONFORT DORSAL 200X180 BLANC',
+        'PVC TTC': '5 299,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '2000000970189',
+        'Désignation article': 'CONFORT DORSAL PREMIUM 190X140',
+        'PVC TTC': '4 099,00'
+      },
+      // Groupe R DORSAL
+      {
+        'Photo': 'image_r_dorsal.jpg',
+        'Marque': 'RICHBOND',
+        'Famille': 'MATELAS',
+        'Sous marques': 'R DORSAL',
+        'CODE EAN': '6111250526005',
+        'Désignation article': 'R DORSAL 190X140',
+        'PVC TTC': '4 299,90'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '6111250526289',
+        'Désignation article': 'R DORSAL 190X160',
+        'PVC TTC': '4 819,00'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '6111250526012',
+        'Désignation article': 'R DORSAL 200X160',
+        'PVC TTC': '5 499,90'
+      },
+      {
+        'Photo': '',
+        'Marque': '',
+        'Famille': '',
+        'Sous marques': '',
+        'CODE EAN': '6111250526296',
+        'Désignation article': 'R DORSAL 200X180',
+        'PVC TTC': '6 899,90'
+      }
+    ];
 
     return {
       entityName: 'Produit',

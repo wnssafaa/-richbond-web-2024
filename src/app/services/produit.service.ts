@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, forkJoin, of, switchMap } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, switchMap as rxSwitchMap } from 'rxjs/operators';
 
 export interface ProduitImageDTO {
   id?: number;
@@ -68,6 +68,8 @@ export interface Produit {
   _loadingImage?: boolean;
   _imageBlobUrl?: string; // URL blob temporaire pour l'affichage
   _thumbnailBlobUrl?: string; // URL blob temporaire pour la thumbnail
+  _noImageAvailable?: boolean; // Indique qu'aucune image n'est disponible
+  _extractedImage?: any; // Image extraite depuis Excel
 }
 
 @Injectable({
@@ -81,7 +83,107 @@ export class ProduitService {
 
   // Ajouter un produit
   createProduit(produit: Produit): Observable<Produit> {
+    // Si le produit contient une image extraite, l'envoyer avec l'image
+    if (produit._extractedImage) {
+      return this.createProduitWithImage(produit);
+    }
+    
     return this.http.post<Produit>(`${this.apiUrl}/add`, produit);
+  }
+
+  // Créer un produit avec une image extraite
+  private createProduitWithImage(produit: Produit): Observable<Produit> {
+    // Pour l'instant, créer le produit sans image, puis uploader l'image séparément
+    const { _extractedImage, _imageBlobUrl, _thumbnailBlobUrl, _loadingImage, _noImageAvailable, ...produitData } = produit;
+    
+    console.log('📤 Création du produit sans image d\'abord:', produitData);
+    
+    // Créer le produit d'abord
+    return this.http.post<Produit>(`${this.apiUrl}/add`, produitData).pipe(
+      rxSwitchMap(createdProduit => {
+        console.log('✅ Produit créé:', createdProduit);
+        
+        // Si le produit a été créé et qu'il y a une image, l'uploader
+        if (createdProduit.id && _extractedImage && _extractedImage.dataUrl) {
+          return this.uploadExtractedImage(createdProduit.id, _extractedImage).pipe(
+            map(() => createdProduit) // Retourner le produit même si l'upload d'image échoue
+          );
+        }
+        
+        return of(createdProduit);
+      })
+    );
+  }
+
+  // Uploader une image extraite depuis Excel
+  private uploadExtractedImage(produitId: number, extractedImage: any): Observable<any> {
+    if (!extractedImage.dataUrl) {
+      console.log('⚠️ Aucune data URL disponible pour l\'upload');
+      return of(null);
+    }
+
+    try {
+      // Convertir la data URL en blob
+      const base64Data = extractedImage.dataUrl.split(',')[1];
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: extractedImage.mimeType });
+      
+      // Créer un fichier à partir du blob
+      const fileName = `produit_${produitId}_${Date.now()}.${extractedImage.extension || 'jpg'}`;
+      const file = new File([blob], fileName, { type: extractedImage.mimeType });
+      
+      console.log('📤 Upload de l\'image extraite:', fileName);
+      
+      // Uploader l'image
+      return this.uploadImage(produitId, file, 'Image importée depuis Excel');
+    } catch (error) {
+      console.error('❌ Erreur lors de la conversion de l\'image:', error);
+      return of(null);
+    }
+  }
+
+  // Mapper les données d'import Excel vers l'interface Produit
+  mapImportDataToProduit(importData: any): Produit {
+    // Extraire les dimensions de la désignation article (ex: "R VITAL 190X090" -> "190X090")
+    const dimensionsMatch = importData.designationArticle?.match(/(\d+X\d+)/);
+    const dimensions = dimensionsMatch ? dimensionsMatch[1] : '';
+    
+    // Extraire le type d'article de la désignation (ex: "R VITAL 190X090" -> "R VITAL")
+    const typeMatch = importData.designationArticle?.match(/^([^0-9]+)/);
+    const type = typeMatch ? typeMatch[1].trim() : importData.sousMarques || '';
+    
+    const produit: Produit = {
+      marque: importData.marque || 'RICHBOND',
+      reference: importData.codeEAN || '', // Utiliser le code EAN comme référence
+      categorie: importData.famille || 'MATELAS',
+      article: importData.designationArticle || '',
+      type: type,
+      dimensions: dimensions,
+      disponible: true, // Par défaut disponible
+      prix: parseFloat(importData.prix) || 0,
+      famille: importData.famille || 'MATELAS',
+      sousMarques: importData.sousMarques || '',
+      codeEAN: importData.codeEAN || '',
+      designationArticle: importData.designationArticle || '',
+    };
+
+    // Gérer les images extraites depuis Excel
+    if (importData.extractedImage) {
+      console.log('🖼️ Image extraite trouvée:', importData.extractedImage);
+      // Ajouter les données d'image pour l'envoi au backend
+      produit._extractedImage = importData.extractedImage;
+    } else if (importData.photo && importData.photo.trim() !== '') {
+      // Image par nom de fichier (méthode traditionnelle)
+      produit.image = importData.photo;
+    }
+    
+    console.log('🔄 Mapping des données d\'import vers Produit:', { importData, produit });
+    return produit;
   }
 
   // Obtenir tous les produits
@@ -277,8 +379,18 @@ export class ProduitService {
    * Charger une image et créer une URL blob pour l'affichage
    */
   loadImageAsBlobUrl(produitId: number, imageId: number): Observable<string> {
+    const imageUrl = this.getImageUrl(produitId, imageId);
+    console.log('🖼️ Tentative de chargement de l\'image:', imageUrl);
+    
     return this.getImage(produitId, imageId).pipe(
-      map(blob => this.createBlobUrl(blob))
+      map(blob => {
+        console.log('✅ Image chargée avec succès:', imageUrl);
+        return this.createBlobUrl(blob);
+      }),
+      catchError(error => {
+        console.error('❌ Erreur lors du chargement de l\'image:', imageUrl, error);
+        throw error;
+      })
     );
   }
 
@@ -286,8 +398,18 @@ export class ProduitService {
    * Charger une thumbnail et créer une URL blob pour l'affichage
    */
   loadThumbnailAsBlobUrl(produitId: number, imageId: number): Observable<string> {
+    const thumbnailUrl = this.getThumbnailUrl(produitId, imageId);
+    console.log('🖼️ Tentative de chargement de la thumbnail:', thumbnailUrl);
+    
     return this.getThumbnail(produitId, imageId).pipe(
-      map(blob => this.createBlobUrl(blob))
+      map(blob => {
+        console.log('✅ Thumbnail chargée avec succès:', thumbnailUrl);
+        return this.createBlobUrl(blob);
+      }),
+      catchError(error => {
+        console.error('❌ Erreur lors du chargement de la thumbnail:', thumbnailUrl, error);
+        throw error;
+      })
     );
   }
 
@@ -327,7 +449,10 @@ export class ProduitService {
                   );
                 }),
                 catchError(error => {
+                  console.warn(`⚠️ Impossible de charger l'image pour le produit ${produit.id}:`, error);
                   produit._loadingImage = false;
+                  // Marquer qu'il n'y a pas d'image disponible
+                  produit._noImageAvailable = true;
                   return of(produit);
                 })
               );
@@ -366,8 +491,10 @@ export class ProduitService {
             return produit;
           }),
           catchError(error => {
-            console.log(`Aucune image trouvée pour le produit ${produit.id}`);
+            console.warn(`⚠️ Aucune image trouvée pour le produit ${produit.id}:`, error);
             produit._loadingImage = false;
+            // Marquer qu'il n'y a pas d'image disponible
+            produit._noImageAvailable = true;
             return of(produit);
           })
         );

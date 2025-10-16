@@ -31,6 +31,7 @@
     "angular-calendar": "^0.31.1",
     "chart.js": "^4.5.0",
     "date-fns": "^4.1.0",
+    "exceljs": "^4.4.0",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "leaflet-control-geocoder": "^3.2.0",

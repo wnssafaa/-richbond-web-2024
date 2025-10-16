@@ -73,7 +73,7 @@ throw new Error('Method not implemented.');
        });
      }
     displayedColumns: string[] = [
-      'marque', 'reference', 'categorie', 'image',
+      'marque', 'categorie', 'image',
       'article', 'dimensions', 'prix',
       'famille', 'sousMarques', 'codeEAN', 
       'actions'
