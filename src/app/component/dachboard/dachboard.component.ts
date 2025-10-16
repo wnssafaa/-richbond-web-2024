@@ -1409,7 +1409,7 @@ private createKpiAssignmentChart(): void {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      indexAxis: 'y', // Graphique horizontal
+      indexAxis: 'x', // Graphique vertical (par défaut)
       plugins: {
         legend: {
           display: false // Pas besoin de légende pour un seul dataset
@@ -1420,15 +1420,15 @@ private createKpiAssignmentChart(): void {
         }
       },
       scales: {
-        x: {
+        y: {
           beginAtZero: true,
           ticks: {
             stepSize: 1
           }
         },
-        y: {
+        x: {
           ticks: {
-            maxRotation: 0,
+            maxRotation: 45,
             minRotation: 0
           }
         }
