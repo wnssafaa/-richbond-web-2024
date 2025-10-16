@@ -93,9 +93,9 @@
           matTooltipPosition="right"
         >
           <mat-icon matListItemIcon>group</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen"
-            >{{ "DASHBOARD.ALL_USERS" | translate }}</span
-          >
+          <span matListItemTitle [class.text-hidden]="!menuOpen">{{
+            "DASHBOARD.ALL_USERS" | translate
+          }}</span>
         </a>
 
         <a
@@ -156,6 +156,18 @@
 
         <a
           mat-list-item
+          routerLink="/kpi"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? 'Indicateurs de Performance' : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>analytics</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">KPI</span>
+        </a>
+
+        <a
+          mat-list-item
           routerLink="/gestion-visites"
           routerLinkActive="active-link"
           [class.nav-item-collapsed]="!menuOpen"
@@ -191,7 +203,9 @@
           matTooltipPosition="right"
         >
           <mat-icon matListItemIcon>warehouse</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">Gestion de Stock</span>
+          <span matListItemTitle [class.text-hidden]="!menuOpen"
+            >Gestion de Stock</span
+          >
         </a>
 
         <a
@@ -359,21 +373,6 @@
       <!-- Section des graphiques -->
       <div class="charts-container">
         <div class="charts-grid">
-          <!-- Graphique des planifications par statut -->
-          <mat-card class="chart-card">
-            <mat-card-header>
-              <mat-card-title>
-                <mat-icon>event_note</mat-icon>
-                {{ "DASHBOARD.PLANNING_BY_STATUS" | translate }}
-              </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <div class="chart-container">
-                <canvas id="planificationsChart"></canvas>
-              </div>
-            </mat-card-content>
-          </mat-card>
-
           <!-- Graphique d'intégration des utilisateurs -->
           <mat-card class="chart-card">
             <mat-card-header>
@@ -474,6 +473,198 @@
               </div>
             </div>
           </mat-card>
+
+          <!-- Graphique des planifications par statut -->
+          <mat-card class="chart-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>event_note</mat-icon>
+                {{ "DASHBOARD.PLANNING_BY_STATUS" | translate }}
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="chart-container">
+                <canvas id="planificationsChart"></canvas>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <!-- KPI 2: Utilisation de l'App -->
+          <mat-card class="kpi-card">
+            <mat-card-header>
+              <mat-card-title>{{ "KPI.APP_USAGE" | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="chart-container">
+                <canvas id="kpiUsageChart"></canvas>
+              </div>
+              <div class="kpi-stats" *ngIf="kpiAppUsageData">
+                <div class="stat-item">
+                  <div class="stat-value">
+                    {{ kpiAppUsageData.activeUsers }}/{{
+                      kpiAppUsageData.totalUsers
+                    }}
+                  </div>
+                  <div class="stat-label">Utilisateurs Actifs</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value">
+                    {{ kpiAppUsageData.dailyActiveUsers }}
+                  </div>
+                  <div class="stat-label">Actifs Aujourd'hui</div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <!-- Section KPI -->
+        <div class="kpi-section">
+          <div class="kpi-header">
+            <h2 class="section-title">
+              <mat-icon>analytics</mat-icon>
+              {{ "KPI.TITLE" | translate }}
+              <span
+                class="data-mode-indicator"
+                [class.mock-mode]="kpiDataMode === 'mock'"
+              >
+                <mat-icon *ngIf="kpiDataMode === 'mock'">warning</mat-icon>
+                <span *ngIf="kpiDataMode === 'mock'">Mode Démo</span>
+                <mat-icon *ngIf="kpiDataMode === 'real'">check_circle</mat-icon>
+                <span *ngIf="kpiDataMode === 'real'">Données Réelles</span>
+              </span>
+            </h2>
+
+            <!-- Filtres KPI -->
+            <div class="kpi-filters">
+              <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Date de début</mat-label>
+                <input
+                  matInput
+                  type="date"
+                  [(ngModel)]="kpiFilters.dateRange.startDate"
+                  (change)="applyKpiFilters()"
+                />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Date de fin</mat-label>
+                <input
+                  matInput
+                  type="date"
+                  [(ngModel)]="kpiFilters.dateRange.endDate"
+                  (change)="applyKpiFilters()"
+                />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Région</mat-label>
+                <mat-select
+                  [(value)]="kpiFilters.region"
+                  (selectionChange)="applyKpiFilters()"
+                >
+                  <mat-option value="">Toutes les régions</mat-option>
+                  <mat-option value="Casablanca-Settat"
+                    >Casablanca-Settat</mat-option
+                  >
+                  <mat-option value="Rabat-Salé-Kénitra"
+                    >Rabat-Salé-Kénitra</mat-option
+                  >
+                  <mat-option value="Marrakech-Safi">Marrakech-Safi</mat-option>
+                  <mat-option value="Fès-Meknès">Fès-Meknès</mat-option>
+                  <mat-option value="Tanger-Tétouan-Al Hoceïma"
+                    >Tanger-Tétouan-Al Hoceïma</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="applyKpiFilters()"
+                class="filter-button"
+              >
+                <mat-icon>filter_list</mat-icon>
+                Filtrer
+              </button>
+
+              <button
+                mat-raised-button
+                color="accent"
+                (click)="clearKpiFilters()"
+                class="filter-button"
+              >
+                <mat-icon>clear</mat-icon>
+                Effacer
+              </button>
+
+              <button
+                mat-raised-button
+                color="warn"
+                (click)="refreshKpiData()"
+                class="filter-button"
+              >
+                <mat-icon>refresh</mat-icon>
+                Actualiser
+              </button>
+            </div>
+          </div>
+
+          <div class="kpi-grid">
+            <!-- KPI 1: Suivi des Affectations -->
+            <mat-card class="kpi-card">
+              <mat-card-header>
+                <mat-card-title>{{
+                  "KPI.ASSIGNMENT_TRACKING" | translate
+                }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="chart-container">
+                  <canvas id="kpiAssignmentChart"></canvas>
+                </div>
+                <div class="kpi-stats">
+                  <div class="stat-item">
+                    <div class="stat-value">{{ getTotalAssignments() }}</div>
+                    <div class="stat-label">Total Planifications</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">{{ getCompletedAssignments() }}</div>
+                    <div class="stat-label">Terminées</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">{{ getPendingAssignments() }}</div>
+                    <div class="stat-label">En Attente</div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- KPI 3: Finalisation des Rapports -->
+            <mat-card class="kpi-card">
+              <mat-card-header>
+                <mat-card-title>{{
+                  "KPI.REPORT_COMPLETION" | translate
+                }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="chart-container">
+                  <canvas id="kpiReportChart"></canvas>
+                </div>
+                <div class="kpi-stats" *ngIf="kpiReportData.length > 0">
+                  <div class="stat-item">
+                    <div class="stat-value">
+                      {{ getAverageCompletionRate() }}%
+                    </div>
+                    <div class="stat-label">Taux Moyen</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">
+                      {{ getTotalCompletedReports() }}
+                    </div>
+                    <div class="stat-label">Rapports Complétés</div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
         </div>
       </div>
     </div>
