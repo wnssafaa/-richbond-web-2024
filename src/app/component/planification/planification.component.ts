@@ -51,6 +51,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
+import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
 import { ExportService } from '../../services/export.service';
 import { environment } from '../../../environments/environment';
 
@@ -144,6 +145,7 @@ interface FilterOption {
     MatDatepickerModule,
     MatNativeDateModule,
     ColumnCustomizationPanelComponent,
+    GenericImportDialogComponent,
   ],
   templateUrl: './planification.component.html',
   styleUrls: ['./planification.component.css', './stat-icons.css'],
@@ -189,8 +191,8 @@ export class PlanificationComponent {
 
           // 4. Mise à jour de la carte si on est sur l'onglet map
           if (this.selectedTab === 'map' && this.map) {
-            // Utiliser la logique de testShowMagasinsWithRealCoords par défaut
-            this.testShowMagasinsWithRealCoords();
+            // Utiliser la nouvelle logique de marqueurs de planification
+            this.updateMapMarkers();
           }
 
           // 5. Navigation dans le calendrier si semaine sélectionnée
@@ -940,16 +942,82 @@ export class PlanificationComponent {
     this.loadSuperviseurs();
     // Note: extractRegionsAndVilles() est maintenant appelé dans loadMagasins()
     this.updateDisplayedColumns();
+    this.setupDailyUpdate();
 
     // Forcer le chargement des magasins après un délai pour s'assurer que tout est initialisé
     setTimeout(() => {
       console.log('🔄 Chargement forcé des magasins après initialisation...');
       this.loadMagasins();
-      // Si on est sur l'onglet carte, utiliser la logique de testShowMagasinsWithRealCoords
+      // Si on est sur l'onglet carte, utiliser la logique de marqueurs de planification
       if (this.selectedTab === 'map' && this.map) {
-        this.testShowMagasinsWithRealCoords();
+        this.updateMapMarkers();
       }
     }, 1000);
+  }
+
+  /**
+   * Configure la mise à jour automatique de la carte chaque jour à minuit
+   */
+  private setupDailyUpdate(): void {
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0); // Minuit du jour suivant
+    
+    const timeUntilMidnight = tomorrow.getTime() - now.getTime();
+    
+    console.log('🕐 Configuration de la mise à jour quotidienne:', {
+      maintenant: now.toLocaleString('fr-FR'),
+      prochainUpdate: tomorrow.toLocaleString('fr-FR'),
+      delaiEnMs: timeUntilMidnight
+    });
+    
+    // Premier timer pour minuit
+    setTimeout(() => {
+      this.updateMapForNewDay();
+      // Ensuite, mettre à jour toutes les 24 heures
+      setInterval(() => {
+        this.updateMapForNewDay();
+      }, 24 * 60 * 60 * 1000); // 24 heures en millisecondes
+    }, timeUntilMidnight);
+  }
+
+  /**
+   * Met à jour la carte pour un nouveau jour
+   */
+  private updateMapForNewDay(): void {
+    console.log('🌅 Nouveau jour détecté - Mise à jour de la carte');
+    const today = new Date().toLocaleDateString('fr-FR');
+    
+    // Recharger les planifications
+    this.loadPlanificationsForTable();
+    
+    // Mettre à jour la carte si elle est visible
+    if (this.selectedTab === 'map' && this.map) {
+      this.updateMapMarkers();
+    }
+    
+    // Afficher une notification
+    this.snackBar.open(
+      `Carte mise à jour pour le ${today}`,
+      'Fermer',
+      {
+        duration: 3000,
+        panelClass: ['info-snackbar'],
+      }
+    );
+  }
+
+  /**
+   * Retourne la date courante formatée pour l'affichage
+   */
+  getCurrentDateString(): string {
+    return new Date().toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   }
 
   loadCurrentUser(): void {
@@ -1272,10 +1340,10 @@ export class PlanificationComponent {
 
     if (this.selectedTab === 'map') {
       this.initMap();
-      // Utiliser la logique de testShowMagasinsWithRealCoords après initialisation
+      // Utiliser la nouvelle logique de marqueurs de planification
       setTimeout(() => {
         if (this.map) {
-          this.testShowMagasinsWithRealCoords();
+          this.updateMapMarkers();
         }
       }, 1000);
     }
@@ -1311,8 +1379,8 @@ export class PlanificationComponent {
     // Attendre un peu avant de mettre à jour les marqueurs
     setTimeout(() => {
       console.log('🔄 Mise à jour des marqueurs après initialisation...');
-      // Utiliser la logique de testShowMagasinsWithRealCoords par défaut
-      this.testShowMagasinsWithRealCoords();
+      // Utiliser la nouvelle logique de marqueurs de planification
+      this.updateMapMarkers();
       this.map?.invalidateSize();
     }, 500);
   }
@@ -1451,11 +1519,17 @@ export class PlanificationComponent {
             this.map = null;
           }
           this.initMap();
+          // Utiliser la nouvelle logique de marqueurs de planification
+          setTimeout(() => {
+            if (this.map) {
+              this.updateMapMarkers();
+            }
+          }, 1000);
         } else {
           console.log('🔄 Mise à jour de la carte existante...');
           this.map.invalidateSize();
-          // Utiliser la logique de testShowMagasinsWithRealCoords par défaut
-          this.testShowMagasinsWithRealCoords();
+          // Utiliser la nouvelle logique de marqueurs de planification
+          this.updateMapMarkers();
         }
       }, 500); // Augmenté le délai pour s'assurer que le DOM est prêt
     } else if (tab === 'table') {
@@ -1509,9 +1583,9 @@ export class PlanificationComponent {
       return;
     }
 
-    console.log('=== DÉBOGAGE MAP ===');
-    console.log('Magasins chargés:', this.magasins);
-    console.log('Nombre de magasins:', this.magasins.length);
+    console.log('=== DÉBOGAGE MAP - STATUTS DE PLANIFICATION ===');
+    console.log('Planifications chargées:', this.allPlanifications);
+    console.log('Nombre de planifications:', this.allPlanifications.length);
 
     // Supprimer tous les marqueurs existants de manière plus sûre
     this.map.eachLayer((layer) => {
@@ -1519,34 +1593,76 @@ export class PlanificationComponent {
         this.map!.removeLayer(layer);
       }
     });
+    
+    console.log('🗑️ Tous les marqueurs existants ont été supprimés');
 
-    // Vérifier si on a des magasins à afficher
-    if (this.magasins.length === 0) {
-      console.log('⚠️ Aucun magasin à afficher');
+    // Filtrer les planifications par date courante
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Début de la journée
+    
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1); // Début du jour suivant
+    
+    console.log('📅 Filtrage par date courante:', {
+      today: today.toISOString(),
+      tomorrow: tomorrow.toISOString()
+    });
+    
+    let planificationsToShow = this.allPlanifications.filter(planif => {
+      const planifDate = new Date(planif.dateVisite);
+      planifDate.setHours(0, 0, 0, 0);
+      return planifDate.getTime() === today.getTime();
+    });
+    
+    console.log(`📊 Planifications du jour (${today.toLocaleDateString('fr-FR')}):`, planificationsToShow.length);
+
+    // Vérifier si on a des planifications à afficher
+    if (planificationsToShow.length === 0) {
+      console.log('⚠️ Aucune planification du jour à afficher');
       this.snackBar.open(
-        "Aucun magasin trouvé. Veuillez d'abord ajouter des magasins.",
+        `Aucune planification trouvée pour le ${today.toLocaleDateString('fr-FR')}. Veuillez créer des planifications pour cette date.`,
         'Fermer',
         {
-          duration: 3000,
-          panelClass: ['warning-snackbar'],
+          duration: 4000,
+          panelClass: ['info-snackbar'],
         }
       );
       return;
     }
-
-    let magasinsToShow = this.magasins;
+    
+    // Appliquer les filtres additionnels
     if (this.selectedMagasin) {
-      magasinsToShow = this.magasins.filter(
-        (m) => m.id === this.selectedMagasin
+      planificationsToShow = planificationsToShow.filter(
+        (p) => p.magasin?.id === this.selectedMagasin
       );
-    } else if (this.selectedMerchandiseur) {
-      magasinsToShow = this.magasins.filter(
-        (m) =>
-          m.merchandiseur && m.merchandiseur.id === this.selectedMerchandiseur
+    }
+    if (this.selectedMerchandiseur) {
+      planificationsToShow = planificationsToShow.filter(
+        (p) => p.merchandiser?.id === this.selectedMerchandiseur
+      );
+    }
+    if (this.selectedRegion) {
+      planificationsToShow = planificationsToShow.filter(
+        (p) => p.magasin?.region === this.selectedRegion
+      );
+    }
+    if (this.selectedVille) {
+      planificationsToShow = planificationsToShow.filter(
+        (p) => p.magasin?.ville === this.selectedVille
+      );
+    }
+    if (this.selectedEnseigne) {
+      planificationsToShow = planificationsToShow.filter(
+        (p) => p.magasin?.enseigne === this.selectedEnseigne
+      );
+    }
+    if (this.selectedStatut) {
+      planificationsToShow = planificationsToShow.filter(
+        (p) => p.statut === this.selectedStatut
       );
     }
 
-    console.log('Magasins à afficher:', magasinsToShow);
+    console.log('Planifications à afficher:', planificationsToShow);
 
     // Coordonnées par défaut pour les principales villes du Maroc
     const defaultCoords: { [key: string]: [number, number] } = {
@@ -1579,181 +1695,242 @@ export class PlanificationComponent {
 
     let markersAdded = 0;
 
-    magasinsToShow.forEach((magasin, index) => {
-      console.log(`Magasin ${index + 1}:`, magasin);
-      console.log(`- Nom: ${magasin.nom}`);
-      console.log(`- Ville: ${magasin.ville}`);
-      console.log(`- Latitude: ${magasin.latitude}`);
-      console.log(`- Longitude: ${magasin.longitude}`);
-      console.log(`- Localisation: ${magasin.localisation}`);
+    // Créer une map pour avoir une seule planification par magasin (celle du jour)
+    const planificationsByMagasin = new Map<number, Planification>();
+    planificationsToShow.forEach(planif => {
+      if (planif.magasin?.id) {
+        // Garder seulement la première planification trouvée pour chaque magasin
+        if (!planificationsByMagasin.has(planif.magasin.id)) {
+          planificationsByMagasin.set(planif.magasin.id, planif);
+        }
+      }
+    });
 
-      let lat: number = 0,
-        lng: number = 0;
+    console.log('Planifications du jour par magasin:', planificationsByMagasin);
+
+    planificationsByMagasin.forEach((planification, magasinId) => {
+      const magasin = planification.magasin;
+      if (!magasin) return;
+
+      console.log(`Magasin ${magasin.nom}:`, planification);
+      console.log(`- Ville: ${magasin.ville}`);
+      console.log(`- Latitude: ${(magasin as any).latitude}`);
+      console.log(`- Longitude: ${(magasin as any).longitude}`);
+      console.log(`- Localisation: ${(magasin as any).localisation}`);
+
+      let lat: number = 0, lng: number = 0;
       let hasCoords = false;
 
       // 1. Utiliser les coordonnées GPS si disponibles
-      if (magasin.latitude && magasin.longitude) {
-        lat = magasin.latitude;
-        lng = magasin.longitude;
+      if ((magasin as any).latitude && (magasin as any).longitude) {
+        lat = (magasin as any).latitude;
+        lng = (magasin as any).longitude;
         hasCoords = true;
         console.log(`✅ Coordonnées GPS trouvées: ${lat}, ${lng}`);
       }
       // 2. Fallback: essayer de parser localisation si pas de coordonnées GPS
-      else if (magasin.localisation && magasin.localisation.includes(',')) {
-        const coords = magasin.localisation.split(',').map(Number);
+      else if ((magasin as any).localisation && (magasin as any).localisation.includes(',')) {
+        const coords = (magasin as any).localisation.split(',').map(Number);
         if (!isNaN(coords[0]) && !isNaN(coords[1])) {
           lat = coords[0];
           lng = coords[1];
           hasCoords = true;
-          console.log(
-            `✅ Coordonnées parsées depuis localisation: ${lat}, ${lng}`
-          );
+          console.log(`✅ Coordonnées parsées depuis localisation: ${lat}, ${lng}`);
         }
       }
       // 3. Fallback: utiliser des coordonnées par défaut basées sur la ville
       else if (magasin.ville) {
-        console.log(
-          `🔍 Recherche de coordonnées pour la ville: "${magasin.ville}"`
-        );
-        console.log(`📋 Villes disponibles:`, Object.keys(defaultCoords));
-
+        console.log(`🔍 Recherche de coordonnées pour la ville: "${magasin.ville}"`);
+        
         // Recherche insensible à la casse et plus flexible
         const villeKey = Object.keys(defaultCoords).find((key) => {
-          const normalizedKey = key
-            .toLowerCase()
-            .replace(/[éèêë]/g, 'e')
-            .replace(/[àâä]/g, 'a');
-          const normalizedVille = magasin.ville
-            .toLowerCase()
-            .replace(/[éèêë]/g, 'e')
-            .replace(/[àâä]/g, 'a');
-
-          console.log(
-            `🔍 Comparaison: "${normalizedKey}" vs "${normalizedVille}"`
-          );
-
-          const match =
-            normalizedKey === normalizedVille ||
-            normalizedKey.includes(normalizedVille) ||
-            normalizedVille.includes(normalizedKey);
-
-          if (match) {
-            console.log(
-              `✅ Match trouvé: "${key}" correspond à "${magasin.ville}"`
-            );
-          }
-
-          return match;
+          const normalizedKey = key.toLowerCase().replace(/[éèêë]/g, 'e').replace(/[àâä]/g, 'a');
+          const normalizedVille = magasin.ville!.toLowerCase().replace(/[éèêë]/g, 'e').replace(/[àâä]/g, 'a');
+          
+          return normalizedKey === normalizedVille ||
+                 normalizedKey.includes(normalizedVille) ||
+                 normalizedVille.includes(normalizedKey);
         });
-
-        // Si pas de match avec la recherche flexible, essayer une correspondance exacte
-        if (!villeKey) {
-          const exactMatch = Object.keys(defaultCoords).find(
-            (key) => key.toLowerCase() === magasin.ville.toLowerCase()
-          );
-          if (exactMatch) {
-            console.log(`✅ Correspondance exacte trouvée: "${exactMatch}"`);
-            [lat, lng] = defaultCoords[exactMatch];
-            hasCoords = true;
-            console.log(
-              `✅ Coordonnées par défaut pour ${magasin.ville} (correspondance exacte): ${lat}, ${lng}`
-            );
-          }
-        }
 
         if (villeKey) {
           [lat, lng] = defaultCoords[villeKey];
           hasCoords = true;
-          console.log(
-            `✅ Coordonnées par défaut pour ${magasin.ville} (trouvé via ${villeKey}): ${lat}, ${lng}`
-          );
+          console.log(`✅ Coordonnées par défaut pour ${magasin.ville}: ${lat}, ${lng}`);
         } else {
-          console.log(
-            `❌ Aucune coordonnée trouvée pour la ville: "${magasin.ville}"`
-          );
-          // Ajouter des coordonnées pour Essaouira
-          if (magasin.ville.toLowerCase().includes('essaouira')) {
-            lat = 31.5085;
-            lng = -9.7595;
-            hasCoords = true;
-            console.log(
-              `✅ Coordonnées ajoutées pour Essaouira: ${lat}, ${lng}`
-            );
-          }
+          console.log(`❌ Aucune coordonnée trouvée pour la ville: "${magasin.ville}"`);
         }
       }
       // 4. Fallback: coordonnées par défaut du Maroc (Casablanca)
-      else {
+      if (!hasCoords) {
         lat = 33.5731;
         lng = -7.5898;
         hasCoords = true;
         console.log(`⚠️ Coordonnées par défaut (Casablanca): ${lat}, ${lng}`);
       }
 
-      // 5. Si toujours pas de coordonnées, utiliser Casablanca pour ce magasin
-      if (!hasCoords) {
-        lat = 33.5731;
-        lng = -7.5898;
-        hasCoords = true;
-        console.log(
-          `⚠️ Coordonnées de secours (Casablanca) pour ${magasin.nom}: ${lat}, ${lng}`
-        );
-      }
-
       if (hasCoords) {
         try {
-          // Créer un marqueur simple sans icône personnalisée
-          const marker = L.marker([lat, lng]).addTo(this.map!).bindPopup(`
-             <div style="min-width: 250px; padding: 10px;">
-               <h4 style="margin: 0 0 10px 0; color: #333;">🏪 ${
-                 magasin.nom
-               }</h4>
-               <p style="margin: 5px 0; color: #666;">
-                 <strong>📍 Adresse:</strong><br>
-                 ${magasin.localisation || 'Adresse non spécifiée'}
-               </p>
-               <p style="margin: 5px 0; color: #666;">
-                 <strong>🏙️ Ville:</strong> ${magasin.ville}, ${magasin.region}
-               </p>
-               <p style="margin: 5px 0; color: #666;">
-                 <strong>🏪 Type:</strong> ${magasin.type}
-               </p>
-               <p style="margin: 5px 0; color: #666;">
-                 <strong>🏷️ Enseigne:</strong> ${magasin.enseigne}
-               </p>
-               ${
-                 !magasin.latitude || !magasin.longitude
-                   ? '<p style="margin: 5px 0; color: #ff9800; font-weight: bold;">⚠️ Coordonnées estimées</p>'
-                   : '<p style="margin: 5px 0; color: #4CAF50; font-weight: bold;">✅ Coordonnées GPS précises</p>'
-               }
+          // Utiliser le statut de la planification du jour
+          const statutPrincipal = planification.statut;
+          const couleur = this.getStatusColor(statutPrincipal);
+          const icone = this.getStatusIcon(statutPrincipal);
+          
+          console.log(`🎨 Création du marqueur pour ${magasin.nom}:`, {
+            statut: statutPrincipal,
+            statutText: this.getStatusText(statutPrincipal),
+            couleur: couleur,
+            icone: icone
+          });
+
+          // Créer un marqueur coloré basé sur le statut avec HTML pur
+          const markerIcon = L.divIcon({
+            className: 'status-marker-html',
+            html: `
+              <div style="
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                background-color: ${couleur};
+                border: 3px solid white;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                color: white;
+                font-weight: bold;
+                position: relative;
+                z-index: 999;
+              ">${icone}</div>
+            `,
+            iconSize: [28, 28],
+            iconAnchor: [14, 14],
+            popupAnchor: [0, -14]
+          });
+
+          const marker = L.marker([lat, lng], { icon: markerIcon }).addTo(this.map!);
+          
+          // Forcer la suppression des styles par défaut de Leaflet
+          setTimeout(() => {
+            const markerElement = marker.getElement();
+            if (markerElement) {
+              console.log(`🔧 Correction du marqueur pour ${magasin.nom}:`, {
+                couleurAttendue: couleur,
+                elementTrouve: !!markerElement
+              });
+              
+              // Forcer les styles personnalisés
+              markerElement.style.background = 'transparent';
+              markerElement.style.border = 'none';
+              markerElement.style.width = 'auto';
+              markerElement.style.height = 'auto';
+              
+              // Vérifier que le div interne a la bonne couleur
+              const innerDiv = markerElement.querySelector('div');
+              if (innerDiv) {
+                innerDiv.style.backgroundColor = couleur;
+                console.log(`✅ Couleur appliquée au marqueur: ${couleur}`);
+              }
+            }
+          }, 200);
+
+          marker.bindPopup(`
+             <div style="min-width: 320px; max-width: 400px; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+               <div style="background: linear-gradient(135deg, ${couleur} 0%, ${couleur}dd 100%); padding: 16px; border-radius: 12px 12px 0 0; position: relative;">
+                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                   <span style="background-color: rgba(255,255,255,0.2); color: white; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                     ${this.getStatusText(statutPrincipal)}
+                   </span>
+                   <div style="color: white; font-size: 18px;">🏪</div>
+                 </div>
+                 <h4 style="margin: 0; color: white; font-size: 16px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                   ${magasin.nom}
+                 </h4>
+               </div>
+               <div style="padding: 16px;">
+                 <div style="display: grid; gap: 12px; margin-bottom: 16px;">
+                   <div style="display: flex; align-items: flex-start; gap: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #007bff;">
+                     <div style="color: #007bff; font-size: 16px;">📍</div>
+                     <div>
+                       <div style="font-size: 12px; color: #6c757d; font-weight: 500; margin-bottom: 2px;">Adresse</div>
+                       <div style="font-size: 13px; color: #495057; line-height: 1.4;">${(magasin as any).localisation || 'Adresse non spécifiée'}</div>
+                     </div>
+                   </div>
+                   <div style="display: flex; align-items: flex-start; gap: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #28a745;">
+                     <div style="color: #28a745; font-size: 16px;">🏙️</div>
+                     <div>
+                       <div style="font-size: 12px; color: #6c757d; font-weight: 500; margin-bottom: 2px;">Localisation</div>
+                       <div style="font-size: 13px; color: #495057; line-height: 1.4;">${magasin.ville}, ${magasin.region}</div>
+                     </div>
+                   </div>
+                   <div style="display: flex; align-items: flex-start; gap: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #ffc107;">
+                     <div style="color: #ffc107; font-size: 16px;">🏷️</div>
+                     <div>
+                       <div style="font-size: 12px; color: #6c757d; font-weight: 500; margin-bottom: 2px;">Enseigne</div>
+                       <div style="font-size: 13px; color: #495057; line-height: 1.4;">${magasin.enseigne}</div>
+                     </div>
+                   </div>
+                 </div>
+                 
+                 <!-- Planification du jour -->
+                 <div style="background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef; padding: 12px;">
+                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                     <strong style="color: #495057; font-size: 13px;">📅 Planification du jour</strong>
+                     <span style="font-size: 10px; color: #6c757d; background: #dee2e6; padding: 2px 6px; border-radius: 8px; font-weight: 500;">${new Date().toLocaleDateString('fr-FR')}</span>
+                   </div>
+                   <div style="
+                     padding: 12px; 
+                     background-color: white; 
+                     border-radius: 6px; 
+                     border-left: 4px solid ${couleur};
+                     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                   ">
+                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                       <strong style="font-size: 13px; color: #212529;">${new Date(planification.dateVisite).toLocaleDateString('fr-FR')}</strong>
+                       <span style="font-size: 11px; color: #6c757d; background: #f8f9fa; padding: 2px 6px; border-radius: 4px;">${new Date(planification.dateVisite).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}</span>
+                     </div>
+                     <div style="font-size: 12px; color: #495057; margin-bottom: 4px; font-weight: 500;">
+                       👤 ${planification.merchandiser?.nom || 'N/A'} ${planification.merchandiser?.prenom || ''}
+                     </div>
+                     <div style="font-size: 11px; color: #6c757d;">
+                       <span style="background-color: ${couleur}; color: white; padding: 2px 8px; border-radius: 10px; font-weight: 500;">
+                         ${this.getStatusText(planification.statut)}
+                       </span>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+               <div style="padding: 12px 16px; background: #f8f9fa; border-top: 1px solid #e9ecef; border-radius: 0 0 12px 12px;">
+                 ${
+                   !(magasin as any).latitude || !(magasin as any).longitude
+                     ? '<div style="display: flex; align-items: center; gap: 8px; color: #ff9800; font-size: 12px; font-weight: 500;"><span style="font-size: 14px;">⚠️</span> Coordonnées estimées</div>'
+                     : '<div style="display: flex; align-items: center; gap: 8px; color: #28a745; font-size: 12px; font-weight: 500;"><span style="font-size: 14px;">✅</span> Coordonnées GPS précises</div>'
+                 }
+               </div>
              </div>
            `);
 
           markersAdded++;
-          console.log(
-            `✅ Marqueur ajouté pour ${magasin.nom} à [${lat}, ${lng}]`
-          );
+          console.log(`✅ Marqueur ajouté pour ${magasin.nom} (${this.getStatusText(statutPrincipal)}) à [${lat}, ${lng}]`);
         } catch (error) {
-          console.error(
-            `❌ Erreur lors de l'ajout du marqueur pour ${magasin.nom}:`,
-            error
-          );
+          console.error(`❌ Erreur lors de l'ajout du marqueur pour ${magasin.nom}:`, error);
         }
       }
     });
 
     console.log(`Total marqueurs ajoutés: ${markersAdded}`);
 
-    // Afficher un message si aucun magasin n'a de coordonnées GPS
-    const magasinsWithCoords = magasinsToShow.filter(
-      (m) =>
-        (m.latitude && m.longitude) ||
-        (m.localisation && m.localisation.includes(','))
+    // Afficher un message si aucune planification n'a de coordonnées GPS
+    const planificationsWithCoords = planificationsToShow.filter(
+      (p) => p.magasin && (
+        ((p.magasin as any).latitude && (p.magasin as any).longitude) ||
+        ((p.magasin as any).localisation && (p.magasin as any).localisation.includes(','))
+      )
     );
 
-    if (magasinsToShow.length > 0 && magasinsWithCoords.length === 0) {
+    if (planificationsToShow.length > 0 && planificationsWithCoords.length === 0) {
       this.snackBar.open(
-        "Aucun magasin n'a de coordonnées GPS précises. Des coordonnées estimées ont été utilisées. Utilisez la carte lors de la création/modification des magasins pour ajouter des coordonnées précises.",
+        "Aucune planification n'a de coordonnées GPS précises. Des coordonnées estimées ont été utilisées.",
         'Fermer',
         { duration: 8000, panelClass: ['info-snackbar'] }
       );
@@ -1848,8 +2025,8 @@ export class PlanificationComponent {
         if (this.selectedTab === 'map') {
           if (this.map) {
             console.log('🗺️ Carte disponible, mise à jour des marqueurs...');
-            // Utiliser la logique de testShowMagasinsWithRealCoords par défaut
-            this.testShowMagasinsWithRealCoords();
+            // Utiliser la nouvelle logique de marqueurs de planification
+            this.updateMapMarkers();
           } else {
             console.log('⚠️ Carte non disponible, initialisation...');
             setTimeout(() => {
@@ -1881,10 +2058,10 @@ export class PlanificationComponent {
 
     setTimeout(() => {
       this.initMap();
-      // Charger les magasins et utiliser la logique de testShowMagasinsWithRealCoords
+      // Charger les magasins et utiliser la logique de marqueurs de planification
       this.loadMagasins();
       if (this.map) {
-        this.testShowMagasinsWithRealCoords();
+        this.updateMapMarkers();
       }
     }, 100);
   }
@@ -1907,8 +2084,8 @@ export class PlanificationComponent {
 
     // Forcer la mise à jour des marqueurs
     if (this.map) {
-      // Utiliser la logique de testShowMagasinsWithRealCoords par défaut
-      this.testShowMagasinsWithRealCoords();
+      // Utiliser la nouvelle logique de marqueurs de planification
+      this.updateMapMarkers();
     } else {
       this.initMap();
     }
@@ -2033,7 +2210,7 @@ export class PlanificationComponent {
       console.log('🗺️ Carte non initialisée, initialisation...');
       this.initMap();
       setTimeout(() => {
-        this.testShowMagasinsWithRealCoords();
+        this.updateMapMarkers();
       }, 500);
       return;
     }
@@ -2463,6 +2640,54 @@ export class PlanificationComponent {
     }
   }
 
+  // Nouvelle méthode pour déterminer le statut principal d'un magasin
+  getPrincipalStatut(planifications: Planification[]): StatutVisite {
+    if (planifications.length === 0) {
+      return StatutVisite.PLANIFIEE; // Par défaut
+    }
+
+    // Priorité des statuts (du plus important au moins important)
+    const statutPriority = {
+      [StatutVisite.NON_ACCOMPLIE]: 5,
+      [StatutVisite.EN_COURS]: 4,
+      [StatutVisite.EFFECTUEE]: 3,
+      [StatutVisite.REPROGRAMMEE]: 2,
+      [StatutVisite.PLANIFIEE]: 1
+    };
+
+    // Trouver le statut avec la priorité la plus élevée
+    let principalStatut = StatutVisite.PLANIFIEE;
+    let maxPriority = 0;
+
+    planifications.forEach(planif => {
+      const priority = statutPriority[planif.statut] || 0;
+      if (priority > maxPriority) {
+        maxPriority = priority;
+        principalStatut = planif.statut;
+      }
+    });
+
+    return principalStatut;
+  }
+
+  // Nouvelle méthode pour obtenir l'icône correspondant au statut
+  getStatusIcon(statut: StatutVisite): string {
+    switch (statut) {
+      case StatutVisite.PLANIFIEE:
+        return '📅';
+      case StatutVisite.EN_COURS:
+        return '🔄';
+      case StatutVisite.EFFECTUEE:
+        return '✅';
+      case StatutVisite.REPROGRAMMEE:
+        return '🔄';
+      case StatutVisite.NON_ACCOMPLIE:
+        return '❌';
+      default:
+        return '❓';
+    }
+  }
+
   editPlanification(planification: Planification): void {
     const data = {
       planification: {
@@ -2519,5 +2744,30 @@ export class PlanificationComponent {
           },
         });
     }
+  }
+
+  // Méthode pour l'import
+  openImportDialog(): void {
+    const dialogRef = this.dialog.open(GenericImportDialogComponent, {
+      width: '900px',
+      maxHeight: '90vh',
+      data: {
+        importType: 'planifications',
+        title: 'Importer des planifications',
+        description: 'Sélectionnez un fichier Excel contenant les données des planifications à importer.'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Recharger les données après import
+        this.loadPlanificationsForTable();
+        this.loadInitialData(); // Recharger aussi le calendrier
+        this.snackBar.open('Import terminé avec succès', 'Fermer', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+      }
+    });
   }
 }

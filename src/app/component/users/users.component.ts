@@ -48,6 +48,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Region } from '../../enum/Region';
 import { ImportConfigService } from '../../services/import-config.service';
+import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
+import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
 const componentMap: { [key: string]: { component: any; dataKey: string } } = {
   SUPERVISEUR: { component: AddSupComponent, dataKey: 'superviseur' },
   MERCHANDISEUR_MONO: {
@@ -89,6 +91,8 @@ const componentMap: { [key: string]: { component: any; dataKey: string } } = {
     MatListModule,
     RouterLink,
     RouterModule,
+    GenericImportDialogComponent,
+    ColumnCustomizationPanelComponent,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -166,19 +170,22 @@ export class UsersComponent implements OnInit {
   status: string | undefined;
   searchTerm = '';
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = [
-    // 'numero',
-    'nom',
-    'region',
-    'city',
-    'store',
-    'connexion',
-    'sessions',
-    'role',
-    'status',
-    'actions',
-  ];
+  displayedColumns: string[] = [];
   combinedDataSource = new MatTableDataSource<any>([]);
+
+  // Propriétés pour la personnalisation des colonnes
+  isColumnCustomizationOpen = false;
+  columnConfig = [
+    { key: 'nom', label: 'Nom complet', visible: true },
+    { key: 'region', label: 'Région', visible: true },
+    { key: 'city', label: 'Ville', visible: true },
+    { key: 'store', label: 'Magasin', visible: true },
+    { key: 'connexion', label: 'Dernière connexion', visible: true },
+    { key: 'sessions', label: 'Sessions', visible: true },
+    { key: 'role', label: 'Rôle', visible: true },
+    { key: 'status', label: 'Statut', visible: true },
+    { key: 'actions', label: 'Actions', visible: true }
+  ];
 
   constructor(
     private translate: TranslateService,
@@ -196,6 +203,11 @@ export class UsersComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Initialiser les colonnes affichées
+    this.displayedColumns = this.columnConfig
+      .filter(col => col.visible)
+      .map(col => col.key);
+    
     this.loadUsers();
     this.loadCurrentUser();
   }
@@ -574,5 +586,46 @@ export class UsersComponent implements OnInit {
     } else {
       this.drawer.close();
     }
+  }
+
+  // Méthodes pour la personnalisation des colonnes
+  openColumnCustomizationPanel(): void {
+    this.isColumnCustomizationOpen = true;
+  }
+
+  closeColumnCustomizationPanel(): void {
+    this.isColumnCustomizationOpen = false;
+  }
+
+  onColumnCustomizationSave(updatedConfig: any[]): void {
+    this.columnConfig = updatedConfig;
+    this.displayedColumns = this.columnConfig
+      .filter(col => col.visible)
+      .map(col => col.key);
+    this.closeColumnCustomizationPanel();
+  }
+
+  // Méthode pour l'import
+  openImportDialog(): void {
+    const dialogRef = this.dialog.open(GenericImportDialogComponent, {
+      width: '900px',
+      maxHeight: '90vh',
+      data: {
+        importType: 'users',
+        title: 'Importer des utilisateurs',
+        description: 'Sélectionnez un fichier Excel contenant les données des utilisateurs à importer.'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Recharger les données après import
+        this.loadUsers();
+        this.snackBar.open('Import terminé avec succès', 'Fermer', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+      }
+    });
   }
 }

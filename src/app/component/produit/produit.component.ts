@@ -44,6 +44,7 @@ import { ProduitDetailComponent } from '../../dialogs/produit-detail/produit-det
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
 import { ImportConfigService } from '../../services/import-config.service';
+import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
 
 @Component({
   selector: 'app-produit',
@@ -53,7 +54,8 @@ import { ImportConfigService } from '../../services/import-config.service';
     MatCheckboxModule, MatToolbarModule, MatTableModule, MatIconModule, MatButtonModule,
     MatInputModule, MatFormFieldModule, MatSelectModule, MatBadgeModule, MatChipsModule,MatTooltipModule,
     MatSlideToggleModule, MatMenuModule, MatListModule, HttpClientModule,RouterLink,MatPaginatorModule,RouterModule,
-    GenericImportDialogComponent
+    GenericImportDialogComponent,
+    ColumnCustomizationPanelComponent
   ],
   templateUrl: './produit.component.html',
   styleUrls: ['./produit.component.css']
@@ -77,6 +79,21 @@ throw new Error('Method not implemented.');
       'article', 'dimensions', 'prix',
       'famille', 'sousMarques', 'codeEAN', 
       'actions'
+    ];
+
+    // Configuration pour la personnalisation des colonnes
+    isColumnCustomizationOpen = false;
+    columnConfig = [
+      { key: 'marque', label: 'Marque', visible: true },
+      { key: 'categorie', label: 'Catégorie', visible: true },
+      { key: 'image', label: 'Image', visible: true },
+      { key: 'article', label: 'Article', visible: true },
+      { key: 'dimensions', label: 'Dimensions', visible: true },
+      { key: 'prix', label: 'Prix', visible: true },
+      { key: 'famille', label: 'Famille', visible: true },
+      { key: 'sousMarques', label: 'Sous-marques', visible: true },
+      { key: 'codeEAN', label: 'Code EAN', visible: true },
+      { key: 'actions', label: 'Actions', visible: true }
     ];
     dataSource = new MatTableDataSource<Produit>();
     selection = new SelectionModel<Produit>(true, []);
@@ -670,5 +687,22 @@ onRowClick(event: MouseEvent, row: Produit): void {
         );
       }
     });
+  }
+
+  // Méthodes pour la personnalisation des colonnes
+  openColumnCustomizationPanel(): void {
+    this.isColumnCustomizationOpen = true;
+  }
+
+  closeColumnCustomizationPanel(): void {
+    this.isColumnCustomizationOpen = false;
+  }
+
+  onColumnCustomizationSave(updatedConfig: any[]): void {
+    this.columnConfig = updatedConfig;
+    this.displayedColumns = this.columnConfig
+      .filter(col => col.visible)
+      .map(col => col.key);
+    this.closeColumnCustomizationPanel();
   }
 }

@@ -154,7 +154,9 @@ export class AddPlanificationComponent implements OnInit {
         let current = new Date(d);
         while (current <= endDate) {
           recDates.push(this.formatDateToISO(current));
-          if (formValue.recurrence === 'weekly') {
+          if (formValue.recurrence === 'daily') {
+            current.setDate(current.getDate() + 1);
+          } else if (formValue.recurrence === 'weekly') {
             current.setDate(current.getDate() + 7);
           } else if (formValue.recurrence === 'monthly') {
             current.setMonth(current.getMonth() + 1);
@@ -379,6 +381,14 @@ export class AddPlanificationComponent implements OnInit {
     this.showDateFin = value !== 'none';
     if (!this.showDateFin) {
       this.planifForm.get('dateFin')?.setValue('');
+    }
+    
+    // Avertissement pour la récurrence quotidienne
+    if (value === 'daily') {
+      this.snackBar.open('⚠️ Attention : La récurrence quotidienne créera une planification pour chaque jour jusqu\'à la date de fin', 'Fermer', {
+        duration: 6000,
+        panelClass: ['warning-snackbar']
+      });
     }
   }
 

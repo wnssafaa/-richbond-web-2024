@@ -13,7 +13,6 @@ import { MatProgressBarModule, MatProgressBar } from '@angular/material/progress
 import { MatSpinner } from '@angular/material/progress-spinner';
 import { forkJoin } from 'rxjs';
 import { AdduserComponent } from '../adduser/adduser.component';
-import { LoginHistoryComponent } from '../login-history/login-history.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DatePipe, formatDate } from '@angular/common';
 // import { Magasin, MagasinService } from '../../services/magasin.service';
@@ -24,7 +23,7 @@ import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-log
 import { CommonModule } from '@angular/common';
 import { MatSortModule } from '@angular/material/sort';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatCheckboxModule, MatCheckbox } from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule, MatIcon } from '@angular/material/icon';
 import { MatFormFieldModule, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatSelectModule, MatSelect, MatOption } from '@angular/material/select';
@@ -50,6 +49,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
 // import { MatTooltip } from '@angular/material/tooltip';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { Chart, registerables } from 'chart.js';
@@ -66,7 +66,8 @@ interface FilterOption {
   standalone: true,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
-    TranslateModule,MatTooltipModule,
+    TranslateModule,
+    MatTooltipModule,
     CommonModule,
     MatSortModule,
     MatSidenavModule,
@@ -77,7 +78,6 @@ interface FilterOption {
     FormsModule,
     MatDialogModule,
     MatCheckboxModule,
-    MatCheckbox,
     MatToolbarModule,
     MatTableModule,
     NzCalendarModule,
@@ -106,8 +106,7 @@ interface FilterOption {
     RouterModule,
     MatProgressBarModule,
     MatProgressBar,
-    LoginHistoryComponent,
-   
+    MatTabsModule
   ],
 providers: [TranslateService,
   // { provide: LOCALE_ID, useValue: 'fr' },
@@ -140,6 +139,7 @@ export class DachboardComponent implements OnDestroy {
   kpiAssignmentChart: Chart | null = null;
   kpiUsageChart: Chart | null = null;
   kpiReportChart: Chart | null = null;
+  completionTrendChart: Chart | null = null;
 
   // Graphiques
   public usersChartData: ChartData<'doughnut'> = {
@@ -187,6 +187,14 @@ export class DachboardComponent implements OnDestroy {
   kpiAppUsageData: AppUsageStats | null = null;
   kpiReportData: ReportCompletionStats[] = [];
 
+  // Table data sources pour les KPIs
+  assignmentDataSource = new MatTableDataSource<MerchandiserAssignmentTracking>();
+  reportDataSource = new MatTableDataSource<ReportCompletionStats>();
+
+  // Colonnes des tables KPI
+  assignmentColumns: string[] = ['merchandiserName', 'region', 'totalAssignments', 'completionRate', 'status', 'lastActivity'];
+  reportColumns: string[] = ['merchandiserName', 'region', 'totalReports', 'completionRate', 'status', 'averageTime'];
+
   // Filtres KPI
   kpiFilters = {
     dateRange: {
@@ -198,8 +206,21 @@ export class DachboardComponent implements OnDestroy {
     status: ''
   };
 
+  // Filtres KPI étendus
+  selectedKpiRegion: string = '';
+  selectedKpiPeriod: string = 'month';
+  kpiDateRange = {
+    start: new Date(),
+    end: new Date()
+  };
+
+  // Options de filtres KPI
+  kpiRegions: string[] = ['Toutes', 'Casablanca-Settat', 'Rabat-Salé-Kénitra', 'Marrakech-Safi', 'Fès-Meknès', 'Tanger-Tétouan-Al Hoceïma'];
+  kpiPeriods: string[] = ['week', 'month', 'quarter', 'year'];
+
   // État des données KPI
   kpiDataMode: 'real' | 'mock' = 'real';
+  kpiLoading = false;
 
   // Méthodes utilitaires pour les calculs KPI
   getTotalAssignments(): number {
@@ -282,6 +303,11 @@ ngAfterViewInit(): void {
   setTimeout(() => {
     this.initializeCharts();
   }, 100);
+  
+  // Initialiser les graphiques KPI pour l'onglet actif
+  setTimeout(() => {
+    this.createKpiChartsSelectively();
+  }, 200);
 }
 
 dataSource = new MatTableDataSource<any>();
@@ -593,6 +619,7 @@ ngOnInit(): void {
   this.loadUsersIntegrationChartData();
   
   // Charger les données KPI
+  console.log('🔄 Démarrage du chargement des données KPI...');
   this.loadKpiData();
 
   const currentYear = new Date().getFullYear();
@@ -1280,6 +1307,7 @@ private updatePlanificationsChartDisplay(): void {
 // Méthodes KPI
 loadKpiData(): void {
   console.log('🔄 Chargement des données KPI...');
+  this.kpiLoading = true;
   
   // Utiliser les filtres si définis, sinon charger toutes les données
   const kpiObservable = this.hasActiveFilters() ? 
@@ -1294,11 +1322,23 @@ loadKpiData(): void {
       this.kpiAppUsageData = data.appUsageStats;
       this.kpiReportData = data.reportCompletion;
       
+      // DEBUG: Vérifier les données reçues
+      console.log('🔍 DEBUG - Données reçues:', {
+        assignmentData: this.kpiAssignmentData,
+        appUsageData: this.kpiAppUsageData,
+        reportData: this.kpiReportData
+      });
+      
+      // Mettre à jour les data sources
+      this.updateKpiDataSources();
+      
       // Détecter si on utilise des données mock (basé sur la taille des données)
       this.kpiDataMode = (this.kpiAssignmentData.length <= 2 && this.kpiReportData.length <= 2) ? 'mock' : 'real';
       
       if (this.kpiDataMode === 'mock') {
         console.warn('⚠️ Mode données mock détecté - API backend non disponible');
+        // Créer des données de test si aucune donnée n'est disponible
+        this.createMockKpiData();
       }
       
       // Logs de vérification
@@ -1320,17 +1360,36 @@ loadKpiData(): void {
         tauxMoyen: this.getAverageCompletionRate()
       });
       
+      this.kpiLoading = false;
+      
       // Créer les graphiques KPI après un délai pour s'assurer que les éléments DOM sont prêts
       setTimeout(() => {
-        this.createKpiCharts();
+        this.createKpiChartsWithRetry();
       }, 500);
     },
     error: (error) => {
       console.error('❌ Erreur lors du chargement des KPIs:', error);
       // En cas d'erreur, passer en mode mock
       this.kpiDataMode = 'mock';
+      this.kpiLoading = false;
+      this.createMockKpiData();
     }
   });
+}
+
+// Mettre à jour les data sources KPI
+updateKpiDataSources(): void {
+  // Filtrer les données selon les critères sélectionnés
+  let filteredAssignments = this.kpiAssignmentData;
+  let filteredReports = this.kpiReportData;
+
+  if (this.selectedKpiRegion && this.selectedKpiRegion !== 'Toutes') {
+    filteredAssignments = this.kpiAssignmentData.filter(item => item.region === this.selectedKpiRegion);
+    filteredReports = this.kpiReportData.filter(item => item.region === this.selectedKpiRegion);
+  }
+
+  this.assignmentDataSource.data = filteredAssignments;
+  this.reportDataSource.data = filteredReports;
 }
 
 // Méthodes pour les filtres KPI
@@ -1356,8 +1415,25 @@ clearKpiFilters(): void {
     merchandiserId: 0,
     status: ''
   };
+  this.selectedKpiRegion = '';
+  this.selectedKpiPeriod = 'month';
+  this.kpiDateRange = {
+    start: new Date(),
+    end: new Date()
+  };
   console.log('🗑️ Filtres KPI effacés');
   this.loadKpiData();
+}
+
+// Méthodes de filtrage KPI étendues
+onKpiRegionChange(): void {
+  this.updateKpiDataSources();
+  this.refreshKpiCharts();
+}
+
+onKpiPeriodChange(): void {
+  // Ici vous pourriez filtrer par période si nécessaire
+  this.refreshKpiCharts();
 }
 
 refreshKpiData(): void {
@@ -1367,175 +1443,703 @@ refreshKpiData(): void {
       this.kpiAssignmentData = data.assignmentTracking;
       this.kpiAppUsageData = data.appUsageStats;
       this.kpiReportData = data.reportCompletion;
+      this.updateKpiDataSources();
       setTimeout(() => this.createKpiCharts(), 500);
     }
   });
+}
+
+refreshKpiCharts(): void {
+  this.destroyKpiCharts();
+  setTimeout(() => {
+    this.createKpiChartsSelectively();
+  }, 100);
+}
+
+private destroyKpiCharts(): void {
+  if (this.kpiAssignmentChart) {
+    this.kpiAssignmentChart.destroy();
+    this.kpiAssignmentChart = null;
+  }
+  if (this.kpiUsageChart) {
+    this.kpiUsageChart.destroy();
+    this.kpiUsageChart = null;
+  }
+  if (this.kpiReportChart) {
+    this.kpiReportChart.destroy();
+    this.kpiReportChart = null;
+  }
+  if (this.completionTrendChart) {
+    this.completionTrendChart.destroy();
+    this.completionTrendChart = null;
+  }
+}
+
+// Utilitaires KPI
+getCompletionStatus(rate: number): string {
+  if (rate >= 90) return 'excellent';
+  if (rate >= 80) return 'good';
+  if (rate >= 70) return 'average';
+  return 'poor';
+}
+
+getCompletionRate(rate: number): string {
+  if (rate >= 90) return 'primary';
+  if (rate >= 80) return 'accent';
+  if (rate >= 70) return 'warn';
+  return 'warn';
+}
+
+getCompletionColor(rate: number): string {
+  if (rate >= 90) return '#4CAF50';
+  if (rate >= 80) return '#FF9800';
+  if (rate >= 70) return '#FFC107';
+  return '#F44336';
+}
+
+getAssignmentStatus(assignments: MerchandiserAssignmentTracking): string {
+  const completionRate = assignments.completionRate;
+  if (completionRate >= 90) return 'Excellente';
+  if (completionRate >= 80) return 'Bonne';
+  if (completionRate >= 70) return 'Moyenne';
+  return 'À améliorer';
 }
 
 createKpiCharts(): void {
   this.createKpiAssignmentChart();
   this.createKpiUsageChart();
   this.createKpiReportChart();
+  this.createCompletionTrendChart();
+}
+
+createKpiChartsWithRetry(): void {
+  // Vérifier si les éléments DOM sont disponibles
+  const canvasElements = [
+    'kpiAssignmentChart',
+    'kpiUsageChart', 
+    'kpiReportChart',
+    'kpiTrendChart'
+  ];
+  
+  const missingElements = canvasElements.filter(id => !document.getElementById(id));
+  
+  if (missingElements.length > 0) {
+    console.warn('⏳ Canvas elements not ready yet:', missingElements);
+    
+    // Limiter le nombre de tentatives pour éviter une boucle infinie
+    if (!this.retryCount) {
+      this.retryCount = 0;
+    }
+    
+    if (this.retryCount < 10) {
+      this.retryCount++;
+      // Réessayer après 200ms
+      setTimeout(() => {
+        this.createKpiChartsWithRetry();
+      }, 200);
+      return;
+    } else {
+      console.warn('⚠️ Max retry attempts reached, creating available charts only');
+    }
+  }
+  
+  console.log('🎯 Creating available charts...');
+  this.createKpiChartsSelectively();
+}
+
+private retryCount = 0;
+
+createKpiChartsSelectively(): void {
+  // Créer seulement les graphiques dont les éléments DOM sont disponibles
+  if (document.getElementById('kpiAssignmentChart')) {
+    this.createKpiAssignmentChart();
+  }
+  
+  if (document.getElementById('kpiUsageChart')) {
+    this.createKpiUsageChart();
+  }
+  
+  if (document.getElementById('kpiReportChart')) {
+    this.createKpiReportChart();
+  }
+  
+  if (document.getElementById('kpiTrendChart')) {
+    this.createCompletionTrendChart();
+  }
+}
+
+// Gestionnaire pour les changements d'onglets
+onTabChange(event: any): void {
+  console.log('📑 Tab changed to:', event.index);
+  
+  // Attendre que l'onglet soit complètement rendu
+  setTimeout(() => {
+    this.createChartsForActiveTab(event.index);
+  }, 100);
+}
+
+private createChartsForActiveTab(tabIndex: number): void {
+  switch (tabIndex) {
+    case 0: // Onglet des affectations
+      if (document.getElementById('kpiAssignmentChart')) {
+        this.createKpiAssignmentChart();
+      }
+      break;
+      
+    case 1: // Onglet d'utilisation
+      if (document.getElementById('kpiUsageChart')) {
+        this.createKpiUsageChart();
+      }
+      break;
+      
+    case 2: // Onglet des rapports
+      if (document.getElementById('kpiReportChart')) {
+        this.createKpiReportChart();
+      }
+      if (document.getElementById('kpiTrendChart')) {
+        this.createCompletionTrendChart();
+      }
+      break;
+  }
+}
+
+// Créer des données de test pour les graphiques KPI
+createMockKpiData(): void {
+  console.log('🎭 Création de données de test pour les graphiques KPI...');
+  
+  // Données de test pour les assignations
+  if (this.kpiAssignmentData.length === 0) {
+    this.kpiAssignmentData = [
+      {
+        merchandiserId: 1,
+        merchandiserName: 'Ahmed Benali',
+        region: 'Casablanca-Settat',
+        totalAssignments: 15,
+        completedAssignments: 12,
+        pendingAssignments: 3,
+        inProgressAssignments: 2,
+        completionRate: 80,
+        averageCompletionTime: '2h 30m',
+        lastActivityDate: '2024-01-15'
+      },
+      {
+        merchandiserId: 2,
+        merchandiserName: 'Fatima Alami',
+        region: 'Rabat-Salé-Kénitra',
+        totalAssignments: 20,
+        completedAssignments: 18,
+        pendingAssignments: 2,
+        inProgressAssignments: 1,
+        completionRate: 90,
+        averageCompletionTime: '2h 15m',
+        lastActivityDate: '2024-01-14'
+      },
+      {
+        merchandiserId: 3,
+        merchandiserName: 'Omar Tazi',
+        region: 'Marrakech-Safi',
+        totalAssignments: 12,
+        completedAssignments: 8,
+        pendingAssignments: 4,
+        inProgressAssignments: 3,
+        completionRate: 67,
+        averageCompletionTime: '3h 00m',
+        lastActivityDate: '2024-01-13'
+      }
+    ];
+  }
+  
+  // Données de test pour l'utilisation de l'app
+  if (!this.kpiAppUsageData) {
+    this.kpiAppUsageData = {
+      totalUsers: 25,
+      activeUsers: 18,
+      dailyActiveUsers: 12,
+      weeklyActiveUsers: 20,
+      averageSessionDuration: '2h 45m',
+      mostUsedFeatures: [
+        { feature: 'Planification', usageCount: 150, percentage: 35 },
+        { feature: 'Visites', usageCount: 120, percentage: 28 },
+        { feature: 'Rapports', usageCount: 100, percentage: 23 },
+        { feature: 'Gestion Stock', usageCount: 60, percentage: 14 }
+      ],
+      loginStats: {
+        today: 12,
+        thisWeek: 85,
+        thisMonth: 320
+      }
+    };
+  }
+  
+  // Données de test pour les rapports
+  if (this.kpiReportData.length === 0) {
+    this.kpiReportData = [
+      {
+        merchandiserId: 1,
+        merchandiserName: 'Ahmed Benali',
+        region: 'Casablanca-Settat',
+        totalReports: 15,
+        completedReports: 12,
+        incompleteReports: 3,
+        completionRate: 80,
+        averageReportTime: '2h 30m',
+        reportsByStatus: {
+          completed: 12,
+          inProgress: 2,
+          pending: 1,
+          overdue: 0
+        },
+        reportsByMonth: [
+          { month: 'Oct 2023', completed: 8, total: 10 },
+          { month: 'Nov 2023', completed: 12, total: 15 },
+          { month: 'Déc 2023', completed: 15, total: 18 },
+          { month: 'Jan 2024', completed: 12, total: 15 }
+        ]
+      },
+      {
+        merchandiserId: 2,
+        merchandiserName: 'Fatima Alami',
+        region: 'Rabat-Salé-Kénitra',
+        totalReports: 20,
+        completedReports: 18,
+        incompleteReports: 2,
+        completionRate: 90,
+        averageReportTime: '2h 15m',
+        reportsByStatus: {
+          completed: 18,
+          inProgress: 1,
+          pending: 1,
+          overdue: 0
+        },
+        reportsByMonth: [
+          { month: 'Oct 2023', completed: 10, total: 12 },
+          { month: 'Nov 2023', completed: 15, total: 16 },
+          { month: 'Déc 2023', completed: 18, total: 20 },
+          { month: 'Jan 2024', completed: 18, total: 20 }
+        ]
+      }
+    ];
+  }
+  
+  console.log('✅ Données de test créées:', {
+    assignments: this.kpiAssignmentData.length,
+    appUsage: this.kpiAppUsageData ? 'OK' : 'MANQUANT',
+    reports: this.kpiReportData.length
+  });
+  
+  // Mettre à jour les data sources
+  this.updateKpiDataSources();
+}
+
+// Méthode de debug pour diagnostiquer les problèmes de graphiques
+debugKpiCharts(): void {
+  console.log('🔍 === DIAGNOSTIC DES GRAPHIQUES KPI ===');
+  
+  // 1. Vérifier Chart.js
+  console.log('1️⃣ Chart.js disponible?', typeof Chart !== 'undefined' ? '✅ OUI' : '❌ NON');
+  
+  // 2. Vérifier les données
+  console.log('2️⃣ Données KPI:', {
+    assignmentData: this.kpiAssignmentData.length,
+    appUsageData: this.kpiAppUsageData ? 'OK' : 'MANQUANT',
+    reportData: this.kpiReportData.length,
+    loadingState: this.kpiLoading
+  });
+  
+  // 3. Vérifier les éléments DOM
+  const canvasIds = ['kpiAssignmentChart', 'kpiUsageChart', 'kpiReportChart', 'kpiTrendChart'];
+  console.log('3️⃣ Éléments Canvas dans le DOM:');
+  canvasIds.forEach(id => {
+    const element = document.getElementById(id);
+    console.log(`   ${id}:`, element ? '✅ TROUVÉ' : '❌ MANQUANT');
+    if (element) {
+      console.log(`      - Visible: ${element.offsetWidth > 0 && element.offsetHeight > 0 ? 'OUI' : 'NON'}`);
+      console.log(`      - Dimensions: ${element.offsetWidth}x${element.offsetHeight}`);
+    }
+  });
+  
+  // 4. Vérifier les graphiques existants
+  console.log('4️⃣ Graphiques Chart.js existants:', {
+    assignmentChart: this.kpiAssignmentChart ? 'EXISTANT' : 'NULL',
+    usageChart: this.kpiUsageChart ? 'EXISTANT' : 'NULL',
+    reportChart: this.kpiReportChart ? 'EXISTANT' : 'NULL',
+    trendChart: this.completionTrendChart ? 'EXISTANT' : 'NULL'
+  });
+  
+  // 5. Tester le service KPI directement
+  console.log('5️⃣ Test du service KPI...');
+  this.kpiService.getAllKpiData().subscribe({
+    next: (data) => {
+      console.log('✅ Service KPI répond:', data);
+    },
+    error: (error) => {
+      console.error('❌ Erreur service KPI:', error);
+    }
+  });
+  
+  // 6. Créer des données de test si nécessaire
+  if (this.kpiAssignmentData.length === 0 || !this.kpiAppUsageData || this.kpiReportData.length === 0) {
+    console.log('6️⃣ Création de données de test...');
+    this.createMockKpiData();
+  }
+  
+  // 7. Forcer la création des graphiques
+  console.log('7️⃣ Tentative de création des graphiques...');
+  this.createKpiChartsSelectively();
+  
+  console.log('🔍 === FIN DU DIAGNOSTIC ===');
+}
+
+// Forcer le rechargement complet des données KPI
+forceReloadKpiData(): void {
+  console.log('🔄 Rechargement forcé des données KPI...');
+  
+  // Réinitialiser toutes les données
+  this.kpiAssignmentData = [];
+  this.kpiAppUsageData = null;
+  this.kpiReportData = [];
+  this.kpiLoading = true;
+  
+  // Détruire tous les graphiques existants
+  this.destroyKpiCharts();
+  
+  // Attendre un peu puis recharger
+  setTimeout(() => {
+    console.log('📊 Rechargement des données KPI...');
+    this.loadKpiData();
+  }, 500);
+  
+  // En parallèle, créer des données de test immédiatement
+  console.log('🎭 Création de données de test immédiates...');
+  this.createMockKpiData();
+  
+  // Forcer la création des graphiques après 1 seconde
+  setTimeout(() => {
+    console.log('🎨 Création forcée des graphiques...');
+    this.createKpiChartsSelectively();
+  }, 1000);
+}
+
+// Export des données KPI
+exportKpiToExcel(): void {
+  // Implémentation de l'export Excel
+  console.log('Export Excel KPI - À implémenter');
+}
+
+exportKpiToPDF(): void {
+  // Implémentation de l'export PDF
+  console.log('Export PDF KPI - À implémenter');
 }
 
 private createKpiAssignmentChart(): void {
+  console.log('🎯 Tentative de création du graphique d\'assignations...');
+  
   const ctx = document.getElementById('kpiAssignmentChart') as HTMLCanvasElement;
-  if (!ctx || this.kpiAssignmentData.length === 0) return;
+  if (!ctx) {
+    console.error('❌ Canvas kpiAssignmentChart not found in DOM');
+    return;
+  }
+  
+  console.log('✅ Canvas kpiAssignmentChart trouvé:', ctx);
+
+  if (this.kpiAssignmentData.length === 0) {
+    console.error('❌ No assignment data available for chart');
+    return;
+  }
+  
+  console.log('✅ Données d\'assignations disponibles:', this.kpiAssignmentData.length, 'éléments');
 
   // Nettoyer le graphique existant
   if (this.kpiAssignmentChart) {
     this.kpiAssignmentChart.destroy();
+    console.log('🧹 Ancien graphique d\'assignations détruit');
   }
 
-  // Préparer les données pour Chart.js - maintenant par statut
-  const labels = this.kpiAssignmentData.map(item => item.merchandiserName);
-  const data = this.kpiAssignmentData.map(item => item.totalAssignments);
-  const colors = this.kpiAssignmentData.map(item => item.region); // Utilise la couleur stockée dans region
-
-  this.kpiAssignmentChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
+  try {
+    // Préparer les données pour Chart.js
+    const labels = this.kpiAssignmentData.map(item => item.merchandiserName);
+    const completedData = this.kpiAssignmentData.map(item => item.completedAssignments);
+    const pendingData = this.kpiAssignmentData.map(item => item.pendingAssignments);
+    
+    console.log('📊 Données préparées pour le graphique:', {
       labels: labels,
-      datasets: [
-        {
-          label: 'Nombre de Planifications',
-          data: data,
-          backgroundColor: colors.map(color => color + '80'), // Ajouter transparence
-          borderColor: colors,
-          borderWidth: 2
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      indexAxis: 'x', // Graphique vertical (par défaut)
-      plugins: {
-        legend: {
-          display: false // Pas besoin de légende pour un seul dataset
-        },
-        title: {
-          display: true,
-          text: 'Répartition des Planifications par Statut'
-        }
+      completedData: completedData,
+      pendingData: pendingData
+    });
+
+    this.kpiAssignmentChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Assignations Complétées',
+            data: completedData,
+            backgroundColor: '#4CAF50',
+            borderColor: '#4CAF50',
+            borderWidth: 1
+          },
+          {
+            label: 'Assignations en Attente',
+            data: pendingData,
+            backgroundColor: '#FF9800',
+            borderColor: '#FF9800',
+            borderWidth: 1
+          }
+        ]
       },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Suivi des Affectations par Merchandiser'
+          },
+          legend: {
+            position: 'top'
           }
         },
-        x: {
-          ticks: {
-            maxRotation: 45,
-            minRotation: 0
-          }
-        }
-      }
-    }
-  });
-}
-
-private createKpiUsageChart(): void {
-  const ctx = document.getElementById('kpiUsageChart') as HTMLCanvasElement;
-  if (!ctx || !this.kpiAppUsageData) return;
-
-  this.kpiUsageChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Utilisateurs Actifs', 'Utilisateurs Inactifs'],
-      datasets: [{
-        data: [
-          this.kpiAppUsageData.activeUsers, 
-          this.kpiAppUsageData.totalUsers - this.kpiAppUsageData.activeUsers
-        ],
-        backgroundColor: ['#2196F3', '#E0E0E0'],
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        title: {
-          display: true,
-          text: 'Taux d\'Utilisation Globale'
-        },
-        legend: {
-          position: 'bottom'
-        }
-      }
-    }
-  });
-}
-
-private createKpiReportChart(): void {
-  const ctx = document.getElementById('kpiReportChart') as HTMLCanvasElement;
-  if (!ctx || this.kpiReportData.length === 0) return;
-
-  this.kpiReportChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: this.kpiReportData.map(item => item.merchandiserName),
-      datasets: [{
-        label: 'Taux de Completion (%)',
-        data: this.kpiReportData.map(item => item.completionRate),
-        backgroundColor: this.kpiReportData.map(item => 
-          item.completionRate >= 90 ? '#4CAF50' : 
-          item.completionRate >= 80 ? '#FF9800' : '#F44336'
-        ),
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        title: {
-          display: true,
-          text: 'Finalisation des Rapports par Merchandiser'
-        },
-        legend: {
-          display: false
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 100,
-          ticks: {
-            callback: function(value) {
-              return value + '%';
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
             }
           }
         }
       }
+    });
+    
+    console.log('✅ KPI Assignment Chart created successfully!');
+  } catch (error) {
+    console.error('❌ Error creating KPI Assignment Chart:', error);
+    if (error instanceof Error) {
+      console.error('❌ Error details:', error.message);
+      console.error('❌ Error stack:', error.stack);
+    } else {
+      console.error('❌ Unknown error type:', typeof error);
     }
-  });
+  }
+}
+
+private createKpiUsageChart(): void {
+  const ctx = document.getElementById('kpiUsageChart') as HTMLCanvasElement;
+  if (!ctx) {
+    console.warn('Canvas kpiUsageChart not found');
+    return;
+  }
+
+  if (!this.kpiAppUsageData) {
+    console.warn('No app usage data available for chart');
+    return;
+  }
+
+  // Nettoyer le graphique existant
+  if (this.kpiUsageChart) {
+    this.kpiUsageChart.destroy();
+  }
+
+  try {
+    this.kpiUsageChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Utilisateurs Actifs', 'Utilisateurs Inactifs'],
+        datasets: [{
+          data: [
+            this.kpiAppUsageData.activeUsers, 
+            this.kpiAppUsageData.totalUsers - this.kpiAppUsageData.activeUsers
+          ],
+          backgroundColor: ['#2196F3', '#E0E0E0'],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Taux d\'Utilisation Globale'
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+    
+    console.log('✅ KPI Usage Chart created successfully');
+  } catch (error) {
+    console.error('❌ Error creating KPI Usage Chart:', error);
+    if (error instanceof Error) {
+      console.error('❌ Error details:', error.message);
+    }
+  }
+}
+
+private createKpiReportChart(): void {
+  const ctx = document.getElementById('kpiReportChart') as HTMLCanvasElement;
+  if (!ctx) {
+    console.warn('Canvas kpiReportChart not found');
+    return;
+  }
+
+  if (this.kpiReportData.length === 0) {
+    console.warn('No report data available for chart');
+    return;
+  }
+
+  // Nettoyer le graphique existant
+  if (this.kpiReportChart) {
+    this.kpiReportChart.destroy();
+  }
+
+  try {
+    this.kpiReportChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: this.kpiReportData.map(item => item.merchandiserName),
+        datasets: [{
+          label: 'Taux de Completion (%)',
+          data: this.kpiReportData.map(item => item.completionRate),
+          backgroundColor: this.kpiReportData.map(item => 
+            item.completionRate >= 90 ? '#4CAF50' : 
+            item.completionRate >= 80 ? '#FF9800' : '#F44336'
+          ),
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Finalisation des Rapports par Merchandiser'
+          },
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              callback: function(value) {
+                return value + '%';
+              }
+            }
+          }
+        }
+      }
+    });
+    
+    console.log('✅ KPI Report Chart created successfully');
+  } catch (error) {
+    console.error('❌ Error creating KPI Report Chart:', error);
+    if (error instanceof Error) {
+      console.error('❌ Error details:', error.message);
+    }
+  }
+}
+
+private createCompletionTrendChart(): void {
+  const ctx = document.getElementById('kpiTrendChart') as HTMLCanvasElement;
+  if (!ctx) {
+    console.warn('Canvas kpiTrendChart not found');
+    return;
+  }
+
+  if (this.kpiReportData.length === 0) {
+    console.warn('No report data available for trend chart');
+    return;
+  }
+
+  // Nettoyer le graphique existant
+  if (this.completionTrendChart) {
+    this.completionTrendChart.destroy();
+  }
+
+  try {
+    // Calculer la moyenne des taux de completion par mois
+    const months = ['Oct 2023', 'Nov 2023', 'Déc 2023', 'Jan 2024'];
+    const avgCompletionRates = months.map(month => {
+      const rates = this.kpiReportData.map(report => {
+        const monthData = report.reportsByMonth?.find(m => m.month === month);
+        return monthData ? (monthData.completed / monthData.total) * 100 : 0;
+      });
+      return rates.reduce((sum, rate) => sum + rate, 0) / rates.length;
+    });
+
+    this.completionTrendChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [{
+          label: 'Taux de Completion Moyen (%)',
+          data: avgCompletionRates,
+          borderColor: '#2196F3',
+          backgroundColor: 'rgba(33, 150, 243, 0.1)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Évolution du Taux de Completion'
+          },
+          legend: {
+            position: 'top'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              callback: function(value) {
+                return value + '%';
+              }
+            }
+          }
+        }
+      }
+    });
+    
+    console.log('✅ KPI Trend Chart created successfully');
+  } catch (error) {
+    console.error('❌ Error creating KPI Trend Chart:', error);
+    if (error instanceof Error) {
+      console.error('❌ Error details:', error.message);
+    }
+  }
 }
 
 // Nettoyer les graphiques lors de la destruction du composant
 ngOnDestroy(): void {
+  this.destroyCharts();
+  this.destroyKpiCharts();
+}
+
+private destroyCharts(): void {
   if (this.visitsChart) {
     this.visitsChart.destroy();
+    this.visitsChart = null;
   }
   if (this.planificationsChart) {
     this.planificationsChart.destroy();
+    this.planificationsChart = null;
   }
   if (this.usersIntegrationChart) {
     this.usersIntegrationChart.destroy();
-  }
-  
-  // Nettoyer les graphiques KPI
-  if (this.kpiAssignmentChart) {
-    this.kpiAssignmentChart.destroy();
-  }
-  if (this.kpiUsageChart) {
-    this.kpiUsageChart.destroy();
-  }
-  if (this.kpiReportChart) {
-    this.kpiReportChart.destroy();
+    this.usersIntegrationChart = null;
   }
 }
 
