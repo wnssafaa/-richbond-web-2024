@@ -42,7 +42,7 @@ export class AddMagasinComponent implements OnInit {
   isEditMode = false;
   editId!: number;
 
-  types: string[] = ['Hyper', 'Super', 'Boutique'];
+  types: string[] = ['Hyper','Market'];
   enseignes = [
     'Carrefour', 'Marjane', 'Aswak Assalam', 'Acima', 'Label\'Vie', 'BIM', 'Atacadao',
     'Carrefour Market', 'Metro', 'Super U', 'Uniprix', 'Hanouty', 'Miniprix',

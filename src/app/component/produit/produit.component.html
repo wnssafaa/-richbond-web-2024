@@ -288,6 +288,17 @@
 
               <button
                 mat-raised-button
+                class="export-button"
+                (click)="openColumnCustomizationPanel()"
+                style="background-color: #3b45ca; color: white; margin-right: 8px"
+                matTooltip="Personnaliser les colonnes"
+              >
+                <span>Organiser</span>
+                <mat-icon style="color:white">view_column</mat-icon>
+              </button>
+
+              <button
+                mat-raised-button
                 class="import-button"
                  style="background-color: #455e98; color: white; margin-right: 12px; padding: 10px 15px;
   border-radius: 20px;"
@@ -622,3 +633,18 @@
     </div>
   </div>
 </div>
+
+<!-- Overlay pour fermer le panneau en cliquant à l'extérieur -->
+<div
+  class="panel-overlay"
+  [class.visible]="isColumnCustomizationOpen"
+  (click)="closeColumnCustomizationPanel()"
+></div>
+
+<!-- Panneau de personnalisation des colonnes -->
+<app-column-customization-panel
+  [isOpen]="isColumnCustomizationOpen"
+  [columnConfig]="columnConfig"
+  (close)="closeColumnCustomizationPanel()"
+  (save)="onColumnCustomizationSave($event)"
+></app-column-customization-panel>

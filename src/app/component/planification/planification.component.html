@@ -979,7 +979,10 @@
             "
           >
             <h3 style="margin: 0; color: #333">
-              🗺️ Carte des magasins
+              🗺️ Carte des planifications du jour
+              <span style="font-size: 0.8em; color: #007bff; font-weight: normal; background: #f0f8ff; padding: 2px 8px; border-radius: 12px; margin-left: 10px;">
+                {{ getCurrentDateString() }}
+              </span>
               <span *ngIf="selectedRegion || selectedVille || selectedMagasin || selectedMerchandiseur || selectedEnseigne || selectedMarque" 
                     style="font-size: 0.8em; color: #3b45ca; font-weight: normal;">
                 (filtré)
@@ -988,23 +991,24 @@
             <div style="display: flex; gap: 10px">
               <button
                 mat-icon-button
-                matTooltip="Afficher les magasins avec coordonnées espacées (test)"
+                matTooltip="Recharger la carte et les planifications"
                 class="menu-toggle"
-                (click)="showMagasinsWithSpacedCoords()"
+                (click)="refreshMap()"
               >
-                <mat-icon>grid_on</mat-icon>
+                <mat-icon>refresh</mat-icon>
               </button>
               <button
                 mat-icon-button
-                matTooltip="Afficher avec coordonnées réelles (logique par défaut)"
+                matTooltip="Réinitialiser tous les filtres"
                 class="menu-toggle"
-                (click)="testShowMagasinsWithRealCoords()"
+                (click)="resetFilters()"
+                *ngIf="selectedRegion || selectedVille || selectedMagasin || selectedMerchandiseur || selectedEnseigne || selectedMarque"
               >
-                <mat-icon>location_on</mat-icon>
+                <mat-icon>clear_all</mat-icon>
               </button>
               <button
                 mat-icon-button
-                matTooltip="Cliquez sur les marqueurs pour voir les détails des magasins"
+                matTooltip="Cliquez sur les marqueurs pour voir les détails des planifications"
                 class="menu-toggle"
               >
                 <mat-icon>help_outline</mat-icon>
@@ -1024,24 +1028,38 @@
             class="map-legend"
             style="
               margin-top: 10px;
-              padding: 10px;
+              padding: 15px;
               background: #f5f5f5;
               border-radius: 8px;
               font-size: 12px;
             "
           >
-            <strong>Légende :</strong>
-            <ul style="margin: 5px 0; padding-left: 20px">
-              <li>📍 <strong>Marqueurs :</strong> Représentent vos magasins</li>
-              <li>
-                💡 <strong>Cliquez</strong> sur un marqueur pour voir les
-                détails du magasin
-              </li>
-            </ul>
-            <small style="color: #666"
-              >💡 Pour ajouter des coordonnées GPS à vos magasins, utilisez la
-              carte lors de la création/modification des magasins.</small
-            >
+            <strong>Légende des statuts (planifications du jour) :</strong>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; padding: 5px; background: white; border-radius: 4px;">
+                <div style="width: 16px; height: 16px; border-radius: 50%; background-color: #4e9af1; border: 2px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.3);"></div>
+                <span>📅 <strong>Planifiée</strong></span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; padding: 5px; background: white; border-radius: 4px;">
+                <div style="width: 16px; height: 16px; border-radius: 50%; background-color: #ff9800; border: 2px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.3);"></div>
+                <span>🔄 <strong>En cours</strong></span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; padding: 5px; background: white; border-radius: 4px;">
+                <div style="width: 16px; height: 16px; border-radius: 50%; background-color: #4caf50; border: 2px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.3);"></div>
+                <span>✅ <strong>Effectuée</strong></span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; padding: 5px; background: white; border-radius: 4px;">
+                <div style="width: 16px; height: 16px; border-radius: 50%; background-color: #ffca28; border: 2px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.3);"></div>
+                <span>🔄 <strong>Reprogrammée</strong></span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; padding: 5px; background: white; border-radius: 4px;">
+                <div style="width: 16px; height: 16px; border-radius: 50%; background-color: #f44336; border: 2px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.3);"></div>
+                <span>❌ <strong>Non accomplie</strong></span>
+              </div>
+            </div>
+            <div style="margin-top: 10px; padding: 8px; background: #e3f2fd; border-radius: 4px; border-left: 4px solid #2196f3;">
+              <strong>💡 Information :</strong> Les marqueurs colorés représentent le statut principal de planification de chaque magasin. Cliquez sur un marqueur pour voir tous les détails des planifications.
+            </div>
           </div>
         </div>
       </div>
@@ -1097,8 +1115,19 @@
                   style="background-color: #3b45ca; color: white; margin-right: 8px"
                   matTooltip="Personnaliser les colonnes"
                 >
-                  <span>Colonnes</span>
+                  <span>Organiser</span>
                   <mat-icon style="color:white">view_column</mat-icon>
+                </button>
+
+                <!-- Bouton d'importation -->
+                <button
+                  mat-raised-button
+                  class="import-button"
+                  style="background-color: #455e98; color: white; margin-right: 12px; padding: 10px 15px; border-radius: 20px;"
+                  (click)="openImportDialog()"
+                >
+                  <mat-icon style="color:white">upload_file</mat-icon>
+                  Importer
                 </button>
                 
                 <button

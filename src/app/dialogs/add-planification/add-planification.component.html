@@ -103,6 +103,7 @@
             <mat-label>Récurrence</mat-label>
             <mat-select formControlName="recurrence" (selectionChange)="onRecurrenceChange($event.value)">
               <mat-option value="none">Aucune</mat-option>
+              <mat-option value="daily">Chaque jour</mat-option>
               <mat-option value="weekly">Chaque semaine</mat-option>
               <mat-option value="monthly">Chaque mois</mat-option>
             </mat-select>

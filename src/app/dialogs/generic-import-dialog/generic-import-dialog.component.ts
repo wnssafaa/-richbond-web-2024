@@ -109,9 +109,9 @@ export class GenericImportDialogComponent implements OnInit {
           console.warn('⚠️ ExcelJS a échoué, utilisation de xlsx en fallback:', exceljsError);
           
           // Fallback vers xlsx (méthode originale)
-          const workbook = XLSX.read(data, { type: 'array' });
-          const firstSheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[firstSheetName];
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
           
           console.log('📊 Feuille xlsx chargée:', firstSheetName);
           console.log('📊 Plage de données:', worksheet['!ref']);
@@ -142,8 +142,8 @@ export class GenericImportDialogComponent implements OnInit {
             console.error('❌ Erreur avec xlsx:', xlsxError);
             jsonData = [];
           }
-          
-          this.processData(jsonData);
+
+        this.processData(jsonData);
         }
         
         this.isLoading = false;
@@ -434,7 +434,7 @@ export class GenericImportDialogComponent implements OnInit {
       const errors = this.validateRow(parsedRow);
       parsedRow.errors = errors;
       parsedRow.valid = errors.length === 0;
-      
+
       console.log(`✅ Ligne ${index + 1} traitée:`, {
         valide: parsedRow.valid,
         erreurs: errors.length,
@@ -583,7 +583,7 @@ export class GenericImportDialogComponent implements OnInit {
       });
       
       if (successCount > 0) {
-        this.dialogRef.close({ success: true, count: successCount });
+      this.dialogRef.close({ success: true, count: successCount });
       }
     });
   }
