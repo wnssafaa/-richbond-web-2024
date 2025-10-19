@@ -3812,21 +3812,21 @@ button[mat-icon-button]:active {
 /* Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) */
 .filters-toolbar {
   width: 100%;
-  padding: 16px 0;
-  margin-bottom: 20px;
+  padding: 8px 0;
+  margin-bottom: 10px;
 }
 
 .filters-content {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 2px;
   padding: 0 16px;
 }
 
 .filters-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
   flex-wrap: wrap;
   justify-content: flex-start;
 }
@@ -3852,23 +3852,90 @@ button[mat-icon-button]:active {
   max-width: 300px;
 }
 
-/* Responsive pour les filtres */
-@media (max-width: 1200px) {
-  .filters-content .filter-field {
-    min-width: 180px;
-    max-width: 250px;
+/* ============================================================================
+   RESPONSIVE DESIGN POUR LA NOUVELLE ORGANISATION
+============================================================================ */
+
+/* Tablettes */
+@media (max-width: 1024px) {
+  .main-toolbar-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .left-controls,
+  .right-controls {
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  /* Grille 3 colonnes sur tablettes */
+  .filters-content {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
+/* Mobiles */
 @media (max-width: 768px) {
-  .filters-row {
-    flex-direction: column;
-    align-items: stretch;
+  .main-toolbar {
+    padding: 12px 0;
   }
-  
-  .filters-content .filter-field {
+
+  .main-toolbar-content {
+    gap: 12px;
+  }
+
+  .left-controls,
+  .right-controls {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .custom-search-box {
+    width: 100%;
+    max-width: none;
+  }
+
+  .filters-toolbar {
+    padding: 12px 0;
+  }
+
+  /* Grille 1 colonne sur mobiles */
+  .filters-content {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .filters-content mat-form-field {
     min-width: 100%;
-    max-width: 100%;
+  }
+
+  .filters-row-2 .close-filters {
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+  }
+}
+
+/* Très petits écrans */
+@media (max-width: 480px) {
+  .main-toolbar {
+    padding: 8px 0;
+  }
+
+  .filters-toolbar {
+    padding: 8px 0;
+  }
+
+  .filters-content {
+    padding: 0 8px;
+  }
+
+  .filters-row .close-filters {
+    height: 36px;
+    font-size: 14px;
   }
 }
 
@@ -4077,32 +4144,16 @@ button[mat-icon-button]:active {
 }
 
 .filters-content {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: stretch;
-  width: 100%;
-}
-
-/* Styles pour les lignes de filtres */
-.filters-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   align-items: start;
   width: 100%;
-  margin-bottom: 16px;
+  padding: 0 16px;
 }
 
-.filters-row-1 {
-  /* Première ligne : 3 filtres */
-}
-
-.filters-row-2 {
-  /* Deuxième ligne : 3 filtres */
-}
-
-.filters-row mat-form-field {
+/* Styles pour les champs de filtre */
+.filters-content mat-form-field {
   width: 100%;
   min-width: 200px;
 }
@@ -4113,9 +4164,10 @@ button[mat-icon-button]:active {
 }
 
 .filters-content .close-filters {
-  align-self: center;
+  grid-column: 1 / -1; /* Prend toute la largeur de la grille */
+  justify-self: center;
   height: 40px;
-  margin-bottom: 20px;
+  margin-top: 16px;
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -4123,7 +4175,10 @@ button[mat-icon-button]:active {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  padding: 8px 16px;
 }
 
 /* Style pour les boutons de suppression de filtre à l'intérieur du champ */
@@ -4234,6 +4289,7 @@ button[mat-icon-button]:active {
   /* Grille 2 colonnes sur tablettes */
   .filters-row {
     grid-template-columns: repeat(2, 1fr);
+    gap: 3px;
   }
 }
 
@@ -4266,7 +4322,7 @@ button[mat-icon-button]:active {
   /* Grille 1 colonne sur mobiles */
   .filters-row {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 3px;
   }
 
   .filters-row mat-form-field {
