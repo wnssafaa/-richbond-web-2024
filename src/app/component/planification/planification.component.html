@@ -1148,208 +1148,290 @@
           <!-- Filtres avancés (affichés seulement si showAdvancedFilters = true) -->
           <div *ngIf="showAdvancedFilters" class="filters-toolbar">
             <div class="filters-content">
-              
-              <!-- Première ligne : 4 filtres -->
-              <div class="filters-row filters-row-1">
-                <mat-form-field appearance="outline">
-                  <mat-label>Région</mat-label>
-                  <mat-select
-                    [(ngModel)]="selectedRegion"
-                    (selectionChange)="filterByRegion()"
-                  >
-                    <mat-option [value]="null">Toutes les régions</mat-option>
-                    <mat-option
-                      *ngFor="let region of regions"
-                      [value]="region"
-                    >
-                      {{ region }}
-                    </mat-option>
-                  </mat-select>
-                  <button
-                    mat-icon-button
-                    matSuffix
-                    (click)="selectedRegion = null; filterByRegion()"
-                    class="clear-filter-btn"
-                    tabindex="-1"
-                    aria-label="Effacer le filtre région"
-                    *ngIf="selectedRegion"
-                  >
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </mat-form-field>
+              <!-- Filtre par semaine avec calendrier -->
+              <mat-form-field appearance="outline">
+                <mat-label>Sélectionner une semaine</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="weekPicker"
+                  [(ngModel)]="selectedWeekDate"
+                  (dateChange)="onWeekDateChange()"
+                  [placeholder]="getWeekPlaceholder()"
+                  readonly
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="weekPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker
+                  #weekPicker
+                  (selectedChange)="onWeekDateChange()"
+                  [startAt]="selectedWeekDate || today"
+                >
+                </mat-datepicker>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedWeekDate = null; onWeekDateChange()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre semaine"
+                  *ngIf="selectedWeekDate"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Ville</mat-label>
-                  <mat-select
-                    [(ngModel)]="selectedVille"
-                    (selectionChange)="filterByVille()"
+              <!-- Filtre par heure -->
+              <mat-form-field appearance="outline">
+                <mat-label>Heure de visite</mat-label>
+                <mat-select
+                  panelClass="filter-select"
+                  [(value)]="selectedHeure"
+                  (selectionChange)="filterByHeure()"
+                >
+                  <mat-option [value]="null">Toutes les heures</mat-option>
+                  <mat-option
+                    *ngFor="let heure of heuresOptions"
+                    [value]="heure.value"
+                    >{{ heure.label }}</mat-option
                   >
-                    <mat-option [value]="null">Toutes les villes</mat-option>
-                    <mat-option
-                      *ngFor="let ville of villes"
-                      [value]="ville"
-                    >
-                      {{ ville }}
-                    </mat-option>
-                  </mat-select>
-                  <button
-                    mat-icon-button
-                    matSuffix
-                    (click)="selectedVille = null; filterByVille()"
-                    class="clear-filter-btn"
-                    tabindex="-1"
-                    aria-label="Effacer le filtre ville"
-                    *ngIf="selectedVille"
-                  >
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </mat-form-field>
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedHeure = null; filterByHeure()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre heure"
+                  *ngIf="selectedHeure"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Magasins</mat-label>
-                  <mat-select
-                    [(ngModel)]="selectedMagasin"
-                    (selectionChange)="filterByMagasin()"
+              <!-- Filtre par statut -->
+              <mat-form-field appearance="outline">
+                <mat-label>Statut</mat-label>
+                <mat-select
+                  panelClass="filter-select"
+                  [(value)]="selectedStatut"
+                  (selectionChange)="filterByStatut()"
+                >
+                  <mat-option
+                    *ngFor="let statut of statutOptions"
+                    [value]="statut.value"
+                    >{{ statut.label }}</mat-option
                   >
-                    <mat-option [value]="null">Tous les magasins</mat-option>
-                    <mat-option
-                      *ngFor="let magasin of magasinsOptions"
-                      [value]="magasin.value"
-                    >
-                      {{ magasin.label }}
-                    </mat-option>
-                  </mat-select>
-                  <button
-                    mat-icon-button
-                    matSuffix
-                    (click)="selectedMagasin = null; filterByMagasin()"
-                    class="clear-filter-btn"
-                    tabindex="-1"
-                    aria-label="Effacer le filtre magasin"
-                    *ngIf="selectedMagasin"
-                  >
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </mat-form-field>
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedStatut = null; filterByStatut()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre statut"
+                  *ngIf="selectedStatut"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Merchandiseurs</mat-label>
-                  <mat-select
-                    [(ngModel)]="selectedMerchandiseur"
-                    (selectionChange)="filterMerchandiseurs()"
+              <!-- Filtre par magasin -->
+              <mat-form-field appearance="outline">
+                <mat-label>{{ "STORES.TITLE" | translate }}</mat-label>
+                <mat-select
+                  panelClass="filter-select"
+                  [(value)]="selectedMagasin"
+                  (selectionChange)="filterByMagasin()"
+                >
+                  <mat-option [value]="null">Tous les magasins</mat-option>
+                  <mat-option
+                    *ngFor="let magasin of magasinsOptions"
+                    [value]="magasin.value"
+                    >{{ magasin.label }}</mat-option
                   >
-                    <mat-option [value]="null">Tous les merchandiseurs</mat-option>
-                    <mat-option
-                      *ngFor="let merch of merchandiseursOptions"
-                      [value]="merch.value"
-                    >
-                      {{ merch.label }}
-                    </mat-option>
-                  </mat-select>
-                  <button
-                    mat-icon-button
-                    matSuffix
-                    (click)="selectedMerchandiseur = null; filterMerchandiseurs()"
-                    class="clear-filter-btn"
-                    tabindex="-1"
-                    aria-label="Effacer le filtre merchandiseur"
-                    *ngIf="selectedMerchandiseur"
-                  >
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </mat-form-field>
-              </div>
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedMagasin = null; filterByMagasin()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre magasin"
+                  *ngIf="selectedMagasin"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
 
-              <!-- Deuxième ligne : 4 filtres + bouton fermer -->
-              <div class="filters-row filters-row-2">
-                <mat-form-field appearance="outline">
-                  <mat-label>Superviseurs</mat-label>
-                  <mat-select
-                    [(ngModel)]="selectedSuperviseur"
-                    (selectionChange)="filterBySuperviseur()"
+              <!-- Filtre par merchandiseur -->
+              <mat-form-field appearance="outline">
+                <mat-label>Merchendiseurs</mat-label>
+                <mat-select
+                  panelClass="filter-select"
+                  [(value)]="selectedMerchandiseur"
+                  (selectionChange)="filterMerchandiseurs()"
+                >
+                  <mat-option [value]="null">Tous les merchandiseurs</mat-option>
+                  <mat-option
+                    *ngFor="let merch of merchandiseursOptions"
+                    [value]="merch.value"
+                    >{{ merch.label }}</mat-option
                   >
-                    <mat-option [value]="null">Tous les superviseurs</mat-option>
-                    <mat-option
-                      *ngFor="let superviseur of superviseursOptions"
-                      [value]="superviseur.value"
-                    >
-                      {{ superviseur.label }}
-                    </mat-option>
-                  </mat-select>
-                  <button
-                    mat-icon-button
-                    matSuffix
-                    (click)="selectedSuperviseur = null; filterBySuperviseur()"
-                    class="clear-filter-btn"
-                    tabindex="-1"
-                    aria-label="Effacer le filtre superviseur"
-                    *ngIf="selectedSuperviseur"
-                  >
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </mat-form-field>
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedMerchandiseur = null; filterMerchandiseurs()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre merchandiseur"
+                  *ngIf="selectedMerchandiseur"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Statut</mat-label>
-                  <mat-select
-                    [(ngModel)]="selectedStatut"
-                    (selectionChange)="filterByStatut()"
+              <!-- Filtre par enseigne -->
+              <mat-form-field appearance="outline">
+                <mat-label>Enseigne</mat-label>
+                <mat-select
+                  panelClass="filter-select"
+                  [(value)]="selectedEnseigne"
+                  (selectionChange)="filterByEnseigne()"
+                >
+                  <mat-option [value]="null">Toutes les enseignes</mat-option>
+                  <mat-option
+                    *ngFor="let enseigne of enseigneOptions"
+                    [value]="enseigne.value"
+                    >{{ enseigne.label }}</mat-option
                   >
-                    <mat-option [value]="null">Tous les statuts</mat-option>
-                    <mat-option
-                      *ngFor="let statut of statutOptions"
-                      [value]="statut.value"
-                    >
-                      {{ statut.label }}
-                    </mat-option>
-                  </mat-select>
-                  <button
-                    mat-icon-button
-                    matSuffix
-                    (click)="selectedStatut = null; filterByStatut()"
-                    class="clear-filter-btn"
-                    tabindex="-1"
-                    aria-label="Effacer le filtre statut"
-                    *ngIf="selectedStatut"
-                  >
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </mat-form-field>
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedEnseigne = null; filterByEnseigne()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre enseigne"
+                  *ngIf="selectedEnseigne"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Sélectionner une semaine</mat-label>
-                  <input
-                    matInput
-                    [matDatepicker]="weekPicker"
-                    [(ngModel)]="selectedWeekDate"
-                    (dateChange)="onWeekDateChange()"
-                    [placeholder]="getWeekPlaceholder()"
-                    readonly
-                  />
-                  <mat-datepicker-toggle
-                    matSuffix
-                    [for]="weekPicker"
-                  ></mat-datepicker-toggle>
-                  <mat-datepicker
-                    #weekPicker
-                    (selectedChange)="onWeekDateChange()"
-                    [startAt]="selectedWeekDate || today"
+              <!-- Filtre par région -->
+              <mat-form-field appearance="outline">
+                <mat-label>Région</mat-label>
+                <mat-select
+                  panelClass="filter-select"
+                  [(value)]="selectedRegion"
+                  (selectionChange)="filterByRegion()"
+                >
+                  <mat-option [value]="null">Toutes les régions</mat-option>
+                  <mat-option
+                    *ngFor="let region of regions"
+                    [value]="region"
+                    >{{ region }}</mat-option
                   >
-                  </mat-datepicker>
-                  <button
-                    mat-icon-button
-                    matSuffix
-                    (click)="selectedWeekDate = null; onWeekDateChange()"
-                    class="clear-filter-btn"
-                    tabindex="-1"
-                    aria-label="Effacer le filtre semaine"
-                    *ngIf="selectedWeekDate"
-                  >
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </mat-form-field>
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedRegion = null; filterByRegion()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre région"
+                  *ngIf="selectedRegion"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
 
-              </div>
+              <!-- Filtre par ville -->
+              <mat-form-field appearance="outline">
+                <mat-label>Ville</mat-label>
+                <mat-select
+                  panelClass="filter-select"
+                  [(value)]="selectedVille"
+                  (selectionChange)="filterByVille()"
+                >
+                  <mat-option [value]="null">Toutes les villes</mat-option>
+                  <mat-option
+                    *ngFor="let ville of villes"
+                    [value]="ville"
+                    >{{ ville }}</mat-option
+                  >
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedVille = null; filterByVille()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre ville"
+                  *ngIf="selectedVille"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+
+              <!-- Filtre par superviseur -->
+              <mat-form-field appearance="outline">
+                <mat-label>Superviseurs</mat-label>
+                <mat-select
+                  panelClass="filter-select"
+                  [(value)]="selectedSuperviseur"
+                  (selectionChange)="filterBySuperviseur()"
+                >
+                  <mat-option [value]="null">Tous les superviseurs</mat-option>
+                  <mat-option
+                    *ngFor="let superviseur of superviseursOptions"
+                    [value]="superviseur.value"
+                    >{{ superviseur.label }}</mat-option
+                  >
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedSuperviseur = null; filterBySuperviseur()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre superviseur"
+                  *ngIf="selectedSuperviseur"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+
+              <!-- Filtre par marque -->
+              <mat-form-field appearance="outline">
+                <mat-label>Marque</mat-label>
+                <mat-select
+                  panelClass="filter-select"
+                  [(value)]="selectedMarque"
+                  (selectionChange)="filterByMarque()"
+                >
+                  <mat-option [value]="null">Toutes les marques</mat-option>
+                  <mat-option
+                    *ngFor="let marque of marqueOptions"
+                    [value]="marque.value"
+                    >{{ marque.label }}</mat-option
+                  >
+                </mat-select>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="selectedMarque = null; filterByMarque()"
+                  class="clear-filter-btn"
+                  tabindex="-1"
+                  aria-label="Effacer le filtre marque"
+                  *ngIf="selectedMarque"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
             </div>
           </div>
 
