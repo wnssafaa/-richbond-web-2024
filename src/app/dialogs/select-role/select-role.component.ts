@@ -38,16 +38,40 @@ export class SelectRoleComponent implements OnInit {
   
   roleOptions: RoleOption[] = [
     {
+      value: 'ADMIN',
+      label: 'Administrateur',
+      description: 'Accès complet à toutes les fonctionnalités',
+      icon: 'admin_panel_settings'
+    },
+    {
       value: 'SUPERVISEUR',
       label: 'Superviseur',
       description: 'Gère et supervise les merchandiseurs',
       icon: 'supervisor_account'
     },
     {
-      value: 'MERCHANDISEUR',
-      label: 'Merchandiseur',
-      description: 'Gère les produits et les magasins',
+      value: 'MERCHANDISEUR_MONO',
+      label: 'Merchandiseur Mono',
+      description: 'Gère les produits d\'une seule région',
       icon: 'storefront'
+    },
+    {
+      value: 'MERCHANDISEUR_MULTI',
+      label: 'Merchandiseur Multi',
+      description: 'Gère les produits de plusieurs régions',
+      icon: 'storefront'
+    },
+    {
+      value: 'RESPONSABLE_ANIMATEUR',
+      label: 'Responsable Animateur',
+      description: 'Responsable/Animateur national - accès multi-régional',
+      icon: 'people'
+    },
+    {
+      value: 'CONSULTANT',
+      label: 'Consultant',
+      description: 'Consultant - accès lecture seule',
+      icon: 'visibility'
     }
   ];
 

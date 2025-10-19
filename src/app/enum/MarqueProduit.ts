@@ -1,12 +1,6 @@
 export enum MarqueProduit {
-  RICHBOND = 'Richbond',
+  RICHBOND_LINGE = 'Richbond (linge / literie)',
   SIMMONS = 'Simmons',
-  SEALY = 'Sealy',
-  TEMPUR = 'Tempur-Pedic',
-  SERTA = 'Serta',
-  IKEA = 'IKEA',
-  DUNLOPILLO = 'Dunlopillo',
-  EPEDA = 'Epeda',
-  BULTEX = 'Bultex',
-  MERINOS = 'Mérinos'
+  ROSA = 'Rosa',
+  GENERIQUE = 'Générique'
 }

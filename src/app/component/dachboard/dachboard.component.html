@@ -70,7 +70,9 @@
           <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.USERS' | translate }}</span>
           <mat-icon style="margin-left:auto;" [class.text-hidden]="!menuOpen">{{ userMenuOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
         </a> -->
+        <!-- Historique - masqué pour les consultants -->
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/login-history"
           routerLinkActive="active-link"
@@ -85,6 +87,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/users"
           routerLinkActive="active-link"
@@ -99,6 +102,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/merchendiseur"
           routerLinkActive="active-link"
@@ -113,6 +117,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/superviseur"
           routerLinkActive="active-link"
@@ -127,6 +132,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/magasins"
           routerLinkActive="active-link"
@@ -141,6 +147,22 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
+          mat-list-item
+          routerLink="/responsable-animateur"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? 'Responsables Animateurs' : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>animation</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">
+            Responsables Animateurs
+          </span>
+        </a>
+
+        <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/planification"
           routerLinkActive="active-link"
@@ -169,6 +191,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/Produit"
           routerLinkActive="active-link"
@@ -183,6 +206,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/gestion-stock"
           routerLinkActive="active-link"

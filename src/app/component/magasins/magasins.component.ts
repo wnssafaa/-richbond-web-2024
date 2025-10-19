@@ -39,6 +39,7 @@ import { MerchendiseurService, Merchendiseur } from '../../services/merchendiseu
 import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
 import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
 import { ImportConfigService } from '../../services/import-config.service';
+import { PermissionService } from '../../services/permission.service';
 @Component({
   selector: 'app-magasins',
   standalone: true,
@@ -99,6 +100,7 @@ export class MagasinsComponent {
   status: string = '';
   prenom: string = '';
   telephone: string = '';
+
 
   changeLanguage(lang: string) {
     this.currentLanguage = lang;
@@ -191,6 +193,7 @@ enseignes = [
       'Dakhla', 'Aousserd', 'Bir Gandouz', 'Gleibat El Foula', 'Ntirett'
     ]
   };
+  
   showFilters: boolean = false;
   loadCurrentUser(): void {
     this.athService.getCurrentUserInfo().subscribe({
@@ -204,10 +207,13 @@ enseignes = [
         this.status = data.status ?? '';
         this.imagePath = data.imagePath ?? '';
         // Gestion de l'avatar : base64 ou URL
+         this.initializePermissions(this.role);
         this.avatarUrl = data.imagePath
+
           ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
           : 'assets/profil.webp';
       },
+      
       error: (err) => {
         console.error('Erreur lors de la récupération des infos utilisateur :', err);
         // Valeurs par défaut en cas d'erreur
@@ -233,7 +239,8 @@ enseignes = [
       private superviseurService: SuperveseurService,
       private merchendiseurService: MerchendiseurService,
       private exportService: ExportService,
-      private importConfigService: ImportConfigService
+      private importConfigService: ImportConfigService,
+       private permissionService: PermissionService,
     ) {
 
 this.translate.setDefaultLang('fr');
@@ -241,6 +248,10 @@ this.translate.setDefaultLang('fr');
 
       
     }
+     isConsultant: boolean = false;
+  canEdit: boolean = false;
+  canDelete: boolean = false;
+  canAdd: boolean = false;
 //     changeLanguage(lang: string) {
 //   this.currentLanguage = lang;
 //   this.translate.use(lang);
@@ -666,4 +677,10 @@ openAddMagasinDialog(): void {
     }
 
      userMenuOpen: boolean = false;
+  private initializePermissions(userRole: string): void {
+  this.isConsultant = this.permissionService.isConsultant(this.role);
+  this.canEdit = this.permissionService.canEdit(this.role);
+  this.canDelete = this.permissionService.canDelete(this.role);
+  this.canAdd = this.permissionService.canAdd(this.role);
+}
 }

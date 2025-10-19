@@ -1,0 +1,465 @@
+/* Styles pour les éléments désactivés par permissions */
+
+.disabled-by-permission {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  position: relative;
+  transition: all 0.3s ease;
+  filter: grayscale(0.3);
+}
+
+.consultant-disabled {
+  position: relative;
+}
+
+.consultant-disabled::after {
+  content: "🔒";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: #ff9800;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ff9800;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+/* Style amélioré pour les boutons d'action dans les tables */
+.action-buttons-container .disabled-by-permission {
+  background-color: transparent !important;
+  color: #bdbdbd !important;
+  position: relative;
+  filter: grayscale(0.8);
+  transition: all 0.3s ease;
+}
+
+.action-buttons-container .disabled-by-permission::after {
+  content: "🔒";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: #ff9800;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 248, 225, 0.95) 100%);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ff9800;
+  box-shadow: 0 2px 6px rgba(255, 152, 0, 0.3);
+  z-index: 1;
+  animation: lockPulse 2s infinite;
+}
+
+/* Animation pour l'icône de cadenas */
+@keyframes lockPulse {
+  0% {
+    box-shadow: 0 2px 6px rgba(255, 152, 0, 0.3);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    box-shadow: 0 2px 12px rgba(255, 152, 0, 0.5);
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  100% {
+    box-shadow: 0 2px 6px rgba(255, 152, 0, 0.3);
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Styles spécifiques pour les boutons Material */
+mat-button.disabled-by-permission,
+mat-raised-button.disabled-by-permission,
+mat-flat-button.disabled-by-permission,
+mat-stroked-button.disabled-by-permission,
+mat-icon-button.disabled-by-permission,
+mat-fab.disabled-by-permission,
+mat-mini-fab.disabled-by-permission {
+  background-color: #f5f5f5 !important;
+  color: #9e9e9e !important;
+  border-color: #e0e0e0 !important;
+}
+
+/* Styles pour les boutons d'action dans les tables */
+.mat-icon-button.disabled-by-permission {
+  background-color: transparent !important;
+  color: #bdbdbd !important;
+}
+
+/* Styles pour les inputs désactivés */
+mat-form-field.disabled-by-permission .mat-form-field-wrapper {
+  opacity: 0.6;
+}
+
+/* Message informatif pour les consultants - Style amélioré */
+.consultant-readonly-message {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border: 1px solid #ff9800;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #ef6c00;
+  box-shadow: 0 2px 4px rgba(255, 152, 0, 0.1);
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+  font-weight: 500;
+}
+
+.consultant-readonly-message mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #ff9800;
+}
+
+.consultant-readonly-message::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, #ff9800, #f57c00);
+  border-radius: 4px 0 0 4px;
+}
+
+/* Message global pour les consultants - Style élégant */
+.consultant-global-message {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border: 1px solid #ff9800;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #ef6c00;
+  font-weight: 600;
+  text-align: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.15);
+  position: relative;
+  animation: slideInBounce 0.5s ease-out;
+}
+
+.consultant-global-message::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, #ff9800, #f57c00);
+  border-radius: 4px 0 0 4px;
+}
+
+.consultant-global-message mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #ff9800;
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+  border-radius: 50%;
+  padding: 4px;
+  border: 2px solid rgba(255, 152, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.2);
+  animation: globalIconPulse 2s infinite;
+}
+
+/* Animation pour l'icône du message global */
+@keyframes globalIconPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(255, 152, 0, 0.2);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(255, 152, 0, 0.2);
+  }
+}
+
+/* Animation pour le message global */
+@keyframes slideInBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.9);
+  }
+  50% {
+    transform: translateY(5px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Message compact pour les consultants dans les cellules - Style amélioré */
+.consultant-readonly-message-compact {
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.08) 0%, rgba(255, 193, 7, 0.05) 100%);
+  border: 1px solid rgba(255, 152, 0, 0.2);
+  border-radius: 6px;
+  padding: 3px 8px;
+  margin: 2px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: #f57c00;
+  font-weight: 600;
+  text-align: center;
+  justify-content: center;
+  min-width: 70px;
+  box-shadow: 0 1px 2px rgba(255, 152, 0, 0.1);
+  position: relative;
+  animation: fadeInScale 0.3s ease-out;
+}
+
+.consultant-readonly-message-compact::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #ff9800, #f57c00);
+  border-radius: 2px 0 0 2px;
+}
+
+.consultant-readonly-message-compact mat-icon {
+  font-size: 10px;
+  width: 10px;
+  height: 10px;
+  color: #f57c00;
+}
+
+/* Animation pour le message compact */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation pour le message */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Style alternatif plus discret pour les messages de permissions */
+.consultant-readonly-message-subtle {
+  background: rgba(255, 152, 0, 0.05);
+  border: 1px solid rgba(255, 152, 0, 0.15);
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin: 1px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 8px;
+  color: #ff9800;
+  font-weight: 500;
+  text-align: center;
+  justify-content: center;
+  min-width: 60px;
+  opacity: 0.8;
+  transition: all 0.2s ease;
+}
+
+.consultant-readonly-message-subtle:hover {
+  opacity: 1;
+  background: rgba(255, 152, 0, 0.1);
+}
+
+.consultant-readonly-message-subtle mat-icon {
+  font-size: 10px;
+  width: 10px;
+  height: 10px;
+  color: #ff9800;
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+  border-radius: 50%;
+  padding: 2px;
+  border: 1px solid rgba(255, 152, 0, 0.2);
+  box-shadow: 0 1px 3px rgba(255, 152, 0, 0.2);
+  animation: iconGlow 3s infinite;
+}
+
+/* Animation pour l'icône dans le message */
+@keyframes iconGlow {
+  0% {
+    box-shadow: 0 1px 3px rgba(255, 152, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 1px 6px rgba(255, 152, 0, 0.4);
+  }
+  100% {
+    box-shadow: 0 1px 3px rgba(255, 152, 0, 0.2);
+  }
+}
+
+/* Style pour les tooltips des boutons désactivés */
+.disabled-by-permission[title] {
+  position: relative;
+}
+
+.disabled-by-permission[title]:hover::before {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 1000;
+  margin-bottom: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.disabled-by-permission[title]:hover::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: #333;
+  margin-bottom: -4px;
+}
+
+/* Animation pour les boutons désactivés */
+@keyframes pulseDisabled {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 4px rgba(255, 152, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 152, 0, 0);
+  }
+}
+
+.disabled-by-permission:hover {
+  animation: pulseDisabled 1.5s infinite;
+}
+
+/* Styles spéciaux pour les icônes de permissions */
+.permission-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.permission-icon.locked {
+  color: #ff9800;
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+  border-radius: 50%;
+  padding: 4px;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(255, 152, 0, 0.2);
+  animation: permissionIconGlow 2s infinite;
+}
+
+.permission-icon.unlocked {
+  color: #4caf50;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%);
+  border-radius: 50%;
+  padding: 4px;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2);
+}
+
+/* Animation pour les icônes de permissions */
+@keyframes permissionIconGlow {
+  0% {
+    box-shadow: 0 2px 4px rgba(255, 152, 0, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 4px 8px rgba(255, 152, 0, 0.4);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 2px 4px rgba(255, 152, 0, 0.2);
+    transform: scale(1);
+  }
+}
+
+/* Style pour les icônes d'action avec permissions */
+.action-icon {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.action-icon.disabled {
+  filter: grayscale(0.8);
+  opacity: 0.6;
+}
+
+.action-icon.enabled {
+  filter: none;
+  opacity: 1;
+}
+
+.action-icon.enabled:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation pour les éléments désactivés */
+.disabled-by-permission {
+  transition: all 0.3s ease;
+}
+
+.disabled-by-permission:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}

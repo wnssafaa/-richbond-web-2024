@@ -1,7 +1,7 @@
 <div class="header">
   <img src="assets/logo.png" alt="Richbond Logo" class="logo" />
   <div class="header-icons">
-    <mat-icon style="color: #0e6af4 !important">notifications_none</mat-icon>
+    <mat-icon>notifications_none</mat-icon>
 
     <!-- Bouton de changement de langue -->
     <button mat-button [matMenuTriggerFor]="languageMenu" class="lang-button">
@@ -25,7 +25,7 @@
       </button>
     </mat-menu>
 
-    <mat-icon style="color: #0e6af4 !important">settings</mat-icon>
+    <mat-icon>settings</mat-icon>
   </div>
 </div>
 <div class="container">
@@ -63,14 +63,8 @@
             "COMMON.DASHBOARD" | translate
           }}</span>
         </a>
-
-        <!-- <a mat-list-item (click)="userMenuOpen = !userMenuOpen" [class.nav-item-collapsed]="!menuOpen"
-           [matTooltip]="!menuOpen ? ('COMMON.USERS' | translate) : ''" matTooltipPosition="right">
-          <mat-icon matListItemIcon>people</mat-icon>
-          <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.USERS' | translate }}</span>
-          <mat-icon style="margin-left:auto;" [class.text-hidden]="!menuOpen">{{ userMenuOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
-        </a> -->
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/login-history"
           routerLinkActive="active-link"
@@ -85,6 +79,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/users"
           routerLinkActive="active-link"
@@ -99,6 +94,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/merchendiseur"
           routerLinkActive="active-link"
@@ -113,6 +109,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/superviseur"
           routerLinkActive="active-link"
@@ -127,6 +124,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/magasins"
           routerLinkActive="active-link"
@@ -141,6 +139,22 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
+          mat-list-item
+          routerLink="/responsable-animateur"
+          routerLinkActive="active-link"
+          [class.nav-item-collapsed]="!menuOpen"
+          [matTooltip]="!menuOpen ? 'Responsables Animateurs' : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon matListItemIcon>animation</mat-icon>
+          <span matListItemTitle [class.text-hidden]="!menuOpen">
+            Responsables Animateurs
+          </span>
+        </a>
+
+        <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/planification"
           routerLinkActive="active-link"
@@ -169,6 +183,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/Produit"
           routerLinkActive="active-link"
@@ -183,6 +198,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/gestion-stock"
           routerLinkActive="active-link"
@@ -238,7 +254,6 @@
         </a>
       </mat-nav-list>
     </div>
-
     <div class="content">
       <div class="page-header">
         <div class="page-header-left">
@@ -250,7 +265,7 @@
               >keyboard_arrow_right</mat-icon
             >
           </button>
-          <h1>{{ "COMMON.SUPERVISORS" | translate }}</h1>
+          <h1>Responsables Animateurs</h1>
         </div>
       </div>
 
@@ -294,32 +309,38 @@
                 mat-raised-button
                 class="export-button"
                 (click)="exportToExcel()"
+                style="
+                  background-color: #000000;
+                  color: white;
+                  margin-right: 8px;
+                "
               >
-                <span>{{ "ACTIONS.EXPORT" | translate }}</span>
-                <mat-icon>file_download</mat-icon>
+                <span>Export </span>
+                <mat-icon style="color:white">file_download</mat-icon>
               </button>
-
-              <button
-                mat-raised-button
-                class="export-button"
-                (click)="openColumnCustomizationPanel()"
-                style="background-color: #3b45ca; color: white; margin-right: 8px"
-                matTooltip="Personnaliser les colonnes"
-              >
-                <span>Organiser</span>
-                <mat-icon style="color:white">view_column</mat-icon>
-              </button>
+ <button
+          mat-raised-button
+           class="export-button"
+          (click)="openColumnCustomizationPanel()"
+          style="background-color: #3b45ca; color: white; margin-right: 8px"
+          matTooltip="Personnaliser les colonnes"
+        >
+          <span>Organiser</span>
+          <mat-icon style="color:white">view_column</mat-icon>
+        </button>
 
               <!-- ✅ Bouton d'importation -->
               <button
                 *ngIf="canAdd"
                 mat-raised-button
                 class="import-button"
-               style="background-color: #455e98; color: white; margin-right: 12px; padding: 10px 15px;
+                style="background-color: #455e98; color: white; margin-right: 12px; padding: 10px 15px;
   border-radius: 20px;"
-                (click)="openImportDialog()">
+                (click)="openImportDialog()"
+                matTooltip="Importer des responsables animateurs"
+              >
                 <mat-icon style="color:white">upload_file</mat-icon>
-               Importer
+             Importer
               </button>
 
               <button
@@ -327,9 +348,9 @@
                 mat-raised-button
                 class="add-user-button"
                 style="background-color: #0a2681; color: white"
-                (click)="openDialog()"
+                (click)="openAddResponsableDialog()"
               >
-               Ajouter 
+               Ajouter
               </button>
             </div>
           </div>
@@ -337,13 +358,15 @@
 
         <!-- Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) -->
         <div *ngIf="showFilters" class="filters-toolbar">
-          <div class="filters-content">
+          <!-- Première ligne : 4 filtres -->
+          <div class="filters-row filters-row-1">
             <mat-form-field appearance="outline">
               <mat-label>Région</mat-label>
               <mat-select
                 [(ngModel)]="selectedRegion"
-                (selectionChange)="onRegionFilterChange($event.value)"
+                (selectionChange)="onRegionChange($event.value)"
               >
+                <mat-option value="">Toutes les régions</mat-option>
                 <mat-option *ngFor="let region of regions" [value]="region">
                   {{ region }}
                 </mat-option>
@@ -368,7 +391,7 @@
                 (selectionChange)="applyFilters()"
               >
                 <mat-option value="">Toutes les villes</mat-option>
-                <mat-option *ngFor="let ville of allVilles" [value]="ville">
+                <mat-option *ngFor="let ville of villes" [value]="ville">
                   {{ ville }}
                 </mat-option>
               </mat-select>
@@ -386,11 +409,36 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
+              <mat-label>Marque</mat-label>
+              <mat-select
+                [(ngModel)]="selectedMarque"
+                (selectionChange)="applyFilters()"
+              >
+                <mat-option value="">Toutes les marques</mat-option>
+                <mat-option *ngFor="let marque of marques" [value]="marque">
+                  {{ marque }}
+                </mat-option>
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedMarque = ''; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre marque"
+                *ngIf="selectedMarque"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
               <mat-label>Enseigne</mat-label>
               <mat-select
                 [(ngModel)]="selectedEnseigne"
                 (selectionChange)="applyFilters()"
               >
+                <mat-option value="">Toutes les enseignes</mat-option>
                 <mat-option
                   *ngFor="let enseigne of enseignes"
                   [value]="enseigne"
@@ -410,97 +458,114 @@
                 <mat-icon>close</mat-icon>
               </button>
             </mat-form-field>
+          </div>
 
+          <!-- Deuxième ligne : 4 filtres + bouton fermer -->
+          <div class="filters-row filters-row-2">
             <mat-form-field appearance="outline">
-              <mat-label>Magasin</mat-label>
+              <mat-label>Superviseur</mat-label>
               <mat-select
-                [(ngModel)]="selectedMagasin"
+                [(ngModel)]="selectedSuperviseur"
                 (selectionChange)="applyFilters()"
               >
+                <mat-option value="">Tous les superviseurs</mat-option>
                 <mat-option
-                  *ngFor="let magasin of magasinNames"
-                  [value]="magasin"
+                  *ngFor="let superviseur of superviseurs"
+                  [value]="superviseur.nom"
                 >
-                  {{ magasin }}
+                  {{ superviseur.nom }}
                 </mat-option>
               </mat-select>
               <button
                 mat-icon-button
                 matSuffix
-                (click)="selectedMagasin = ''; applyFilters()"
+                (click)="selectedSuperviseur = ''; applyFilters()"
                 class="clear-filter-btn"
                 tabindex="-1"
-                aria-label="Effacer le filtre magasin"
-                *ngIf="selectedMagasin"
+                aria-label="Effacer le filtre superviseur"
+                *ngIf="selectedSuperviseur"
               >
                 <mat-icon>close</mat-icon>
               </button>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Marque</mat-label>
+              <mat-label>Statut</mat-label>
               <mat-select
-                [(ngModel)]="selectedMarque"
+                [(ngModel)]="selectedStatus"
                 (selectionChange)="applyFilters()"
               >
-                <mat-option *ngFor="let marque of marques" [value]="marque">
-                  {{ marque }}
-                </mat-option>
+                <mat-option value="">Tous les statuts</mat-option>
+                <mat-option value="ACTIVE">ACTIVE</mat-option>
+                <mat-option value="INACTIVE">INACTIVE</mat-option>
               </mat-select>
               <button
                 mat-icon-button
                 matSuffix
-                (click)="selectedMarque = ''; applyFilters()"
+                (click)="selectedStatus = ''; applyFilters()"
                 class="clear-filter-btn"
                 tabindex="-1"
-                aria-label="Effacer le filtre marque"
-                *ngIf="selectedMarque"
+                aria-label="Effacer le filtre statut"
+                *ngIf="selectedStatus"
               >
                 <mat-icon>close</mat-icon>
               </button>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Marchandiseur</mat-label>
-              <mat-select
-                [(ngModel)]="selectedMerchandiseur"
-                (selectionChange)="applyFilters()"
-              >
-                <mat-option
-                  *ngFor="let marchandiseur of merchandiserNames"
-                  [value]="marchandiseur"
-                >
-                  {{ marchandiseur }}
-                </mat-option>
-              </mat-select>
+              <mat-label>Date d'intégration</mat-label>
+              <input
+                matInput
+                [matDatepicker]="integrationPicker"
+                [(ngModel)]="selectedIntegrationDate"
+                (dateChange)="applyFilters()"
+                placeholder="Sélectionner une date"
+              />
+              <mat-datepicker-toggle matSuffix [for]="integrationPicker"></mat-datepicker-toggle>
+              <mat-datepicker #integrationPicker></mat-datepicker>
               <button
                 mat-icon-button
                 matSuffix
-                (click)="selectedMerchandiseur = ''; applyFilters()"
+                (click)="selectedIntegrationDate = null; applyFilters()"
                 class="clear-filter-btn"
                 tabindex="-1"
-                aria-label="Effacer le filtre marchandiseur"
-                *ngIf="selectedMerchandiseur"
+                aria-label="Effacer le filtre date d'intégration"
+                *ngIf="selectedIntegrationDate"
               >
                 <mat-icon>close</mat-icon>
               </button>
             </mat-form-field>
 
-            <!-- <button
-              mat-button
-              (click)="showFilters = false"
-              class="close-filters"
-            >
-              <mat-icon>close</mat-icon>
-            </button> -->
+            <mat-form-field appearance="outline">
+              <mat-label>Date de sortie</mat-label>
+              <input
+                matInput
+                [matDatepicker]="sortiePicker"
+                [(ngModel)]="selectedSortieDate"
+                (dateChange)="applyFilters()"
+                placeholder="Sélectionner une date"
+              />
+              <mat-datepicker-toggle matSuffix [for]="sortiePicker"></mat-datepicker-toggle>
+              <mat-datepicker #sortiePicker></mat-datepicker>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedSortieDate = null; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre date de sortie"
+                *ngIf="selectedSortieDate"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
           </div>
         </div>
-
         <table
           mat-table
           [dataSource]="dataSource"
           matSort
-          class="mat-elevation-z8 full-width-table"
+          class="full-width-table"
         >
           <!-- ID Column -->
           <ng-container matColumnDef="id">
@@ -512,10 +577,9 @@
             >
               ID
             </th>
-            <td mat-cell *matCellDef="let superviseur">{{ superviseur.id }}</td>
+            <td mat-cell *matCellDef="let r">{{ r.id }}</td>
           </ng-container>
 
-          <!-- Nom Column -->
           <ng-container matColumnDef="nom">
             <th
               mat-header-cell
@@ -523,30 +587,60 @@
               mat-sort-header
               style="background-color: #f2f2f2"
             >
-              {{ "SUPERVISORS.NAME" | translate }}
+              Nom
             </th>
-            <td mat-cell *matCellDef="let superviseur">
-              {{ superviseur.nom }}
-            </td>
+            <td mat-cell *matCellDef="let r">{{ r.nom }} {{ r.prenom }}</td>
           </ng-container>
 
-          <!-- Prénom Column -->
-          <ng-container matColumnDef="prenom">
+         
+          <ng-container matColumnDef="region">
             <th
               mat-header-cell
               *matHeaderCellDef
               mat-sort-header
               style="background-color: #f2f2f2"
             >
-              Prénom
+              Région
             </th>
-            <td mat-cell *matCellDef="let superviseur">
-              {{ superviseur.prenom }}
+            <td mat-cell *matCellDef="let r">{{ r.region }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="ville">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              Ville
+            </th>
+            <td mat-cell *matCellDef="let r">{{ r.ville }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="marques">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              Marques
+            </th>
+            <td mat-cell *matCellDef="let r">
+              <div class="marques-chips">
+                <mat-chip-listbox *ngIf="r.marques && r.marques.length > 0; else noMarques">
+                  <mat-chip-option *ngFor="let marque of r.marques">
+                    {{ marque }}
+                  </mat-chip-option>
+                </mat-chip-listbox>
+                <ng-template #noMarques>
+                  <span style="color: #999; font-style: italic;">Aucune marque</span>
+                </ng-template>
+              </div>
             </td>
           </ng-container>
 
-          <!-- Enseignes des merchandiseurs Column -->
-          <ng-container matColumnDef="enseigne">
+          <ng-container matColumnDef="enseignes">
             <th
               mat-header-cell
               *matHeaderCellDef
@@ -555,89 +649,56 @@
             >
               Enseignes
             </th>
-            <td mat-cell *matCellDef="let superviseur">
-              <div
-                *ngIf="getMerchandiseurEnseignes(superviseur).length > 0"
-                class="enseignes-list"
-              >
-                <span
-                  *ngFor="
-                    let enseigne of getMerchandiseurEnseignes(superviseur);
-                    let last = last
-                  "
-                  class="enseigne-chip"
-                >
-                  {{ enseigne }}<span *ngIf="!last">, </span>
-                </span>
+            <td mat-cell *matCellDef="let r">
+              <div class="enseignes-chips">
+                <mat-chip-listbox *ngIf="r.enseignes && r.enseignes.length > 0; else noEnseignes">
+                  <mat-chip-option *ngFor="let enseigne of r.enseignes" style="color:#000000">
+                    {{ enseigne }}
+                  </mat-chip-option>
+                </mat-chip-listbox>
+                <ng-template #noEnseignes>
+                  <span style="color: #999; font-style: italic;">Aucune enseigne</span>
+                </ng-template>
               </div>
-              <span
-                *ngIf="getMerchandiseurEnseignes(superviseur).length === 0"
-                class="no-enseignes"
-              >
-                Aucune enseigne
-              </span>
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="magasin">
+          <ng-container matColumnDef="superviseur">
             <th
               mat-header-cell
               *matHeaderCellDef
               mat-sort-header
               style="background-color: #f2f2f2"
             >
-              Magasins
+            Superviseur
             </th>
-            <td mat-cell *matCellDef="let superviseur">
-              <div
-                *ngIf="getMerchandiseurMagasins(superviseur).length > 0"
-                class="magasins-list"
-              >
-                <span
-                  *ngFor="
-                    let magasin of getMerchandiseurMagasins(superviseur);
-                    let last = last
-                  "
-                  class="magasin-chip"
-                >
-                  {{ magasin }}<span *ngIf="!last">, </span>
-                </span>
-              </div>
-              <span
-                *ngIf="getMerchandiseurMagasins(superviseur).length === 0"
-                class="no-magasins"
-              >
-                Aucun magasin
+            <td mat-cell *matCellDef="let r">
+              <span *ngIf="r.superviseur; else noSupervisor">
+                {{ r.superviseur.nom }} {{ r.superviseur.prenom }}
               </span>
-            </td>
-          </ng-container>
-          <!-- Région Column -->
-          <ng-container matColumnDef="region">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header
-              style="background-color: #f2f2f2"
-            >
-              {{ "SUPERVISORS.REGION" | translate }}
-            </th>
-            <td mat-cell *matCellDef="let superviseur">
-              {{ superviseur.region }}
+              <ng-template #noSupervisor>
+                <span style="color: #999; font-style: italic">Non assigné</span>
+              </ng-template>
             </td>
           </ng-container>
 
-          <!-- Ville d'intervention Column -->
-          <ng-container matColumnDef="villeIntervention">
+          <ng-container matColumnDef="status">
             <th
               mat-header-cell
               *matHeaderCellDef
               mat-sort-header
               style="background-color: #f2f2f2"
             >
-              {{ "STORES.CITY" | translate }}
+            Statut
             </th>
-            <td mat-cell *matCellDef="let superviseur">
-              {{ superviseur.ville }}
+            <td mat-cell *matCellDef="let r">
+              <span 
+                class="status-badge"
+                [class.status-active]="r.status === 'ACTIVE'"
+                [class.status-inactive]="r.status === 'INACTIVE'"
+              >
+                {{ r.status }}
+              </span>
             </td>
           </ng-container>
 
@@ -650,12 +711,23 @@
             >
               Date Integration
             </th>
-            <td mat-cell *matCellDef="let superviseur">
-              {{ superviseur.dateDebutIntegration | date : "shortDate" }}
+            <td mat-cell *matCellDef="let r">
+              {{ r.dateDebutIntegration | date : "dd/MM/yyyy" }}
             </td>
           </ng-container>
 
-          <!-- Date de sortie Column -->
+          <ng-container matColumnDef="Profil">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              Rôle
+            </th>
+            <td mat-cell *matCellDef="let r">{{ r.role }}</td>
+          </ng-container>
+
           <ng-container matColumnDef="dateSortie">
             <th
               mat-header-cell
@@ -665,12 +737,11 @@
             >
               Date Sortie
             </th>
-            <td mat-cell *matCellDef="let superviseur">
-              {{ superviseur.dateSortie | date : "shortDate" }}
+            <td mat-cell *matCellDef="let r">
+              {{ r.dateSortie | date : "dd/MM/yyyy" }}
             </td>
           </ng-container>
 
-          <!-- Téléphone Column -->
           <ng-container matColumnDef="telephone">
             <th
               mat-header-cell
@@ -678,76 +749,35 @@
               mat-sort-header
               style="background-color: #f2f2f2"
             >
-              {{ "SUPERVISORS.PHONE" | translate }}
+              Téléphone
             </th>
-            <td mat-cell *matCellDef="let superviseur">
-              {{ superviseur.telephone }}
-            </td>
+            <td mat-cell *matCellDef="let r">{{ r.telephone }}</td>
           </ng-container>
-
-          <!-- Magasin Column -->
-          <!-- <ng-container matColumnDef="magasin">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">
-              {{ 'COMMON.STORES' | translate }}
-            </th>
-            <td mat-cell *matCellDef="let superviseur">{{superviseur.magasin || ''}}</td>
-          </ng-container> -->
-
-          <!-- Merchandiseurs Column -->
-          <ng-container matColumnDef="merchandiseurs">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header
-              style="background-color: #f2f2f2"
-            >
-              Merchandiseurs
-            </th>
-            <td mat-cell *matCellDef="let superviseur">
-              {{ getMerchandiseurNames(superviseur.merchendiseurs) }}
-            </td>
-          </ng-container>
-
-          <!-- Enseigne Column -->
-          <!-- <ng-container matColumnDef="enseigne">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #F2F2F2;">
-              {{ 'STORES.BRAND' | translate }}
-            </th>
-            <td mat-cell *matCellDef="let superviseur">{{superviseur.enseigne}}</td>
-          </ng-container> -->
-
-          <!-- Actions Column -->
-          <ng-container matColumnDef="actions">
+ <ng-container matColumnDef="actions">
             <th
               mat-header-cell
               *matHeaderCellDef
               style="background-color: #f2f2f2"
             >
-              {{ "USERS.ACTIONS" | translate }}
+              Actions
             </th>
-            <td
-              mat-cell
-              *matCellDef="let superviseur"
-              class="action-buttons-cell"
-            >
-              <div class="action-buttons-container">
+            <td mat-cell *matCellDef="let r" class="actions-cell">
+              <div class="actions-container">
                 <button
                   *ngIf="canEdit"
                   mat-icon-button
                   color="primary"
-                  (click)="
-                    editSuperviseur(superviseur); $event.stopPropagation()
-                  "
-                  title="Modifier"
+                  (click)="editResponsable(r); $event.stopPropagation()"
+                  class="action-button"
+                  matTooltip="Modifier"
                 >
                   <mat-icon style="color: blue">edit</mat-icon>
                 </button>
                 <button
                   mat-icon-button
-                  (click)="
-                    viewSuperviseur(superviseur); $event.stopPropagation()
-                  "
-                  title="Voir détails"
+                  (click)="viewResponsable(r); $event.stopPropagation()"
+                  class="action-button"
+                  matTooltip="Voir les détails"
                 >
                   <mat-icon>visibility</mat-icon>
                 </button>
@@ -755,16 +785,17 @@
                   *ngIf="canDelete"
                   mat-icon-button
                   color="warn"
-                  (click)="
-                    deleteSuperviseur(superviseur.id); $event.stopPropagation()
-                  "
-                  title="Supprimer"
+                  (click)="deleteResponsable(r.id!); $event.stopPropagation()"
+                  class="action-button"
+                  matTooltip="Supprimer"
                 >
                   <mat-icon style="color: black">delete</mat-icon>
                 </button>
               </div>
             </td>
           </ng-container>
+
+         
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr
@@ -776,7 +807,7 @@
         </table>
 
         <mat-paginator
-          [pageSizeOptions]="[5, 10, 20]"
+          [pageSizeOptions]="[5, 10, 20,100]"
           showFirstLastButtons
         ></mat-paginator>
       </div>
@@ -798,3 +829,6 @@
   (close)="closeColumnCustomizationPanel()"
   (save)="onColumnCustomizationSave($event)"
 ></app-column-customization-panel>
+
+
+

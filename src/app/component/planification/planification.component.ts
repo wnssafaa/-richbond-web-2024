@@ -26,6 +26,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CalendarOptions, EventInput, CalendarApi } from '@fullcalendar/core';
 import { AuthService } from '../../services/auth.service';
+import { PermissionService } from '../../services/permission.service';
 import {
   Merchendiseur,
   MerchendiseurService,
@@ -158,6 +159,12 @@ export class PlanificationComponent {
   status: any;
   imagePath: string | undefined;
   avatarUrl: any;
+
+  // Propriétés de permissions
+  isConsultant: boolean = false;
+  canEdit: boolean = false;
+  canDelete: boolean = false;
+  canAdd: boolean = false;
   changeLanguage(lang: string) {
     this.currentLanguage = lang;
     this.translate.use(lang);
@@ -765,7 +772,7 @@ export class PlanificationComponent {
     'Virgin Megastore',
     'LC Waikiki',
   ];
-  marques = ['Richbond', 'Simmons', 'Révey', 'Atlas', 'Total Rayons'];
+  marques = ['Richbond (linge / literie)', 'Simmons', 'Rosa', 'Générique'];
   semaines = ['Semaine actuelle', 'Semaine précédente', 'Semaine prochaine'];
 
   // Options pour le filtre de statut
@@ -919,6 +926,7 @@ export class PlanificationComponent {
 
   constructor(
     private authService: AuthService,
+    private permissionService: PermissionService,
     private dialog: MatDialog,
     private planificationService: PlanificationService,
     private merchService: MerchendiseurService,
@@ -1037,6 +1045,9 @@ export class PlanificationComponent {
             ? data.imagePath
             : 'http://localhost:8080/uploads/' + data.imagePath
           : 'assets/default-avatar.png';
+        
+        // Initialiser les permissions
+        this.initializePermissions();
       },
       error: (err) => {
         console.error(
@@ -2769,5 +2780,13 @@ export class PlanificationComponent {
         });
       }
     });
+  }
+
+  // Méthode pour initialiser les permissions
+  private initializePermissions(): void {
+    this.isConsultant = this.permissionService.isConsultant(this.role);
+    this.canEdit = this.permissionService.canEdit(this.role);
+    this.canDelete = this.permissionService.canDelete(this.role);
+    this.canAdd = this.permissionService.canAdd(this.role);
   }
 }

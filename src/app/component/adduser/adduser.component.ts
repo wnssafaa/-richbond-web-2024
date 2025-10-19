@@ -40,10 +40,12 @@ export class AdduserComponent implements OnInit {
     { label: 'MERCHANDISEUR_MULTI', value: Role.MERCHANDISEUR_MULTI }
   ];
   Role = [
-    // { label: 'Admin', value: Role.ADMIN },
+    { label: 'ADMIN', value: Role.ADMIN },
     { label: 'SUPERVISEUR', value: Role.SUPERVISEUR },
     { label: 'MERCHANDISEUR_MONO', value: Role.MERCHANDISEUR_MONO },
-    { label: 'MERCHANDISEUR_MULTI', value: Role.MERCHANDISEUR_MULTI }
+    { label: 'MERCHANDISEUR_MULTI', value: Role.MERCHANDISEUR_MULTI },
+    { label: 'RESPONSABLE_ANIMATEUR', value: Role.RESPONSABLE_ANIMATEUR },
+    { label: 'CONSULTANT', value: Role.CONSULTANT }
   ];
 regionVillesMap: { [key in Region]: string[] } = {
   [Region.SUD]: ['Assa', 'Zag', 'Tata', 'Akka', 'Foum Zguid'],
@@ -163,7 +165,7 @@ regionVillesMap: { [key in Region]: string[] } = {
   ]
 };
   regions = Object.values(Region);
-  marques = ['Richbond', 'Simmons', 'Révey', 'Atlas', 'Total Rayons'];
+  marques = ['Richbond (linge / literie)', 'Simmons', 'Rosa', 'Générique'];
    villesDisponibles: string[] = [];
   isEditMode: boolean = false;
   Region = Object.values(Region);
@@ -254,12 +256,21 @@ onRegionChange(): void {
 
   private handleCreate(formValue: any): void {
     switch(formValue.role) {
+      case Role.ADMIN:
+        this.createAdmin(formValue);
+        break;
       case Role.SUPERVISEUR:
         this.createSuperviseur(formValue);
         break;
       case Role.MERCHANDISEUR_MONO:
       case Role.MERCHANDISEUR_MULTI:
         this.createMerchandiseur(formValue);
+        break;
+      case Role.RESPONSABLE_ANIMATEUR:
+        this.createResponsableAnimateur(formValue);
+        break;
+      case Role.CONSULTANT:
+        this.createConsultant(formValue);
         break;
       default:
         this.snackBar.open('Rôle non pris en charge', 'Fermer', { duration: 3000 });
@@ -293,6 +304,36 @@ onRegionChange(): void {
       next: (response) => this.handleSuccess('Merchandiseur', response),
       error: (err) => this.handleError('merchandiseur', err)
     });
+  }
+
+  private createAdmin(formValue: any): void {
+    const payload = {
+      ...formValue
+    };
+
+    // Pour l'instant, utiliser le service utilisateur générique
+    // Vous devrez peut-être créer un service spécifique pour les admins
+    this.snackBar.open('Création d\'administrateur - Service à implémenter', 'Fermer', { duration: 3000 });
+  }
+
+  private createResponsableAnimateur(formValue: any): void {
+    const payload = {
+      ...formValue
+    };
+
+    // Pour l'instant, utiliser le service utilisateur générique
+    // Vous devrez peut-être créer un service spécifique pour les responsables animateurs
+    this.snackBar.open('Création de responsable animateur - Service à implémenter', 'Fermer', { duration: 3000 });
+  }
+
+  private createConsultant(formValue: any): void {
+    const payload = {
+      ...formValue
+    };
+
+    // Pour l'instant, utiliser le service utilisateur générique
+    // Vous devrez peut-être créer un service spécifique pour les consultants
+    this.snackBar.open('Création de consultant - Service à implémenter', 'Fermer', { duration: 3000 });
   }
 
   private handleSuccess(role: string, response?: any): void {

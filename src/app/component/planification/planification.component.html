@@ -62,7 +62,9 @@
             "COMMON.DASHBOARD" | translate
           }}</span>
         </a>
+        <!-- Historique - masqué pour les consultants -->
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/login-history"
           routerLinkActive="active-link"

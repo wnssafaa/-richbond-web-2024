@@ -1,0 +1,331 @@
+<div class="permission-demo-container">
+  <mat-card class="user-info-card">
+    <mat-card-header>
+      <mat-card-title>Informations de l'utilisateur connecté</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p><strong>Nom d'utilisateur :</strong> {{ username }}</p>
+      <p><strong>Rôle :</strong> {{ getRoleDisplayName() }}</p>
+      <p *ngIf="isConsultant()" class="consultant-warning">
+        <mat-icon color="warn">warning</mat-icon>
+        Mode lecture seule activé - Accès consultant
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="permissions-card">
+    <mat-card-header>
+      <mat-card-title>Test des permissions</mat-card-title>
+      <mat-card-subtitle>Les boutons sont affichés/masqués selon vos permissions</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="permissions-grid">
+        
+        <!-- Section Lecture -->
+        <div class="permission-section">
+          <h3>Permissions de Lecture</h3>
+          <div class="button-group">
+            <button 
+              mat-raised-button 
+              color="primary"
+              (click)="onView()"
+              [disabled]="!canRead()">
+              <mat-icon>visibility</mat-icon>
+              Voir les données
+            </button>
+            <p class="permission-status" [class.allowed]="canRead()" [class.denied]="!canRead()">
+              {{ canRead() ? 'Autorisé' : 'Non autorisé' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Section Écriture -->
+        <div class="permission-section">
+          <h3>Permissions d'Écriture (Boutons désactivés)</h3>
+          <div class="button-group">
+            <button 
+              mat-raised-button 
+              color="accent"
+              (click)="onAdd()"
+              appDisablePermission="canAdd">
+              <mat-icon>add</mat-icon>
+              Ajouter
+            </button>
+            <p class="permission-status" [class.allowed]="canAdd()" [class.denied]="!canAdd()">
+              {{ canAdd() ? 'Autorisé' : 'Non autorisé (désactivé)' }}
+            </p>
+          </div>
+
+          <div class="button-group">
+            <button 
+              mat-raised-button 
+              color="primary"
+              (click)="onEdit()"
+              appDisablePermission="canEdit">
+              <mat-icon>edit</mat-icon>
+              Modifier
+            </button>
+            <p class="permission-status" [class.allowed]="canEdit()" [class.denied]="!canEdit()">
+              {{ canEdit() ? 'Autorisé' : 'Non autorisé (désactivé)' }}
+            </p>
+          </div>
+
+          <div class="button-group">
+            <button 
+              mat-raised-button 
+              color="warn"
+              (click)="onDelete()"
+              appDisablePermission="canDelete">
+              <mat-icon>delete</mat-icon>
+              Supprimer
+            </button>
+            <p class="permission-status" [class.allowed]="canDelete()" [class.denied]="!canDelete()">
+              {{ canDelete() ? 'Autorisé' : 'Non autorisé (désactivé)' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Section avec directive de désactivation -->
+        <div class="permission-section">
+          <h3>Directive appDisablePermission (Style amélioré)</h3>
+          <div class="directive-examples">
+            
+            <!-- Exemple avec canAdd -->
+            <div class="directive-example">
+              <button mat-raised-button color="accent" appDisablePermission="canAdd">
+                <mat-icon>add_circle</mat-icon>
+                Ajouter un élément
+              </button>
+              <p class="directive-explanation">
+                Bouton désactivé avec icône de cadenas pour les consultants
+              </p>
+            </div>
+
+            <!-- Exemple avec canEdit -->
+            <div class="directive-example">
+              <button mat-raised-button color="primary" appDisablePermission="canEdit">
+                <mat-icon>edit</mat-icon>
+                Modifier
+              </button>
+              <p class="directive-explanation">
+                Style élégant avec animation de pulsation au survol
+              </p>
+            </div>
+
+            <!-- Exemple avec canDelete -->
+            <div class="directive-example">
+              <button mat-raised-button color="warn" appDisablePermission="canDelete">
+                <mat-icon>delete</mat-icon>
+                Supprimer
+              </button>
+              <p class="directive-explanation">
+                Filtre grayscale et opacité réduite pour les consultants
+              </p>
+            </div>
+
+            <!-- Exemple avec isConsultant -->
+            <div class="directive-example">
+              <button mat-raised-button color="warn" appDisablePermission="isConsultant">
+                <mat-icon>info</mat-icon>
+                Action spéciale consultant
+              </button>
+              <p class="directive-explanation">
+                Désactivé uniquement pour les consultants
+              </p>
+            </div>
+
+            <!-- Exemple de boutons d'action dans une table -->
+            <div class="directive-example">
+              <h4>Boutons d'action dans une table (Nouvelle approche) :</h4>
+              <div class="action-buttons-container">
+                <!-- Bouton d'édition - masqué pour les consultants -->
+                <button 
+                  *ngIf="canEdit()"
+                  mat-icon-button 
+                  title="Modifier"
+                  class="action-icon enabled"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                
+                <!-- Bouton de visualisation - toujours visible -->
+                <button 
+                  mat-icon-button 
+                  title="Voir"
+                  class="action-icon enabled"
+                >
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                
+                <!-- Bouton de suppression - masqué pour les consultants -->
+                <button 
+                  *ngIf="canDelete()"
+                  mat-icon-button 
+                  title="Supprimer"
+                  class="action-icon enabled"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+                
+              </div>
+              <p class="directive-explanation">
+                <strong>Nouvelle approche :</strong> Les boutons Edit et Delete sont complètement masqués pour les consultants, seul le bouton "Voir" reste visible.
+              </p>
+            </div>
+
+            <!-- Exemple de l'ancienne approche (désactivation) -->
+            <div class="directive-example">
+              <h4>Ancienne approche (désactivation) :</h4>
+              <div class="action-buttons-container">
+                <button 
+                  mat-icon-button 
+                  appDisablePermission="canEdit" 
+                  title="Modifier"
+                  class="action-icon"
+                  [class.disabled]="!canEdit()"
+                  [class.enabled]="canEdit()"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button 
+                  mat-icon-button 
+                  title="Voir"
+                  class="action-icon enabled"
+                >
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button 
+                  mat-icon-button 
+                  appDisablePermission="canDelete" 
+                  title="Supprimer"
+                  class="action-icon"
+                  [class.disabled]="!canDelete()"
+                  [class.enabled]="canDelete()"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+              <p class="directive-explanation">
+                <strong>Ancienne approche :</strong> Les boutons sont désactivés (grisés) mais restent visibles pour les consultants.
+              </p>
+            </div>
+
+            <!-- Exemple d'interface minimale -->
+            <div class="directive-example">
+              <h4>Interface minimale pour les consultants :</h4>
+              <div class="action-buttons-container">
+                <!-- Seul le bouton "Voir" est visible pour les consultants -->
+                <button 
+                  mat-icon-button 
+                  title="Voir"
+                  class="action-icon enabled"
+                >
+                  <mat-icon>visibility</mat-icon>
+                </button>
+              </div>
+              <p class="directive-explanation">
+                <strong>Approche minimale :</strong> Aucun message, aucune indication - interface propre avec seulement les boutons fonctionnels.
+              </p>
+            </div>
+
+            <!-- Exemple d'icônes de permissions -->
+            <div class="directive-example">
+              <h4>Icônes de permissions stylées :</h4>
+              <div style="display: flex; gap: 16px; align-items: center; margin: 16px 0;">
+                <div class="permission-icon locked">
+                  <mat-icon>lock</mat-icon>
+                </div>
+                <span>Icône verrouillée (consultant)</span>
+                
+                <div class="permission-icon unlocked">
+                  <mat-icon>lock_open</mat-icon>
+                </div>
+                <span>Icône déverrouillée (autres rôles)</span>
+              </div>
+              <p class="directive-explanation">
+                Icônes avec dégradés, bordures et animations
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Section avec directive personnalisée (ancienne approche) -->
+        <div class="permission-section">
+          <h3>Utilisation de la directive appPermission (Masquer)</h3>
+          <div class="directive-examples">
+            
+            <!-- Exemple avec canAdd -->
+            <div *appPermission="'canAdd'" class="directive-example">
+              <button mat-raised-button color="accent">
+                <mat-icon>add_circle</mat-icon>
+                Bouton visible avec appPermission="canAdd"
+              </button>
+            </div>
+
+            <!-- Exemple avec canEdit -->
+            <div *appPermission="'canEdit'" class="directive-example">
+              <button mat-raised-button color="primary">
+                <mat-icon>edit</mat-icon>
+                Bouton visible avec appPermission="canEdit"
+              </button>
+            </div>
+
+            <!-- Exemple avec canDelete -->
+            <div *appPermission="'canDelete'" class="directive-example">
+              <button mat-raised-button color="warn">
+                <mat-icon>delete</mat-icon>
+                Bouton visible avec appPermission="canDelete"
+              </button>
+            </div>
+
+            <!-- Exemple avec isConsultant -->
+            <div *appPermission="'isConsultant'" class="directive-example consultant-only">
+              <button mat-raised-button color="warn">
+                <mat-icon>info</mat-icon>
+                Message spécial pour les consultants
+              </button>
+            </div>
+
+            <!-- Message si aucune directive ne s'applique -->
+            <div class="no-permissions-message" *ngIf="isConsultant()">
+              <p>En tant que consultant, vous avez uniquement accès en lecture.</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="instructions-card">
+    <mat-card-header>
+      <mat-card-title>Instructions</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li><strong>Consultant :</strong> Peut voir toutes les données (lecture seule) - interface minimale sans messages</li>
+        <li><strong>Autres rôles :</strong> Ont accès complet (lecture + écriture) - tous les boutons visibles</li>
+        <li><strong>Approche minimale :</strong> 
+          <ul>
+            <li><strong>Consultants :</strong> Seul le bouton "Voir" est visible, aucun message</li>
+            <li><strong>Autres rôles :</strong> Tous les boutons (Edit, Voir, Delete) sont visibles</li>
+            <li><strong>Masquage conditionnel :</strong> Utilisation de <code>*ngIf="canEdit"</code> et <code>*ngIf="canDelete"</code></li>
+            <li><strong>Aucun message :</strong> Pas de "Lecture seule" ou "Mode consultant"</li>
+          </ul>
+        </li>
+        <li><strong>Interface ultra-propre :</strong> 
+          <ul>
+            <li>Aucun message de restriction visible</li>
+            <li>Seulement les boutons fonctionnels affichés</li>
+            <li>Interface identique pour tous les rôles (sauf boutons masqués)</li>
+            <li>Expérience utilisateur fluide et discrète</li>
+          </ul>
+        </li>
+        <li><strong>Directive <code>appDisablePermission</code> :</strong> Toujours disponible pour d'autres cas d'usage</li>
+        <li><strong>Directive <code>*appPermission</code> :</strong> Masque/affiche les éléments selon les permissions</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>

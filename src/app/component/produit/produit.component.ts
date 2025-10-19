@@ -27,6 +27,8 @@ import { AdduserComponent } from '../adduser/adduser.component';
 import { MerchendiseurService, Merchendiseur } from '../../services/merchendiseur.service';
 import { AddMerchComponent } from '../../dialogs/add-merch/add-merch.component';
 import{ MatSnackBar } from '@angular/material/snack-bar';
+import { PermissionService } from '../../services/permission.service';
+import { PermissionDirectivesModule } from '../../directives/permission-directives.module';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -55,7 +57,8 @@ import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customiz
     MatInputModule, MatFormFieldModule, MatSelectModule, MatBadgeModule, MatChipsModule,MatTooltipModule,
     MatSlideToggleModule, MatMenuModule, MatListModule, HttpClientModule,RouterLink,MatPaginatorModule,RouterModule,
     GenericImportDialogComponent,
-    ColumnCustomizationPanelComponent
+    ColumnCustomizationPanelComponent,
+    PermissionDirectivesModule
   ],
   templateUrl: './produit.component.html',
   styleUrls: ['./produit.component.css']
@@ -67,6 +70,12 @@ throw new Error('Method not implemented.');
   username: any;
   email: any;
   role: any;
+
+  // Permissions de l'utilisateur
+  canEdit = false;
+  canDelete = false;
+  canAdd = false;
+  isConsultant = false;
  
     exportToExcel(): void {
        this.exportService.exportProduits(this.dataSource.data, {
@@ -109,7 +118,8 @@ throw new Error('Method not implemented.');
       article: '',
       type: '',
       dimensions: '',
-      famille: ''
+      famille: '',
+      sousMarque: ''
     };
   
     // Options des filtres
@@ -119,6 +129,20 @@ throw new Error('Method not implemented.');
     marques: string[] = Object.values(MarqueProduit);
     familles: string[] = ['MATELAS', 'Oreiller', 'Couette', 'Linge'];
     articles: string[] = [];
+    sousMarques: string[] = [
+      'R VITAL',
+      'R Ultima',
+      'R Hello',
+      'R Protect',
+      'R Dorsal',
+      'Imperial',
+      'R Protect Enfant',
+      'R Protect Ferme',
+      'R Protect Mi-Ferme',
+      'R Protect Moelleux',
+      'R Medical',
+      'R Confortech'
+    ];
   
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
@@ -132,7 +156,8 @@ throw new Error('Method not implemented.');
       private router: Router,
       private translate: TranslateService,
       private exportService: ExportService,
-      private importConfigService: ImportConfigService
+      private importConfigService: ImportConfigService,
+      private permissionService: PermissionService
     ) {
           this.translate.setDefaultLang('fr');
   this.translate.use('fr');
@@ -166,6 +191,9 @@ throw new Error('Method not implemented.');
       this.avatarUrl = data.imagePath
         ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
         : 'assets/profil.webp';
+      
+      // Initialiser les permissions basées sur le rôle
+      this.initializePermissions(this.role);
     },
     error: (err) => {
       console.error('Erreur lors de la récupération des infos utilisateur :', err);
@@ -184,6 +212,14 @@ throw new Error('Method not implemented.');
         this.drawer.close();
       }
     }
+
+  private initializePermissions(userRole: string): void {
+    this.canEdit = this.permissionService.canEdit(userRole);
+    this.canDelete = this.permissionService.canDelete(userRole);
+    this.canAdd = this.permissionService.canAdd(userRole);
+    this.isConsultant = this.permissionService.isConsultant(userRole);
+  }
+
     ngOnInit(): void {
       this.loadProduits();
       this.setupCustomFilter();
@@ -261,6 +297,8 @@ private setupCustomFilter(): void {
       data.dimensions?.toLowerCase().includes(filterObj.filters.dimensions.toLowerCase()) : true;
     const matchesFamille = filterObj.filters.famille ? 
       data.famille?.toLowerCase().includes(filterObj.filters.famille.toLowerCase()) : true;
+    const matchesSousMarque = filterObj.filters.sousMarque ? 
+      data.sousMarques?.toLowerCase().includes(filterObj.filters.sousMarque.toLowerCase()) : true;
 
     return matchesSearch && 
            matchesMarque && 
@@ -268,7 +306,8 @@ private setupCustomFilter(): void {
            matchesArticle && 
            matchesType && 
            matchesDimensions &&
-           matchesFamille;
+           matchesFamille &&
+           matchesSousMarque;
   };
 }
   // Filtrer les superviseurs
@@ -292,7 +331,8 @@ resetFilters(): void {
     article: '',
     type: '',
     dimensions: '',
-    famille: ''
+    famille: '',
+    sousMarque: ''
   };
   this.searchText = '';
   this.applyFilters();

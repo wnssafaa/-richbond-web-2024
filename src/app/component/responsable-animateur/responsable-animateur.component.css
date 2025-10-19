@@ -1,353 +1,3 @@
-/* Ajout des styles pour la sidebar collapsible à la fin du fichier existant */
-
-/* ============================================================================
-   STYLES POUR SIDEBAR COLLAPSIBLE (copiés du composant magasins)
-============================================================================ */
-
-/* Layout flexbox pour sidebar et contenu */
-.example-container {
-  display: flex;
-  height: 100vh;
-  gap: 0;
-}
-
-/* Sidebar - largeur fixe */
-.sidebar {
-  flex-shrink: 0;
-  width: 250px;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - 24px);
-  transition: width 0.3s ease;
-  position: relative;
-  z-index: 1;
-  background-color: #ffffff;
-}
-
-/* Mode collapsed - icônes seulement */
-.sidebar-collapsed {
-  width: 70px !important;
-  min-width: 70px;
-  max-width: 70px;
-}
-
-/* Contenu principal - prend tout l'espace restant */
-.content {
-  flex: 1;
-  padding: 24px;
-  background-color: #ffffff;
-  border-radius: 16px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  box-sizing: border-box;
-  overflow-x: auto;
-  margin-left: 0;
-}
-
-/* ============================================================================
-   2. PROFIL UTILISATEUR (haut de la sidebar)
-============================================================================ */
-.user-profile {
-  display: flex;
-  align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #f0f0f0;
-  transition: all 0.3s ease;
-}
-
-.user-profile img {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  margin-right: 12px;
-  transition: all 0.3s ease;
-}
-
-.user-profile strong {
-  display: block;
-  font-size: 16px;
-  color: #333;
-  transition: opacity 0.3s ease;
-}
-
-.user-profile p {
-  margin: 0;
-  font-size: 13px;
-  color: #6c757d;
-  transition: opacity 0.3s ease;
-}
-
-/* Mode collapsed pour le profil */
-.user-profile-collapsed {
-  justify-content: center;
-  padding: 16px 8px;
-}
-
-.user-profile-collapsed img {
-  width: 35px;
-  height: 35px;
-  margin-right: 0;
-}
-
-.user-info-hidden {
-  opacity: 0;
-  width: 0;
-  overflow: hidden;
-}
-
-/* ============================================================================
-   3. LISTE DE NAVIGATION (liens mat-nav-list)
-============================================================================ */
-mat-nav-list a.active {
-  background-color: #f0f4ff !important;
-  color: #3f51b5 !important;
-  font-weight: 500;
-}
-
-/* Style pour les icônes de navigation */
-mat-nav-list mat-icon[matListItemIcon] {
-  color: #0a2681;
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-  margin-right: 16px;
-  transition: color 0.3s ease;
-}
-
-/* Style pour les liens actifs avec icônes */
-mat-nav-list a.active mat-icon[matListItemIcon] {
-  color: #0a2681 !important;
-}
-
-/* Style pour les titres des éléments de navigation */
-mat-nav-list span[matListItemTitle] {
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-}
-
-/* Style pour les liens actifs */
-mat-nav-list a.active span[matListItemTitle] {
-  color: #3f51b5 !important;
-  font-weight: 600;
-}
-
-/* Hover effect pour les éléments de navigation */
-mat-nav-list a:hover mat-icon[matListItemIcon] {
-  color: #0a2681;
-  transform: scale(1.1);
-}
-
-mat-nav-list a:hover span[matListItemTitle] {
-  color: #0e6af4;
-}
-
-/* Style spécial pour le bouton de déconnexion */
-mat-nav-list
-  a[mat-list-item]
-  mat-icon[matListItemIcon][style*="color: #ff0022"] {
-  color: #ff0022 !important;
-}
-
-mat-nav-list a[mat-list-item] span[matListItemTitle][style*="color: #ff0022"] {
-  color: #ff0022 !important;
-}
-
-/* Hover effect pour le bouton de déconnexion */
-mat-nav-list
-  a[mat-list-item]:has(mat-icon[style*="color: #ff0022"])
-  mat-icon[matListItemIcon] {
-  color: #ff0022 !important;
-}
-
-mat-nav-list
-  a[mat-list-item]:has(mat-icon[style*="color: #ff0022"])
-  span[matListItemTitle] {
-  color: #ff0022 !important;
-}
-
-/* ============================================================================
-   MODE COLLAPSED - ICÔNES SEULEMENT
-============================================================================ */
-
-/* Masquer le texte en mode collapsed */
-.text-hidden {
-  opacity: 0;
-  width: 0;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-/* Navigation en mode collapsed */
-.nav-list-collapsed {
-  padding: 0 8px;
-}
-
-.nav-item-collapsed {
-  justify-content: center !important;
-  padding: 12px 8px !important;
-  min-height: 48px;
-  display: flex !important;
-  align-items: center !important;
-}
-
-.nav-item-collapsed mat-icon[matListItemIcon] {
-  margin-right: 0 !important;
-  margin-left: 0 !important;
-  margin: 0 auto !important;
-}
-
-/* Masquer les trois points (dots) en mode collapsed */
-.nav-item-collapsed::after {
-  display: none !important;
-}
-
-/* S'assurer qu'aucun contenu supplémentaire ne s'affiche */
-.nav-item-collapsed {
-  position: relative;
-}
-
-.nav-item-collapsed *:not(mat-icon[matListItemIcon]) {
-  display: none !important;
-}
-
-/* Masquer spécifiquement les éléments Material Design qui causent les trois points */
-.nav-item-collapsed .mat-list-item-content {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
-}
-
-.nav-item-collapsed .mat-list-item-content > *:not(mat-icon[matListItemIcon]) {
-  display: none !important;
-}
-
-/* Masquer les spans et autres éléments de texte */
-.nav-item-collapsed span {
-  display: none !important;
-}
-
-/* Masquer les icônes de flèche */
-.nav-item-collapsed mat-icon:not([matListItemIcon]) {
-  display: none !important;
-}
-
-/* ============================================================================
-   4. BOUTONS DU BAS (Aide + Déconnexion)
-============================================================================ */
-.mat-nav-list .bottom-actions {
-  margin-top: auto;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  padding-top: 16px;
-}
-
-/* ============================================================================
-   5. RESPONSIVE DESIGN
-============================================================================ */
-@media (max-width: 768px) {
-  .example-container {
-    flex-direction: column;
-    height: auto;
-  }
-
-  .sidebar {
-    width: 100%;
-    height: auto;
-    flex-direction: row;
-    border-radius: 0;
-    box-shadow: none;
-    overflow-x: auto;
-    min-height: auto;
-  }
-
-  .user-profile {
-    display: none;
-  }
-
-  .mat-nav-list {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    padding: 10px;
-    justify-content: space-around;
-    width: 100%;
-  }
-
-  .mat-nav-list a {
-    flex: 1;
-    text-align: center;
-    padding: 10px;
-    font-size: 14px;
-    flex-direction: column;
-  }
-
-  /* Styles pour les icônes en mode mobile */
-  .mat-nav-list mat-icon[matListItemIcon] {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    margin-right: 0;
-    margin-bottom: 4px;
-  }
-
-  .mat-nav-list span[matListItemTitle] {
-    font-size: 12px;
-    text-align: center;
-  }
-
-  .logout-button,
-  .help-button {
-    font-size: 14px;
-    gap: 6px;
-  }
-
-  .logout-icon::before {
-    content: "logout";
-  }
-
-  .content {
-    padding: 12px;
-    min-height: auto;
-  }
-}
-
-/* Styles pour le header de la page */
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-  gap: 10px;
-  color: #333;
-  padding: 12px 20px;
-  border-radius: 8px;
-  background: transparent;
-  margin-bottom: 20px;
-}
-
-.page-header h1 {
-  margin: 0;
-  flex-shrink: 0;
-  color: #333;
-}
-
-.page-header .menu-toggle {
-  margin-right: 10px;
-  flex-shrink: 0;
-  background-color: transparent;
-  transition: background-color 0.3s ease;
-}
-
-.page-header .menu-toggle:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
 /* Styles pour le header et les éléments de base */
 .header {
   display: flex;
@@ -578,7 +228,7 @@ mat-nav-list span[matListItemTitle] {
 
 /* Style pour les liens actifs */
 mat-nav-list a.active span[matListItemTitle] {
-  color: #3f51b5 !important;
+  color: #0a2681 !important;
   font-weight: 600;
 }
 
@@ -589,7 +239,7 @@ mat-nav-list a:hover mat-icon[matListItemIcon] {
 }
 
 mat-nav-list a:hover span[matListItemTitle] {
-  color: #0a2681;
+  color: #0e6af4;
 }
 
 /* Style spécial pour le bouton de déconnexion */
@@ -1097,13 +747,13 @@ mat-nav-list span[matListItemTitle] {
 
 /* Style pour les liens actifs */
 mat-nav-list a.active span[matListItemTitle] {
-  color: #3f51b5 !important;
+  color: #0a2681 !important;
   font-weight: 600;
 }
 
 /* Hover effect pour les éléments de navigation */
 mat-nav-list a:hover mat-icon[matListItemIcon] {
-  color: #0e6af4;
+  color: #0a2681;
   transform: scale(1.1);
 }
 
@@ -1294,6 +944,7 @@ mat-nav-list
     min-height: auto;
   }
 }
+
 /* Styles pour le header de la page */
 .page-header {
   display: flex;
@@ -1645,6 +1296,34 @@ table.mat-table {
   text-align: right;
 }
 
+/* Styles pour la colonne Actions */
+.actions-cell {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.actions-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+.action-button {
+  min-width: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  margin: 0 2px !important;
+}
+
+.action-button mat-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
 /* === Lignes survolées === */
 .hoverable:hover {
   background-color: #f8f9fa;
@@ -1653,56 +1332,8 @@ table.mat-table {
 }
 
 /* === Style des boutons d'action === */
-.action-buttons-cell {
-  padding: 8px 12px !important;
-  text-align: center;
-}
-
-.action-buttons-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  flex-wrap: nowrap;
-}
-
-.action-buttons-container .mat-icon-button {
-  margin: 0;
-  padding: 8px;
-  min-width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.action-buttons-container .mat-icon-button:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-  transform: scale(1.1);
-}
-
-.action-buttons-container .mat-icon-button mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-}
-
-/* Style spécifique pour l'icône de suppression */
-.action-buttons-container .mat-icon-button:has(mat-icon[style*="color: black"]) {
-  transition: all 0.2s ease;
-}
-
-.action-buttons-container .mat-icon-button:has(mat-icon[style*="color: black"]):hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-/* Style spécifique pour l'icône d'édition */
-.action-buttons-container .mat-icon-button:has(mat-icon[style*="color: blue"]) {
-  transition: all 0.2s ease;
-}
-
-.action-buttons-container .mat-icon-button:has(mat-icon[style*="color: blue"]):hover {
-  background-color: rgba(33, 150, 243, 0.1);
+.mat-icon-button {
+  margin: 0 4px;
 }
 
 /* === Responsive : petits écrans (tablettes & téléphones) === */
@@ -1737,6 +1368,24 @@ table.mat-table {
   .mat-icon-button {
     padding: 6px;
   }
+
+  /* Responsive pour les boutons d'action */
+  .actions-container {
+    gap: 2px;
+  }
+
+  .action-button {
+    min-width: 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+    margin: 0 1px !important;
+  }
+
+  .action-button mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
 }
 
 /* === Responsive très petits écrans (téléphones < 480px) === */
@@ -1750,6 +1399,24 @@ table.mat-table {
 
   .mat-icon-button mat-icon {
     font-size: 18px;
+  }
+
+  /* Responsive pour les boutons d'action sur très petits écrans */
+  .actions-container {
+    gap: 1px;
+  }
+
+  .action-button {
+    min-width: 32px !important;
+    width: 32px !important;
+    height: 32px !important;
+    margin: 0 !important;
+  }
+
+  .action-button mat-icon {
+    font-size: 14px !important;
+    width: 14px !important;
+    height: 14px !important;
   }
 }
 /* 📦 Wrapper du tableau + pagination */
@@ -1767,6 +1434,14 @@ table.mat-table {
 table.mat-table {
   width: 100%;
   min-width: 1000px; /* facultatif pour scroll horizontal si trop de colonnes */
+}
+.mdc-data-table__header-cell {
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  outline: none;
+  text-align: left;
+  padding-top: 10px;
 }
 
 /* 📄 Cellules d'en-tête */
@@ -1878,103 +1553,6 @@ mat-paginator {
   align-items: center;
   gap: 10px;
 }
-.mat-button.btn-active,
-button.mat-button.btn-active,
-td.mat-cell .mat-button.btn-active {
-  background-color: #d6f5d6 !important;
-  color: #00a000 !important;
-  border-radius: 5px;
-  padding: 4px 12px;
-  font-weight: 600;
-  border: none;
-  width: 80%;
-  text-transform: uppercase;
-  min-width: 80px;
-  box-shadow: none !important;
-}
-
-.mat-button.btn-inactive,
-button.mat-button.btn-inactive,
-td.mat-cell .mat-button.btn-inactive {
-  background-color: #ffd6d6 !important;
-  color: #e10000 !important;
-  border-radius: 5px;
-  padding: 4px 12px;
-  font-weight: 600;
-  border: none;
-  width: 80%;
-  text-transform: uppercase;
-  min-width: 80px;
-  box-shadow: none !important;
-}
-
-/* Hover states pour les boutons de statut */
-.mat-button.btn-active:hover,
-button.mat-button.btn-active:hover,
-td.mat-cell .mat-button.btn-active:hover {
-  background-color: #c4e8c4 !important;
-  color: #008000 !important;
-}
-
-.mat-button.btn-inactive:hover,
-button.mat-button.btn-inactive:hover,
-td.mat-cell .mat-button.btn-inactive:hover {
-  background-color: #ffc4c4 !important;
-  color: #cc0000 !important;
-}
-
-/* Override Material Design styles */
-:host ::ng-deep .mat-button.btn-active {
-  background-color: #d6f5d6 !important;
-  color: #00a000 !important;
-  border: 2px solid #00a000 !important;
-}
-
-:host ::ng-deep .mat-button.btn-inactive {
-  background-color: #ffd6d6 !important;
-  color: #e10000 !important;
-  border: 2px solid #e10000 !important;
-}
-
-/* Styles de test pour vérifier l'application */
-.btn-active {
-  background-color: #d6f5d6 !important;
-  color: #00a000 !important;
-  border: 2px solid #00a000 !important;
-}
-
-.btn-inactive {
-  background-color: #ffd6d6 !important;
-  color: #e10000 !important;
-  border: 2px solid #e10000 !important;
-}
-
-/* Styles pour les statuts en lecture seule (consultants) */
-.status-active {
-  background-color: #d6f5d6;
-  color: #00a000;
-  border-radius: 5px;
-  padding: 4px 12px;
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  min-width: 80px;
-  display: inline-block;
-  text-align: center;
-}
-
-.status-inactive {
-  background-color: #ffd6d6;
-  color: #e10000;
-  border-radius: 5px;
-  padding: 4px 12px;
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  min-width: 80px;
-  display: inline-block;
-  text-align: center;
-}
 
 .page-header-left {
   display: flex;
@@ -2007,7 +1585,7 @@ td.mat-cell .mat-button.btn-inactive:hover {
   margin-bottom: 20px;
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
 }
 
 .main-toolbar-content {
@@ -2056,12 +1634,69 @@ td.mat-cell .mat-button.btn-inactive:hover {
   width: 100%;
   padding: 16px 0;
   margin-bottom: 20px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
+  /* background-color: #f8f9fa; */
+  /* border-radius: 8px; */
+  /* border: 1px solid #e9ecef; */
 }
 
-/* Ancien style supprimé - remplacé par les nouvelles classes filters-row-1 et filters-row-2 */
+.filters-content {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+}
+
+.filters-content mat-form-field {
+  flex: 1 1 200px;
+  min-width: 180px;
+}
+
+/* Organisation des filtres en lignes */
+.filters-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+/* Première ligne : 4 filtres */
+.filters-row-1 {
+  justify-content: flex-start;
+}
+
+.filters-row-1 mat-form-field {
+  flex: 1 1 22%;
+  min-width: 180px;
+}
+
+/* Deuxième ligne : 4 filtres + bouton fermer */
+.filters-row-2 {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.filters-row-2 mat-form-field {
+  flex: 1 1 22%;
+  min-width: 180px;
+}
+
+.filters-row-2 .close-filters {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+/* Troisième ligne : Date de sortie seule */
+.filters-row-3 {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.filters-row-3 mat-form-field {
+  flex: 1 1 22%;
+  min-width: 200px;
+}
 
 .filters-content .close-filters {
   align-self: center;
@@ -2097,7 +1732,6 @@ td.mat-cell .mat-button.btn-inactive:hover {
 }
 
 .clear-filter-btn mat-icon {
-  padding: 0;
   font-size: 14px;
   width: 14px;
   height: 6px;
@@ -2106,6 +1740,7 @@ td.mat-cell .mat-button.btn-inactive:hover {
   align-items: center;
   justify-content: center;
   margin: -6px;
+  padding: 0;
 }
 
 /* ============================================================================
@@ -2172,6 +1807,28 @@ td.mat-cell .mat-button.btn-inactive:hover {
     justify-content: center;
     margin-bottom: 10px;
   }
+
+  /* Styles responsive pour les nouvelles lignes de filtres */
+  .filters-row {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .filters-row-1 mat-form-field,
+  .filters-row-2 mat-form-field,
+  .filters-row-3 mat-form-field {
+    flex: 1 1 100%;
+    min-width: 100%;
+    width: 100%;
+  }
+
+  .filters-row-2 .close-filters,
+  .filters-row-3 .close-filters {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* Très petits écrans */
@@ -2193,140 +1850,77 @@ td.mat-cell .mat-button.btn-inactive:hover {
     font-size: 14px;
   }
 }
-/* Styles pour l'organisation des filtres en deux lignes */
-.filters-toolbar {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 20px;
-}
 
-.filters-row-1 {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.filters-row-2 {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.filters-row-1 mat-form-field {
-  flex: 1;
-  min-width: 200px;
-  max-width: 300px;
-}
-
-.filters-row-2 mat-form-field {
-  flex: 1;
-  min-width: 200px;
-  max-width: 300px;
-}
-
-/* Responsive design pour les filtres */
-@media (max-width: 1200px) {
-  .filters-row-1,
-  .filters-row-2 {
-    flex-direction: column;
-  }
-  
-  .filters-row-1 mat-form-field,
-  .filters-row-2 mat-form-field {
-    max-width: 100%;
-  }
-}
-
-/* Styles pour les chips de marques et enseignes */
-.chips-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: flex-start;
-  align-items: flex-start;
-  min-height: 40px;
-  padding: 4px;
-  max-width: 200px;
-}
-
-.chips-container mat-chip-listbox {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: flex-start;
+/* Styles pour l'overlay du panneau de personnalisation */
+.panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
 }
 
-.chips-container mat-chip-option {
-  font-size: 0.8rem;
-  font-weight: 500;
-  height: 28px;
-  min-height: 28px;
-  padding: 0 12px;
-  /* background-color: #2196f3; */
-  color: rgb(0, 0, 0);
-  border: none;
-  border-radius: 14px;
-  /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
-  /* transition: all 0.2s ease;
-  white-space: nowrap;
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis; */
-}
-/*  */
-
-.chips-container mat-chip-option[disabled] {
-  /* opacity: 1;
-  background-color: #2196f3; */
-  color: rgb(0, 0, 0);
-  cursor: default;
+.panel-overlay.visible {
+  opacity: 1;
+  visibility: visible;
 }
 
-
-
-/* Style spécial pour les enseignes */
-.enseignes-chips .chips-container mat-chip-option {
-  /* background-color: #4caf50; */
-  font-size: 0.75rem;
-  height: 26px;
-  min-height: 26px;
-  padding: 0 10px;
-}
-
-/* .enseignes-chips .chips-container mat-chip-option:hover {
-  background-color: #388e3c;
-}
-
-.enseignes-chips .chips-container mat-chip-option[disabled] {
-  background-color: #4caf50;
-} */
-
-/* Style spécial pour les marques */
-.marques-chips .chips-container mat-chip-option {
-  background-color: #ff9800;
-  font-size: 0.75rem;
-  height: 26px;
-  min-height: 26px;
-  padding: 0 10px;
-}
-
-.marques-chips .chips-container mat-chip-option:hover {
-  background-color: #f57c00;
-}
-
-.marques-chips .chips-container mat-chip-option[disabled] {
-  background-color: #ff9800;
-}
-
-/* Styles pour l'affichage de la connexion */
-.login-info {
+/* Chips pour les marques et enseignes */
+.marques-chips, .enseignes-chips {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
+.marques-chips mat-chip-listbox, .enseignes-chips mat-chip-listbox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.marques-chips mat-chip-option {
+  background-color: #fff3cd;
+  color: #856404;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid #ffeaa7;
+}
+
+.enseignes-chips mat-chip-option {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid #bee5eb;
+}
+
+/* Styles pour les badges de statut */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.status-active {
+  background-color: #e8f5e8;
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
+
+.status-inactive {
+  background-color: #ffebee;
+  color: #f44336;
+  border: 1px solid #f44336;
+}
 
 

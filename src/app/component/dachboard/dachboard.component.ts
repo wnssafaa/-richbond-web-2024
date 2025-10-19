@@ -38,6 +38,7 @@ import { Merchendiseur, MerchendiseurService } from '../../services/merchendiseu
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AuthService } from '../../services/auth.service';
+import { PermissionService } from '../../services/permission.service';
 import { SuperveseurService, Superviseur } from '../../services/superveseur.service';
 import { Planification, PlanificationService, StatutVisite,  } from '../../services/planification.service';
 import { VisitService } from '../../services/visit.service';
@@ -130,6 +131,18 @@ export class DachboardComponent implements OnDestroy {
   imagePath: string | undefined;
   status: string | undefined;
 
+  // Propriétés de permissions
+  isConsultant: boolean = false;
+  canEdit: boolean = false;
+  canDelete: boolean = false;
+  canAdd: boolean = false;
+
+  // Injection des services
+  // constructor(
+  //   private athService: AuthService,
+  //   private permissionService: PermissionService
+  // ) {}
+
   // Graphiques Chart.js
   visitsChart: Chart | null = null;
   planificationsChart: Chart | null = null;
@@ -204,11 +217,22 @@ export class DachboardComponent implements OnDestroy {
       this.avatarUrl = data.imagePath
         ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
         : 'assets/default-avatar.png';
+      
+      // Initialiser les permissions
+      this.initializePermissions();
     },
     error: (err) => {
       console.error('Erreur lors de la récupération des infos utilisateur :', err);
     }
   });
+}
+
+// Méthode pour initialiser les permissions
+private initializePermissions(): void {
+  this.isConsultant = this.permissionService.isConsultant(this.role);
+  this.canEdit = this.permissionService.canEdit(this.role);
+  this.canDelete = this.permissionService.canDelete(this.role);
+  this.canAdd = this.permissionService.canAdd(this.role);
 }
 
 displayedColumnsMagasins = ['nom', 'Memebres','progress'];
@@ -267,7 +291,7 @@ filterMerchandiseurs(): void {
   }
   this.dataSource.paginator?.firstPage();
 }
-marques = ['Richbond', 'Simmons', 'Révey', 'Atlas', 'Total Rayons'];
+marques = ['Richbond (linge / literie)', 'Simmons', 'Rosa', 'Générique'];
 stores = [
   { name: 'Marjane', region: 'Casablanca-Settat', progress: 75 },
   { name: 'Carrefour', region: 'Marrakech-Safi', progress: 50 },
@@ -289,6 +313,7 @@ errorMessage: any;
     private userService: UserService,
     public cdr: ChangeDetectorRef,
     private translate: TranslateService,
+     private permissionService: PermissionService,
 ) {
   this.translate.setDefaultLang('fr');
   this.translate.use('fr');

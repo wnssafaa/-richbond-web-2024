@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { AuthService } from '../../services/auth.service';
+import { PermissionService } from '../../services/permission.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MerchendiseurService } from '../../services/merchendiseur.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -81,6 +82,12 @@ export class ParametresComponent implements OnInit {
 username: any;
 role: any;
 email: any;
+
+// Propriétés de permissions
+isConsultant: boolean = false;
+canEdit: boolean = false;
+canDelete: boolean = false;
+canAdd: boolean = false;
 // loadCurrentUser(): void {
 //   this.authService.getCurrentUserInfo().subscribe({
 //     next: (data) => {
@@ -140,6 +147,7 @@ userProfile: any;
       private snackBar: MatSnackBar,
       private dialog: MatDialog,
       private authService: AuthService,
+      private permissionService: PermissionService,
       private router: Router,
         private translate: TranslateService) {
        this.translate.setDefaultLang('fr');
@@ -200,12 +208,24 @@ userProfile: any;
       this.avatarUrl = data.imagePath
         ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
         : 'assets/default-avatar.png';
+      
+      // Initialiser les permissions
+      this.initializePermissions();
     },
     error: (err) => {
       console.error('Erreur lors de la récupération des infos utilisateur :', err);
     }
   });
 }
+
+// Méthode pour initialiser les permissions
+private initializePermissions(): void {
+  this.isConsultant = this.permissionService.isConsultant(this.role);
+  this.canEdit = this.permissionService.canEdit(this.role);
+  this.canDelete = this.permissionService.canDelete(this.role);
+  this.canAdd = this.permissionService.canAdd(this.role);
+}
+
   ngOnInit(): void {
      this.isMobile = window.innerWidth <= 768;
   window.addEventListener('resize', () => {

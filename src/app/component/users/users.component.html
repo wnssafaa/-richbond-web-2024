@@ -312,6 +312,7 @@
 
               <!-- Bouton d'importation -->
               <button
+                *ngIf="canAdd"
                 mat-raised-button
                 class="import-button"
                 style="background-color: #455e98; color: white; margin-right: 12px; padding: 10px 15px; border-radius: 20px;"
@@ -322,12 +323,14 @@
               </button>
 
               <button
+                *ngIf="canAdd"
                 mat-raised-button
                 class="add-user-button"
                 style="background-color: #0a2681; color: white"
                 (click)="openAddUserDialog()"
               >
-                {{ "USERS.ADD_USER" | translate }}
+               Ajouter
+
               </button>
             </div>
           </div>
@@ -335,7 +338,8 @@
 
         <!-- Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) -->
         <div *ngIf="showFilters" class="filters-toolbar">
-          <div class="filters-content">
+          <!-- Première ligne : 3 filtres -->
+          <div class="filters-content filters-row-1">
             <mat-form-field appearance="outline">
               <mat-label>{{ "USERS.ROLE" | translate }}</mat-label>
               <mat-select
@@ -345,6 +349,7 @@
                 <mat-option value="">{{ "USERS.ALL_ROLES" | translate }}</mat-option>
                 <mat-option value="SUPERVISEUR">SUPERVISEUR</mat-option>
                 <mat-option value="MERCHENDISEUR">MERCHENDISEUR</mat-option>
+                <mat-option value="ANIMATEUR">ANIMATEUR</mat-option>
               </mat-select>
               <button
                 mat-icon-button
@@ -365,7 +370,7 @@
                 [(ngModel)]="selectedStatus"
                 (selectionChange)="applyFilter()"
               >
-                <mat-option value="">Touts les status</mat-option>
+                <mat-option value="">Tous les statuts</mat-option>
                 <mat-option value="ACTIVE">ACTIVE</mat-option>
                 <mat-option value="INACTIVE">INACTIVE</mat-option>
               </mat-select>
@@ -405,7 +410,10 @@
                 <mat-icon>close</mat-icon>
               </button>
             </mat-form-field>
+          </div>
 
+          <!-- Deuxième ligne : 4 filtres -->
+          <div class="filters-content filters-row-2">
             <mat-form-field appearance="outline">
               <mat-label>{{ "USERS.CITY" | translate }}</mat-label>
               <mat-select
@@ -454,6 +462,53 @@
               </button>
             </mat-form-field>
 
+            <mat-form-field appearance="outline">
+              <mat-label>Marques</mat-label>
+              <mat-select
+                [(ngModel)]="selectedBrand"
+                (selectionChange)="applyFilter()"
+              >
+                <mat-option value="">Toutes les marques</mat-option>
+                <mat-option *ngFor="let brand of availableBrands" [value]="brand">
+                  {{ brand }}
+                </mat-option>
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedBrand = ''; applyFilter()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre marque"
+                *ngIf="selectedBrand"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Enseignes</mat-label>
+              <mat-select
+                [(ngModel)]="selectedEnseigne"
+                (selectionChange)="applyFilter()"
+              >
+                <mat-option value="">Toutes les enseignes</mat-option>
+                <mat-option *ngFor="let enseigne of availableEnseignes" [value]="enseigne">
+                  {{ enseigne }}
+                </mat-option>
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="selectedEnseigne = ''; applyFilter()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre enseigne"
+                *ngIf="selectedEnseigne"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
           </div>
         </div>
 
@@ -564,6 +619,58 @@
             </td>
           </ng-container>
 
+          <!-- Marques -->
+          <ng-container matColumnDef="marques">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              Marques
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <div class="marques-chips">
+                <div class="chips-container">
+                  <mat-chip-listbox *ngIf="row.marques && row.marques.length > 0; else noMarques">
+                    <mat-chip-option *ngFor="let marque of row.marques" >
+                      {{ marque }}
+                    </mat-chip-option>
+                  </mat-chip-listbox>
+                  <ng-template #noMarques>
+                    <span style="color: #999; font-style: italic;">Aucune marque</span>
+                  </ng-template>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Enseignes -->
+          <ng-container matColumnDef="enseignes">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              style="background-color: #f2f2f2"
+            >
+              Enseignes
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <div >
+                <div >
+                  <mat-chip-listbox *ngIf="row.enseignes && row.enseignes.length > 0; else noEnseignes">
+                    <mat-chip-option *ngFor="let enseigne of row.enseignes"  style="color:#000000">
+                      {{ enseigne }}
+                    </mat-chip-option>
+                  </mat-chip-listbox>
+                  <ng-template #noEnseignes>
+                    <span style="color: #999; font-style: italic;">Aucune enseigne</span>
+                  </ng-template>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
           <!-- Connection -->
           <ng-container matColumnDef="connexion">
             <th
@@ -578,11 +685,23 @@
               <div
                 style="
                   background-color: #f2f2f2;
-                  width: 80%;
+                  width: 90%;
                   text-align: center;
+                  padding: 8px;
+                  border-radius: 5px;
                 "
               >
-                {{ row.derniereConnexion || "—" }}
+                <div *ngIf="row.derniereConnexion && row.derniereConnexion !== '—'" class="login-info">
+                  <div style="font-weight: bold; color: #333;">
+                    {{ row.derniereConnexion | date:'dd/MM/yyyy HH:mm' }}
+                  </div>
+                  <div style="font-size: 0.8em; color: #666; margin-top: 2px;">
+                    Session: {{ row.derniereSession || 'N/A' }}
+                  </div>
+                </div>
+                <div *ngIf="!row.derniereConnexion || row.derniereConnexion === '—'" style="color: #999;">
+                  —
+                </div>
               </div>
             </td>
           </ng-container>
@@ -637,6 +756,7 @@
             </th>
             <td mat-cell *matCellDef="let row">
               <button
+                *ngIf="canEdit"
                 mat-button
                 [ngClass]="
                   row.status === 'ACTIVE' ? 'btn-active' : 'btn-inactive'
@@ -650,6 +770,9 @@
               >
                 {{ row.status }}
               </button>
+              <span *ngIf="!canEdit" [ngClass]="row.status === 'ACTIVE' ? 'status-active' : 'status-inactive'">
+                {{ row.status }}
+              </span>
             </td>
           </ng-container>
 
@@ -666,20 +789,22 @@
             <td mat-cell *matCellDef="let row" class="action-buttons-cell">
               <div class="action-buttons-container">
                 <button
+                  *ngIf="canEdit"
                   mat-icon-button
                   (click)="editUser(row); $event.stopPropagation()"
                   title="Modifier"
                 >
                   <mat-icon style="color: blue">edit</mat-icon>
                 </button>
-                <button 
+                <!-- <button 
                   mat-icon-button
                   (click)="showUserDetails(row); $event.stopPropagation()"
                   title="Voir détails"
                 >
                   <mat-icon>visibility</mat-icon>
-                </button>
+                </button> -->
                 <button
+                  *ngIf="canDelete"
                   mat-icon-button
                   (click)="deleteUser(row.id, row.type); $event.stopPropagation()"
                   title="Supprimer"

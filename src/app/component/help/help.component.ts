@@ -33,6 +33,7 @@ import { AddMagasinComponent } from '../../dialogs/add-magasin/add-magasin.compo
 import { Region } from '../../enum/Region';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { AuthService } from '../../services/auth.service';
+import { PermissionService } from '../../services/permission.service';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -75,6 +76,12 @@ export class HELPComponent {
   imagePath: string | undefined;
   avatarUrl: string | undefined;
   status: string | undefined;
+
+  // Propriétés de permissions
+  isConsultant: boolean = false;
+  canEdit: boolean = false;
+  canDelete: boolean = false;
+  canAdd: boolean = false;
   ngOnInit() {
     this.loadCurrentUser();
     
@@ -87,7 +94,8 @@ export class HELPComponent {
       private dialog: MatDialog,
         private translate: TranslateService,
       private router: Router,
-      private athService: AuthService
+      private authService: AuthService,
+      private permissionService: PermissionService
     ) {}
        openLogoutDialog(): void {
           const dialogRef = this.dialog.open(ConfirmLogoutComponent, {
@@ -102,7 +110,7 @@ export class HELPComponent {
     });
   }
    logout(): void {
-        this.athService.logout();
+        this.authService.logout();
       }
       faqItems = [
   {
@@ -211,7 +219,7 @@ currentLanguage = 'fr';
     localStorage.setItem('userLanguage', lang);
   }
    loadCurrentUser(): void {
-  this.athService.getCurrentUserInfo().subscribe({
+  this.authService.getCurrentUserInfo().subscribe({
     next: (data) => {
       this.username = data.username ?? '';
       this.role = data.role ?? '';
@@ -225,11 +233,22 @@ currentLanguage = 'fr';
       this.avatarUrl = data.imagePath
         ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
         : 'assets/default-avatar.png';
+      
+      // Initialiser les permissions
+      this.initializePermissions();
     },
     error: (err) => {
       console.error('Erreur lors de la récupération des infos utilisateur :', err);
     }
   });
+}
+
+// Méthode pour initialiser les permissions
+private initializePermissions(): void {
+  this.isConsultant = this.permissionService.isConsultant(this.role);
+  this.canEdit = this.permissionService.canEdit(this.role);
+  this.canDelete = this.permissionService.canDelete(this.role);
+  this.canAdd = this.permissionService.canAdd(this.role);
 }
 
 }

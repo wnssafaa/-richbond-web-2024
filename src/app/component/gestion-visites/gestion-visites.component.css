@@ -1,3 +1,17 @@
+/* Styles pour les permissions consultant */
+.consultant-info {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.consultant-info mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
 /* Ligne du haut : Barre principale avec actions (toujours visible) */
 .main-toolbar {
   width: 100%;

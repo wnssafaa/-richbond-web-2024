@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VisitService, VisitDTO } from '../../services/visit.service';
 import { AuthService } from '../../services/auth.service';
+import { PermissionService } from '../../services/permission.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
@@ -54,11 +55,18 @@ export class VisitDetailPageComponent implements OnInit {
   telephone: string | undefined; avatarUrl: string | undefined; imagePath: string | undefined;
   status: string | undefined;
 
+  // Propriétés de permissions
+  isConsultant: boolean = false;
+  canEdit: boolean = false;
+  canDelete: boolean = false;
+  canAdd: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private visitService: VisitService,
     private authService: AuthService,
+    private permissionService: PermissionService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private translate: TranslateService
@@ -180,11 +188,22 @@ export class VisitDetailPageComponent implements OnInit {
         this.avatarUrl = data.imagePath
           ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
           : 'assets/default-avatar.png';
+        
+        // Initialiser les permissions
+        this.initializePermissions();
       },
       error: (err) => {
         console.error('Erreur lors de la récupération des infos utilisateur :', err);
       }
     });
+  }
+
+  // Méthode pour initialiser les permissions
+  private initializePermissions(): void {
+    this.isConsultant = this.permissionService.isConsultant(this.role);
+    this.canEdit = this.permissionService.canEdit(this.role);
+    this.canDelete = this.permissionService.canDelete(this.role);
+    this.canAdd = this.permissionService.canAdd(this.role);
   }
 
   goBack(): void {
