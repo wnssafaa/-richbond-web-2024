@@ -835,14 +835,14 @@
   </div>
 </div>
 
-<!-- Overlay pour fermer le panneau en cliquant à l'extérieur -->
+
 <div
   class="panel-overlay"
   [class.visible]="isColumnCustomizationOpen"
   (click)="closeColumnCustomizationPanel()"
 ></div>
 
-<!-- Panneau de personnalisation des colonnes -->
+
 <app-column-customization-panel
   [isOpen]="isColumnCustomizationOpen"
   [columnConfig]="columnConfig"
