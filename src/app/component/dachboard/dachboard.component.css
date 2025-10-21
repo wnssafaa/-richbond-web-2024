@@ -2153,6 +2153,27 @@ mat-nav-list
   padding: 0 1rem;
 }
 
+/* Espacement pour les filtres KPI */
+.kpi-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.filter-spacing {
+  margin-right: 16px;
+}
+
+.filter-field.filter-spacing {
+  min-width: 200px;
+}
+
+.filter-button.filter-spacing {
+  margin-left: 8px;
+}
+
 .section-title {
   display: flex;
   align-items: center;

@@ -373,20 +373,6 @@
       <!-- Section des graphiques -->
       <div class="charts-container">
         <div class="charts-grid">
-          <!-- Graphique d'intégration des utilisateurs -->
-          <mat-card class="chart-card">
-            <mat-card-header>
-              <mat-card-title>
-                <mat-icon>trending_up</mat-icon>
-                Intégration des Utilisateurs par Mois
-              </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <div class="chart-container">
-                <canvas id="usersIntegrationChart"></canvas>
-              </div>
-            </mat-card-content>
-          </mat-card>
           <mat-card class="chart-card" (click)="goToPlabification()">
             <mat-card-content>
               <div class="calendar-header">
@@ -488,6 +474,25 @@
               </div>
             </mat-card-content>
           </mat-card>
+        </div>
+
+        <!-- Section des KPIs côte à côte -->
+        <div class="charts-grid">
+          <!-- Graphique d'intégration des utilisateurs -->
+          <mat-card class="chart-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>trending_up</mat-icon>
+                Intégration des Utilisateurs par Mois
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="chart-container">
+                <canvas id="usersIntegrationChart"></canvas>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
           <!-- KPI 2: Utilisation de l'App -->
           <mat-card class="kpi-card">
             <mat-card-header>
@@ -535,7 +540,7 @@
 
             <!-- Filtres KPI -->
             <div class="kpi-filters">
-              <mat-form-field appearance="outline" class="filter-field">
+              <mat-form-field appearance="outline" class="filter-field filter-spacing">
                 <mat-label>Date de début</mat-label>
                 <input
                   matInput
@@ -545,7 +550,7 @@
                 />
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="filter-field">
+              <mat-form-field appearance="outline" class="filter-field filter-spacing">
                 <mat-label>Date de fin</mat-label>
                 <input
                   matInput
@@ -555,7 +560,7 @@
                 />
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="filter-field">
+              <mat-form-field appearance="outline" class="filter-field filter-spacing">
                 <mat-label>Région</mat-label>
                 <mat-select
                   [(value)]="kpiFilters.region"
@@ -580,7 +585,7 @@
                 mat-raised-button
                 color="primary"
                 (click)="applyKpiFilters()"
-                class="filter-button"
+                class="filter-button filter-spacing"
               >
                 <mat-icon>filter_list</mat-icon>
                 Filtrer
@@ -590,7 +595,7 @@
                 mat-raised-button
                 color="accent"
                 (click)="clearKpiFilters()"
-                class="filter-button"
+                class="filter-button filter-spacing"
               >
                 <mat-icon>clear</mat-icon>
                 Effacer
@@ -600,7 +605,7 @@
                 mat-raised-button
                 color="warn"
                 (click)="refreshKpiData()"
-                class="filter-button"
+                class="filter-button filter-spacing"
               >
                 <mat-icon>refresh</mat-icon>
                 Actualiser
@@ -708,24 +713,6 @@
                   <div class="export-buttons">
                     <button
                       mat-raised-button
-                      color="warn"
-                      (click)="debugKpiCharts()"
-                      style="margin-right: 8px;"
-                    >
-                      <mat-icon>bug_report</mat-icon>
-                      Debug Charts
-                    </button>
-                    <button
-                      mat-raised-button
-                      color="primary"
-                      (click)="forceReloadKpiData()"
-                      style="margin-right: 8px;"
-                    >
-                      <mat-icon>refresh</mat-icon>
-                      Recharger KPI
-                    </button>
-                    <button
-                      mat-raised-button
                       color="primary"
                       (click)="exportKpiToExcel()"
                     >
@@ -786,7 +773,7 @@
               </div>
 
               <!-- Onglets pour les différents KPIs -->
-              <mat-tab-group class="kpi-tabs" (selectedTabChange)="onTabChange($event)">
+              <mat-tab-group class="kpi-tabs">
                 <!-- Onglet 1: Suivi des Affectations -->
                 <mat-tab [label]="'KPI.ASSIGNMENT_TRACKING' | translate">
                   <div class="tab-content">
@@ -981,7 +968,7 @@
                         </mat-card-header>
                         <mat-card-content>
                           <div class="chart-wrapper">
-                            <canvas id="kpiUsageChart"></canvas>
+                            <canvas id="usageChart"></canvas>
                           </div>
                         </mat-card-content>
                       </mat-card>
@@ -1030,7 +1017,7 @@
                             <div class="login-stats">
                               <div class="login-stat">
                                 <div class="login-value">
-                                  {{ kpiAppUsageData.loginStats.today }}
+                                  {{ kpiAppUsageData?.loginStats?.today || 0 }}
                                 </div>
                                 <div class="login-label">
                                   Connexions Aujourd'hui
@@ -1038,13 +1025,13 @@
                               </div>
                               <div class="login-stat">
                                 <div class="login-value">
-                                  {{ kpiAppUsageData.loginStats.thisWeek }}
+                                  {{ kpiAppUsageData?.loginStats?.thisWeek || 0 }}
                                 </div>
                                 <div class="login-label">Cette Semaine</div>
                               </div>
                               <div class="login-stat">
                                 <div class="login-value">
-                                  {{ kpiAppUsageData.loginStats.thisMonth }}
+                                  {{ kpiAppUsageData?.loginStats?.thisMonth || 0 }}
                                 </div>
                                 <div class="login-label">Ce Mois</div>
                               </div>
@@ -1070,7 +1057,7 @@
                         </mat-card-header>
                         <mat-card-content>
                           <div class="chart-wrapper">
-                            <canvas id="kpiReportChart"></canvas>
+                            <canvas id="reportChart"></canvas>
                           </div>
                         </mat-card-content>
                       </mat-card>
@@ -1083,7 +1070,7 @@
                         </mat-card-header>
                         <mat-card-content>
                           <div class="chart-wrapper">
-                            <canvas id="kpiTrendChart"></canvas>
+                            <canvas id="trendChart"></canvas>
                           </div>
                         </mat-card-content>
                       </mat-card>
