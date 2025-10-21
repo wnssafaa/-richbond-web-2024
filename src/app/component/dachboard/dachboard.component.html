@@ -540,7 +540,7 @@
 
             <!-- Filtres KPI -->
             <div class="kpi-filters">
-              <mat-form-field appearance="outline" class="filter-field filter-spacing">
+              <mat-form-field appearance="outline" class="filter-field">
                 <mat-label>Date de début</mat-label>
                 <input
                   matInput
@@ -550,7 +550,7 @@
                 />
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="filter-field filter-spacing">
+              <mat-form-field appearance="outline" class="filter-field">
                 <mat-label>Date de fin</mat-label>
                 <input
                   matInput
@@ -560,7 +560,7 @@
                 />
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="filter-field filter-spacing">
+              <mat-form-field appearance="outline" class="filter-field">
                 <mat-label>Région</mat-label>
                 <mat-select
                   [(value)]="kpiFilters.region"
@@ -585,7 +585,7 @@
                 mat-raised-button
                 color="primary"
                 (click)="applyKpiFilters()"
-                class="filter-button filter-spacing"
+                class="filter-button"
               >
                 <mat-icon>filter_list</mat-icon>
                 Filtrer
@@ -595,7 +595,7 @@
                 mat-raised-button
                 color="accent"
                 (click)="clearKpiFilters()"
-                class="filter-button filter-spacing"
+                class="filter-button"
               >
                 <mat-icon>clear</mat-icon>
                 Effacer
@@ -605,7 +605,7 @@
                 mat-raised-button
                 color="warn"
                 (click)="refreshKpiData()"
-                class="filter-button filter-spacing"
+                class="filter-button"
               >
                 <mat-icon>refresh</mat-icon>
                 Actualiser
@@ -1017,7 +1017,7 @@
                             <div class="login-stats">
                               <div class="login-stat">
                                 <div class="login-value">
-                                  {{ kpiAppUsageData?.loginStats?.today || 0 }}
+                                  {{ kpiAppUsageData?.loginStats.today }}
                                 </div>
                                 <div class="login-label">
                                   Connexions Aujourd'hui
@@ -1025,13 +1025,13 @@
                               </div>
                               <div class="login-stat">
                                 <div class="login-value">
-                                  {{ kpiAppUsageData?.loginStats?.thisWeek || 0 }}
+                                  {{ kpiAppUsageData?.loginStats.thisWeek }}
                                 </div>
                                 <div class="login-label">Cette Semaine</div>
                               </div>
                               <div class="login-stat">
                                 <div class="login-value">
-                                  {{ kpiAppUsageData?.loginStats?.thisMonth || 0 }}
+                                  {{ kpiAppUsageData?.loginStats.thisMonth }}
                                 </div>
                                 <div class="login-label">Ce Mois</div>
                               </div>

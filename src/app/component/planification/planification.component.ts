@@ -1035,7 +1035,7 @@ export class PlanificationComponent {
         this.avatarUrl = data.imagePath
           ? data.imagePath.startsWith('data:image')
             ? data.imagePath
-            : 'http://localhost:8080/uploads/' + data.imagePath
+            : 'http://environment.apiUrl.replace('/api', '')/uploads/' + data.imagePath
           : 'assets/default-avatar.png';
       },
       error: (err) => {
@@ -1166,7 +1166,7 @@ export class PlanificationComponent {
     const merchImage = merch?.imagePath
       ? merch.imagePath.startsWith('data:image')
         ? merch.imagePath
-        : 'http://localhost:8080/uploads/' + merch.imagePath
+        : 'http://environment.apiUrl.replace('/api', '')/uploads/' + merch.imagePath
       : 'assets/default-avatar.png';
 
     const div = document.createElement('div');

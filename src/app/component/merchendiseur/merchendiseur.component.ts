@@ -828,7 +828,7 @@ export class MerchendiseurComponent implements OnInit {
         this.avatarUrl = data.imagePath
           ? data.imagePath.startsWith('data:image')
             ? data.imagePath
-            : 'http://localhost:8080/uploads/' + data.imagePath
+            : 'http://environment.apiUrl.replace('/api', '')/uploads/' + data.imagePath
           : 'assets/default-avatar.png';
       },
       error: (err) => {
