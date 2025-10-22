@@ -28,7 +28,7 @@ import { GestionVisitesComponent } from './component/gestion-visites/gestion-vis
 import { VisitDetailPageComponent } from './component/visit-detail-page/visit-detail-page.component';
 import { LoginHistoryPageComponent } from './component/login-history-page/login-history-page.component';
 import { GestionStockComponent } from './component/gestion-stock/gestion-stock.component';
-import { KpiComponent } from './component/kpi/kpi.component';
+
 
 export const routes: Routes = [
     {
@@ -125,7 +125,7 @@ export const routes: Routes = [
            { path: 'gestion-stock', component: GestionStockComponent, canActivate: [AuthGuard, ConsultantGuard] },
            { path: 'profil', component: ProfilComponent, canActivate: [AuthGuard] },
            { path: 'login-history', component: LoginHistoryPageComponent, canActivate: [AuthGuard] },
-           { path: 'kpi', component: KpiComponent, canActivate: [AuthGuard] },
+           
 
 
 ];

@@ -85,6 +85,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { Chart, registerables } from 'chart.js';
+import { environment } from '../../../environments/environment';
 
 // Enregistrer tous les composants de Chart.js
 Chart.register(...registerables);
@@ -357,27 +358,6 @@ export class DachboardComponent implements OnDestroy {
       }
     }
   };
- loadCurrentUser(): void {
-  this.athService.getCurrentUserInfo().subscribe({
-    next: (data) => {
-      this.username = data.username ?? '';
-      this.role = data.role ?? '';
-      this.email = data.email ?? '';
-      this.nom = data.nom ?? '';
-      this.prenom = data.prenom ?? '';
-      this.telephone = data.telephone ?? '';
-      this.status = data.status ?? '';
-      this.imagePath = data.imagePath ?? '';
-      // Gestion de l'avatar : base64 ou URL
-      this.avatarUrl = data.imagePath
-        ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
-        : 'assets/default-avatar.png';
-      
-      // Initialiser les permissions
-      this.initializePermissions();
->>>>>>> c90546fa0fceabbf0999ce8e337d1fc207d56e6e
-    },
-  };
   loadCurrentUser(): void {
     this.athService.getCurrentUserInfo().subscribe({
       next: (data) => {
@@ -391,10 +371,11 @@ export class DachboardComponent implements OnDestroy {
         this.imagePath = data.imagePath ?? '';
         // Gestion de l'avatar : base64 ou URL
         this.avatarUrl = data.imagePath
-          ? data.imagePath.startsWith('data:image')
-            ? data.imagePath
-            : 'http://localhost:8080/uploads/' + data.imagePath
+          ? (data.imagePath.startsWith('data:image') ? data.imagePath : environment.apiUrl + '/uploads/' + data.imagePath)
           : 'assets/default-avatar.png';
+        
+        // Initialiser les permissions
+        this.initializePermissions();
       },
       error: (err) => {
         console.error(
@@ -422,19 +403,12 @@ headerRender = () => {
 @ViewChild('paginator2') paginator2!: MatPaginator;
 @ViewChild('paginator3') paginator3!: MatPaginator;
 @ViewChild('paginator4') paginator4!: MatPaginator;
-ngAfterViewInit(): void {
-  this.dataSource.paginator = this.paginator1;
-  this.dataSourceMagasins.paginator = this.paginator2;
-  this.combinedDataSource.paginator = this.paginator3;
-  this.dataSourceSuperviseurs.paginator = this.paginator4;
-  
-  // Initialiser les graphiques après le chargement des données
-  setTimeout(() => {
-    this.initializeCharts();
-  }, 100);
-}
->>>>>>> c90546fa0fceabbf0999ce8e337d1fc207d56e6e
-
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator1;
+    this.dataSourceMagasins.paginator = this.paginator2;
+    this.combinedDataSource.paginator = this.paginator3;
+    this.dataSourceSuperviseurs.paginator = this.paginator4;
+    
     // Initialiser les graphiques après le chargement des données
     setTimeout(() => {
       this.initializeCharts();
@@ -489,18 +463,16 @@ ngAfterViewInit(): void {
     }
     this.dataSource.paginator?.firstPage();
   }
-  this.dataSource.paginator?.firstPage();
-}
 marques = ['Richbond (linge / literie)', 'Simmons', 'Rosa', 'Générique'];
 stores = [
   { name: 'Marjane', region: 'Casablanca-Settat', progress: 75 },
   { name: 'Carrefour', region: 'Marrakech-Safi', progress: 50 },
   { name: 'Aswak Assalam', region: 'Rabat-Salé-Kénitra', progress: 90 }
 ];
- selectedDate: Date = new Date();
-isLoading: any;
-errorMessage: any;
->>>>>>> c90546fa0fceabbf0999ce8e337d1fc207d56e6e
+  selectedDate: Date = new Date();
+  isLoading: any;
+  errorMessage: any;
+
   constructor(
     private datePipe: DatePipe,
     private router: Router,
@@ -515,18 +487,12 @@ errorMessage: any;
     private kpiService: KpiService,
     public cdr: ChangeDetectorRef,
     private translate: TranslateService,
-     private permissionService: PermissionService,
-) {
-  this.translate.setDefaultLang('fr');
-  this.translate.use('fr');
-  this.initializeChartLabels();
-  
-  // Écouter les changements de langue
-  this.translate.onLangChange.subscribe(() => {
-    this.updateChartLabelsOnLanguageChange();
-  });
-}
-
+    private permissionService: PermissionService,
+  ) {
+    this.translate.setDefaultLang('fr');
+    this.translate.use('fr');
+    this.initializeChartLabels();
+    
     // Écouter les changements de langue
     this.translate.onLangChange.subscribe(() => {
       this.updateChartLabelsOnLanguageChange();

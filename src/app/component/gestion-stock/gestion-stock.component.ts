@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -554,7 +555,7 @@ export class GestionStockComponent implements OnInit, AfterViewInit {
         this.avatarUrl = data.imagePath
           ? data.imagePath.startsWith('data:image')
             ? data.imagePath
-            : 'environment.apiUrl.replace('/api', '')/uploads/' + data.imagePath
+            : environment.apiUrl.replace('/api', '') + '/uploads/' + data.imagePath
           : 'assets/default-avatar.png';
       },
       error: (err) => {

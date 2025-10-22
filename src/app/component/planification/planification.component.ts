@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -54,7 +55,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
 import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
 import { ExportService } from '../../services/export.service';
-import { environment } from '../../../environments/environment';
+
 
 // Add this before initializing your maps
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -1048,7 +1049,7 @@ export class PlanificationComponent {
         this.avatarUrl = data.imagePath
           ? data.imagePath.startsWith('data:image')
             ? data.imagePath
-            : 'http://environment.apiUrl.replace('/api', '')/uploads/' + data.imagePath
+            : environment.apiUrl.replace('/api', '') + '/uploads/' + data.imagePath
           : 'assets/default-avatar.png';
         
         // Initialiser les permissions
@@ -1182,7 +1183,7 @@ export class PlanificationComponent {
     const merchImage = merch?.imagePath
       ? merch.imagePath.startsWith('data:image')
         ? merch.imagePath
-        : 'http://environment.apiUrl.replace('/api', '')/uploads/' + merch.imagePath
+        : environment.apiUrl.replace('/api', '') + '/uploads/' + merch.imagePath
       : 'assets/default-avatar.png';
 
     const div = document.createElement('div');

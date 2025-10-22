@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { firstValueFrom } from 'rxjs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -109,13 +110,13 @@ export class UsersComponent implements OnInit {
   @ViewChild(MatDrawer) drawer!: MatDrawer;
   currentLanguage = 'fr';
   menuOpen = false;
-  selectedRole: string = '';
-  selectedStatus: string = '';
-  selectedRegion: string = '';
-  selectedCity: string = '';
-  selectedStore: string = '';
-  selectedBrand: string = '';
-  selectedEnseigne: string = '';
+  selectedRole: string | null = null;
+  selectedStatus: string | null = null;
+  selectedRegion: string | null = null;
+  selectedCity: string | null = null;
+  selectedStore: string | null = null;
+  selectedBrand: string | null = null;
+  selectedEnseigne: string | null = null;
   // showFilters = false;
 
   // Available options for filters
@@ -161,7 +162,7 @@ export class UsersComponent implements OnInit {
         this.avatarUrl = data.imagePath
           ? data.imagePath.startsWith('data:image')
             ? data.imagePath
-            : 'http://environment.apiUrl.replace('/api', '')/uploads/' + data.imagePath
+            : environment.apiUrl.replace('/api', '') + '/uploads/' + data.imagePath
           : 'assets/profil.webp';
         
         // Initialiser les permissions
@@ -868,3 +869,4 @@ export class UsersComponent implements OnInit {
     this.canAdd = this.permissionService.canAdd(this.role);
   }
 }
+

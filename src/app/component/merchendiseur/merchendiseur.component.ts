@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -836,7 +837,7 @@ export class MerchendiseurComponent implements OnInit {
         this.avatarUrl = data.imagePath
           ? data.imagePath.startsWith('data:image')
             ? data.imagePath
-            : 'http://environment.apiUrl.replace('/api', '')/uploads/' + data.imagePath
+            : environment.apiUrl.replace('/api', '') + '/uploads/' + data.imagePath
           : 'assets/default-avatar.png';
         
         // Initialiser les permissions
@@ -916,3 +917,4 @@ export class MerchendiseurComponent implements OnInit {
     this.canAdd = this.permissionService.canAdd(this.role);
   }
 }
+

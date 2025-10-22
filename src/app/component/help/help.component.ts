@@ -2,6 +2,7 @@
 
 import {MatExpansionModule} from '@angular/material/expansion';
 import { Component, ViewChild } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -231,7 +232,7 @@ currentLanguage = 'fr';
       this.imagePath = data.imagePath ?? '';
       // Gestion de l'avatar : base64 ou URL
       this.avatarUrl = data.imagePath
-        ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'environment.apiUrl.replace('/api', '')/uploads/' + data.imagePath)
+        ? (data.imagePath.startsWith('data:image') ? data.imagePath : environment.apiUrl.replace('/api', '') + '/uploads/' + data.imagePath)
         : 'assets/default-avatar.png';
       
       // Initialiser les permissions
@@ -250,5 +251,4 @@ private initializePermissions(): void {
   this.canDelete = this.permissionService.canDelete(this.role);
   this.canAdd = this.permissionService.canAdd(this.role);
 }
-
 }
