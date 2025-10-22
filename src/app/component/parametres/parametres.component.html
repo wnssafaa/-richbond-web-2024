@@ -63,7 +63,9 @@
             "COMMON.DASHBOARD" | translate
           }}</span>
         </a>
+        <!-- Historique - masqué pour les consultants -->
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/login-history"
           routerLinkActive="active-link"
@@ -78,6 +80,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/users"
           routerLinkActive="active-link"
@@ -92,6 +95,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/merchendiseur"
           routerLinkActive="active-link"
@@ -106,6 +110,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/superviseur"
           routerLinkActive="active-link"
@@ -120,6 +125,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/magasins"
           routerLinkActive="active-link"
@@ -134,6 +140,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/planification"
           routerLinkActive="active-link"
@@ -162,6 +169,7 @@
         </a>
 
         <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/Produit"
           routerLinkActive="active-link"

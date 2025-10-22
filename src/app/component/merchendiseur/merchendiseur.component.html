@@ -308,6 +308,7 @@
 
               <!-- ✅ Bouton d'importation -->
               <button
+                *ngIf="canAdd"
                 mat-raised-button
                 class="import-button"
                 style="background-color: #455e98; color: white; margin-right: 12px; padding: 10px 15px;
@@ -320,6 +321,7 @@
               </button>
 
               <button
+                *ngIf="canAdd"
                 mat-raised-button
                 class="add-user-button"
                 style="background-color: #0a2681; color: white"
@@ -727,6 +729,7 @@
             <td mat-cell *matCellDef="let m" class="actions-cell">
               <div class="actions-container">
                 <button
+                  *ngIf="canEdit"
                   mat-icon-button
                   color="primary"
                   (click)="editUser(m); $event.stopPropagation()"
@@ -744,6 +747,7 @@
                   <mat-icon>visibility</mat-icon>
                 </button>
                 <button
+                  *ngIf="canDelete"
                   mat-icon-button
                   color="warn"
                   (click)="deleteMerchendiseur(m.id!); $event.stopPropagation()"

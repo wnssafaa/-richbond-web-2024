@@ -15,6 +15,10 @@ export interface User {
   status: string;
   imagePath?: string; // chemin ou url de l'image côté back
   selected: boolean;
+  marques?: string[]; // Liste des marques associées
+  enseignes?: string[]; // Liste des enseignes associées
+  derniereConnexion?: string; // Date de dernière connexion
+  derniereSession?: string; // ID de la dernière session
 }
 
 @Injectable({
@@ -90,5 +94,30 @@ export class UserService {
     const formData = new FormData();
     formData.append('avatar', file);
     return this.http.put<User>(`${this.apiUrl}/${userId}/avatar`, formData);
+  }
+
+  // ✅ Récupérer les marques d'un utilisateur
+  getUserBrands(userId: number): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/${userId}/brands`);
+  }
+
+  // ✅ Récupérer les enseignes d'un utilisateur
+  getUserStores(userId: number): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/${userId}/stores`);
+  }
+
+  // ✅ Récupérer l'historique de connexion d'un utilisateur
+  getUserLoginHistory(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${userId}/login-history`);
+  }
+
+  // ✅ Récupérer toutes les marques disponibles
+  getAllBrands(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/brands`);
+  }
+
+  // ✅ Récupérer toutes les enseignes disponibles
+  getAllStores(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/stores`);
   }
 }

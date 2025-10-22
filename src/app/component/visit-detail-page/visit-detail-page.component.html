@@ -51,6 +51,7 @@
           <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.DASHBOARD' | translate }}</span>
         </a>
          <a
+          *ngIf="!isConsultant"
           mat-list-item
           routerLink="/login-history"
           routerLinkActive="active-link"
@@ -63,31 +64,31 @@
             "LOGIN_HISTORY.TITLE" | translate
           }}</span>
         </a>
-        <a mat-list-item routerLink="/users" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+        <a *ngIf="!isConsultant" mat-list-item routerLink="/users" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
            [matTooltip]="!menuOpen ? 'Tous les utilisateurs' : ''" matTooltipPosition="right">
           <mat-icon matListItemIcon>group</mat-icon>
           <span matListItemTitle [class.text-hidden]="!menuOpen">Tous les utilisateurs</span>
         </a>
         
-        <a mat-list-item routerLink="/merchendiseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+        <a *ngIf="!isConsultant" mat-list-item routerLink="/merchendiseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
            [matTooltip]="!menuOpen ? ('COMMON.MERCHANDISERS' | translate) : ''" matTooltipPosition="right">
           <mat-icon matListItemIcon>storefront</mat-icon>
           <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.MERCHANDISERS' | translate }}</span>
         </a>
         
-        <a mat-list-item routerLink="/superviseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+        <a *ngIf="!isConsultant" mat-list-item routerLink="/superviseur" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
            [matTooltip]="!menuOpen ? ('COMMON.SUPERVISORS' | translate) : ''" matTooltipPosition="right">
           <mat-icon matListItemIcon>supervisor_account</mat-icon>
           <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.SUPERVISORS' | translate }}</span>
         </a>
         
-        <a mat-list-item routerLink="/magasins" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+        <a *ngIf="!isConsultant" mat-list-item routerLink="/magasins" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
            [matTooltip]="!menuOpen ? ('COMMON.STORES' | translate) : ''" matTooltipPosition="right">
           <mat-icon matListItemIcon>store</mat-icon>
           <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.STORES' | translate }}</span>
         </a>
         
-        <a mat-list-item routerLink="/planification" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+        <a *ngIf="!isConsultant" mat-list-item routerLink="/planification" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
            [matTooltip]="!menuOpen ? ('COMMON.PLANNING' | translate) : ''" matTooltipPosition="right">
           <mat-icon matListItemIcon>event_note</mat-icon>
           <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PLANNING' | translate }}</span>
@@ -99,7 +100,7 @@
           <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.VISIT' | translate}}</span>
         </a>
 
-        <a mat-list-item routerLink="/Produit" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
+        <a *ngIf="!isConsultant" mat-list-item routerLink="/Produit" routerLinkActive="active-link" [class.nav-item-collapsed]="!menuOpen"
            [matTooltip]="!menuOpen ? ('COMMON.PRODUCTS' | translate) : ''" matTooltipPosition="right">
           <mat-icon matListItemIcon>inventory</mat-icon>
           <span matListItemTitle [class.text-hidden]="!menuOpen">{{ 'COMMON.PRODUCTS' | translate }}</span>

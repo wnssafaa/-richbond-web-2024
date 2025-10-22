@@ -43,6 +43,7 @@ import { Role } from '../../enum/Role';
 import { MarqueProduit } from '../../enum/MarqueProduit';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { PermissionService } from '../../services/permission.service';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import {
   trigger,
@@ -113,6 +114,12 @@ export class MerchendiseurComponent implements OnInit {
   isColumnCustomizationOpen: boolean = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  
+  // Propriétés de permissions
+  isConsultant: boolean = false;
+  canEdit: boolean = false;
+  canDelete: boolean = false;
+  canAdd: boolean = false;
   displayedColumns: string[] = [
     'id',
     'nom',
@@ -370,7 +377,8 @@ export class MerchendiseurComponent implements OnInit {
     private router: Router,
     private superviseurService: SuperveseurService,
     private magasinService: MagasinService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    private permissionService: PermissionService
   ) {
     this.translate.setDefaultLang('fr');
     this.translate.use('fr');
@@ -830,6 +838,9 @@ export class MerchendiseurComponent implements OnInit {
             ? data.imagePath
             : 'http://environment.apiUrl.replace('/api', '')/uploads/' + data.imagePath
           : 'assets/default-avatar.png';
+        
+        // Initialiser les permissions
+        this.initializePermissions();
       },
       error: (err) => {
         console.error(
@@ -895,5 +906,13 @@ export class MerchendiseurComponent implements OnInit {
   onColumnCustomizationSave(columnConfig: any[]): void {
     this.columnConfig = columnConfig;
     this.updateDisplayedColumns();
+  }
+
+  // Méthode pour initialiser les permissions
+  private initializePermissions(): void {
+    this.isConsultant = this.permissionService.isConsultant(this.role);
+    this.canEdit = this.permissionService.canEdit(this.role);
+    this.canDelete = this.permissionService.canDelete(this.role);
+    this.canAdd = this.permissionService.canAdd(this.role);
   }
 }

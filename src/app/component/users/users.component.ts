@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -42,6 +43,7 @@ import { SelectRoleComponent } from '../../dialogs/select-role/select-role.compo
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { AuthService } from '../../services/auth.service';
 import { ExportService } from '../../services/export.service';
+import { PermissionService } from '../../services/permission.service';
 import { SuperviseurDetailsDialogComponent } from '../../dialogs/superviseur-details-dialog/superviseur-details-dialog.component';
 import { MerchandiserDetailsDialogComponent } from '../../dialogs/merchandiser-details-dialog/merchandiser-details-dialog.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -51,6 +53,7 @@ import { ImportConfigService } from '../../services/import-config.service';
 import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
 import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
 const componentMap: { [key: string]: { component: any; dataKey: string } } = {
+  ADMIN: { component: AdduserComponent, dataKey: 'user' },
   SUPERVISEUR: { component: AddSupComponent, dataKey: 'superviseur' },
   MERCHANDISEUR_MONO: {
     component: AddMerchComponent,
@@ -60,6 +63,8 @@ const componentMap: { [key: string]: { component: any; dataKey: string } } = {
     component: AddMerchComponent,
     dataKey: 'Merchendiseur',
   },
+  RESPONSABLE_ANIMATEUR: { component: AdduserComponent, dataKey: 'user' },
+  CONSULTANT: { component: AdduserComponent, dataKey: 'user' },
 };
 
 @Component({
@@ -109,6 +114,8 @@ export class UsersComponent implements OnInit {
   selectedRegion: string = '';
   selectedCity: string = '';
   selectedStore: string = '';
+  selectedBrand: string = '';
+  selectedEnseigne: string = '';
   // showFilters = false;
 
   // Available options for filters
@@ -117,6 +124,8 @@ export class UsersComponent implements OnInit {
   );
   availableCities: string[] = [];
   availableStores: string[] = [];
+  availableBrands: string[] = [];
+  availableEnseignes: string[] = [];
   componentMap: { [key: string]: { component: any; dataKey: string } } = {
     SUPERVISEUR: { component: AddSupComponent, dataKey: 'superviseur' },
     MERCHANDISEUR_MONO: {
@@ -130,6 +139,13 @@ export class UsersComponent implements OnInit {
     MERCHENDISEUR: { component: AddMerchComponent, dataKey: 'Merchendiseur' },
   };
   showFilters: boolean = false;
+  
+  // Propriétés de permissions
+  isConsultant: boolean = false;
+  canEdit: boolean = false;
+  canDelete: boolean = false;
+  canAdd: boolean = false;
+  
   loadCurrentUser(): void {
     this.authService.getCurrentUserInfo().subscribe({
       next: (data) => {
@@ -147,6 +163,9 @@ export class UsersComponent implements OnInit {
             ? data.imagePath
             : 'http://environment.apiUrl.replace('/api', '')/uploads/' + data.imagePath
           : 'assets/profil.webp';
+        
+        // Initialiser les permissions
+        this.initializePermissions();
       },
       error: (err) => {
         console.error(
@@ -180,6 +199,8 @@ export class UsersComponent implements OnInit {
     { key: 'region', label: 'Région', visible: true },
     { key: 'city', label: 'Ville', visible: true },
     { key: 'store', label: 'Magasin', visible: true },
+    { key: 'marques', label: 'Marques', visible: true },
+    { key: 'enseignes', label: 'Enseignes', visible: true },
     { key: 'connexion', label: 'Dernière connexion', visible: true },
     { key: 'sessions', label: 'Sessions', visible: true },
     { key: 'role', label: 'Rôle', visible: true },
@@ -191,12 +212,14 @@ export class UsersComponent implements OnInit {
     private translate: TranslateService,
     private superviseurService: SuperveseurService,
     private merchendiseurService: MerchendiseurService,
+    private userService: UserService,
     private dialog: MatDialog,
     private router: Router,
     private snackBar: MatSnackBar,
     private authService: AuthService,
     private exportService: ExportService,
-    private importConfigService: ImportConfigService
+    private importConfigService: ImportConfigService,
+    private permissionService: PermissionService
   ) {
     this.translate.setDefaultLang('fr');
     this.translate.use('fr');
@@ -210,6 +233,7 @@ export class UsersComponent implements OnInit {
     
     this.loadUsers();
     this.loadCurrentUser();
+    this.loadBrandsAndStores();
   }
 
   ngAfterViewInit() {
@@ -227,6 +251,8 @@ export class UsersComponent implements OnInit {
         !filterObj.region || data.region === filterObj.region;
       const matchesCity = !filterObj.city || data.ville === filterObj.city;
       const matchesStore = !filterObj.store || data.magasin === filterObj.store;
+      const matchesBrand = !filterObj.brand || (data.marques && data.marques.includes(filterObj.brand));
+      const matchesEnseigne = !filterObj.enseigne || (data.enseignes && data.enseignes.includes(filterObj.enseigne));
 
       return (
         matchesSearch &&
@@ -234,41 +260,230 @@ export class UsersComponent implements OnInit {
         matchesStatus &&
         matchesRegion &&
         matchesCity &&
-        matchesStore
+        matchesStore &&
+        matchesBrand &&
+        matchesEnseigne
       );
     };
   }
 
   loadUsers(): void {
-    this.superviseurService.getAll().subscribe((superviseurs) => {
-      const formattedSuperviseurs = superviseurs.map((s) => ({
+    // Charger les superviseurs et marchandiseurs en parallèle
+    Promise.all([
+      firstValueFrom(this.superviseurService.getAll()),
+      firstValueFrom(this.merchendiseurService.getAllMerchendiseurs())
+    ]).then(([superviseurs, merchandiseurs]) => {
+      // Vérifier que les données ne sont pas undefined
+      const superviseursData = superviseurs || [];
+      const merchandiseursData = merchandiseurs || [];
+      
+      // Debug: Afficher les données brutes des superviseurs
+      console.log('🔍 Données brutes des superviseurs:', superviseursData.map(s => ({
+        id: s.id,
+        nom: s.nom,
+        prenom: s.prenom,
+        magasin: s.magasin,
+        marquesCouvertes: s.marquesCouvertes,
+        merchendiseurIds: s.merchendiseurIds,
+        merchendiseurs: s.merchendiseurs
+      })));
+
+      const formattedSuperviseurs = superviseursData.map((s) => ({
         ...s,
         type: 'SUPERVISEUR',
+        // Utiliser les champs existants de l'interface Superviseur
+        marques: s.marquesCouvertes ? [s.marquesCouvertes] : [],
+        enseignes: [], // Sera rempli par enrichUserData
+        magasin: s.magasin || '—'
       }));
-      this.merchendiseurService
-        .getAllMerchendiseurs()
-        .subscribe((merchandiseurs) => {
-          const formattedMerch = merchandiseurs.map((m) => ({
-            ...m,
-            type: 'MERCHENDISEUR',
-          }));
-          const combined = [...formattedSuperviseurs, ...formattedMerch];
+      
+      // Debug: Afficher les données brutes des marchandiseurs
+      console.log('🔍 Données brutes des marchandiseurs:', merchandiseursData.map(m => ({
+        nom: m.nom,
+        marqueCouverte: m.marqueCouverte,
+        enseignes: m.enseignes,
+        magasinNoms: m.magasinNoms,
+        superviseurId: m.superviseurId
+      })));
 
-          // Debug: Afficher les données pour vérifier les statuts
-          console.log('Données combinées:', combined);
-          combined.forEach((user) => {
-            console.log(
-              `User ${user.nom}: status=${user.status}, type=${user.type}`
+      const formattedMerch = merchandiseursData.map((m) => ({
+        ...m,
+        type: 'MERCHENDISEUR',
+        // Pré-remplir les données des marchandiseurs
+        marques: [m.marqueCouverte].filter(Boolean) || [],
+        enseignes: m.enseignes || [],
+        magasin: m.magasinNoms?.join(', ') || '—'
+      }));
+
+      // Debug: Afficher les données formatées des marchandiseurs
+      console.log('📊 Marchandiseurs formatés:', formattedMerch.map(m => ({
+        nom: m.nom,
+        marques: m.marques,
+        enseignes: m.enseignes,
+        magasin: m.magasin
+      })));
+
+      const combined = [...formattedSuperviseurs, ...formattedMerch];
+
+      // Enrichir les données avec les informations de connexion et les marques/enseignes des superviseurs
+      this.enrichUserData(combined, merchandiseursData).then((enrichedData) => {
+        this.combinedDataSource.data = enrichedData;
+        this.combinedDataSource.sort = this.sort;
+        this.combinedDataSource.paginator = this.paginator;
+
+        // Populate available cities and stores
+        this.populateFilterOptions(enrichedData);
+      });
+    }).catch(error => {
+      console.error('Erreur lors du chargement des utilisateurs:', error);
+      this.snackBar.open('Erreur lors du chargement des utilisateurs', 'Fermer', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
+    });
+  }
+
+  private async enrichUserData(users: any[], merchandiseursData: any[] = []): Promise<any[]> {
+    const enrichedUsers = await Promise.all(
+      users.map(async (user) => {
+        try {
+          let derniereConnexion = '—';
+          let derniereSession = '—';
+          let marques = user.marques || [];
+          let enseignes = user.enseignes || [];
+          let magasin = user.magasin || '—';
+
+          // Pour les superviseurs, récupérer les marques, enseignes et magasins de leurs marchandiseurs
+          if (user.type === 'SUPERVISEUR') {
+            // Méthode 1: Utiliser les marchandiseurs déjà présents dans l'objet superviseur
+            let marchandiseursDuSuperviseur = [];
+            
+            if (user.merchendiseurs && user.merchendiseurs.length > 0) {
+              marchandiseursDuSuperviseur = user.merchendiseurs;
+              console.log(`🔍 Superviseur ${user.nom} utilise merchendiseurs direct:`, marchandiseursDuSuperviseur.length);
+            } else if (user.merchendiseurIds && user.merchendiseurIds.length > 0) {
+              // Méthode 2: Utiliser les IDs pour trouver les marchandiseurs
+              marchandiseursDuSuperviseur = merchandiseursData.filter(m => 
+                user.merchendiseurIds.includes(m.id)
+              );
+              console.log(`🔍 Superviseur ${user.nom} utilise merchendiseurIds:`, marchandiseursDuSuperviseur.length);
+            } else {
+              // Méthode 3: Fallback - chercher par superviseurId
+              marchandiseursDuSuperviseur = merchandiseursData.filter(m => {
+                return m.superviseurId === user.id || 
+                       (m.superviseur && m.superviseur.id === user.id) ||
+                       (m.superviseurId && m.superviseurId.toString() === user.id.toString());
+              });
+              console.log(`🔍 Superviseur ${user.nom} utilise fallback superviseurId:`, marchandiseursDuSuperviseur.length);
+            }
+            
+            console.log(`🔍 Superviseur ${user.nom} (ID: ${user.id}) a ${marchandiseursDuSuperviseur.length} marchandiseurs:`, 
+              marchandiseursDuSuperviseur.map((m: any) => ({ 
+                nom: m.nom, 
+                superviseurId: m.superviseurId,
+                superviseur: m.superviseur,
+                marqueCouverte: m.marqueCouverte,
+                enseignes: m.enseignes,
+                magasinNoms: m.magasinNoms
+              })));
+            
+            // Collecter toutes les marques des marchandiseurs du superviseur
+            const marquesDuSuperviseur = new Set(
+              marchandiseursDuSuperviseur
+                .map((m: any) => m.marqueCouverte)
+                .filter(Boolean)
             );
-          });
+            marques = Array.from(marquesDuSuperviseur);
 
-          this.combinedDataSource.data = combined;
-          this.combinedDataSource.sort = this.sort;
-          this.combinedDataSource.paginator = this.paginator;
+            // Collecter toutes les enseignes des marchandiseurs du superviseur
+            const enseignesDuSuperviseur = new Set(
+              marchandiseursDuSuperviseur
+                .flatMap((m: any) => m.enseignes || [])
+                .filter(Boolean)
+            );
+            enseignes = Array.from(enseignesDuSuperviseur);
 
-          // Populate available cities and stores
-          this.populateFilterOptions(combined);
-        });
+            // Collecter tous les magasins des marchandiseurs du superviseur
+            const magasinsDuSuperviseur = new Set(
+              marchandiseursDuSuperviseur
+                .flatMap((m: any) => m.magasinNoms || [])
+                .filter(Boolean)
+            );
+            magasin = Array.from(magasinsDuSuperviseur).join(', ') || '—';
+
+            console.log(`📊 Résultat pour superviseur ${user.nom}:`, {
+              marques,
+              enseignes,
+              magasin
+            });
+          }
+
+          // Récupérer l'historique de connexion pour tous les utilisateurs
+          try {
+            const userLoginHistory = await firstValueFrom(this.authService.getUserLoginHistory(user.id));
+            if (userLoginHistory) {
+              derniereConnexion = userLoginHistory.lastLoginDate || user.derniereConnexion || '—';
+              derniereSession = userLoginHistory.sessionId || user.derniereSession || '—';
+            }
+          } catch (error) {
+            console.error(`Erreur lors de la récupération de l'historique de connexion pour l'utilisateur ${user.id}:`, error);
+          }
+
+          return {
+            ...user,
+            marques,
+            enseignes,
+            magasin,
+            derniereConnexion,
+            derniereSession
+          };
+        } catch (error) {
+          console.error(`Erreur lors de l'enrichissement des données pour l'utilisateur ${user.id}:`, error);
+          return {
+            ...user,
+            marques: user.marques || [],
+            enseignes: user.enseignes || [],
+            magasin: user.magasin || '—',
+            derniereConnexion: user.derniereConnexion || '—',
+            derniereSession: user.derniereSession || '—'
+          };
+        }
+      })
+    );
+
+    return enrichedUsers;
+  }
+
+  private loadBrandsAndStores(): void {
+    // Utiliser les 4 marques spécifiées
+    this.availableBrands = [
+      'RICHBOND',
+      'SIMMONS', 
+      'ROSA',
+      'GÉNÉRIQUE'
+    ];
+
+    // Charger les enseignes depuis les données des marchandiseurs
+    this.merchendiseurService.getAllMerchendiseurs().subscribe({
+      next: (marchandiseurs) => {
+        // Extraire toutes les enseignes uniques
+        const enseigneSet = new Set(
+          marchandiseurs
+            .flatMap(m => m.enseignes || [])
+            .filter(Boolean)
+        );
+        this.availableEnseignes = Array.from(enseigneSet).sort();
+        
+        // Ajouter "Aswak Assalam" s'il n'est pas déjà présent
+        if (!this.availableEnseignes.includes('Aswak Assalam')) {
+          this.availableEnseignes.push('Aswak Assalam');
+          this.availableEnseignes.sort();
+        }
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement des enseignes:', error);
+        this.availableEnseignes = [];
+      }
     });
   }
 
@@ -284,6 +499,18 @@ export class UsersComponent implements OnInit {
       users.map((user) => user.magasin).filter((store) => store)
     );
     this.availableStores = Array.from(storeSet).sort();
+
+    // Les marques et enseignes sont déjà chargées dans loadBrandsAndStores()
+    // mais on peut les mettre à jour avec les données enrichies
+    const brandSet = new Set(
+      users.flatMap((user) => user.marques || []).filter((brand) => brand)
+    );
+    this.availableBrands = Array.from(brandSet).sort();
+
+    const enseigneSet = new Set(
+      users.flatMap((user) => user.enseignes || []).filter((enseigne) => enseigne)
+    );
+    this.availableEnseignes = Array.from(enseigneSet).sort();
   }
 
   applyFilter(): void {
@@ -294,6 +521,8 @@ export class UsersComponent implements OnInit {
       region: this.selectedRegion,
       city: this.selectedCity,
       store: this.selectedStore,
+      brand: this.selectedBrand,
+      enseigne: this.selectedEnseigne,
     });
   }
 
@@ -303,6 +532,8 @@ export class UsersComponent implements OnInit {
     this.selectedRegion = '';
     this.selectedCity = '';
     this.selectedStore = '';
+    this.selectedBrand = '';
+    this.selectedEnseigne = '';
     this.searchTerm = '';
     this.applyFilter();
   }
@@ -627,5 +858,13 @@ export class UsersComponent implements OnInit {
         });
       }
     });
+  }
+
+  // Méthode pour initialiser les permissions
+  private initializePermissions(): void {
+    this.isConsultant = this.permissionService.isConsultant(this.role);
+    this.canEdit = this.permissionService.canEdit(this.role);
+    this.canDelete = this.permissionService.canDelete(this.role);
+    this.canAdd = this.permissionService.canAdd(this.role);
   }
 }

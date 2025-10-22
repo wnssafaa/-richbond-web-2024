@@ -26,6 +26,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CalendarOptions, EventInput, CalendarApi } from '@fullcalendar/core';
 import { AuthService } from '../../services/auth.service';
+import { PermissionService } from '../../services/permission.service';
 import {
   Merchendiseur,
   MerchendiseurService,
@@ -158,6 +159,12 @@ export class PlanificationComponent {
   status: any;
   imagePath: string | undefined;
   avatarUrl: any;
+
+  // Propriétés de permissions
+  isConsultant: boolean = false;
+  canEdit: boolean = false;
+  canDelete: boolean = false;
+  canAdd: boolean = false;
   changeLanguage(lang: string) {
     this.currentLanguage = lang;
     this.translate.use(lang);
@@ -180,8 +187,8 @@ export class PlanificationComponent {
       .pipe(take(1))
       .subscribe({
         next: (planifs) => {
-          // 1. Filtrage initial
-          let filteredPlanifs = this.applyAllFilters(planifs);
+          // 1. Filtrage unifié pour toutes les vues
+          let filteredPlanifs = this.applyUnifiedFilters(planifs);
 
           // 2. Calcul des statistiques
           this.calculateStatistics(filteredPlanifs, planifs);
@@ -189,13 +196,19 @@ export class PlanificationComponent {
           // 3. Mise à jour du calendrier
           this.updateCalendar(filteredPlanifs);
 
-          // 4. Mise à jour de la carte si on est sur l'onglet map
+          // 4. Mise à jour du tableau si on est en vue tableau
+          if (this.selectedTab === 'table') {
+            this.allPlanifications = planifs;
+            this.applyTableFilters();
+          }
+
+          // 5. Mise à jour de la carte si on est sur l'onglet map
           if (this.selectedTab === 'map' && this.map) {
             // Utiliser la nouvelle logique de marqueurs de planification
             this.updateMapMarkers();
           }
 
-          // 5. Navigation dans le calendrier si semaine sélectionnée
+          // 6. Navigation dans le calendrier si semaine sélectionnée
           if (this.selectedSemaine) {
             this.navigateToSelectedWeek();
           }
@@ -215,7 +228,8 @@ export class PlanificationComponent {
 
   userMenuOpen = false;
   planningMenuOpen = false;
-  private applyAllFilters(planifs: Planification[]): Planification[] {
+  // Méthode unifiée de filtrage pour les deux vues (calendrier et tableau)
+  private applyUnifiedFilters(planifs: Planification[]): Planification[] {
     let filtered = [...planifs];
 
     // Filtre par terme de recherche
@@ -230,40 +244,47 @@ export class PlanificationComponent {
       );
     }
 
+    // Filtre par région
     if (this.selectedRegion) {
       filtered = filtered.filter(
         (p) => p.magasin?.region === this.selectedRegion
       );
     }
 
+    // Filtre par ville
     if (this.selectedVille) {
       filtered = filtered.filter(
         (p) => p.magasin?.ville === this.selectedVille
       );
     }
 
+    // Filtre par superviseur
     if (this.selectedSuperviseur) {
       filtered = filtered.filter(
         (p) => p.merchandiser?.superviseur?.id === this.selectedSuperviseur
       );
     }
 
+    // Filtre par magasin
     if (this.selectedMagasin) {
       filtered = filtered.filter((p) => p.magasin?.id === this.selectedMagasin);
     }
 
+    // Filtre par merchandiseur
     if (this.selectedMerchandiseur) {
       filtered = filtered.filter(
         (p) => p.merchandiser?.id === this.selectedMerchandiseur
       );
     }
 
+    // Filtre par enseigne
     if (this.selectedEnseigne) {
       filtered = filtered.filter(
         (p) => p.magasin?.enseigne === this.selectedEnseigne
       );
     }
 
+    // Filtre par marque
     if (this.selectedMarque) {
       filtered = filtered.filter((p) =>
         p.magasin?.marques?.some(
@@ -272,10 +293,12 @@ export class PlanificationComponent {
       );
     }
 
+    // Filtre par statut
     if (this.selectedStatut) {
       filtered = filtered.filter((p) => p.statut === this.selectedStatut);
     }
 
+    // Filtre par heure
     if (this.selectedHeure) {
       filtered = filtered.filter((p) => {
         const visitDate = new Date(p.dateVisite);
@@ -286,6 +309,7 @@ export class PlanificationComponent {
       });
     }
 
+    // Filtre par semaine
     if (this.selectedSemaine) {
       filtered = this.filterByWeek(filtered, this.selectedSemaine);
     }
@@ -302,6 +326,11 @@ export class PlanificationComponent {
     }
 
     return filtered;
+  }
+
+  // Méthode pour le calendrier (utilise la méthode unifiée)
+  private applyAllFilters(planifs: Planification[]): Planification[] {
+    return this.applyUnifiedFilters(planifs);
   }
 
   private updateCalendar(filteredPlanifs: Planification[]): void {
@@ -342,12 +371,11 @@ export class PlanificationComponent {
 
   // Méthode pour filtrer par région
   filterByRegion(): void {
-    this.applyFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   filterBySemaine(): void {
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   // Nouvelle méthode pour gérer la sélection de date de semaine
@@ -384,49 +412,40 @@ export class PlanificationComponent {
       }
 
       // Mettre à jour les filtres
-      this.applyFilters();
-      this.applyTableFilters();
+      this.applyUnifiedFiltersToBothViews();
     } else {
       this.selectedSemaine = null;
-      this.applyFilters();
-      this.applyTableFilters();
+      this.applyUnifiedFiltersToBothViews();
     }
   }
 
   filterByEnseigne(): void {
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   filterByMagasin(): void {
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   filterMerchandiseurs(): void {
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   filterByMarque(): void {
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   filterByStatut(): void {
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   filterByHeure(): void {
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   // Méthodes pour le filtre de date
   onDateRangeChange(): void {
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   toggleDatePicker(): void {
@@ -466,8 +485,7 @@ export class PlanificationComponent {
       }
 
       this.showDatePicker = false;
-      this.applyFilters();
-      this.applyTableFilters();
+      this.applyUnifiedFiltersToBothViews();
     }
   }
 
@@ -475,8 +493,7 @@ export class PlanificationComponent {
     this.selectedDateRange = { start: null, end: null };
     this.selectedSemaine = null;
     this.showDatePicker = false;
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   // Méthodes pour l'affichage de la semaine
@@ -650,18 +667,15 @@ export class PlanificationComponent {
 
   // Méthodes pour les nouveaux filtres
   filterByRegionNew(): void {
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   filterByVille(): void {
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   filterBySuperviseur(): void {
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   // Méthode pour obtenir le superviseur d'un merchandiser
@@ -699,8 +713,7 @@ export class PlanificationComponent {
     this.showDatePicker = false;
     this.searchTerm = '';
     this.showAdvancedFilters = false;
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   // Méthode pour basculer l'affichage des filtres avancés
@@ -708,8 +721,7 @@ export class PlanificationComponent {
 
   // Méthode pour gérer la recherche
   onSearchChange(): void {
-    this.applyFilters();
-    this.applyTableFilters();
+    this.applyUnifiedFiltersToBothViews();
   }
 
   // Méthode pour charger les options des filtres
@@ -765,7 +777,7 @@ export class PlanificationComponent {
     'Virgin Megastore',
     'LC Waikiki',
   ];
-  marques = ['Richbond', 'Simmons', 'Révey', 'Atlas', 'Total Rayons'];
+  marques = ['Richbond (linge / literie)', 'Simmons', 'Rosa', 'Générique'];
   semaines = ['Semaine actuelle', 'Semaine précédente', 'Semaine prochaine'];
 
   // Options pour le filtre de statut
@@ -919,6 +931,7 @@ export class PlanificationComponent {
 
   constructor(
     private authService: AuthService,
+    private permissionService: PermissionService,
     private dialog: MatDialog,
     private planificationService: PlanificationService,
     private merchService: MerchendiseurService,
@@ -1037,6 +1050,9 @@ export class PlanificationComponent {
             ? data.imagePath
             : 'http://environment.apiUrl.replace('/api', '')/uploads/' + data.imagePath
           : 'assets/default-avatar.png';
+        
+        // Initialiser les permissions
+        this.initializePermissions();
       },
       error: (err) => {
         console.error(
@@ -2533,77 +2549,60 @@ export class PlanificationComponent {
     });
   }
 
+  // Méthode pour le tableau (utilise la méthode unifiée)
   applyTableFilters(): void {
-    let filtered = [...this.allPlanifications];
-
-    // Filtre par terme de recherche
-    if (this.searchTerm && this.searchTerm.trim()) {
-      const searchLower = this.searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(
-        (p) =>
-          p.magasin?.nom?.toLowerCase().includes(searchLower) ||
-          p.merchandiser?.nom?.toLowerCase().includes(searchLower) ||
-          p.commentaire?.toLowerCase().includes(searchLower) ||
-          p.statut?.toLowerCase().includes(searchLower)
-      );
-    }
-
-    // Appliquer les filtres
-    if (this.selectedSemaine) {
-      filtered = this.filterByWeek(filtered, this.selectedSemaine);
-    }
-    if (this.selectedRegion) {
-      filtered = filtered.filter(
-        (p) => p.magasin?.region === this.selectedRegion
-      );
-    }
-    if (this.selectedVille) {
-      filtered = filtered.filter(
-        (p) => p.magasin?.ville === this.selectedVille
-      );
-    }
-    if (this.selectedSuperviseur) {
-      filtered = filtered.filter(
-        (p) => p.merchandiser?.superviseur?.id === this.selectedSuperviseur
-      );
-    }
-    if (this.selectedMagasin) {
-      filtered = filtered.filter((p) => p.magasin?.id === this.selectedMagasin);
-    }
-    if (this.selectedMerchandiseur) {
-      filtered = filtered.filter(
-        (p) => p.merchandiser?.id === this.selectedMerchandiseur
-      );
-    }
-    if (this.selectedStatut) {
-      filtered = filtered.filter((p) => p.statut === this.selectedStatut);
-    }
-
-    if (this.selectedHeure) {
-      filtered = filtered.filter((p) => {
-        const visitDate = new Date(p.dateVisite);
-        const visitHour = visitDate.getHours().toString().padStart(2, '0');
-        const visitMinute = visitDate.getMinutes().toString().padStart(2, '0');
-        const visitTime = `${visitHour}:${visitMinute}`;
-        return visitTime.startsWith(this.selectedHeure!);
-      });
-    }
-
-    // Filtre par plage de dates personnalisée
-    if (this.selectedDateRange.start && this.selectedDateRange.end) {
-      filtered = filtered.filter((p) => {
-        const visitDate = new Date(p.dateVisite);
-        return (
-          visitDate >= this.selectedDateRange.start! &&
-          visitDate <= this.selectedDateRange.end!
-        );
-      });
-    }
-
+    const filtered = this.applyUnifiedFilters(this.allPlanifications);
+    
     this.filteredPlanifications = filtered;
-
     // Mettre à jour le dataSource pour la pagination
     this.dataSource.data = filtered;
+  }
+
+  // Méthode unifiée pour appliquer les filtres aux deux vues simultanément
+  applyUnifiedFiltersToBothViews(): void {
+    if (this.loadingPlanifications) return;
+
+    this.loadingPlanifications = true;
+
+    this.planificationService
+      .getAllPlanifications()
+      .pipe(take(1))
+      .subscribe({
+        next: (planifs) => {
+          // 1. Filtrage unifié pour toutes les vues
+          let filteredPlanifs = this.applyUnifiedFilters(planifs);
+
+          // 2. Calcul des statistiques
+          this.calculateStatistics(filteredPlanifs, planifs);
+
+          // 3. Mise à jour du calendrier
+          this.updateCalendar(filteredPlanifs);
+
+          // 4. Mise à jour du tableau
+          this.allPlanifications = planifs;
+          this.applyTableFilters();
+
+          // 5. Mise à jour de la carte si on est sur l'onglet map
+          if (this.selectedTab === 'map' && this.map) {
+            this.updateMapMarkers();
+          }
+
+          // 6. Navigation dans le calendrier si semaine sélectionnée
+          if (this.selectedSemaine) {
+            this.navigateToSelectedWeek();
+          }
+
+          this.loadingPlanifications = false;
+        },
+        error: (err) => {
+          console.error('Erreur lors du filtrage:', err);
+          this.loadingPlanifications = false;
+          this.snackBar.open('Erreur lors du filtrage des données', 'Fermer', {
+            duration: 3000,
+            panelClass: ['error-snackbar'],
+          });
+        },
+      });
   }
 
   getStatusColor(statut: StatutVisite): string {
@@ -2769,5 +2768,13 @@ export class PlanificationComponent {
         });
       }
     });
+  }
+
+  // Méthode pour initialiser les permissions
+  private initializePermissions(): void {
+    this.isConsultant = this.permissionService.isConsultant(this.role);
+    this.canEdit = this.permissionService.canEdit(this.role);
+    this.canDelete = this.permissionService.canDelete(this.role);
+    this.canAdd = this.permissionService.canAdd(this.role);
   }
 }

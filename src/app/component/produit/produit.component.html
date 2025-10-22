@@ -302,7 +302,8 @@
                 class="import-button"
                  style="background-color: #455e98; color: white; margin-right: 12px; padding: 10px 15px;
   border-radius: 20px;"
-                (click)="openImportDialog()">
+                (click)="openImportDialog()"
+                appDisablePermission="canAdd">
                 <mat-icon style="color:white">upload_file</mat-icon>
                Importer
               </button>
@@ -312,12 +313,14 @@
                 class="add-user-button"
                 style="background-color: #0a2681; color: white"
                 (click)="ajouterProduit()"
+                appDisablePermission="canAdd"
               >
                Ajouter
               </button>
             </div>
           </div>
         </div>
+
 
         <!-- Ligne du bas : Filtres avancés (affichés seulement si showFilters = true) -->
         <div *ngIf="showFilters" class="filters-toolbar">
@@ -425,6 +428,34 @@
                 tabindex="-1"
                 aria-label="Effacer le filtre article"
                 *ngIf="filters.article"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Sous-marque</mat-label>
+              <mat-select
+                [(ngModel)]="filters.sousMarque"
+                (selectionChange)="applyFilters()"
+              >
+                <mat-option [value]="">{{
+                  "ACTIONS.ALL" | translate
+                }}</mat-option>
+                <mat-option
+                  *ngFor="let sousMarque of sousMarques"
+                  [value]="sousMarque"
+                  >{{ sousMarque }}</mat-option
+                >
+              </mat-select>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="filters.sousMarque = ''; applyFilters()"
+                class="clear-filter-btn"
+                tabindex="-1"
+                aria-label="Effacer le filtre sous-marque"
+                *ngIf="filters.sousMarque"
               >
                 <mat-icon>close</mat-icon>
               </button>
@@ -599,22 +630,32 @@
             <td mat-cell *matCellDef="let produit" class="action-buttons-cell">
               <div class="action-buttons-container">
                 <button
+                  *ngIf="canEdit"
                   mat-icon-button
                   (click)="editProduit(produit); $event.stopPropagation()"
                   title="Modifier"
+                  class="action-icon enabled"
                 >
                   <mat-icon style="color: blue">edit</mat-icon>
                 </button>
-                <button mat-icon-button (click)="viewProduit(produit); $event.stopPropagation()" title="Voir détails">
+                <button 
+                  mat-icon-button 
+                  (click)="viewProduit(produit); $event.stopPropagation()" 
+                  title="Voir détails"
+                  class="action-icon enabled"
+                >
                   <mat-icon>visibility</mat-icon>
                 </button>
                 <button
+                  *ngIf="canDelete"
                   mat-icon-button
                   (click)="deleteProduit(produit); $event.stopPropagation()"
                   title="Supprimer"
+                  class="action-icon enabled"
                 >
                   <mat-icon style="color: black">delete</mat-icon>
                 </button>
+                
               </div>
             </td>
           </ng-container>

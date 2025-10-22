@@ -29,6 +29,8 @@ import {
 } from '../../services/superveseur.service';
 import { AddSupComponent } from '../../dialogs/add-sup/add-sup.component';
 import { GenericImportDialogComponent } from '../../dialogs/generic-import-dialog/generic-import-dialog.component';
+import { PermissionService } from '../../services/permission.service';
+import { PermissionDirectivesModule } from '../../directives/permission-directives.module';
 import { ImportConfigService } from '../../services/import-config.service';
 import { ColumnCustomizationPanelComponent } from '../../dialogs/column-customization/column-customization-panel.component';
 import { SuperviseurDetailsDialogComponent } from '../../dialogs/superviseur-details-dialog/superviseur-details-dialog.component';
@@ -113,6 +115,9 @@ export class SuperviseursComponent implements OnInit {
             ? data.imagePath
             : 'http://environment.apiUrl.replace('/api', '')/uploads/' + data.imagePath
           : 'assets/default-avatar.png';
+        
+        // Initialiser les permissions
+        this.initializePermissions();
       },
       error: (err) => {
         console.error(
@@ -165,6 +170,12 @@ export class SuperviseursComponent implements OnInit {
   ];
   showFilters: boolean = false;
   selectedRegion: string = '';
+  
+  // Propriétés de permissions
+  isConsultant: boolean = false;
+  canEdit: boolean = false;
+  canDelete: boolean = false;
+  canAdd: boolean = false;
   selectedVille: string = '';
 
   // selectedEnseigne: string = '';
@@ -396,7 +407,8 @@ export class SuperviseursComponent implements OnInit {
     private magasinService: MagasinService,
     private merchandiserService: MerchendiseurService,
     private exportService: ExportService,
-    private importConfigService: ImportConfigService
+    private importConfigService: ImportConfigService,
+     private permissionService: PermissionService,
   ) {
     this.translate.setDefaultLang('fr');
     this.translate.use('fr');
@@ -797,5 +809,13 @@ export class SuperviseursComponent implements OnInit {
   onColumnCustomizationSave(columnConfig: any[]): void {
     this.columnConfig = columnConfig;
     this.updateDisplayedColumns();
+  }
+
+  // Méthode pour initialiser les permissions
+  private initializePermissions(): void {
+    this.isConsultant = this.permissionService.isConsultant(this.role);
+    this.canEdit = this.permissionService.canEdit(this.role);
+    this.canDelete = this.permissionService.canDelete(this.role);
+    this.canAdd = this.permissionService.canAdd(this.role);
   }
 }

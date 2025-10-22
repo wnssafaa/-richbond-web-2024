@@ -63,15 +63,9 @@ import {
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AuthService } from '../../services/auth.service';
-import {
-  SuperveseurService,
-  Superviseur,
-} from '../../services/superveseur.service';
-import {
-  Planification,
-  PlanificationService,
-  StatutVisite,
-} from '../../services/planification.service';
+import { PermissionService } from '../../services/permission.service';
+import { SuperveseurService, Superviseur } from '../../services/superveseur.service';
+import { Planification, PlanificationService, StatutVisite,  } from '../../services/planification.service';
 import { VisitService } from '../../services/visit.service';
 import { UserService } from '../../services/user.service';
 import {
@@ -167,6 +161,18 @@ export class DachboardComponent implements OnDestroy {
   avatarUrl: string | undefined;
   imagePath: string | undefined;
   status: string | undefined;
+
+  // Propriétés de permissions
+  isConsultant: boolean = false;
+  canEdit: boolean = false;
+  canDelete: boolean = false;
+  canAdd: boolean = false;
+
+  // Injection des services
+  // constructor(
+  //   private athService: AuthService,
+  //   private permissionService: PermissionService
+  // ) {}
 
   // Graphiques Chart.js
   visitsChart: Chart | null = null;
@@ -346,9 +352,30 @@ export class DachboardComponent implements OnDestroy {
         position: 'bottom',
         labels: {
           usePointStyle: true,
-          padding: 20,
-        },
-      },
+          padding: 20
+        }
+      }
+    }
+  };
+ loadCurrentUser(): void {
+  this.athService.getCurrentUserInfo().subscribe({
+    next: (data) => {
+      this.username = data.username ?? '';
+      this.role = data.role ?? '';
+      this.email = data.email ?? '';
+      this.nom = data.nom ?? '';
+      this.prenom = data.prenom ?? '';
+      this.telephone = data.telephone ?? '';
+      this.status = data.status ?? '';
+      this.imagePath = data.imagePath ?? '';
+      // Gestion de l'avatar : base64 ou URL
+      this.avatarUrl = data.imagePath
+        ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
+        : 'assets/default-avatar.png';
+      
+      // Initialiser les permissions
+      this.initializePermissions();
+>>>>>>> c90546fa0fceabbf0999ce8e337d1fc207d56e6e
     },
   };
   loadCurrentUser(): void {
@@ -378,20 +405,35 @@ export class DachboardComponent implements OnDestroy {
     });
   }
 
-  displayedColumnsMagasins = ['nom', 'Memebres', 'progress'];
-  headerRender = () => {
-    return null;
-  };
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild('paginator1') paginator1!: MatPaginator;
-  @ViewChild('paginator2') paginator2!: MatPaginator;
-  @ViewChild('paginator3') paginator3!: MatPaginator;
-  @ViewChild('paginator4') paginator4!: MatPaginator;
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator1;
-    this.dataSourceMagasins.paginator = this.paginator2;
-    this.combinedDataSource.paginator = this.paginator3;
-    this.dataSourceSuperviseurs.paginator = this.paginator4;
+// Méthode pour initialiser les permissions
+private initializePermissions(): void {
+  this.isConsultant = this.permissionService.isConsultant(this.role);
+  this.canEdit = this.permissionService.canEdit(this.role);
+  this.canDelete = this.permissionService.canDelete(this.role);
+  this.canAdd = this.permissionService.canAdd(this.role);
+}
+
+displayedColumnsMagasins = ['nom', 'Memebres','progress'];
+headerRender = () => {
+  return null;
+};
+@ViewChild(MatPaginator) paginator!: MatPaginator;
+@ViewChild('paginator1') paginator1!: MatPaginator;
+@ViewChild('paginator2') paginator2!: MatPaginator;
+@ViewChild('paginator3') paginator3!: MatPaginator;
+@ViewChild('paginator4') paginator4!: MatPaginator;
+ngAfterViewInit(): void {
+  this.dataSource.paginator = this.paginator1;
+  this.dataSourceMagasins.paginator = this.paginator2;
+  this.combinedDataSource.paginator = this.paginator3;
+  this.dataSourceSuperviseurs.paginator = this.paginator4;
+  
+  // Initialiser les graphiques après le chargement des données
+  setTimeout(() => {
+    this.initializeCharts();
+  }, 100);
+}
+>>>>>>> c90546fa0fceabbf0999ce8e337d1fc207d56e6e
 
     // Initialiser les graphiques après le chargement des données
     setTimeout(() => {
@@ -447,15 +489,18 @@ export class DachboardComponent implements OnDestroy {
     }
     this.dataSource.paginator?.firstPage();
   }
-  marques = ['Richbond', 'Simmons', 'Révey', 'Atlas', 'Total Rayons'];
-  stores = [
-    { name: 'Marjane', region: 'Casablanca-Settat', progress: 75 },
-    { name: 'Carrefour', region: 'Marrakech-Safi', progress: 50 },
-    { name: 'Aswak Assalam', region: 'Rabat-Salé-Kénitra', progress: 90 },
-  ];
-  selectedDate: Date = new Date();
-  isLoading: any;
-  errorMessage: any;
+  this.dataSource.paginator?.firstPage();
+}
+marques = ['Richbond (linge / literie)', 'Simmons', 'Rosa', 'Générique'];
+stores = [
+  { name: 'Marjane', region: 'Casablanca-Settat', progress: 75 },
+  { name: 'Carrefour', region: 'Marrakech-Safi', progress: 50 },
+  { name: 'Aswak Assalam', region: 'Rabat-Salé-Kénitra', progress: 90 }
+];
+ selectedDate: Date = new Date();
+isLoading: any;
+errorMessage: any;
+>>>>>>> c90546fa0fceabbf0999ce8e337d1fc207d56e6e
   constructor(
     private datePipe: DatePipe,
     private router: Router,
@@ -469,11 +514,18 @@ export class DachboardComponent implements OnDestroy {
     private userService: UserService,
     private kpiService: KpiService,
     public cdr: ChangeDetectorRef,
-    private translate: TranslateService
-  ) {
-    this.translate.setDefaultLang('fr');
-    this.translate.use('fr');
-    this.initializeChartLabels();
+    private translate: TranslateService,
+     private permissionService: PermissionService,
+) {
+  this.translate.setDefaultLang('fr');
+  this.translate.use('fr');
+  this.initializeChartLabels();
+  
+  // Écouter les changements de langue
+  this.translate.onLangChange.subscribe(() => {
+    this.updateChartLabelsOnLanguageChange();
+  });
+}
 
     // Écouter les changements de langue
     this.translate.onLangChange.subscribe(() => {

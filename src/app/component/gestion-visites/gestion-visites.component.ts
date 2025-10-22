@@ -31,6 +31,8 @@ import { AddVisitComponent } from '../add-visit/add-visit.component';
 import { ConfirmLogoutComponent } from '../../dialogs/confirm-logout/confirm-logout.component';
 import { AuthService } from '../../services/auth.service';
 import { ExportService } from '../../services/export.service';
+import { PermissionService } from '../../services/permission.service';
+import { PermissionDirectivesModule } from '../../directives/permission-directives.module';
 import { Inject } from '@angular/core';
 import { MagasinService, Magasin } from '../../services/magasin.service';
 import { MerchendiseurService, Merchendiseur } from '../../services/merchendiseur.service';
@@ -74,7 +76,7 @@ export interface Visit {
     MatButtonModule, MatInputModule, MatFormFieldModule, MatSelectModule, MatBadgeModule,
     MatChipsModule, MatSlideToggleModule, MatMenuModule, MatListModule, RouterLink, HttpClientModule,
     MatPaginatorModule, RouterModule, MatProgressSpinnerModule, MatDatepickerModule, MatNativeDateModule,
-    MatTooltipModule, ColumnCustomizationPanelComponent
+    MatTooltipModule, ColumnCustomizationPanelComponent, PermissionDirectivesModule
   ],
   templateUrl: './gestion-visites.component.html',
   styleUrls: ['./gestion-visites.component.css']
@@ -156,6 +158,12 @@ editVisit(visit: VisitDTO) {
   // Données originales pour les filtres
   allVisits: VisitDTO[] = [];
 
+  // Permissions de l'utilisateur
+  isConsultant: boolean = false;
+  canEdit = false;
+  canDelete = false;
+  canAdd = false;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -170,6 +178,7 @@ editVisit(visit: VisitDTO) {
     private merchendiseurService: MerchendiseurService,
     private planificationService: PlanificationService,
     private router: Router,
+    private permissionService: PermissionService,
     @Inject(ExportService) private exportService: ExportService
   ) {
     this.translate.setDefaultLang('fr');
@@ -241,12 +250,22 @@ editVisit(visit: VisitDTO) {
       this.avatarUrl = data.imagePath
         ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
         : 'assets/default-avatar.png';
+      
+      // Initialiser les permissions basées sur le rôle
+      this.initializePermissions(this.role);
     },
     error: (err) => {
       console.error('Erreur lors de la récupération des infos utilisateur :', err);
     }
   });
 }
+
+  private initializePermissions(userRole: string): void {
+    this.canEdit = this.permissionService.canEdit(userRole);
+    this.canDelete = this.permissionService.canDelete(userRole);
+    this.canAdd = this.permissionService.canAdd(userRole);
+    this.isConsultant = this.permissionService.isConsultant(userRole);
+  }
 
   ngOnInit(): void {
     this.loadVisits();
@@ -255,6 +274,7 @@ editVisit(visit: VisitDTO) {
     this.loadMerchandiseursOptions();
     this.updateDisplayedColumns();
   }
+
 
   // Méthode pour enrichir les visites avec les données de planification
   private enrichVisitsWithPlanning(visits: VisitDTO[]): void {
@@ -653,3 +673,5 @@ editVisit(visit: VisitDTO) {
       this.loadVisits();
     }
 }
+
+

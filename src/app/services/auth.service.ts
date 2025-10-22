@@ -139,4 +139,11 @@ export class AuthService {
       headers: this.getHeaders()
     });
   }
+
+  // Récupérer l'historique de connexion d'un utilisateur spécifique
+  getUserLoginHistory(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/login-history/user/${userId}`, {
+      headers: this.getHeaders()
+    });
+  }
 }

@@ -1,0 +1,175 @@
+<div class="user-form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ isEditMode ? 'Modifier le Responsable Animateur' : 'Ajouter un Responsable Animateur' }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content class="scrollable-content">
+      <form [formGroup]="responsableForm" (ngSubmit)="onSubmit()">
+        <!-- NOM & PRÉNOM -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Prénom *</mat-label>
+            <input matInput formControlName="prenom" placeholder="Prénom" required>
+            <mat-error *ngIf="isFieldInvalid('prenom')">
+              {{ getErrorMessage('prenom') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nom *</mat-label>
+            <input matInput formControlName="nom" placeholder="Nom" required>
+            <mat-error *ngIf="isFieldInvalid('nom')">
+              {{ getErrorMessage('nom') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- EMAIL & TÉLÉPHONE -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="phone-input">
+            <mat-label>Téléphone *</mat-label>
+            <div matPrefix class="phone-prefix">
+              <img src="assets/3840661.webp" alt="MA" class="flag-icon">
+              <span>+212</span>
+            </div>
+            <input matInput type="tel" formControlName="telephone" placeholder="6XXXXXXXX" maxlength="9">
+            <mat-error *ngIf="isFieldInvalid('telephone')">
+              {{ getErrorMessage('telephone') }}
+            </mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email *</mat-label>
+            <input matInput formControlName="email" placeholder="Email" required>
+            <mat-error *ngIf="isFieldInvalid('email')">
+              {{ getErrorMessage('email') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- RÉGION & VILLE -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Région *</mat-label>
+            <mat-select formControlName="region">
+              <mat-option *ngFor="let region of regions" [value]="region">
+                {{ region }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="isFieldInvalid('region')">
+              {{ getErrorMessage('region') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ville *</mat-label>
+            <input matInput formControlName="ville" placeholder="Ville" required>
+            <mat-error *ngIf="isFieldInvalid('ville')">
+              {{ getErrorMessage('ville') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- LOCALISATION -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Localisation</mat-label>
+            <input matInput formControlName="localisation" placeholder="Adresse complète">
+          </mat-form-field>
+        </div>
+
+        <!-- SUPERVISEUR & STATUT -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Superviseur</mat-label>
+            <mat-select formControlName="superviseurId">
+              <mat-option value="">Aucun superviseur</mat-option>
+              <mat-option *ngFor="let superviseur of superviseurs" [value]="superviseur.id">
+                {{ superviseur.nom }} {{ superviseur.prenom }} ({{ superviseur.email }})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Statut</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="ACTIVE">ACTIVE</mat-option>
+              <mat-option value="INACTIVE">INACTIVE</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- MARQUE COUVERTE & MARQUES -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Marque Couverte *</mat-label>
+            <mat-select formControlName="marqueCouverte" required>
+              <mat-option *ngFor="let marque of marques" [value]="marque">
+                {{ marque }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="isFieldInvalid('marqueCouverte')">
+              {{ getErrorMessage('marqueCouverte') }}
+            </mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Marques</mat-label>
+            <mat-select formControlName="marques" multiple>
+              <mat-option *ngFor="let marque of marques" [value]="marque">
+                {{ marque }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- ENSEIGNES -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Enseignes</mat-label>
+            <mat-select formControlName="enseignes" multiple>
+              <mat-option *ngFor="let enseigne of enseignes" [value]="enseigne">
+                {{ enseigne }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- USERNAME & PASSWORD (only for new users) -->
+        <div class="form-row" *ngIf="!isEditMode">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nom d'utilisateur *</mat-label>
+            <input matInput formControlName="username" placeholder="Nom d'utilisateur" required>
+            <mat-error *ngIf="isFieldInvalid('username')">
+              {{ getErrorMessage('username') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Mot de passe *</mat-label>
+            <input matInput formControlName="password" type="password" placeholder="Mot de passe" required>
+            <mat-error *ngIf="isFieldInvalid('password')">
+              {{ getErrorMessage('password') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit">
+            {{ isEditMode ? 'Modifier' : 'Ajouter' }}
+          </button>
+
+          <button mat-button type="button" (click)="onCancel()" class="cancel-button">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+
+
+
+
+
