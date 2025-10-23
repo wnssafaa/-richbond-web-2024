@@ -189,7 +189,7 @@ throw new Error('Method not implemented.');
       this.imagePath = data.imagePath ?? '';
       // Gestion de l'avatar : base64 ou URL
       this.avatarUrl = data.imagePath
-        ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
+        ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://68.183.71.119:8080/uploads/' + data.imagePath)
         : 'assets/profil.webp';
       
       // Initialiser les permissions basées sur le rôle
@@ -547,7 +547,7 @@ onRowClick(event: MouseEvent, row: Produit): void {
     
     // Debug spécial pour les URLs relatives
     if (produit.imageUrl && produit.imageUrl.startsWith('/api/')) {
-      const fullUrl = `http://localhost:8080${produit.imageUrl}`;
+      const fullUrl = `http://68.183.71.119:8080${produit.imageUrl}`;
       console.log('🔗 URL relative détectée, conversion en absolue:', fullUrl);
       return fullUrl;
     }
@@ -565,7 +565,7 @@ onRowClick(event: MouseEvent, row: Produit): void {
     // 3. Utiliser l'URL directe de l'image principale (priorité sur thumbnail)
     if (produit.imageUrl) {
       if (produit.imageUrl.startsWith('/api/')) {
-        const fullUrl = `http://localhost:8080${produit.imageUrl}`;
+        const fullUrl = `http://68.183.71.119:8080${produit.imageUrl}`;
         return fullUrl;
       }
       return produit.imageUrl;
@@ -574,7 +574,7 @@ onRowClick(event: MouseEvent, row: Produit): void {
     // 4. Utiliser l'URL directe de la thumbnail si disponible (fallback)
     if (produit.thumbnailUrl) {
       if (produit.thumbnailUrl.startsWith('/api/')) {
-        const fullUrl = `http://localhost:8080${produit.thumbnailUrl}`;
+        const fullUrl = `http://68.183.71.119:8080/api${produit.thumbnailUrl}`;
         return fullUrl;
       }
       return produit.thumbnailUrl;
@@ -582,7 +582,7 @@ onRowClick(event: MouseEvent, row: Produit): void {
 
     // 5. Si on a des métadonnées d'image mais pas d'URL, construire l'URL
     if (produit.imageData?.id && produit.id) {
-      const imageUrl = `http://localhost:8080/api/produits/${produit.id}/images/${produit.imageData.id}`;
+      const imageUrl = `http://68.183.71.119:8080/api/api/produits/${produit.id}/images/${produit.imageData.id}`;
       return imageUrl;
     }
 
@@ -590,7 +590,7 @@ onRowClick(event: MouseEvent, row: Produit): void {
     if (produit.images && produit.images.length > 0 && produit.id) {
       const firstImage = produit.images[0];
       if (firstImage.id) {
-        const imageUrl = `http://localhost:8080/api/produits/${produit.id}/images/${firstImage.id}`;
+        const imageUrl = `http://68.183.71.119:8080/api/api/produits/${produit.id}/images/${firstImage.id}`;
         return imageUrl;
       }
     }
@@ -635,7 +635,7 @@ onRowClick(event: MouseEvent, row: Produit): void {
     // 1. Utiliser thumbnailUrl directe si disponible
     if (produit.thumbnailUrl) {
       if (produit.thumbnailUrl.startsWith('/api/')) {
-        return `http://localhost:8080${produit.thumbnailUrl}`;
+        return `http://68.183.71.119:8080${produit.thumbnailUrl}`;
       }
       return produit.thumbnailUrl;
     }
@@ -643,7 +643,7 @@ onRowClick(event: MouseEvent, row: Produit): void {
     // 2. Utiliser imageData.thumbnailUrl si disponible
     if (produit.imageData && produit.imageData.thumbnailUrl) {
       if (produit.imageData.thumbnailUrl.startsWith('/api/')) {
-        return `http://localhost:8080${produit.imageData.thumbnailUrl}`;
+        return `http://68.183.71.119:8080${produit.imageData.thumbnailUrl}`;
       }
       return produit.imageData.thumbnailUrl;
     }
@@ -653,7 +653,7 @@ onRowClick(event: MouseEvent, row: Produit): void {
       const primaryImage = produit.images.find(img => img.primary || img.isPrimary) || produit.images[0];
       if (primaryImage.thumbnailUrl) {
         if (primaryImage.thumbnailUrl.startsWith('/api/')) {
-          return `http://localhost:8080${primaryImage.thumbnailUrl}`;
+          return `http://68.183.71.119:8080${primaryImage.thumbnailUrl}`;
         }
         return primaryImage.thumbnailUrl;
       }

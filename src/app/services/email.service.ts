@@ -28,7 +28,7 @@ export interface VisitReportEmailData {
   providedIn: 'root'
 })
 export class EmailService {
-  private apiUrl = 'http://localhost:8080/api/email';
+  private apiUrl = 'http://68.183.71.119:8080/api/api/email';
 
   constructor(private http: HttpClient) { }
 

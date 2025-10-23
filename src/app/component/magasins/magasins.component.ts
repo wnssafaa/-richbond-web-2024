@@ -210,7 +210,7 @@ enseignes = [
          this.initializePermissions(this.role);
         this.avatarUrl = data.imagePath
 
-          ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
+          ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://68.183.71.119:8080/uploads/' + data.imagePath)
           : 'assets/profil.webp';
       },
       
@@ -470,7 +470,7 @@ loadSuperviseurs() {
     });
   }
   onRegionChange(region: string) {
-    // Ne pas réinitialiser la ville sélectionnée pour rendre les filtres indépendants
+  
     this.applyFilters();
   }
     
@@ -571,7 +571,7 @@ openAddMagasinDialog(): void {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Ajouter le nouveau magasin dans la liste sans recharger tout
+      
         this.dataSource.data = [...this.dataSource.data, result];
       }
     });
@@ -610,8 +610,7 @@ openAddMagasinDialog(): void {
       }
    onRowClick(event: MouseEvent, row: Magasin): void {
       const target = event.target as HTMLElement;
-      
-      // Vérifie spécifiquement les boutons edit/delete via leurs classes
+
       const isEditOrDelete = target.closest('.edit-button') || 
                             target.closest('.delete-button') ||
                             target.closest('mat-icon')?.parentElement?.classList.contains('edit-button') ||
@@ -620,8 +619,7 @@ openAddMagasinDialog(): void {
       if (isEditOrDelete) {
         return;
       }
-    
-      // Navigation vers la page de détail
+  
       this.router.navigate(['/magasin-detail', row.id]);
     }
 

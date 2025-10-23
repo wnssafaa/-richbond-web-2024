@@ -59,7 +59,7 @@ export class VisitdetaileComponent {
     // Si c'est un chemin d'URL
     if (typeof image === 'string' && !image.startsWith('data:image')) {
       console.log('✅ Image trouvée comme URL');
-      return image.startsWith('http') ? image : `http://localhost:8080/uploads/${image}`;
+      return image.startsWith('http') ? image : `http://68.183.71.119:8080/uploads/${image}`;
     }
     
     // Fallback pour les anciens formats

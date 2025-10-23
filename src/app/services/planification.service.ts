@@ -48,7 +48,7 @@ export interface Planification {
   providedIn: 'root'
 })
 export class PlanificationService {
-  private apiUrl = 'http://localhost:8080/api/planifications';
+  private apiUrl = 'http://68.183.71.119:8080/api/api/planifications';
 
   constructor(private http: HttpClient) {}
 

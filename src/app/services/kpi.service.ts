@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, forkJoin, map, combineLatest, tap, catchError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { PlanificationService, Planification, StatutVisite } from './planification.service';
 import { MerchendiseurService, Merchendiseur } from './merchendiseur.service';
 import { VisitService, VisitDTO } from './visit.service';
@@ -82,11 +83,14 @@ export interface KPIFilters {
 })
 export class KpiService {
   
+  private apiUrl = 'http://68.183.71.119:8080/api/api';
+  
   // Cache pour optimiser les performances
   private cache = new Map<string, { data: any; timestamp: number; ttl: number }>();
   private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
   constructor(
+    private http: HttpClient,
     private planificationService: PlanificationService,
     private merchendiseurService: MerchendiseurService,
     private visitService: VisitService,
@@ -635,18 +639,97 @@ export class KpiService {
     }
   }
 
-  // ✅ Méthode principale pour récupérer toutes les données KPI dynamiques
+  // ✅ Méthode principale pour récupérer toutes les données KPI depuis le backend
   getAllKpiData(): Observable<KPIData> {
-    return forkJoin({
-      assignmentTracking: this.getAssignmentTracking(),
-      appUsageStats: this.getAppUsageStats(),
-      reportCompletion: this.getReportCompletionStats()
-    }).pipe(
-      map(({ assignmentTracking, appUsageStats, reportCompletion }) => ({
-        assignmentTracking,
-        appUsageStats,
-        reportCompletion
-      }))
+    const cacheKey = 'allKpiData';
+    const cached = this.getCachedData<KPIData>(cacheKey);
+    
+    if (cached) {
+      return of(cached);
+    }
+
+    // Essayer d'abord l'API backend
+    return this.http.get<KPIData>(`${this.apiUrl}/kpis`).pipe(
+      tap(data => {
+        console.log('✅ Données KPI reçues du backend:', data);
+        this.setCachedData(cacheKey, data);
+      }),
+      catchError(error => {
+        console.warn('⚠️ API KPI backend non disponible, calcul local...', error);
+        // Fallback sur le calcul local
+        return forkJoin({
+          assignmentTracking: this.getAssignmentTracking(),
+          appUsageStats: this.getAppUsageStats(),
+          reportCompletion: this.getReportCompletionStats()
+        }).pipe(
+          map(({ assignmentTracking, appUsageStats, reportCompletion }) => {
+            const result = {
+              assignmentTracking,
+              appUsageStats,
+              reportCompletion
+            };
+            this.setCachedData(cacheKey, result);
+            return result;
+          })
+        );
+      })
+    );
+  }
+
+  // ✅ Méthode pour récupérer les KPIs avec filtres depuis le backend
+  getAllKpiDataWithFilters(filters: KPIFilters = {}): Observable<KPIData> {
+    const cacheKey = `kpiData_${JSON.stringify(filters)}`;
+    const cached = this.getCachedData<KPIData>(cacheKey, 2 * 60 * 1000);
+    
+    if (cached) {
+      return of(cached);
+    }
+
+    // Construire les paramètres de requête
+    const params = new URLSearchParams();
+    if (filters.dateRange?.startDate) {
+      params.append('startDate', filters.dateRange.startDate);
+    }
+    if (filters.dateRange?.endDate) {
+      params.append('endDate', filters.dateRange.endDate);
+    }
+    if (filters.region) {
+      params.append('region', filters.region);
+    }
+    if (filters.merchandiserId) {
+      params.append('merchandiserId', filters.merchandiserId.toString());
+    }
+    if (filters.status) {
+      params.append('status', filters.status);
+    }
+
+    const queryString = params.toString();
+    const url = queryString ? `${this.apiUrl}/kpis?${queryString}` : `${this.apiUrl}/kpis`;
+
+    return this.http.get<KPIData>(url).pipe(
+      tap(data => {
+        console.log('✅ Données KPI filtrées reçues du backend:', data);
+        this.setCachedData(cacheKey, data, 2 * 60 * 1000);
+      }),
+      catchError(error => {
+        console.warn('⚠️ API KPI backend avec filtres non disponible, calcul local...', error);
+        // Fallback sur le calcul local avec filtres
+        return forkJoin({
+          assignmentTracking: this.getAssignmentTrackingWithFilters(filters),
+          appUsageStats: this.getAppUsageStatsWithFilters(filters),
+          reportCompletion: this.getReportCompletionStatsWithFilters(filters)
+        }).pipe(
+          map(({ assignmentTracking, appUsageStats, reportCompletion }) => {
+            const result = {
+              assignmentTracking,
+              appUsageStats,
+              reportCompletion
+            };
+            this.setCachedData(cacheKey, result, 2 * 60 * 1000);
+            return result;
+          })
+        );
+      })
     );
   }
 
@@ -658,30 +741,30 @@ export class KpiService {
   }
 
   // ✅ Méthodes avec filtres temporels
-  getAllKpiDataWithFilters(filters: KPIFilters = {}): Observable<KPIData> {
-    const cacheKey = `kpiData_${JSON.stringify(filters)}`;
-    const cached = this.getCachedData<KPIData>(cacheKey, 2 * 60 * 1000); // 2 minutes pour les filtres
+  // getAllKpiDataWithFilters(filters: KPIFilters = {}): Observable<KPIData> {
+  //   const cacheKey = `kpiData_${JSON.stringify(filters)}`;
+  //   const cached = this.getCachedData<KPIData>(cacheKey, 2 * 60 * 1000); // 2 minutes pour les filtres
     
-    if (cached) {
-      return of(cached);
-    }
+  //   if (cached) {
+  //     return of(cached);
+  //   }
 
-    return forkJoin({
-      assignmentTracking: this.getAssignmentTrackingWithFilters(filters),
-      appUsageStats: this.getAppUsageStatsWithFilters(filters),
-      reportCompletion: this.getReportCompletionStatsWithFilters(filters)
-    }).pipe(
-      map(({ assignmentTracking, appUsageStats, reportCompletion }) => {
-        const result = {
-          assignmentTracking,
-          appUsageStats,
-          reportCompletion
-        };
-        this.setCachedData(cacheKey, result, 2 * 60 * 1000);
-        return result;
-      })
-    );
-  }
+  //   return forkJoin({
+  //     assignmentTracking: this.getAssignmentTrackingWithFilters(filters),
+  //     appUsageStats: this.getAppUsageStatsWithFilters(filters),
+  //     reportCompletion: this.getReportCompletionStatsWithFilters(filters)
+  //   }).pipe(
+  //     map(({ assignmentTracking, appUsageStats, reportCompletion }) => {
+  //       const result = {
+  //         assignmentTracking,
+  //         appUsageStats,
+  //         reportCompletion
+  //       };
+  //       this.setCachedData(cacheKey, result, 2 * 60 * 1000);
+  //       return result;
+  //     })
+  //   );
+  // }
 
   private getAssignmentTrackingWithFilters(filters: KPIFilters): Observable<MerchandiserAssignmentTracking[]> {
     return forkJoin({
@@ -824,6 +907,139 @@ export class KpiService {
   getReportCompletionByRegion(region: string): Observable<ReportCompletionStats[]> {
     return this.getAllKpiDataWithFilters({ region }).pipe(
       map(data => data.reportCompletion)
+    );
+  }
+
+  // ✅ Méthodes pour récupérer les données réelles depuis le backend
+  getRealMagasinsData(): Observable<any[]> {
+    const cacheKey = 'realMagasinsData';
+    const cached = this.getCachedData<any[]>(cacheKey, 10 * 60 * 1000); // 10 minutes
+    
+    if (cached) {
+      return of(cached);
+    }
+
+    return this.http.get<any[]>(`${this.apiUrl}/magasins`).pipe(
+      tap(data => {
+        console.log('✅ Données magasins réelles reçues:', data);
+        this.setCachedData(cacheKey, data, 10 * 60 * 1000);
+      }),
+      catchError(error => {
+        console.warn('⚠️ Erreur récupération magasins:', error);
+        return of([]);
+      })
+    );
+  }
+
+  getRealPlanificationsData(): Observable<Planification[]> {
+    const cacheKey = 'realPlanificationsData';
+    const cached = this.getCachedData<Planification[]>(cacheKey, 5 * 60 * 1000); // 5 minutes
+    
+    if (cached) {
+      return of(cached);
+    }
+
+    return this.http.get<Planification[]>(`${this.apiUrl}/planifications`).pipe(
+      tap(data => {
+        console.log('✅ Données planifications réelles reçues:', data);
+        this.setCachedData(cacheKey, data, 5 * 60 * 1000);
+      }),
+      catchError(error => {
+        console.warn('⚠️ Erreur récupération planifications:', error);
+        return of([]);
+      })
+    );
+  }
+
+  getRealVisitsData(): Observable<VisitDTO[]> {
+    const cacheKey = 'realVisitsData';
+    const cached = this.getCachedData<VisitDTO[]>(cacheKey, 5 * 60 * 1000); // 5 minutes
+    
+    if (cached) {
+      return of(cached);
+    }
+
+    return this.http.get<VisitDTO[]>(`${this.apiUrl}/visits`).pipe(
+      tap(data => {
+        console.log('✅ Données visites réelles reçues:', data);
+        this.setCachedData(cacheKey, data, 5 * 60 * 1000);
+      }),
+      catchError(error => {
+        console.warn('⚠️ Erreur récupération visites:', error);
+        return of([]);
+      })
+    );
+  }
+
+  getRealMerchandisersData(): Observable<Merchendiseur[]> {
+    const cacheKey = 'realMerchandisersData';
+    const cached = this.getCachedData<Merchendiseur[]>(cacheKey, 30 * 60 * 1000); // 30 minutes
+    
+    if (cached) {
+      return of(cached);
+    }
+
+    return this.http.get<Merchendiseur[]>(`${this.apiUrl}/merchendiseurs`).pipe(
+      tap(data => {
+        console.log('✅ Données merchandisers réelles reçues:', data);
+        this.setCachedData(cacheKey, data, 30 * 60 * 1000);
+      }),
+      catchError(error => {
+        console.warn('⚠️ Erreur récupération merchandisers:', error);
+        return of([]);
+      })
+    );
+  }
+
+  getRealUsersData(): Observable<User[]> {
+    const cacheKey = 'realUsersData';
+    const cached = this.getCachedData<User[]>(cacheKey, 30 * 60 * 1000); // 30 minutes
+    
+    if (cached) {
+      return of(cached);
+    }
+
+    return this.http.get<User[]>(`${this.apiUrl}/users`).pipe(
+      tap(data => {
+        console.log('✅ Données utilisateurs réelles reçues:', data);
+        this.setCachedData(cacheKey, data, 30 * 60 * 1000);
+      }),
+      catchError(error => {
+        console.warn('⚠️ Erreur récupération utilisateurs:', error);
+        return of([]);
+      })
+    );
+  }
+
+  // ✅ Méthode pour calculer les KPIs avec des données réelles
+  calculateRealKpis(): Observable<KPIData> {
+    console.log('🔄 Calcul des KPIs avec données réelles...');
+    
+    return forkJoin({
+      planifications: this.getRealPlanificationsData(),
+      visits: this.getRealVisitsData(),
+      merchandisers: this.getRealMerchandisersData(),
+      users: this.getRealUsersData()
+    }).pipe(
+      map(({ planifications, visits, merchandisers, users }) => {
+        console.log('📊 Données réelles reçues:', {
+          planifications: planifications.length,
+          visits: visits.length,
+          merchandisers: merchandisers.length,
+          users: users.length
+        });
+
+        // Calculer les KPIs avec les vraies données
+        const assignmentTracking = this.calculateAssignmentTracking(planifications, merchandisers);
+        const appUsageStats = this.calculateAppUsageStats(users, [], merchandisers, planifications, visits);
+        const reportCompletion = this.calculateReportCompletionStats(visits, merchandisers, planifications);
+
+        return {
+          assignmentTracking,
+          appUsageStats,
+          reportCompletion
+        };
+      })
     );
   }
 }

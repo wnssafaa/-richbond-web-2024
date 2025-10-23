@@ -92,8 +92,8 @@ export class AddPlanificationComponent implements OnInit {
       heureDebut: ['', Validators.required],
       heureFin: ['', Validators.required],
       statut: [StatutVisite.PLANIFIEE, Validators.required],
-      merchendiseurCtrl: ['', Validators.required],
-      magasinId: ['', Validators.required],
+      merchendiseurCtrl: ['' ],
+      magasinId: [''],
       recurrence: ['none'],
       dateFin: ['']
     });

@@ -63,7 +63,7 @@ export interface Merchendiseur {
 })
 export class MerchendiseurService {
 
-  private apiUrl = `http://localhost:8080/api/merchendiseurs`; // L'URL de l'API
+  private apiUrl = `http://68.183.71.119:8080/api/api/merchendiseurs`; // L'URL de l'API
 
   constructor(private http: HttpClient) {}
 

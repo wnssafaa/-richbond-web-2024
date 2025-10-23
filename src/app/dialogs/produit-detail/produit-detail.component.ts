@@ -34,7 +34,7 @@ export class ProduitDetailComponent {
     if (produit.imageUrl) {
       // Si c'est une URL relative, ajouter le base URL
       if (produit.imageUrl.startsWith('/api/')) {
-        return `http://localhost:8080${produit.imageUrl}`;
+        return `http://68.183.71.119:8080${produit.imageUrl}`;
       }
       return produit.imageUrl;
     }
@@ -42,7 +42,7 @@ export class ProduitDetailComponent {
     // 2. Utiliser thumbnailUrl si disponible
     if (produit.thumbnailUrl) {
       if (produit.thumbnailUrl.startsWith('/api/')) {
-        return `http://localhost:8080${produit.thumbnailUrl}`;
+        return `http://68.183.71.119:8080${produit.thumbnailUrl}`;
       }
       return produit.thumbnailUrl;
     }
@@ -50,7 +50,7 @@ export class ProduitDetailComponent {
     // 3. Utiliser imageData si disponible
     if (produit.imageData && produit.imageData.imageUrl) {
       if (produit.imageData.imageUrl.startsWith('/api/')) {
-        return `http://localhost:8080${produit.imageData.imageUrl}`;
+        return `http://68.183.71.119:8080${produit.imageData.imageUrl}`;
       }
       return produit.imageData.imageUrl;
     }
@@ -60,7 +60,7 @@ export class ProduitDetailComponent {
       const primaryImage = produit.images.find(img => img.primary || img.isPrimary) || produit.images[0];
       if (primaryImage.imageUrl) {
         if (primaryImage.imageUrl.startsWith('/api/')) {
-          return `http://localhost:8080${primaryImage.imageUrl}`;
+          return `http://68.183.71.119:8080${primaryImage.imageUrl}`;
         }
         return primaryImage.imageUrl;
       }

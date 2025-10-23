@@ -74,6 +74,7 @@ import {
   AppUsageStats,
   ReportCompletionStats,
 } from '../../services/kpi.service';
+import { VisitKpiService, VisitKpiData, VisitKpiFilters } from '../../services/visit-kpi.service';
 import { NzCalendarMode } from 'ng-zorro-antd/calendar';
 import { NzCalendarModule } from 'ng-zorro-antd/calendar';
 import { LOCALE_ID } from '@angular/core';
@@ -246,6 +247,11 @@ export class DachboardComponent implements OnDestroy {
   kpiAppUsageData: AppUsageStats | null = null;
   kpiReportData: ReportCompletionStats[] = [];
 
+  // Données KPI Visites
+  visitKpiData: VisitKpiData | null = null;
+  visitKpiLoading = false;
+  visitKpiFilters: VisitKpiFilters = {};
+
   // Table data sources pour les KPIs
   assignmentDataSource =
     new MatTableDataSource<MerchandiserAssignmentTracking>();
@@ -287,6 +293,22 @@ export class DachboardComponent implements OnDestroy {
     start: new Date(),
     end: new Date(),
   };
+
+  // Filtres KPI Visites
+  selectedVisitEnseigne: string = '';
+  selectedVisitMarque: string = '';
+  selectedVisitRegion: string = '';
+  selectedVisitMerchandiser: number = 0;
+  visitKpiDateRange = {
+    start: new Date(),
+    end: new Date(),
+  };
+
+  // Options de filtres KPI Visites
+  visitEnseignes: string[] = [];
+  visitMarques: string[] = [];
+  visitRegions: string[] = [];
+  visitMerchandisers: any[] = [];
 
   // Options de filtres KPI
   kpiRegions: string[] = [
@@ -485,6 +507,7 @@ stores = [
     private visitService: VisitService,
     private userService: UserService,
     private kpiService: KpiService,
+    private visitKpiService: VisitKpiService,
     public cdr: ChangeDetectorRef,
     private translate: TranslateService,
     private permissionService: PermissionService,
@@ -759,9 +782,14 @@ stores = [
     this.loadVisitsChartData();
     this.loadUsersIntegrationChartData();
 
-    // Charger les données KPI
-    console.log('🔄 Démarrage du chargement des données KPI...');
-    this.loadKpiData();
+    // Charger les données KPI avec données réelles
+    console.log('🔄 Démarrage du chargement des données KPI réelles...');
+    this.loadRealKpiData();
+
+    // Charger les données KPI Visites
+    console.log('🔄 Démarrage du chargement des données KPI Visites...');
+    this.loadVisitKpiData();
+    this.loadVisitKpiFilterOptions();
 
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i);
@@ -1614,6 +1642,11 @@ stores = [
         setTimeout(() => {
           this.createKpiChartsWithRetry();
         }, 500);
+
+        // Créer les graphiques des KPIs des visites
+        setTimeout(() => {
+          this.createVisitKpiCharts();
+        }, 600);
       },
       error: (error) => {
         console.error('❌ Erreur lors du chargement des KPIs:', error);
@@ -1623,6 +1656,73 @@ stores = [
         this.createMockKpiData();
       },
     });
+  }
+
+  // ✅ Nouvelle méthode pour charger les KPIs avec données réelles
+  loadRealKpiData(): void {
+    console.log('🔄 Chargement des données KPI réelles depuis le backend...');
+    this.kpiLoading = true;
+
+    // Essayer d'abord l'API backend directe
+    this.kpiService.getAllKpiData().subscribe({
+      next: (data) => {
+        console.log('✅ Données KPI réelles reçues du backend:', data);
+        this.processKpiData(data);
+      },
+      error: (error) => {
+        console.warn('⚠️ API KPI backend non disponible, calcul avec données réelles...', error);
+        // Fallback sur le calcul avec données réelles
+        this.kpiService.calculateRealKpis().subscribe({
+          next: (data) => {
+            console.log('✅ KPIs calculés avec données réelles:', data);
+            this.processKpiData(data);
+          },
+          error: (fallbackError) => {
+            console.error('❌ Erreur calcul KPIs avec données réelles:', fallbackError);
+            this.kpiDataMode = 'mock';
+            this.kpiLoading = false;
+            this.createMockKpiData();
+          }
+        });
+      }
+    });
+  }
+
+  // ✅ Méthode pour traiter les données KPI
+  private processKpiData(data: any): void {
+    this.kpiAssignmentData = data.assignmentTracking || [];
+    this.kpiAppUsageData = data.appUsageStats || null;
+    this.kpiReportData = data.reportCompletion || [];
+
+    console.log('📊 Données KPI traitées:', {
+      assignmentData: this.kpiAssignmentData.length,
+      appUsageData: this.kpiAppUsageData ? 'OK' : 'MANQUANT',
+      reportData: this.kpiReportData.length,
+    });
+
+    // Mettre à jour les data sources
+    this.updateKpiDataSources();
+
+    // Déterminer le mode de données
+    this.kpiDataMode = this.kpiAssignmentData.length > 0 ? 'real' : 'mock';
+
+    if (this.kpiDataMode === 'real') {
+      console.log('✅ Mode données réelles activé');
+    } else {
+      console.warn('⚠️ Mode données mock activé');
+      this.createMockKpiData();
+    }
+
+    this.kpiLoading = false;
+
+    // Créer les graphiques
+    setTimeout(() => {
+      this.createKpiChartsWithRetry();
+    }, 500);
+
+    setTimeout(() => {
+      this.createVisitKpiCharts();
+    }, 600);
   }
 
   // Mettre à jour les data sources KPI
@@ -2418,6 +2518,561 @@ stores = [
         console.error('❌ Error details:', error.message);
       }
     }
+  }
+
+  // ==================== MÉTHODES KPI VISITES ====================
+
+  // Charger les données KPI des visites
+  loadVisitKpiData(): void {
+    console.log('🔄 Chargement des données KPI Visites...');
+    this.visitKpiLoading = true;
+
+    // Construire les filtres
+    const filters: VisitKpiFilters = {
+      dateRange: {
+        startDate: this.visitKpiDateRange.start.toISOString().split('T')[0],
+        endDate: this.visitKpiDateRange.end.toISOString().split('T')[0]
+      }
+    };
+
+    if (this.selectedVisitEnseigne) {
+      filters.enseigne = this.selectedVisitEnseigne;
+    }
+    if (this.selectedVisitMarque) {
+      filters.marque = this.selectedVisitMarque;
+    }
+    if (this.selectedVisitRegion) {
+      filters.region = this.selectedVisitRegion;
+    }
+    if (this.selectedVisitMerchandiser > 0) {
+      filters.merchandiserId = this.selectedVisitMerchandiser;
+    }
+
+    // Essayer d'abord l'API, puis fallback sur le calcul local
+    this.visitKpiService.getAllVisitKpis(filters).subscribe({
+      next: (data) => {
+        console.log('✅ Données KPI Visites reçues:', data);
+        this.visitKpiData = data;
+        this.visitKpiLoading = false;
+      },
+      error: (error) => {
+        console.warn('⚠️ API KPI Visites non disponible, calcul local...', error);
+        // Fallback sur le calcul local
+        this.visitKpiService.calculateVisitKpisLocally(filters).subscribe({
+          next: (data) => {
+            console.log('✅ Données KPI Visites calculées localement:', data);
+            this.visitKpiData = data;
+            this.visitKpiLoading = false;
+          },
+          error: (err) => {
+            console.error('❌ Erreur calcul local KPI Visites:', err);
+            this.visitKpiLoading = false;
+            this.createMockVisitKpiData();
+          }
+        });
+      }
+    });
+  }
+
+  // Charger les options de filtres pour les KPIs des visites
+  loadVisitKpiFilterOptions(): void {
+    // Charger les enseignes
+    this.visitKpiService.getAvailableEnseignes().subscribe({
+      next: (enseignes) => {
+        this.visitEnseignes = ['Toutes', ...enseignes];
+      },
+      error: () => {
+        this.visitEnseignes = ['Toutes', 'Carrefour', 'Marjane', 'Aswak Assalam', 'Acima', "Label'Vie"];
+      }
+    });
+
+    // Charger les marques
+    this.visitKpiService.getAvailableMarques().subscribe({
+      next: (marques) => {
+        this.visitMarques = ['Toutes', ...marques];
+      },
+      error: () => {
+        this.visitMarques = ['Toutes', 'Richbond', 'Simmons', 'Rosa', 'Générique'];
+      }
+    });
+
+    // Charger les régions
+    this.visitKpiService.getAvailableRegions().subscribe({
+      next: (regions) => {
+        this.visitRegions = ['Toutes', ...regions];
+      },
+      error: () => {
+        this.visitRegions = ['Toutes', 'Casablanca-Settat', 'Rabat-Salé-Kénitra', 'Marrakech-Safi', 'Fès-Meknès'];
+      }
+    });
+
+    // Charger les merchandisers
+    this.merchendiseurService.getAllMerchendiseurs().subscribe({
+      next: (merchandisers) => {
+        this.visitMerchandisers = [
+          { value: 0, label: 'Tous' },
+          ...merchandisers.map(m => ({
+            value: m.id,
+            label: `${m.nom} ${m.prenom}`
+          }))
+        ];
+      },
+      error: () => {
+        this.visitMerchandisers = [{ value: 0, label: 'Tous' }];
+      }
+    });
+  }
+
+  // Appliquer les filtres KPI Visites
+  applyVisitKpiFilters(): void {
+    console.log('🔍 Application des filtres KPI Visites:', this.visitKpiFilters);
+    this.loadVisitKpiData();
+  }
+
+  // Effacer les filtres KPI Visites
+  clearVisitKpiFilters(): void {
+    this.selectedVisitEnseigne = '';
+    this.selectedVisitMarque = '';
+    this.selectedVisitRegion = '';
+    this.selectedVisitMerchandiser = 0;
+    this.visitKpiDateRange = {
+      start: new Date(),
+      end: new Date(),
+    };
+    console.log('🗑️ Filtres KPI Visites effacés');
+    this.loadVisitKpiData();
+  }
+
+  // Gestionnaires de changement de filtres
+  onVisitEnseigneChange(): void {
+    this.loadVisitKpiData();
+  }
+
+  onVisitMarqueChange(): void {
+    this.loadVisitKpiData();
+  }
+
+  onVisitRegionChange(): void {
+    this.loadVisitKpiData();
+  }
+
+  onVisitMerchandiserChange(): void {
+    this.loadVisitKpiData();
+  }
+
+  onVisitDateRangeChange(): void {
+    this.loadVisitKpiData();
+  }
+
+  // Créer des données de test pour les KPIs des visites
+  createMockVisitKpiData(): void {
+    console.log('🎭 Création de données de test pour les KPIs des visites...');
+    
+    this.visitKpiData = {
+      totalVisits: 150,
+      completedVisits: 120,
+      pendingVisits: 30,
+      completionRate: 80.0,
+      averageFacingCount: 25.5,
+      totalFacingCount: 3825,
+      priceAccuracyRate: 85.2,
+      stockAccuracyRate: 78.9,
+      visitsByEnseigne: {
+        'Carrefour': 45,
+        'Marjane': 38,
+        'Aswak Assalam': 32,
+        'Acima': 20,
+        "Label'Vie": 15
+      },
+      visitsByMarque: {
+        'Richbond': 60,
+        'Simmons': 35,
+        'Rosa': 28,
+        'Générique': 27
+      },
+      visitsByMerchandiser: [
+        {
+          merchandiserId: 1,
+          merchandiserName: 'Ahmed Benali',
+          region: 'Casablanca-Settat',
+          totalVisits: 25,
+          completedVisits: 22,
+          pendingVisits: 3,
+          completionRate: 88.0,
+          averageFacingCount: 28.5,
+          priceAccuracyRate: 87.5,
+          stockAccuracyRate: 82.3,
+          averageVisitDuration: 2.5,
+          lastVisitDate: '2024-01-15',
+          visitsThisWeek: 5,
+          visitsThisMonth: 18
+        },
+        {
+          merchandiserId: 2,
+          merchandiserName: 'Fatima Alami',
+          region: 'Rabat-Salé-Kénitra',
+          totalVisits: 30,
+          completedVisits: 28,
+          pendingVisits: 2,
+          completionRate: 93.3,
+          averageFacingCount: 26.8,
+          priceAccuracyRate: 89.2,
+          stockAccuracyRate: 85.7,
+          averageVisitDuration: 2.2,
+          lastVisitDate: '2024-01-14',
+          visitsThisWeek: 6,
+          visitsThisMonth: 22
+        }
+      ],
+      visitsByRegion: {
+        'Casablanca-Settat': 65,
+        'Rabat-Salé-Kénitra': 45,
+        'Marrakech-Safi': 25,
+        'Fès-Meknès': 15
+      },
+      visitsByStatus: {
+        'Complètes': 120,
+        'Incomplètes': 20,
+        'En cours': 10
+      },
+      averageVisitDuration: 2.3,
+      mostVisitedStores: [
+        {
+          storeId: 1,
+          storeName: 'Carrefour Ain Diab',
+          enseigne: 'Carrefour',
+          region: 'Casablanca-Settat',
+          totalVisits: 15,
+          completedVisits: 14,
+          completionRate: 93.3,
+          averageFacingCount: 30.2,
+          lastVisitDate: '2024-01-15'
+        },
+        {
+          storeId: 2,
+          storeName: 'Marjane Maarif',
+          enseigne: 'Marjane',
+          region: 'Casablanca-Settat',
+          totalVisits: 12,
+          completedVisits: 10,
+          completionRate: 83.3,
+          averageFacingCount: 25.8,
+          lastVisitDate: '2024-01-14'
+        }
+      ],
+      recentVisits: [
+        {
+          visitId: 1,
+          storeName: 'Carrefour Ain Diab',
+          merchandiserName: 'Ahmed Benali',
+          visitDate: '2024-01-15',
+          status: 'EFFECTUEE',
+          facingCount: 32,
+          priceAccuracy: 88.5,
+          stockLevel: 15,
+          duration: '2h 30m'
+        },
+        {
+          visitId: 2,
+          storeName: 'Marjane Maarif',
+          merchandiserName: 'Fatima Alami',
+          visitDate: '2024-01-14',
+          status: 'EFFECTUEE',
+          facingCount: 28,
+          priceAccuracy: 91.2,
+          stockLevel: 8,
+          duration: '2h 15m'
+        }
+      ]
+    };
+
+    console.log('✅ Données de test KPI Visites créées');
+  }
+
+  // Méthodes utilitaires pour les KPIs des visites
+  getVisitCompletionStatus(rate: number): string {
+    if (rate >= 90) return 'excellent';
+    if (rate >= 80) return 'good';
+    if (rate >= 70) return 'average';
+    return 'poor';
+  }
+
+  getVisitCompletionColor(rate: number): string {
+    if (rate >= 90) return '#4CAF50';
+    if (rate >= 80) return '#FF9800';
+    if (rate >= 70) return '#FFC107';
+    return '#F44336';
+  }
+
+  getFacingStatus(count: number): string {
+    if (count >= 30) return 'excellent';
+    if (count >= 20) return 'good';
+    if (count >= 10) return 'average';
+    return 'poor';
+  }
+
+  getPriceAccuracyStatus(rate: number): string {
+    if (rate >= 90) return 'excellent';
+    if (rate >= 80) return 'good';
+    if (rate >= 70) return 'average';
+    return 'poor';
+  }
+
+  getStockAccuracyStatus(rate: number): string {
+    if (rate >= 85) return 'excellent';
+    if (rate >= 75) return 'good';
+    if (rate >= 65) return 'average';
+    return 'poor';
+  }
+
+  // Export des KPIs des visites
+  exportVisitKpisToExcel(): void {
+    const filters: VisitKpiFilters = {
+      dateRange: {
+        startDate: this.visitKpiDateRange.start.toISOString().split('T')[0],
+        endDate: this.visitKpiDateRange.end.toISOString().split('T')[0]
+      }
+    };
+
+    this.visitKpiService.exportVisitKpisToExcel(filters).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `visit-kpis-${new Date().toISOString().split('T')[0]}.xlsx`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Erreur export Excel KPIs Visites:', error);
+      }
+    });
+  }
+
+  exportVisitKpisToPDF(): void {
+    const filters: VisitKpiFilters = {
+      dateRange: {
+        startDate: this.visitKpiDateRange.start.toISOString().split('T')[0],
+        endDate: this.visitKpiDateRange.end.toISOString().split('T')[0]
+      }
+    };
+
+    this.visitKpiService.exportVisitKpisToPDF(filters).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `visit-kpis-${new Date().toISOString().split('T')[0]}.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Erreur export PDF KPIs Visites:', error);
+      }
+    });
+  }
+
+  // ==================== GRAPHIQUES KPIs VISITES ====================
+
+  // Créer tous les graphiques des KPIs des visites
+  createVisitKpiCharts(): void {
+    if (!this.visitKpiData) {
+      console.warn('⚠️ Aucune donnée KPI Visites disponible pour créer les graphiques');
+      return;
+    }
+
+    this.createVisitEnseigneChart();
+    this.createVisitMarqueChart();
+    this.createVisitStatusChart();
+    this.createVisitFacingChart();
+  }
+
+  // Graphique des visites par enseigne
+  private createVisitEnseigneChart(): void {
+    const ctx = document.getElementById('visitEnseigneChart') as HTMLCanvasElement;
+    if (!ctx) {
+      console.warn('Canvas visitEnseigneChart not found');
+      return;
+    }
+
+    const enseigneData = this.visitKpiData!.visitsByEnseigne;
+    const labels = Object.keys(enseigneData);
+    const data = Object.values(enseigneData);
+
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+            '#4BC0C0',
+            '#9966FF',
+            '#FF9F40'
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Répartition des Visites par Enseigne'
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  }
+
+  // Graphique des visites par marque
+  private createVisitMarqueChart(): void {
+    const ctx = document.getElementById('visitMarqueChart') as HTMLCanvasElement;
+    if (!ctx) {
+      console.warn('Canvas visitMarqueChart not found');
+      return;
+    }
+
+    const marqueData = this.visitKpiData!.visitsByMarque;
+    const labels = Object.keys(marqueData);
+    const data = Object.values(marqueData);
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Nombre de Visites',
+          data: data,
+          backgroundColor: '#2196F3',
+          borderColor: '#1976D2',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Visites par Marque'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Graphique des visites par statut
+  private createVisitStatusChart(): void {
+    const ctx = document.getElementById('visitStatusChart') as HTMLCanvasElement;
+    if (!ctx) {
+      console.warn('Canvas visitStatusChart not found');
+      return;
+    }
+
+    const statusData = this.visitKpiData!.visitsByStatus;
+    const labels = Object.keys(statusData);
+    const data = Object.values(statusData);
+
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: [
+            '#4CAF50', // Complètes
+            '#FF9800', // Incomplètes
+            '#2196F3'  // En cours
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Répartition des Visites par Statut'
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  }
+
+  // Graphique de distribution des facing
+  private createVisitFacingChart(): void {
+    const ctx = document.getElementById('visitFacingChart') as HTMLCanvasElement;
+    if (!ctx) {
+      console.warn('Canvas visitFacingChart not found');
+      return;
+    }
+
+    // Créer des intervalles de facing pour l'histogramme
+    const facingRanges = ['0-10', '11-20', '21-30', '31-40', '41+'];
+    const facingCounts = [0, 0, 0, 0, 0];
+
+    // Simuler la distribution des facing (en réalité, vous devriez calculer cela à partir des données)
+    const merchandisers = this.visitKpiData!.visitsByMerchandiser;
+    merchandisers.forEach(merch => {
+      const avgFacing = merch.averageFacingCount;
+      if (avgFacing <= 10) facingCounts[0]++;
+      else if (avgFacing <= 20) facingCounts[1]++;
+      else if (avgFacing <= 30) facingCounts[2]++;
+      else if (avgFacing <= 40) facingCounts[3]++;
+      else facingCounts[4]++;
+    });
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: facingRanges,
+        datasets: [{
+          label: 'Nombre de Merchandisers',
+          data: facingCounts,
+          backgroundColor: '#FF9800',
+          borderColor: '#F57C00',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Distribution des Facing par Merchandiser'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        }
+      }
+    });
   }
 
   // Nettoyer les graphiques lors de la destruction du composant

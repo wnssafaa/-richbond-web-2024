@@ -73,7 +73,7 @@
           <!-- Merchandiseur sans autocomplete -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Merchandiseur</mat-label>
-            <mat-select formControlName="merchendiseurCtrl" required>
+            <mat-select formControlName="merchendiseurCtrl" >
               <mat-option *ngFor="let merch of merchendiseurs" [value]="merch">
                 {{ merch.prenom }} {{ merch.nom }}
               </mat-option>
@@ -86,7 +86,7 @@
           <!-- Magasin sans autocomplete -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Magasin</mat-label>
-            <mat-select formControlName="magasinId" required>
+            <mat-select formControlName="magasinId" >
               <mat-option *ngFor="let magasin of magasins" [value]="magasin.id">
                 {{ magasin.nom }} ({{ magasin.ville }})
               </mat-option>

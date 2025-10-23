@@ -668,6 +668,312 @@
         
         </div>
       </div>
+
+      <!-- Section KPIs Visites -->
+      <div class="kpi-section" *ngIf="!isConsultant">
+        <h2 class="section-title">
+          <mat-icon>storefront</mat-icon>
+          KPIs des Visites
+        </h2>
+        
+        <!-- Filtres KPIs Visites -->
+        <div class="filters-section">
+          <div class="filter-row">
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Enseigne</mat-label>
+              <mat-select [(value)]="selectedVisitEnseigne" (selectionChange)="onVisitEnseigneChange()">
+                <mat-option *ngFor="let enseigne of visitEnseignes" [value]="enseigne">
+                  {{ enseigne }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Marque</mat-label>
+              <mat-select [(value)]="selectedVisitMarque" (selectionChange)="onVisitMarqueChange()">
+                <mat-option *ngFor="let marque of visitMarques" [value]="marque">
+                  {{ marque }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Région</mat-label>
+              <mat-select [(value)]="selectedVisitRegion" (selectionChange)="onVisitRegionChange()">
+                <mat-option *ngFor="let region of visitRegions" [value]="region">
+                  {{ region }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Merchandiser</mat-label>
+              <mat-select [(value)]="selectedVisitMerchandiser" (selectionChange)="onVisitMerchandiserChange()">
+                <mat-option *ngFor="let merch of visitMerchandisers" [value]="merch.value">
+                  {{ merch.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" (click)="applyVisitKpiFilters()">
+              <mat-icon>search</mat-icon>
+              Appliquer
+            </button>
+
+            <button mat-button (click)="clearVisitKpiFilters()">
+              <mat-icon>clear</mat-icon>
+              Effacer
+            </button>
+          </div>
+        </div>
+
+        <!-- Cartes de statistiques KPIs Visites -->
+        <div class="kpi-cards" *ngIf="visitKpiData">
+          <mat-card class="stat-card">
+            <div class="text-content">
+              <mat-icon class="stat-icon">storefront</mat-icon>
+              <span class="stat-label">Total Visites</span>
+              <h2>{{ visitKpiData.totalVisits }}</h2>
+            </div>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <div class="text-content">
+              <mat-icon class="stat-icon">check_circle</mat-icon>
+              <span class="stat-label">Visites Complétées</span>
+              <h2>{{ visitKpiData.completedVisits }}</h2>
+            </div>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <div class="text-content">
+              <mat-icon class="stat-icon">trending_up</mat-icon>
+              <span class="stat-label">Taux de Réalisation</span>
+              <h2 [style.color]="getVisitCompletionColor(visitKpiData.completionRate)">
+                {{ visitKpiData.completionRate }}%
+              </h2>
+            </div>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <div class="text-content">
+              <mat-icon class="stat-icon">view_module</mat-icon>
+              <span class="stat-label">Facing Moyen</span>
+              <h2>{{ visitKpiData.averageFacingCount }}</h2>
+            </div>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <div class="text-content">
+              <mat-icon class="stat-icon">attach_money</mat-icon>
+              <span class="stat-label">Précision Prix</span>
+              <h2 [style.color]="getPriceAccuracyStatus(visitKpiData.priceAccuracyRate) === 'excellent' ? '#4CAF50' : getPriceAccuracyStatus(visitKpiData.priceAccuracyRate) === 'good' ? '#FF9800' : '#F44336'">
+                {{ visitKpiData.priceAccuracyRate }}%
+              </h2>
+            </div>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <div class="text-content">
+              <mat-icon class="stat-icon">inventory</mat-icon>
+              <span class="stat-label">Précision Stock</span>
+              <h2 [style.color]="getStockAccuracyStatus(visitKpiData.stockAccuracyRate) === 'excellent' ? '#4CAF50' : getStockAccuracyStatus(visitKpiData.stockAccuracyRate) === 'good' ? '#FF9800' : '#F44336'">
+                {{ visitKpiData.stockAccuracyRate }}%
+              </h2>
+            </div>
+          </mat-card>
+        </div>
+
+        <!-- Graphiques et tableaux KPIs Visites -->
+        <div class="charts-section" *ngIf="visitKpiData">
+          <div class="chart-row">
+            <!-- Graphique des visites par enseigne -->
+            <mat-card class="chart-card">
+              <mat-card-header>
+                <mat-card-title>Visites par Enseigne</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="chart-container">
+                  <canvas id="visitEnseigneChart"></canvas>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Graphique des visites par marque -->
+            <mat-card class="chart-card">
+              <mat-card-header>
+                <mat-card-title>Visites par Marque</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="chart-container">
+                  <canvas id="visitMarqueChart"></canvas>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <div class="chart-row">
+            <!-- Graphique des visites par statut -->
+            <mat-card class="chart-card">
+              <mat-card-header>
+                <mat-card-title>Visites par Statut</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="chart-container">
+                  <canvas id="visitStatusChart"></canvas>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Graphique des facing -->
+            <mat-card class="chart-card">
+              <mat-card-header>
+                <mat-card-title>Distribution des Facing</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="chart-container">
+                  <canvas id="visitFacingChart"></canvas>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <!-- Tableau des merchandisers -->
+          <mat-card class="table-card">
+            <mat-card-header>
+              <mat-card-title>Performance par Merchandiser</mat-card-title>
+              <div class="card-actions">
+                <button mat-icon-button (click)="exportVisitKpisToExcel()" matTooltip="Exporter en Excel">
+                  <mat-icon>file_download</mat-icon>
+                </button>
+                <button mat-icon-button (click)="exportVisitKpisToPDF()" matTooltip="Exporter en PDF">
+                  <mat-icon>picture_as_pdf</mat-icon>
+                </button>
+              </div>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="table-container">
+                <table mat-table [dataSource]="visitKpiData.visitsByMerchandiser" class="kpi-table">
+                  <ng-container matColumnDef="merchandiserName">
+                    <th mat-header-cell *matHeaderCellDef>Merchandiser</th>
+                    <td mat-cell *matCellDef="let element">{{ element.merchandiserName }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="region">
+                    <th mat-header-cell *matHeaderCellDef>Région</th>
+                    <td mat-cell *matCellDef="let element">{{ element.region }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="totalVisits">
+                    <th mat-header-cell *matHeaderCellDef>Total Visites</th>
+                    <td mat-cell *matCellDef="let element">{{ element.totalVisits }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="completionRate">
+                    <th mat-header-cell *matHeaderCellDef>Taux Réalisation</th>
+                    <td mat-cell *matCellDef="let element">
+                      <span [style.color]="getVisitCompletionColor(element.completionRate)">
+                        {{ element.completionRate }}%
+                      </span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="averageFacingCount">
+                    <th mat-header-cell *matHeaderCellDef>Facing Moyen</th>
+                    <td mat-cell *matCellDef="let element">{{ element.averageFacingCount }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="priceAccuracyRate">
+                    <th mat-header-cell *matHeaderCellDef>Précision Prix</th>
+                    <td mat-cell *matCellDef="let element">
+                      <span [style.color]="getPriceAccuracyStatus(element.priceAccuracyRate) === 'excellent' ? '#4CAF50' : getPriceAccuracyStatus(element.priceAccuracyRate) === 'good' ? '#FF9800' : '#F44336'">
+                        {{ element.priceAccuracyRate }}%
+                      </span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="stockAccuracyRate">
+                    <th mat-header-cell *matHeaderCellDef>Précision Stock</th>
+                    <td mat-cell *matCellDef="let element">
+                      <span [style.color]="getStockAccuracyStatus(element.stockAccuracyRate) === 'excellent' ? '#4CAF50' : getStockAccuracyStatus(element.stockAccuracyRate) === 'good' ? '#FF9800' : '#F44336'">
+                        {{ element.stockAccuracyRate }}%
+                      </span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="averageVisitDuration">
+                    <th mat-header-cell *matHeaderCellDef>Durée Moyenne</th>
+                    <td mat-cell *matCellDef="let element">{{ element.averageVisitDuration }}h</td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="['merchandiserName', 'region', 'totalVisits', 'completionRate', 'averageFacingCount', 'priceAccuracyRate', 'stockAccuracyRate', 'averageVisitDuration']"></tr>
+                  <tr mat-row *matRowDef="let row; columns: ['merchandiserName', 'region', 'totalVisits', 'completionRate', 'averageFacingCount', 'priceAccuracyRate', 'stockAccuracyRate', 'averageVisitDuration'];"></tr>
+                </table>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Tableau des magasins les plus visités -->
+          <mat-card class="table-card">
+            <mat-card-header>
+              <mat-card-title>Magasins les Plus Visités</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="table-container">
+                <table mat-table [dataSource]="visitKpiData.mostVisitedStores" class="kpi-table">
+                  <ng-container matColumnDef="storeName">
+                    <th mat-header-cell *matHeaderCellDef>Magasin</th>
+                    <td mat-cell *matCellDef="let element">{{ element.storeName }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="enseigne">
+                    <th mat-header-cell *matHeaderCellDef>Enseigne</th>
+                    <td mat-cell *matCellDef="let element">{{ element.enseigne }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="region">
+                    <th mat-header-cell *matHeaderCellDef>Région</th>
+                    <td mat-cell *matCellDef="let element">{{ element.region }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="totalVisits">
+                    <th mat-header-cell *matHeaderCellDef>Total Visites</th>
+                    <td mat-cell *matCellDef="let element">{{ element.totalVisits }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="completionRate">
+                    <th mat-header-cell *matHeaderCellDef>Taux Réalisation</th>
+                    <td mat-cell *matCellDef="let element">
+                      <span [style.color]="getVisitCompletionColor(element.completionRate)">
+                        {{ element.completionRate }}%
+                      </span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="averageFacingCount">
+                    <th mat-header-cell *matHeaderCellDef>Facing Moyen</th>
+                    <td mat-cell *matCellDef="let element">{{ element.averageFacingCount }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="lastVisitDate">
+                    <th mat-header-cell *matHeaderCellDef>Dernière Visite</th>
+                    <td mat-cell *matCellDef="let element">{{ element.lastVisitDate }}</td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="['storeName', 'enseigne', 'region', 'totalVisits', 'completionRate', 'averageFacingCount', 'lastVisitDate']"></tr>
+                  <tr mat-row *matRowDef="let row; columns: ['storeName', 'enseigne', 'region', 'totalVisits', 'completionRate', 'averageFacingCount', 'lastVisitDate'];"></tr>
+                </table>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Indicateur de chargement -->
+        <div class="loading-container" *ngIf="visitKpiLoading">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Chargement des KPIs des visites...</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

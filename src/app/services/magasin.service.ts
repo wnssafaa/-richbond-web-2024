@@ -33,7 +33,7 @@ export interface Magasin {
   providedIn: 'root'
 })
 export class MagasinService {
-  private apiUrl = 'http://localhost:8080/api/magasins';
+  private apiUrl = 'http://68.183.71.119:8080/api/api/magasins';
 
   constructor(private http: HttpClient) {}
 
