@@ -34,7 +34,7 @@ export interface Superviseur {
 })
 export class SuperveseurService {
 
-  private apiUrl = `${environment.apiUrl}/superviseur`;
+  private apiUrl = `/api/superviseur`;
 
   constructor(private http: HttpClient) { }
 
@@ -131,4 +131,5 @@ export class SuperveseurService {
     return this.http.delete<Superviseur>(`${this.apiUrl}/${superviseurId}/merchandiseurs/${merchendiseurId}`);
   }
 }
+
 

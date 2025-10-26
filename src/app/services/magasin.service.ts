@@ -36,7 +36,7 @@ export interface Magasin {
   providedIn: 'root'
 })
 export class MagasinService {
-  private apiUrl = `${environment.apiUrl}/magasins`;
+  private apiUrl = `/api/magasins`;
 
   constructor(private http: HttpClient) {}
 
@@ -75,4 +75,5 @@ export class MagasinService {
     return this.http.get<Magasin[]>(`${this.apiUrl}/region/${region}`);
   }
 }
+
 

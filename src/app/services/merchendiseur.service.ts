@@ -120,3 +120,4 @@ export class MerchendiseurService {
   updateMerchendiseur(id: number, merchendiseur: Merchendiseur): Observable<Merchendiseur> {
 return this.http.put<Merchendiseur>(`${this.apiUrl}/update/${id}`, merchendiseur);
   }}
+

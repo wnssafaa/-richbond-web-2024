@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, forkJoin, of, switchMap } from 'rxjs';
 import { map, catchError, switchMap as rxSwitchMap } from 'rxjs/operators';
@@ -19,7 +19,7 @@ export interface ProduitImageDTO {
   thumbnailUrl?: string;
   downloadUrl?: string;
   primary?: boolean;
-  isPrimary?: boolean; // Alias pour compatibilité
+  isPrimary?: boolean; // Alias pour compatibilitÃ©
 }
 
 export interface ProduitDTO {
@@ -36,7 +36,7 @@ export interface ProduitDTO {
   sousMarques: string;
   codeEAN: string;
   designationArticle: string;
-  image?: string; // URL de l'image (compatibilité)
+  image?: string; // URL de l'image (compatibilitÃ©)
   imageUrl?: string; // URL de l'image principale
   thumbnailUrl?: string; // URL de la thumbnail
   imageData?: ProduitImageDTO;
@@ -48,10 +48,10 @@ export interface Produit {
   marque: string;
   reference: string;
   categorie: string;
-  image?: string; // Gardé pour compatibilité, sera remplacé par les URLs d'images
+  image?: string; // GardÃ© pour compatibilitÃ©, sera remplacÃ© par les URLs d'images
   imageUrl?: string; // URL de l'image principale
   thumbnailUrl?: string; // URL de la thumbnail
-  imageData?: ProduitImageDTO; // Données de l'image principale
+  imageData?: ProduitImageDTO; // DonnÃ©es de l'image principale
   images?: ProduitImageDTO[]; // Toutes les images du produit
   article: string;
   type: string;
@@ -59,13 +59,13 @@ export interface Produit {
   disponible: boolean;
   prix: number;
   
-  // Nouveaux attributs ajoutés
+  // Nouveaux attributs ajoutÃ©s
   famille: string;           // ex: "MATELAS"
   sousMarques: string;       // ex: "R VITAL"
   codeEAN: string;          // ex: "6111250526067"
   designationArticle: string; // ex: "R VITAL 190X090"
   
-  // Propriétés internes pour la gestion des images
+  // PropriÃ©tÃ©s internes pour la gestion des images
   _loadingImage?: boolean;
   _imageBlobUrl?: string; // URL blob temporaire pour l'affichage
   _thumbnailBlobUrl?: string; // URL blob temporaire pour la thumbnail
@@ -78,7 +78,7 @@ export interface Produit {
 })
 export class ProduitService {
 
-  private apiUrl = `${environment.apiUrl}/produits`;
+  private apiUrl = `/api/produits`;
 
   constructor(private http: HttpClient) { }
 
@@ -92,22 +92,22 @@ export class ProduitService {
     return this.http.post<Produit>(`${this.apiUrl}/add`, produit);
   }
 
-  // Créer un produit avec une image extraite
+  // CrÃ©er un produit avec une image extraite
   private createProduitWithImage(produit: Produit): Observable<Produit> {
-    // Pour l'instant, créer le produit sans image, puis uploader l'image séparément
+    // Pour l'instant, crÃ©er le produit sans image, puis uploader l'image sÃ©parÃ©ment
     const { _extractedImage, _imageBlobUrl, _thumbnailBlobUrl, _loadingImage, _noImageAvailable, ...produitData } = produit;
     
-    console.log('📤 Création du produit sans image d\'abord:', produitData);
+    console.log('ðŸ“¤ CrÃ©ation du produit sans image d\'abord:', produitData);
     
-    // Créer le produit d'abord
+    // CrÃ©er le produit d'abord
     return this.http.post<Produit>(`${this.apiUrl}/add`, produitData).pipe(
       rxSwitchMap(createdProduit => {
-        console.log('✅ Produit créé:', createdProduit);
+        console.log('âœ… Produit crÃ©Ã©:', createdProduit);
         
-        // Si le produit a été créé et qu'il y a une image, l'uploader
+        // Si le produit a Ã©tÃ© crÃ©Ã© et qu'il y a une image, l'uploader
         if (createdProduit.id && _extractedImage && _extractedImage.dataUrl) {
           return this.uploadExtractedImage(createdProduit.id, _extractedImage).pipe(
-            map(() => createdProduit) // Retourner le produit même si l'upload d'image échoue
+            map(() => createdProduit) // Retourner le produit mÃªme si l'upload d'image Ã©choue
           );
         }
         
@@ -119,7 +119,7 @@ export class ProduitService {
   // Uploader une image extraite depuis Excel
   private uploadExtractedImage(produitId: number, extractedImage: any): Observable<any> {
     if (!extractedImage.dataUrl) {
-      console.log('⚠️ Aucune data URL disponible pour l\'upload');
+      console.log('âš ï¸ Aucune data URL disponible pour l\'upload');
       return of(null);
     }
 
@@ -134,38 +134,38 @@ export class ProduitService {
       const byteArray = new Uint8Array(byteNumbers);
       const blob = new Blob([byteArray], { type: extractedImage.mimeType });
       
-      // Créer un fichier à partir du blob
+      // CrÃ©er un fichier Ã  partir du blob
       const fileName = `produit_${produitId}_${Date.now()}.${extractedImage.extension || 'jpg'}`;
       const file = new File([blob], fileName, { type: extractedImage.mimeType });
       
-      console.log('📤 Upload de l\'image extraite:', fileName);
+      console.log('ðŸ“¤ Upload de l\'image extraite:', fileName);
       
       // Uploader l'image
-      return this.uploadImage(produitId, file, 'Image importée depuis Excel');
+      return this.uploadImage(produitId, file, 'Image importÃ©e depuis Excel');
     } catch (error) {
-      console.error('❌ Erreur lors de la conversion de l\'image:', error);
+      console.error('âŒ Erreur lors de la conversion de l\'image:', error);
       return of(null);
     }
   }
 
-  // Mapper les données d'import Excel vers l'interface Produit
+  // Mapper les donnÃ©es d'import Excel vers l'interface Produit
   mapImportDataToProduit(importData: any): Produit {
-    // Extraire les dimensions de la désignation article (ex: "R VITAL 190X090" -> "190X090")
+    // Extraire les dimensions de la dÃ©signation article (ex: "R VITAL 190X090" -> "190X090")
     const dimensionsMatch = importData.designationArticle?.match(/(\d+X\d+)/);
     const dimensions = dimensionsMatch ? dimensionsMatch[1] : '';
     
-    // Extraire le type d'article de la désignation (ex: "R VITAL 190X090" -> "R VITAL")
+    // Extraire le type d'article de la dÃ©signation (ex: "R VITAL 190X090" -> "R VITAL")
     const typeMatch = importData.designationArticle?.match(/^([^0-9]+)/);
     const type = typeMatch ? typeMatch[1].trim() : importData.sousMarques || '';
     
     const produit: Produit = {
       marque: importData.marque || 'RICHBOND',
-      reference: importData.codeEAN || '', // Utiliser le code EAN comme référence
+      reference: importData.codeEAN || '', // Utiliser le code EAN comme rÃ©fÃ©rence
       categorie: importData.famille || 'MATELAS',
       article: importData.designationArticle || '',
       type: type,
       dimensions: dimensions,
-      disponible: true, // Par défaut disponible
+      disponible: true, // Par dÃ©faut disponible
       prix: parseFloat(importData.prix) || 0,
       famille: importData.famille || 'MATELAS',
       sousMarques: importData.sousMarques || '',
@@ -173,63 +173,63 @@ export class ProduitService {
       designationArticle: importData.designationArticle || '',
     };
 
-    // Gérer les images extraites depuis Excel
+    // GÃ©rer les images extraites depuis Excel
     if (importData.extractedImage) {
-      console.log('🖼️ Image extraite trouvée:', importData.extractedImage);
-      // Ajouter les données d'image pour l'envoi au backend
+      console.log('ðŸ–¼ï¸ Image extraite trouvÃ©e:', importData.extractedImage);
+      // Ajouter les donnÃ©es d'image pour l'envoi au backend
       produit._extractedImage = importData.extractedImage;
     } else if (importData.photo && importData.photo.trim() !== '') {
-      // Image par nom de fichier (méthode traditionnelle)
+      // Image par nom de fichier (mÃ©thode traditionnelle)
       produit.image = importData.photo;
     }
     
-    console.log('🔄 Mapping des données d\'import vers Produit:', { importData, produit });
+    console.log('ðŸ”„ Mapping des donnÃ©es d\'import vers Produit:', { importData, produit });
     return produit;
   }
 
   // Obtenir tous les produits
   getAllProduits(): Observable<Produit[]> {
-    console.log('🔄 Récupération de tous les produits depuis:', `${this.apiUrl}/all`);
+    console.log('ðŸ”„ RÃ©cupÃ©ration de tous les produits depuis:', `${this.apiUrl}/all`);
     
     return this.http.get<ProduitDTO[]>(`${this.apiUrl}/all`).pipe(
       map(produitDTOs => {
-        console.log('📦 Produits DTOs reçus du backend:', produitDTOs);
+        console.log('ðŸ“¦ Produits DTOs reÃ§us du backend:', produitDTOs);
         const produits = produitDTOs.map(dto => this.convertDTOToProduit(dto));
-        console.log('✅ Produits convertis:', produits);
+        console.log('âœ… Produits convertis:', produits);
         return produits;
       })
     );
   }
 
-  // Méthode de test pour vérifier les données
+  // MÃ©thode de test pour vÃ©rifier les donnÃ©es
   testGetAllProduits(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/all`);
   }
 
-  // Méthode de debug pour tester les images
+  // MÃ©thode de debug pour tester les images
   debugProductImages(): void {
-    console.log('🔍 Debug des images de produits...');
+    console.log('ðŸ” Debug des images de produits...');
     
     this.testGetAllProduits().subscribe({
       next: (data) => {
-        console.log('📊 Données brutes du backend:', data);
+        console.log('ðŸ“Š DonnÃ©es brutes du backend:', data);
         
         if (Array.isArray(data) && data.length > 0) {
           const premierProduit = data[0];
-          console.log('🔍 Premier produit analysé:', premierProduit);
+          console.log('ðŸ” Premier produit analysÃ©:', premierProduit);
           
           if (premierProduit.imageData) {
-            console.log('✅ Données d\'image trouvées:', premierProduit.imageData);
-            console.log('🔗 URL d\'image construite:', `http://68.183.71.119:8080/api/api/produits/${premierProduit.id}/images/${premierProduit.imageData.id}`);
+            console.log('âœ… DonnÃ©es d\'image trouvÃ©es:', premierProduit.imageData);
+            console.log('ðŸ”— URL d\'image construite:', `http://68.183.71.119:8080/api/api/produits/${premierProduit.id}/images/${premierProduit.imageData.id}`);
           } else {
-            console.log('❌ Aucune donnée d\'image trouvée dans le premier produit');
+            console.log('âŒ Aucune donnÃ©e d\'image trouvÃ©e dans le premier produit');
           }
         } else {
-          console.log('❌ Aucun produit trouvé ou format de données incorrect');
+          console.log('âŒ Aucun produit trouvÃ© ou format de donnÃ©es incorrect');
         }
       },
       error: (error) => {
-        console.error('❌ Erreur lors du test des images:', error);
+        console.error('âŒ Erreur lors du test des images:', error);
       }
     });
   }
@@ -259,7 +259,7 @@ export class ProduitService {
     );
   }
 
-  // ========== MÉTHODES POUR LA GESTION DES IMAGES ==========
+  // ========== MÃ‰THODES POUR LA GESTION DES IMAGES ==========
 
   /**
    * Uploader une image pour un produit (remplace l'ancienne si elle existe)
@@ -275,14 +275,14 @@ export class ProduitService {
   }
 
   /**
-   * Récupérer l'image d'un produit (OneToOne)
+   * RÃ©cupÃ©rer l'image d'un produit (OneToOne)
    */
   getImageByProduit(produitId: number): Observable<ProduitImageDTO> {
     return this.http.get<ProduitImageDTO>(`${this.apiUrl}/${produitId}/images`).pipe(
       catchError(error => {
         // Si l'endpoint n'existe pas ou retourne 404, retourner un observable vide
         if (error.status === 404) {
-          console.log(`Aucune image trouvée pour le produit ${produitId}`);
+          console.log(`Aucune image trouvÃ©e pour le produit ${produitId}`);
           return of(null as any);
         }
         // Pour les autres erreurs, les propager
@@ -292,14 +292,14 @@ export class ProduitService {
   }
 
   /**
-   * Récupérer l'image principale d'un produit (alias pour getImageByProduit)
+   * RÃ©cupÃ©rer l'image principale d'un produit (alias pour getImageByProduit)
    */
   getPrimaryImage(produitId: number): Observable<ProduitImageDTO> {
     return this.http.get<ProduitImageDTO>(`${this.apiUrl}/${produitId}/images/primary`);
   }
 
   /**
-   * Récupérer une image spécifique comme blob
+   * RÃ©cupÃ©rer une image spÃ©cifique comme blob
    */
   getImage(produitId: number, imageId: number): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/${produitId}/images/${imageId}`, { 
@@ -308,7 +308,7 @@ export class ProduitService {
   }
 
   /**
-   * Récupérer la thumbnail d'une image comme blob
+   * RÃ©cupÃ©rer la thumbnail d'une image comme blob
    */
   getThumbnail(produitId: number, imageId: number): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/${produitId}/images/${imageId}/thumbnail`, { 
@@ -317,7 +317,7 @@ export class ProduitService {
   }
 
   /**
-   * Télécharger une image
+   * TÃ©lÃ©charger une image
    */
   downloadImage(produitId: number, imageId: number): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/${produitId}/images/${imageId}/download`, { 
@@ -337,10 +337,10 @@ export class ProduitService {
     return this.http.delete<void>(`${this.apiUrl}/${produitId}/images/${imageId}`);
   }
 
-  // ========== MÉTHODES UTILITAIRES POUR LES URLs D'IMAGES ==========
+  // ========== MÃ‰THODES UTILITAIRES POUR LES URLs D'IMAGES ==========
 
   /**
-   * Obtenir l'URL complète d'une image
+   * Obtenir l'URL complÃ¨te d'une image
    */
   getImageUrl(produitId: number, imageId: number): string {
     return `${this.apiUrl}/${produitId}/images/${imageId}`;
@@ -354,7 +354,7 @@ export class ProduitService {
   }
 
   /**
-   * Obtenir l'URL de téléchargement
+   * Obtenir l'URL de tÃ©lÃ©chargement
    */
   getDownloadUrl(produitId: number, imageId: number): string {
     return `${this.apiUrl}/${produitId}/images/${imageId}/download`;
@@ -368,7 +368,7 @@ export class ProduitService {
   }
 
   /**
-   * Libérer une URL d'objet blob pour éviter les fuites mémoire
+   * LibÃ©rer une URL d'objet blob pour Ã©viter les fuites mÃ©moire
    */
   revokeBlobUrl(url: string): void {
     if (url && url.startsWith('blob:')) {
@@ -377,38 +377,38 @@ export class ProduitService {
   }
 
   /**
-   * Charger une image et créer une URL blob pour l'affichage
+   * Charger une image et crÃ©er une URL blob pour l'affichage
    */
   loadImageAsBlobUrl(produitId: number, imageId: number): Observable<string> {
     const imageUrl = this.getImageUrl(produitId, imageId);
-    console.log('🖼️ Tentative de chargement de l\'image:', imageUrl);
+    console.log('ðŸ–¼ï¸ Tentative de chargement de l\'image:', imageUrl);
     
     return this.getImage(produitId, imageId).pipe(
       map(blob => {
-        console.log('✅ Image chargée avec succès:', imageUrl);
+        console.log('âœ… Image chargÃ©e avec succÃ¨s:', imageUrl);
         return this.createBlobUrl(blob);
       }),
       catchError(error => {
-        console.error('❌ Erreur lors du chargement de l\'image:', imageUrl, error);
+        console.error('âŒ Erreur lors du chargement de l\'image:', imageUrl, error);
         throw error;
       })
     );
   }
 
   /**
-   * Charger une thumbnail et créer une URL blob pour l'affichage
+   * Charger une thumbnail et crÃ©er une URL blob pour l'affichage
    */
   loadThumbnailAsBlobUrl(produitId: number, imageId: number): Observable<string> {
     const thumbnailUrl = this.getThumbnailUrl(produitId, imageId);
-    console.log('🖼️ Tentative de chargement de la thumbnail:', thumbnailUrl);
+    console.log('ðŸ–¼ï¸ Tentative de chargement de la thumbnail:', thumbnailUrl);
     
     return this.getThumbnail(produitId, imageId).pipe(
       map(blob => {
-        console.log('✅ Thumbnail chargée avec succès:', thumbnailUrl);
+        console.log('âœ… Thumbnail chargÃ©e avec succÃ¨s:', thumbnailUrl);
         return this.createBlobUrl(blob);
       }),
       catchError(error => {
-        console.error('❌ Erreur lors du chargement de la thumbnail:', thumbnailUrl, error);
+        console.error('âŒ Erreur lors du chargement de la thumbnail:', thumbnailUrl, error);
         throw error;
       })
     );
@@ -424,7 +424,7 @@ export class ProduitService {
         return this.getImageByProduit(produit.id).pipe(
           switchMap(imageData => {
             if (imageData && imageData.id && produit.id) {
-              // Stocker les métadonnées de l'image
+              // Stocker les mÃ©tadonnÃ©es de l'image
               produit.imageData = imageData;
               produit.images = [imageData];
               produit.imageUrl = this.getImageUrl(produit.id, imageData.id);
@@ -450,7 +450,7 @@ export class ProduitService {
                   );
                 }),
                 catchError(error => {
-                  console.warn(`⚠️ Impossible de charger l'image pour le produit ${produit.id}:`, error);
+                  console.warn(`âš ï¸ Impossible de charger l'image pour le produit ${produit.id}:`, error);
                   produit._loadingImage = false;
                   // Marquer qu'il n'y a pas d'image disponible
                   produit._noImageAvailable = true;
@@ -474,7 +474,7 @@ export class ProduitService {
   }
 
   /**
-   * Version simplifiée pour charger seulement les métadonnées d'images
+   * Version simplifiÃ©e pour charger seulement les mÃ©tadonnÃ©es d'images
    */
   loadImageMetadataForProducts(produits: Produit[]): Observable<Produit[]> {
     const productsWithMetadata = produits.map(produit => {
@@ -492,7 +492,7 @@ export class ProduitService {
             return produit;
           }),
           catchError(error => {
-            console.warn(`⚠️ Aucune image trouvée pour le produit ${produit.id}:`, error);
+            console.warn(`âš ï¸ Aucune image trouvÃ©e pour le produit ${produit.id}:`, error);
             produit._loadingImage = false;
             // Marquer qu'il n'y a pas d'image disponible
             produit._noImageAvailable = true;
@@ -507,7 +507,7 @@ export class ProduitService {
   }
 
   /**
-   * Charger l'image blob pour un produit spécifique
+   * Charger l'image blob pour un produit spÃ©cifique
    */
   loadImageBlobForProduct(produit: Produit): Observable<Produit> {
     if (!produit.id || !produit.imageData?.id || produit._imageBlobUrl) {
@@ -527,7 +527,7 @@ export class ProduitService {
   }
 
   /**
-   * Charger la thumbnail blob pour un produit spécifique
+   * Charger la thumbnail blob pour un produit spÃ©cifique
    */
   loadThumbnailBlobForProduct(produit: Produit): Observable<Produit> {
     if (!produit.id || !produit.imageData?.id || produit._thumbnailBlobUrl) {
@@ -547,7 +547,7 @@ export class ProduitService {
   }
 
   /**
-   * Nettoyer les URLs blob pour éviter les fuites mémoire
+   * Nettoyer les URLs blob pour Ã©viter les fuites mÃ©moire
    */
   cleanupBlobUrls(produits: Produit[]): void {
     produits.forEach(produit => {
@@ -564,7 +564,7 @@ export class ProduitService {
 
   /**
    * Obtenir l'URL d'affichage optimale pour un produit
-   * Préfère la thumbnail si disponible, sinon l'image complète
+   * PrÃ©fÃ¨re la thumbnail si disponible, sinon l'image complÃ¨te
    */
   getDisplayUrl(produit: Produit): string | null {
     if (produit._thumbnailBlobUrl) {
@@ -586,7 +586,7 @@ export class ProduitService {
    * Convertit un ProduitDTO en Produit
    */
   private convertDTOToProduit(dto: ProduitDTO): Produit {
-    console.log('🔄 Conversion DTO vers Produit:', dto);
+    console.log('ðŸ”„ Conversion DTO vers Produit:', dto);
     
     const produit: Produit = {
       id: dto.id,
@@ -606,7 +606,7 @@ export class ProduitService {
       images: dto.images
     };
 
-    // Si le DTO contient des données d'image, utiliser les URLs du backend
+    // Si le DTO contient des donnÃ©es d'image, utiliser les URLs du backend
     if (dto.imageData && dto.imageData.id && dto.id) {
       // Utiliser les URLs du backend si disponibles
       if (dto.imageUrl) {
@@ -621,12 +621,12 @@ export class ProduitService {
         produit.thumbnailUrl = this.getThumbnailUrl(dto.id, dto.imageData.id);
       }
       
-      console.log('✅ URLs d\'images construites pour le produit', dto.id, ':', {
+      console.log('âœ… URLs d\'images construites pour le produit', dto.id, ':', {
         imageUrl: produit.imageUrl,
         thumbnailUrl: produit.thumbnailUrl
       });
     } else {
-      console.log('⚠️ Pas de données d\'image pour le produit', dto.id);
+      console.log('âš ï¸ Pas de donnÃ©es d\'image pour le produit', dto.id);
     }
 
     return produit;
