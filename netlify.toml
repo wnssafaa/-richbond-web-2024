@@ -5,6 +5,14 @@
 [build.environment]
   NODE_VERSION = "18"
 
+# Proxy API calls to backend
+[[redirects]]
+  from = "/api/*"
+  to = "http://68.183.71.119:8080/:splat"
+  status = 200
+  force = true
+
+# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
