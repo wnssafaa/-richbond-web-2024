@@ -1,11 +1,11 @@
 ﻿import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+
 import { Observable, forkJoin, map } from 'rxjs';
-import { environment } from '../../environments/environment';
+
 import { VisitService, VisitDTO } from './visit.service';
-import { environment } from '../../environments/environment';
+;
 import { PlanificationService, Planification } from './planification.service';
 import { environment } from '../../environments/environment';
 
@@ -86,7 +86,7 @@ export interface VisitKpiFilters {
   providedIn: 'root'
 })
 export class VisitKpiService {
-  private apiUrl = `/api/visit-kpis`;
+  private apiUrl = `/api/api/visit-kpis`;
 
   constructor(
     private http: HttpClient,
@@ -634,5 +634,6 @@ export class VisitKpiService {
     );
   }
 }
+
 
 

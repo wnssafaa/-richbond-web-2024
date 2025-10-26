@@ -121,3 +121,4 @@ export class MerchendiseurService {
 return this.http.put<Merchendiseur>(`${this.apiUrl}/update/${id}`, merchendiseur);
   }}
 
+

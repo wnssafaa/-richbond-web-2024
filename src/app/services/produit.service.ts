@@ -78,7 +78,7 @@ export interface Produit {
 })
 export class ProduitService {
 
-  private apiUrl = `/api/produits`;
+  private apiUrl = `/api/api/produits`;
 
   constructor(private http: HttpClient) { }
 
@@ -632,3 +632,4 @@ export class ProduitService {
     return produit;
   }
 }
+

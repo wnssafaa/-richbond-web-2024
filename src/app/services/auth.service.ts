@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -11,11 +11,11 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
 
-  private apiUrl = `/api/auth`;
+  private apiUrl = `/api/api/auth`;
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  // Ajoutez cette méthode
+  // Ajoutez cette mÃ©thode
   private getHeaders(): HttpHeaders {
     const token = this.getToken();
     return new HttpHeaders({
@@ -41,13 +41,13 @@ export class AuthService {
       }
     ).pipe(
       tap(response => {
-        console.log('Réponse complète:', response);
+        console.log('RÃ©ponse complÃ¨te:', response);
       }),
       catchError(error => {
         console.error('Erreur technique:', error);
         return throwError(() => new Error(
           error.error?.message || 
-          'Erreur lors de la demande. Vérifiez votre connexion.'
+          'Erreur lors de la demande. VÃ©rifiez votre connexion.'
         ));
       })
     );
@@ -87,11 +87,11 @@ export class AuthService {
       responseType: 'text'
     }).subscribe({
       next: (response) => {
-        console.log('Déconnexion réussie:', response);
+        console.log('DÃ©connexion rÃ©ussie:', response);
         this.cleanUpAndRedirect();
       },
       error: (err) => {
-        console.error('Erreur pendant la déconnexion :', err);
+        console.error('Erreur pendant la dÃ©connexion :', err);
         this.cleanUpAndRedirect();
       }
     });
@@ -120,7 +120,7 @@ export class AuthService {
     });
   }
 
-  // Corrigez cette méthode - retirez le /auth en double dans l'URL
+  // Corrigez cette mÃ©thode - retirez le /auth en double dans l'URL
   getLoginHistory(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/admin/login-history/all`, {
       headers: this.getHeaders()
@@ -128,7 +128,7 @@ export class AuthService {
   }
   
 
-  // Optionnel : Ajoutez des méthodes pour filtrer l'historique
+  // Optionnel : Ajoutez des mÃ©thodes pour filtrer l'historique
   getLoginHistoryByDevice(deviceType: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/login-history/device/${deviceType}`, {
       headers: this.getHeaders()
@@ -141,7 +141,7 @@ export class AuthService {
     });
   }
 
-  // Récupérer l'historique de connexion d'un utilisateur spécifique
+  // RÃ©cupÃ©rer l'historique de connexion d'un utilisateur spÃ©cifique
   getUserLoginHistory(userId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/login-history/user/${userId}`, {
       headers: this.getHeaders()

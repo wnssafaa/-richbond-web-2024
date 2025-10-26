@@ -26,7 +26,7 @@ export interface User {
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = `/api/users`;
+  private apiUrl = `/api/api/users`;
 
   constructor(private http: HttpClient) {}
 
@@ -122,4 +122,5 @@ export class UserService {
     return this.http.get<string[]>(`${this.apiUrl}/stores`);
   }
 }
+
 

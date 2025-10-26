@@ -1,13 +1,13 @@
 ﻿import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+
 import { Magasin } from './magasin.service';
-import { environment } from '../../environments/environment';
+
 import { Merchendiseur } from './merchendiseur.service';
-import { environment } from '../../environments/environment';
+
 
 export enum StatutVisite {
   PLANIFIEE = 'PLANIFIEE',
@@ -53,7 +53,7 @@ export interface Planification {
   providedIn: 'root'
 })
 export class PlanificationService {
-  private apiUrl = `/api/planifications`;
+  private apiUrl = `/api/api/planifications`;
 
   constructor(private http: HttpClient) {}
 
@@ -130,5 +130,6 @@ checkDisponibilite(merchId: number, dateDebut: string, dateFin: string): Observa
 
 
 }
+
 
 

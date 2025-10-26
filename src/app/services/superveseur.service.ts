@@ -1,13 +1,13 @@
 ﻿import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Region } from '../enum/Region';
-import { environment } from '../../environments/environment';
+
 import { Merchendiseur } from './merchendiseur.service';
-import { environment } from '../../environments/environment';
+
 
 export interface Superviseur {
   id?: number;
@@ -34,7 +34,7 @@ export interface Superviseur {
 })
 export class SuperveseurService {
 
-  private apiUrl = `/api/superviseur`;
+  private apiUrl = `/api/api/superviseur`;
 
   constructor(private http: HttpClient) { }
 
@@ -131,5 +131,6 @@ export class SuperveseurService {
     return this.http.delete<Superviseur>(`${this.apiUrl}/${superviseurId}/merchandiseurs/${merchendiseurId}`);
   }
 }
+
 
 
