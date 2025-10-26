@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, forkJoin, of, switchMap } from 'rxjs';
 import { map, catchError, switchMap as rxSwitchMap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface ProduitImageDTO {
   id?: number;
@@ -77,7 +78,7 @@ export interface Produit {
 })
 export class ProduitService {
 
-  private apiUrl = 'http://68.183.71.119:8080/api/api/produits';
+  private apiUrl = `${environment.apiUrl}/produits`;
 
   constructor(private http: HttpClient) { }
 
@@ -631,4 +632,3 @@ export class ProduitService {
     return produit;
   }
 }
-

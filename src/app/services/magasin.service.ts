@@ -1,6 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Magasin {
   id?: number;
@@ -33,26 +36,26 @@ export interface Magasin {
   providedIn: 'root'
 })
 export class MagasinService {
-  private apiUrl = 'http://68.183.71.119:8080/api/api/magasins';
+  private apiUrl = `${environment.apiUrl}/magasins`;
 
   constructor(private http: HttpClient) {}
 
-  // Créer un magasin (POST /create)
+  // CrÃ©er un magasin (POST /create)
   addMagasin(magasin: Magasin): Observable<Magasin> {
     return this.http.post<Magasin>(`${this.apiUrl}/create`, magasin);
   }
 
-  // Récupérer tous les magasins (GET /all)
+  // RÃ©cupÃ©rer tous les magasins (GET /all)
   getAllMagasins(): Observable<Magasin[]> {
     return this.http.get<Magasin[]>(`${this.apiUrl}/all`);
   }
 
-  // Récupérer un magasin par ID (GET /{id})
+  // RÃ©cupÃ©rer un magasin par ID (GET /{id})
   getMagasinById(id: number): Observable<Magasin> {
     return this.http.get<Magasin>(`${this.apiUrl}/${id}`);
   }
 
-  // Mettre à jour un magasin (PUT /update/{id})
+  // Mettre Ã  jour un magasin (PUT /update/{id})
   updateMagasin(id: number, magasin: Magasin): Observable<Magasin> {
     return this.http.put<Magasin>(`${this.apiUrl}/update/${id}`, magasin);
   }
@@ -62,13 +65,14 @@ export class MagasinService {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
 
-  // Récupérer les magasins par ville (GET /ville/{ville})
+  // RÃ©cupÃ©rer les magasins par ville (GET /ville/{ville})
   getMagasinsByVille(ville: string): Observable<Magasin[]> {
     return this.http.get<Magasin[]>(`${this.apiUrl}/ville/${ville}`);
   }
 
-  // Récupérer les magasins par région (GET /region/{region})
+  // RÃ©cupÃ©rer les magasins par rÃ©gion (GET /region/{region})
   getMagasinsByRegion(region: string): Observable<Magasin[]> {
     return this.http.get<Magasin[]>(`${this.apiUrl}/region/${region}`);
   }
 }
+

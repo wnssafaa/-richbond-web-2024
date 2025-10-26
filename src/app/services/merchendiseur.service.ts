@@ -1,11 +1,17 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { Region } from '../enum/Region';
+import { environment } from '../../environments/environment';
 import { Magasin } from './magasin.service';
+import { environment } from '../../environments/environment';
 import { Role } from '../enum/Role';
+import { environment } from '../../environments/environment';
 
-// ✅ Enum pour les statuts d'invitation
+// âœ… Enum pour les statuts d'invitation
 export enum InviteStatus {
   EN_ATTENTE = 'EN_ATTENTE',
   ACCEPTE = 'ACCEPTE',
@@ -13,20 +19,20 @@ export enum InviteStatus {
   EXPIRE = 'EXPIRE'
 }
 
-// ✅ Options pour le select d'invitation
+// âœ… Options pour le select d'invitation
 export const INVITE_STATUS_OPTIONS = [
   { value: null, label: 'Aucune invitation', description: 'Merchandiseur actif normal' },
   { value: 'EN_ATTENTE', label: 'En attente', description: 'En attente d\'acceptation' },
-  { value: 'ACCEPTE', label: 'Accepté', description: 'Invitation acceptée' },
-  { value: 'REFUSE', label: 'Refusé', description: 'Invitation refusée' },
-  { value: 'EXPIRE', label: 'Expiré', description: 'Invitation expirée' }
+  { value: 'ACCEPTE', label: 'AcceptÃ©', description: 'Invitation acceptÃ©e' },
+  { value: 'REFUSE', label: 'RefusÃ©', description: 'Invitation refusÃ©e' },
+  { value: 'EXPIRE', label: 'ExpirÃ©', description: 'Invitation expirÃ©e' }
 ];
 
 export interface Merchendiseur {
   magasinNoms?: string[];
   superviseurPrenom?: string;
   superviseurNom?: string;
-  username?: string; // Optionnel si différent de l'email
+  username?: string; // Optionnel si diffÃ©rent de l'email
   password?: string;
   id?: number;
   nom: string;
@@ -48,11 +54,11 @@ export interface Merchendiseur {
     prenom: string;
   } | null;
   enseignes: string[];
-   dateDebutIntegration?: string; // 🆕 Date d'intégration du superviseur
+   dateDebutIntegration?: string; // ðŸ†• Date d'intÃ©gration du superviseur
   dateSortie?: string; 
-  imagePath?: string;  // ou un type détaillé si tu veux
+  imagePath?: string;  // ou un type dÃ©taillÃ© si tu veux
   
-  // ✅ Nouveaux champs pour les invitations
+  // âœ… Nouveaux champs pour les invitations
   inviteStatus?: InviteStatus | null;
   dateInvitation?: string;
 }
@@ -72,12 +78,12 @@ export class MerchendiseurService {
     return this.http.post<Merchendiseur>(`${this.apiUrl}/add`, merchendiseur);
   }
 
-  // Récupérer tous les merchandiseurs
+  // RÃ©cupÃ©rer tous les merchandiseurs
   getAllMerchendiseurs(): Observable<Merchendiseur[]> {
     return this.http.get<Merchendiseur[]>(`${this.apiUrl}/all`);
   }
 
-  // Récupérer un merchandiseur par ID
+  // RÃ©cupÃ©rer un merchandiseur par ID
   getMerchendiseurById(id: number): Observable<Merchendiseur> {
     return this.http.get<Merchendiseur>(`${this.apiUrl}/${id}`);
   }
@@ -92,7 +98,7 @@ export class MerchendiseurService {
     return this.http.get<Merchendiseur[]>(`${this.apiUrl}/nom/${nom}`);
   }
 
-  // Rechercher des merchandiseurs par région
+  // Rechercher des merchandiseurs par rÃ©gion
   getMerchendiseurByRegion(region: string): Observable<Merchendiseur[]> {
     return this.http.get<Merchendiseur[]>(`${this.apiUrl}/region/${region}`);
   }
@@ -107,7 +113,7 @@ export class MerchendiseurService {
     return this.http.get<Merchendiseur[]>(`${this.apiUrl}/superviseur/${superviseurId}`);
   }
 
-  // Mettre à jour le statut d'un merchandiseur
+  // Mettre Ã  jour le statut d'un merchandiseur
   updateStatus(id: number, status: string): Observable<Merchendiseur> {
     return this.http.put<Merchendiseur>(`${this.apiUrl}/status/${id}?status=${status}`, {});
   }

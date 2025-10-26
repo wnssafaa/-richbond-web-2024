@@ -1,8 +1,13 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable, forkJoin, map } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { VisitService, VisitDTO } from './visit.service';
+import { environment } from '../../environments/environment';
 import { PlanificationService, Planification } from './planification.service';
+import { environment } from '../../environments/environment';
 
 // Interface pour les KPIs des visites
 export interface VisitKpiData {
@@ -81,7 +86,7 @@ export interface VisitKpiFilters {
   providedIn: 'root'
 })
 export class VisitKpiService {
-  private apiUrl = 'http://68.183.71.119:8080/api/api/visit-kpis';
+  private apiUrl = `${environment.apiUrl}/visit-kpis`;
 
   constructor(
     private http: HttpClient,
@@ -89,31 +94,31 @@ export class VisitKpiService {
     private planificationService: PlanificationService
   ) {}
 
-  // Récupérer tous les KPIs des visites
+  // RÃ©cupÃ©rer tous les KPIs des visites
   getAllVisitKpis(filters?: VisitKpiFilters): Observable<VisitKpiData> {
     const params = this.buildFilterParams(filters);
     return this.http.get<VisitKpiData>(`${this.apiUrl}`, { params });
   }
 
-  // Récupérer les KPIs par merchandiser
+  // RÃ©cupÃ©rer les KPIs par merchandiser
   getVisitKpisByMerchandiser(merchandiserId: number, filters?: VisitKpiFilters): Observable<VisitMerchandiserKpi> {
     const params = this.buildFilterParams(filters);
     return this.http.get<VisitMerchandiserKpi>(`${this.apiUrl}/merchandiser/${merchandiserId}`, { params });
   }
 
-  // Récupérer les KPIs par enseigne
+  // RÃ©cupÃ©rer les KPIs par enseigne
   getVisitKpisByEnseigne(enseigne: string, filters?: VisitKpiFilters): Observable<VisitKpiData> {
     const params = this.buildFilterParams({ ...filters, enseigne });
     return this.http.get<VisitKpiData>(`${this.apiUrl}/enseigne/${enseigne}`, { params });
   }
 
-  // Récupérer les KPIs par marque
+  // RÃ©cupÃ©rer les KPIs par marque
   getVisitKpisByMarque(marque: string, filters?: VisitKpiFilters): Observable<VisitKpiData> {
     const params = this.buildFilterParams({ ...filters, marque });
     return this.http.get<VisitKpiData>(`${this.apiUrl}/marque/${marque}`, { params });
   }
 
-  // Récupérer les KPIs par région
+  // RÃ©cupÃ©rer les KPIs par rÃ©gion
   getVisitKpisByRegion(region: string, filters?: VisitKpiFilters): Observable<VisitKpiData> {
     const params = this.buildFilterParams({ ...filters, region });
     return this.http.get<VisitKpiData>(`${this.apiUrl}/region/${region}`, { params });
@@ -129,17 +134,17 @@ export class VisitKpiService {
     );
   }
 
-  // Récupérer les enseignes disponibles
+  // RÃ©cupÃ©rer les enseignes disponibles
   getAvailableEnseignes(): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiUrl}/enseignes`);
   }
 
-  // Récupérer les marques disponibles
+  // RÃ©cupÃ©rer les marques disponibles
   getAvailableMarques(): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiUrl}/marques`);
   }
 
-  // Récupérer les régions disponibles
+  // RÃ©cupÃ©rer les rÃ©gions disponibles
   getAvailableRegions(): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiUrl}/regions`);
   }
@@ -162,7 +167,7 @@ export class VisitKpiService {
     });
   }
 
-  // Construire les paramètres de filtre
+  // Construire les paramÃ¨tres de filtre
   private buildFilterParams(filters?: VisitKpiFilters): HttpParams {
     let params = new HttpParams();
     
@@ -193,46 +198,46 @@ export class VisitKpiService {
     return params;
   }
 
-  // Traiter les données des visites localement
+  // Traiter les donnÃ©es des visites localement
   private processVisitData(visits: VisitDTO[], planifications: Planification[], filters?: VisitKpiFilters): VisitKpiData {
     // Appliquer les filtres
     let filteredVisits = this.applyFilters(visits, planifications, filters);
     let filteredPlanifications = this.applyPlanificationFilters(planifications, filters);
 
-    // Calculer les métriques de base
+    // Calculer les mÃ©triques de base
     const totalVisits = filteredVisits.length;
     const completedVisits = filteredVisits.filter(v => this.isVisitComplete(v)).length;
     const pendingVisits = totalVisits - completedVisits;
     const completionRate = totalVisits > 0 ? (completedVisits / totalVisits) * 100 : 0;
 
-    // Calculer les métriques de facing
+    // Calculer les mÃ©triques de facing
     const facingData = this.calculateFacingMetrics(filteredVisits);
     
-    // Calculer les métriques de prix et stock
+    // Calculer les mÃ©triques de prix et stock
     const priceStockData = this.calculatePriceStockMetrics(filteredVisits);
 
-    // Calculer les métriques par enseigne
+    // Calculer les mÃ©triques par enseigne
     const visitsByEnseigne = this.calculateVisitsByEnseigne(filteredVisits, filteredPlanifications);
     
-    // Calculer les métriques par marque
+    // Calculer les mÃ©triques par marque
     const visitsByMarque = this.calculateVisitsByMarque(filteredVisits, filteredPlanifications);
 
-    // Calculer les métriques par merchandiser
+    // Calculer les mÃ©triques par merchandiser
     const visitsByMerchandiser = this.calculateVisitsByMerchandiser(filteredVisits, filteredPlanifications);
 
-    // Calculer les métriques par région
+    // Calculer les mÃ©triques par rÃ©gion
     const visitsByRegion = this.calculateVisitsByRegion(filteredVisits, filteredPlanifications);
 
-    // Calculer les métriques par statut
+    // Calculer les mÃ©triques par statut
     const visitsByStatus = this.calculateVisitsByStatus(filteredVisits, filteredPlanifications);
 
-    // Calculer la durée moyenne des visites
+    // Calculer la durÃ©e moyenne des visites
     const averageVisitDuration = this.calculateAverageVisitDuration(filteredVisits);
 
-    // Calculer les magasins les plus visités
+    // Calculer les magasins les plus visitÃ©s
     const mostVisitedStores = this.calculateMostVisitedStores(filteredVisits, filteredPlanifications);
 
-    // Calculer les visites récentes
+    // Calculer les visites rÃ©centes
     const recentVisits = this.calculateRecentVisits(filteredVisits, filteredPlanifications);
 
     return {
@@ -281,7 +286,7 @@ export class VisitKpiService {
         return false;
       }
 
-      // Filtre par région
+      // Filtre par rÃ©gion
       if (filters.region && planning.magasin.region !== filters.region) {
         return false;
       }
@@ -310,7 +315,7 @@ export class VisitKpiService {
         return false;
       }
 
-      // Filtre par région
+      // Filtre par rÃ©gion
       if (filters.region && planning.magasin.region !== filters.region) {
         return false;
       }
@@ -324,7 +329,7 @@ export class VisitKpiService {
     });
   }
 
-  // Vérifier si une visite contient une marque spécifique
+  // VÃ©rifier si une visite contient une marque spÃ©cifique
   private visitHasMarque(visit: VisitDTO, marque: string): boolean {
     return visit.produits.some(produit => 
       produit.categorie?.toLowerCase().includes(marque.toLowerCase()) ||
@@ -332,7 +337,7 @@ export class VisitKpiService {
     );
   }
 
-  // Vérifier si une planification contient une marque spécifique
+  // VÃ©rifier si une planification contient une marque spÃ©cifique
   private planningHasMarque(planning: Planification, marque: string): boolean {
     return planning.magasin.marques && 
            Object.keys(planning.magasin.marques).some(key => 
@@ -340,7 +345,7 @@ export class VisitKpiService {
            );
   }
 
-  // Calculer les métriques de facing
+  // Calculer les mÃ©triques de facing
   private calculateFacingMetrics(visits: VisitDTO[]): { average: number; total: number } {
     const totalFacing = visits.reduce((sum, visit) => sum + visit.nombreFacings, 0);
     const averageFacing = visits.length > 0 ? totalFacing / visits.length : 0;
@@ -351,7 +356,7 @@ export class VisitKpiService {
     };
   }
 
-  // Calculer les métriques de prix et stock
+  // Calculer les mÃ©triques de prix et stock
   private calculatePriceStockMetrics(visits: VisitDTO[]): { priceAccuracy: number; stockAccuracy: number } {
     let priceAccuracySum = 0;
     let stockAccuracySum = 0;
@@ -359,7 +364,7 @@ export class VisitKpiService {
 
     visits.forEach(visit => {
       if (visit.prixNormal > 0 && visit.prixPromotionnel >= 0) {
-        // Calculer la précision des prix (basé sur la cohérence des données)
+        // Calculer la prÃ©cision des prix (basÃ© sur la cohÃ©rence des donnÃ©es)
         const priceAccuracy = visit.prixPromotionnel > 0 ? 
           (visit.prixPromotionnel / visit.prixNormal) * 100 : 100;
         priceAccuracySum += Math.min(priceAccuracy, 100);
@@ -367,7 +372,7 @@ export class VisitKpiService {
       }
 
       if (visit.niveauStock >= 0) {
-        // Calculer la précision du stock (basé sur la cohérence des données)
+        // Calculer la prÃ©cision du stock (basÃ© sur la cohÃ©rence des donnÃ©es)
         const stockAccuracy = visit.niveauStock > 0 ? 100 : 0;
         stockAccuracySum += stockAccuracy;
       }
@@ -420,7 +425,7 @@ export class VisitKpiService {
 
       const merchandiserId = planning.merchandiser.id;
       const merchandiserName = `${planning.merchandiser.nom} ${planning.merchandiser.prenom || ''}`.trim();
-      const region = planning.magasin.region || 'Non définie';
+      const region = planning.magasin.region || 'Non dÃ©finie';
 
       if (!merchandiserMap.has(merchandiserId)) {
         merchandiserMap.set(merchandiserId, {
@@ -464,7 +469,7 @@ export class VisitKpiService {
     return Array.from(merchandiserMap.values());
   }
 
-  // Calculer les visites par région
+  // Calculer les visites par rÃ©gion
   private calculateVisitsByRegion(visits: VisitDTO[], planifications: Planification[]): { [region: string]: number } {
     const regionCount: { [region: string]: number } = {};
     
@@ -494,7 +499,7 @@ export class VisitKpiService {
     return statusCount;
   }
 
-  // Calculer la durée moyenne des visites
+  // Calculer la durÃ©e moyenne des visites
   private calculateAverageVisitDuration(visits: VisitDTO[]): number {
     let totalDuration = 0;
     let validVisits = 0;
@@ -514,7 +519,7 @@ export class VisitKpiService {
     return validVisits > 0 ? Math.round((totalDuration / validVisits) * 10) / 10 : 0;
   }
 
-  // Calculer les magasins les plus visités
+  // Calculer les magasins les plus visitÃ©s
   private calculateMostVisitedStores(visits: VisitDTO[], planifications: Planification[]): StoreVisitStats[] {
     const storeMap = new Map<number, StoreVisitStats>();
 
@@ -524,8 +529,8 @@ export class VisitKpiService {
 
       const storeId = planning.magasin.id;
       const storeName = planning.magasin.nom;
-      const enseigne = planning.magasin.enseigne || 'Non définie';
-      const region = planning.magasin.region || 'Non définie';
+      const enseigne = planning.magasin.enseigne || 'Non dÃ©finie';
+      const region = planning.magasin.region || 'Non dÃ©finie';
 
       if (!storeMap.has(storeId)) {
         storeMap.set(storeId, {
@@ -550,7 +555,7 @@ export class VisitKpiService {
 
       store.averageFacingCount += visit.nombreFacings;
       
-      // Mettre à jour la dernière visite
+      // Mettre Ã  jour la derniÃ¨re visite
       const visitDate = new Date(visit.heureArrivee);
       if (!store.lastVisitDate || visitDate > new Date(store.lastVisitDate)) {
         store.lastVisitDate = visitDate.toISOString().split('T')[0];
@@ -570,7 +575,7 @@ export class VisitKpiService {
       .slice(0, 10); // Top 10
   }
 
-  // Calculer les visites récentes
+  // Calculer les visites rÃ©centes
   private calculateRecentVisits(visits: VisitDTO[], planifications: Planification[]): RecentVisitStats[] {
     return visits
       .map(visit => {
@@ -596,10 +601,10 @@ export class VisitKpiService {
       })
       .filter(visit => visit !== null)
       .sort((a, b) => new Date(b!.visitDate).getTime() - new Date(a!.visitDate).getTime())
-      .slice(0, 20) as RecentVisitStats[]; // 20 visites récentes
+      .slice(0, 20) as RecentVisitStats[]; // 20 visites rÃ©centes
   }
 
-  // Calculer la durée d'une visite
+  // Calculer la durÃ©e d'une visite
   private calculateVisitDuration(visit: VisitDTO): string {
     if (!visit.heureArrivee || !visit.heureDepart) return '0h 0m';
     
@@ -615,7 +620,7 @@ export class VisitKpiService {
     return `${hours}h ${minutes}m`;
   }
 
-  // Vérifier si une visite est complète
+  // VÃ©rifier si une visite est complÃ¨te
   private isVisitComplete(visit: VisitDTO): boolean {
     return !!(
       visit.heureArrivee &&
@@ -629,3 +634,4 @@ export class VisitKpiService {
     );
   }
 }
+

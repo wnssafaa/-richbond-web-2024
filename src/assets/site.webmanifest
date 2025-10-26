@@ -9,13 +9,13 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "assets/richbond-logo.png",
+      "src": "richbond-logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "assets/richbond-logo.png",
+      "src": "richbond-logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"

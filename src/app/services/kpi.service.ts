@@ -1,13 +1,23 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { Observable, of, forkJoin, map, combineLatest, tap, catchError } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { PlanificationService, Planification, StatutVisite } from './planification.service';
+import { environment } from '../../environments/environment';
 import { MerchendiseurService, Merchendiseur } from './merchendiseur.service';
+import { environment } from '../../environments/environment';
 import { VisitService, VisitDTO } from './visit.service';
+import { environment } from '../../environments/environment';
 import { UserService, User } from './user.service';
+import { environment } from '../../environments/environment';
 import { SuperveseurService, Superviseur } from './superveseur.service';
+import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 import { Region } from '../enum/Region';
+import { environment } from '../../environments/environment';
 
 export interface MerchandiserAssignmentTracking {
   merchandiserId: number;
@@ -99,11 +109,11 @@ export class KpiService {
     private authService: AuthService
   ) { }
 
-  // Méthode utilitaire pour le cache
+  // MÃ©thode utilitaire pour le cache
   private getCachedData<T>(key: string, ttl: number = this.CACHE_TTL): T | null {
     const cached = this.cache.get(key);
     if (cached && Date.now() - cached.timestamp < ttl) {
-      console.log(`💾 Cache hit pour ${key}`);
+      console.log(`ðŸ’¾ Cache hit pour ${key}`);
       return cached.data;
     }
     return null;
@@ -115,15 +125,15 @@ export class KpiService {
       timestamp: Date.now(),
       ttl
     });
-    console.log(`💾 Cache mis à jour pour ${key}`);
+    console.log(`ðŸ’¾ Cache mis Ã  jour pour ${key}`);
   }
 
   private clearCache(): void {
     this.cache.clear();
-    console.log('🗑️ Cache vidé');
+    console.log('ðŸ—‘ï¸ Cache vidÃ©');
   }
 
-  // ✅ KPI 1: Suivi des Affectations par Merchandiser (OPTIMISÉ AVEC CACHE)
+  // âœ… KPI 1: Suivi des Affectations par Merchandiser (OPTIMISÃ‰ AVEC CACHE)
   getAssignmentTracking(): Observable<MerchandiserAssignmentTracking[]> {
     const cacheKey = 'assignmentTracking';
     const cached = this.getCachedData<MerchandiserAssignmentTracking[]>(cacheKey);
@@ -132,27 +142,27 @@ export class KpiService {
       return of(cached);
     }
     
-    console.log('🔄 Récupération des données pour KPI 1...');
+    console.log('ðŸ”„ RÃ©cupÃ©ration des donnÃ©es pour KPI 1...');
     
     return forkJoin({
       planifications: this.getCachedPlanifications(),
       merchandisers: this.getCachedMerchandisers()
     }).pipe(
       map(({ planifications, merchandisers }) => {
-        console.log('📊 Données sources KPI 1:', {
+        console.log('ðŸ“Š DonnÃ©es sources KPI 1:', {
           planifications: planifications.length,
           merchandisers: merchandisers.length
         });
         
         const result = this.calculateAssignmentTracking(planifications, merchandisers);
         this.setCachedData(cacheKey, result);
-        console.log('✅ Calcul KPI 1 terminé:', result);
+        console.log('âœ… Calcul KPI 1 terminÃ©:', result);
         return result;
       })
     );
   }
 
-  // Méthodes de cache pour les données sources avec gestion d'erreur
+  // MÃ©thodes de cache pour les donnÃ©es sources avec gestion d'erreur
   private getCachedPlanifications(): Observable<Planification[]> {
     const cached = this.getCachedData<Planification[]>('planifications', 10 * 60 * 1000); // 10 minutes
     if (cached) return of(cached);
@@ -160,7 +170,7 @@ export class KpiService {
     return this.planificationService.getAllPlanifications().pipe(
       tap(data => this.setCachedData('planifications', data, 10 * 60 * 1000)),
       catchError(error => {
-        console.warn('⚠️ Erreur API planifications, utilisation des données mock:', error);
+        console.warn('âš ï¸ Erreur API planifications, utilisation des donnÃ©es mock:', error);
         const mockData = this.getMockPlanifications();
         this.setCachedData('planifications', mockData, 10 * 60 * 1000);
         return of(mockData);
@@ -175,7 +185,7 @@ export class KpiService {
     return this.merchendiseurService.getAllMerchendiseurs().pipe(
       tap(data => this.setCachedData('merchandisers', data, 30 * 60 * 1000)),
       catchError(error => {
-        console.warn('⚠️ Erreur API merchandisers, utilisation des données mock:', error);
+        console.warn('âš ï¸ Erreur API merchandisers, utilisation des donnÃ©es mock:', error);
         const mockData = this.getMockMerchandisers();
         this.setCachedData('merchandisers', mockData, 30 * 60 * 1000);
         return of(mockData);
@@ -190,7 +200,7 @@ export class KpiService {
     return this.visitService.getAllVisits().pipe(
       tap(data => this.setCachedData('visits', data, 5 * 60 * 1000)),
       catchError(error => {
-        console.warn('⚠️ Erreur API visits, utilisation des données mock:', error);
+        console.warn('âš ï¸ Erreur API visits, utilisation des donnÃ©es mock:', error);
         const mockData = this.getMockVisits();
         this.setCachedData('visits', mockData, 5 * 60 * 1000);
         return of(mockData);
@@ -205,7 +215,7 @@ export class KpiService {
     return this.userService.getUsers().pipe(
       tap(data => this.setCachedData('users', data, 30 * 60 * 1000)),
       catchError(error => {
-        console.warn('⚠️ Erreur API users, utilisation des données mock:', error);
+        console.warn('âš ï¸ Erreur API users, utilisation des donnÃ©es mock:', error);
         const mockData = this.getMockUsers();
         this.setCachedData('users', mockData, 30 * 60 * 1000);
         return of(mockData);
@@ -252,7 +262,7 @@ export class KpiService {
           break;
       }
 
-      // Mettre à jour la dernière activité
+      // Mettre Ã  jour la derniÃ¨re activitÃ©
       if (new Date(planification.dateVisite) > new Date(stats.lastActivity)) {
         stats.lastActivity = planification.dateVisite;
       }
@@ -265,12 +275,12 @@ export class KpiService {
       color: string;
     }>();
 
-    // Initialiser les statuts avec les libellés français
-    statusStats.set('PLANIFIEE', { count: 0, label: 'Planifié', color: '#3498db' });
+    // Initialiser les statuts avec les libellÃ©s franÃ§ais
+    statusStats.set('PLANIFIEE', { count: 0, label: 'PlanifiÃ©', color: '#3498db' });
     statusStats.set('EN_COURS', { count: 0, label: 'En cours', color: '#f39c12' });
-    statusStats.set('EFFECTUEE', { count: 0, label: 'Terminé', color: '#27ae60' });
-    statusStats.set('REPLANIFIEE', { count: 0, label: 'Replanifié', color: '#9b59b6' });
-    statusStats.set('NON_ACCOMPLIE', { count: 0, label: 'Non réalisé', color: '#e74c3c' });
+    statusStats.set('EFFECTUEE', { count: 0, label: 'TerminÃ©', color: '#27ae60' });
+    statusStats.set('REPLANIFIEE', { count: 0, label: 'ReplanifiÃ©', color: '#9b59b6' });
+    statusStats.set('NON_ACCOMPLIE', { count: 0, label: 'Non rÃ©alisÃ©', color: '#e74c3c' });
 
     // Compter les planifications par statut
     planifications.forEach(planification => {
@@ -281,7 +291,7 @@ export class KpiService {
       }
     });
 
-    // Convertir en array de résultats pour l'affichage
+    // Convertir en array de rÃ©sultats pour l'affichage
     const result: MerchandiserAssignmentTracking[] = [];
     statusStats.forEach((stats, statusKey) => {
       result.push({
@@ -298,7 +308,7 @@ export class KpiService {
       });
     });
 
-    // Trier par ordre logique : En cours, Planifié, Terminé, Replanifié, Non réalisé
+    // Trier par ordre logique : En cours, PlanifiÃ©, TerminÃ©, ReplanifiÃ©, Non rÃ©alisÃ©
     const order = ['EN_COURS', 'PLANIFIEE', 'EFFECTUEE', 'REPLANIFIEE', 'NON_ACCOMPLIE'];
     return result.sort((a, b) => {
       const aOrder = order.indexOf(this.getStatusKeyById(a.merchandiserId));
@@ -345,16 +355,16 @@ export class KpiService {
   }
 
   private calculateAverageCompletionTime(completedCount: number): string {
-    // Simulation d'un temps moyen basé sur le nombre de tâches complétées
+    // Simulation d'un temps moyen basÃ© sur le nombre de tÃ¢ches complÃ©tÃ©es
     const baseTime = 2.5; // 2h30 de base
-    const variation = Math.min(completedCount * 0.1, 1); // Variation jusqu'à 1h
+    const variation = Math.min(completedCount * 0.1, 1); // Variation jusqu'Ã  1h
     const totalMinutes = Math.round((baseTime + variation) * 60);
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     return `${hours}h ${minutes}m`;
   }
 
-  // ✅ KPI 2: Taux d'Utilisation Globale (OPTIMISÉ AVEC CACHE)
+  // âœ… KPI 2: Taux d'Utilisation Globale (OPTIMISÃ‰ AVEC CACHE)
   getAppUsageStats(): Observable<AppUsageStats> {
     const cacheKey = 'appUsageStats';
     const cached = this.getCachedData<AppUsageStats>(cacheKey);
@@ -385,7 +395,7 @@ export class KpiService {
     return this.superviseurService.getAll().pipe(
       tap(data => this.setCachedData('superviseurs', data, 30 * 60 * 1000)),
       catchError(error => {
-        console.warn('⚠️ Erreur API superviseurs, utilisation des données mock:', error);
+        console.warn('âš ï¸ Erreur API superviseurs, utilisation des donnÃ©es mock:', error);
         const mockData = this.getMockSuperviseurs();
         this.setCachedData('superviseurs', mockData, 30 * 60 * 1000);
         return of(mockData);
@@ -399,10 +409,10 @@ export class KpiService {
                        superviseurs.filter(s => s.status === 'ACTIVE').length + 
                        merchandisers.filter(m => m.status === 'ACTIVE').length;
 
-    // Calculer les fonctionnalités les plus utilisées
+    // Calculer les fonctionnalitÃ©s les plus utilisÃ©es
     const featureUsage = this.calculateFeatureUsage(planifications, visits);
     
-    // Calculer les statistiques de connexion (simulation basée sur l'activité)
+    // Calculer les statistiques de connexion (simulation basÃ©e sur l'activitÃ©)
     const loginStats = this.calculateLoginStats(planifications, visits);
 
     return {
@@ -438,7 +448,7 @@ export class KpiService {
     const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
     const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    // Estimation basée sur l'activité récente
+    // Estimation basÃ©e sur l'activitÃ© rÃ©cente
     const recentActivity = [
       ...planifications.map(p => ({ date: p.dateVisite })),
       ...visits.map(v => ({ date: v.heureArrivee }))
@@ -448,9 +458,9 @@ export class KpiService {
     }).length;
 
     return {
-      today: Math.floor(recentActivity * 0.2), // 20% de l'activité récente
-      thisWeek: Math.floor(recentActivity * 0.6), // 60% de l'activité récente
-      thisMonth: Math.floor(recentActivity * 1.2) // 120% de l'activité récente
+      today: Math.floor(recentActivity * 0.2), // 20% de l'activitÃ© rÃ©cente
+      thisWeek: Math.floor(recentActivity * 0.6), // 60% de l'activitÃ© rÃ©cente
+      thisMonth: Math.floor(recentActivity * 1.2) // 120% de l'activitÃ© rÃ©cente
     };
   }
 
@@ -471,7 +481,7 @@ export class KpiService {
     return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
   }
 
-  // ✅ KPI 3: Finalisation des Rapports par Merchandiser (OPTIMISÉ AVEC CACHE)
+  // âœ… KPI 3: Finalisation des Rapports par Merchandiser (OPTIMISÃ‰ AVEC CACHE)
   getReportCompletionStats(): Observable<ReportCompletionStats[]> {
     const cacheKey = 'reportCompletionStats';
     const cached = this.getCachedData<ReportCompletionStats[]>(cacheKey);
@@ -504,7 +514,7 @@ export class KpiService {
       reportCount: number;
     }>();
 
-    // Calculer les statistiques par merchandiser basées sur les visites
+    // Calculer les statistiques par merchandiser basÃ©es sur les visites
     visits.forEach(visit => {
       if (!visit.planning?.merchandiser?.id) return;
       
@@ -525,7 +535,7 @@ export class KpiService {
       const stats = merchandiserStats.get(merchId)!;
       stats.totalReports++;
 
-      // Déterminer si le rapport est complet
+      // DÃ©terminer si le rapport est complet
       const isComplete = this.isVisitComplete(visit);
       if (isComplete) {
         stats.completedReports++;
@@ -538,7 +548,7 @@ export class KpiService {
       } else {
         stats.incompleteReports++;
         
-        // Déterminer le statut selon la date
+        // DÃ©terminer le statut selon la date
         const visitDate = new Date(visit.heureArrivee);
         const today = new Date();
         const daysDiff = (today.getTime() - visitDate.getTime()) / (1000 * 60 * 60 * 24);
@@ -552,7 +562,7 @@ export class KpiService {
         }
       }
 
-      // Mettre à jour les statistiques mensuelles
+      // Mettre Ã  jour les statistiques mensuelles
       this.updateMonthlyStats(stats.reportsByMonth, visit, isComplete);
     });
 
@@ -575,7 +585,7 @@ export class KpiService {
       return {
         merchandiserId: merchandiser.id!,
         merchandiserName: `${merchandiser.nom} ${merchandiser.prenom}`,
-        region: merchandiser.region || 'Non spécifiée',
+        region: merchandiser.region || 'Non spÃ©cifiÃ©e',
         totalReports: stats.totalReports,
         completedReports: stats.completedReports,
         incompleteReports: stats.incompleteReports,
@@ -588,7 +598,7 @@ export class KpiService {
   }
 
   private isVisitComplete(visit: VisitDTO): boolean {
-    // Vérifier les champs obligatoires pour considérer un rapport comme complet
+    // VÃ©rifier les champs obligatoires pour considÃ©rer un rapport comme complet
     const hasRequiredFields = visit.heureArrivee && 
                              visit.heureDepart && 
                              visit.nombreFacings !== undefined && 
@@ -600,7 +610,7 @@ export class KpiService {
       return false;
     }
     
-    // Vérifier si au moins une image a été prise
+    // VÃ©rifier si au moins une image a Ã©tÃ© prise
     if (!visit.images || visit.images.length === 0) {
       return false;
     }
@@ -621,13 +631,13 @@ export class KpiService {
   }
 
   private initializeMonthlyStats(): Array<{month: string; completed: number; total: number}> {
-    const months = ['Oct 2023', 'Nov 2023', 'Déc 2023', 'Jan 2024'];
+    const months = ['Oct 2023', 'Nov 2023', 'DÃ©c 2023', 'Jan 2024'];
     return months.map(month => ({ month, completed: 0, total: 0 }));
   }
 
   private updateMonthlyStats(monthlyStats: Array<{month: string; completed: number; total: number}>, visit: VisitDTO, isComplete: boolean) {
     const visitDate = new Date(visit.heureArrivee);
-    const monthNames = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+    const monthNames = ['Jan', 'FÃ©v', 'Mar', 'Avr', 'Mai', 'Juin', 'Jul', 'AoÃ»', 'Sep', 'Oct', 'Nov', 'DÃ©c'];
     const monthKey = `${monthNames[visitDate.getMonth()]} ${visitDate.getFullYear()}`;
     
     const monthStat = monthlyStats.find(m => m.month === monthKey);
@@ -639,7 +649,7 @@ export class KpiService {
     }
   }
 
-  // ✅ Méthode principale pour récupérer toutes les données KPI depuis le backend
+  // âœ… MÃ©thode principale pour rÃ©cupÃ©rer toutes les donnÃ©es KPI depuis le backend
   getAllKpiData(): Observable<KPIData> {
     const cacheKey = 'allKpiData';
     const cached = this.getCachedData<KPIData>(cacheKey);
@@ -651,11 +661,11 @@ export class KpiService {
     // Essayer d'abord l'API backend
     return this.http.get<KPIData>(`${this.apiUrl}/kpis`).pipe(
       tap(data => {
-        console.log('✅ Données KPI reçues du backend:', data);
+        console.log('âœ… DonnÃ©es KPI reÃ§ues du backend:', data);
         this.setCachedData(cacheKey, data);
       }),
       catchError(error => {
-        console.warn('⚠️ API KPI backend non disponible, calcul local...', error);
+        console.warn('âš ï¸ API KPI backend non disponible, calcul local...', error);
         // Fallback sur le calcul local
         return forkJoin({
           assignmentTracking: this.getAssignmentTracking(),
@@ -676,7 +686,7 @@ export class KpiService {
     );
   }
 
-  // ✅ Méthode pour récupérer les KPIs avec filtres depuis le backend
+  // âœ… MÃ©thode pour rÃ©cupÃ©rer les KPIs avec filtres depuis le backend
   getAllKpiDataWithFilters(filters: KPIFilters = {}): Observable<KPIData> {
     const cacheKey = `kpiData_${JSON.stringify(filters)}`;
     const cached = this.getCachedData<KPIData>(cacheKey, 2 * 60 * 1000);
@@ -685,7 +695,7 @@ export class KpiService {
       return of(cached);
     }
 
-    // Construire les paramètres de requête
+    // Construire les paramÃ¨tres de requÃªte
     const params = new URLSearchParams();
     if (filters.dateRange?.startDate) {
       params.append('startDate', filters.dateRange.startDate);
@@ -708,11 +718,11 @@ export class KpiService {
 
     return this.http.get<KPIData>(url).pipe(
       tap(data => {
-        console.log('✅ Données KPI filtrées reçues du backend:', data);
+        console.log('âœ… DonnÃ©es KPI filtrÃ©es reÃ§ues du backend:', data);
         this.setCachedData(cacheKey, data, 2 * 60 * 1000);
       }),
       catchError(error => {
-        console.warn('⚠️ API KPI backend avec filtres non disponible, calcul local...', error);
+        console.warn('âš ï¸ API KPI backend avec filtres non disponible, calcul local...', error);
         // Fallback sur le calcul local avec filtres
         return forkJoin({
           assignmentTracking: this.getAssignmentTrackingWithFilters(filters),
@@ -733,14 +743,14 @@ export class KpiService {
     );
   }
 
-  // Méthode pour rafraîchir les données KPI (vide le cache)
+  // MÃ©thode pour rafraÃ®chir les donnÃ©es KPI (vide le cache)
   refreshKpiData(): Observable<KPIData> {
-    console.log('🔄 Rafraîchissement des données KPI...');
+    console.log('ðŸ”„ RafraÃ®chissement des donnÃ©es KPI...');
     this.clearCache();
     return this.getAllKpiData();
   }
 
-  // ✅ Méthodes avec filtres temporels
+  // âœ… MÃ©thodes avec filtres temporels
   // getAllKpiDataWithFilters(filters: KPIFilters = {}): Observable<KPIData> {
   //   const cacheKey = `kpiData_${JSON.stringify(filters)}`;
   //   const cached = this.getCachedData<KPIData>(cacheKey, 2 * 60 * 1000); // 2 minutes pour les filtres
@@ -796,7 +806,7 @@ export class KpiService {
         let filteredPlanifications = this.applyDateFilter(planifications, filters.dateRange);
         let filteredVisits = this.applyDateFilter(visits, filters.dateRange);
         
-        // Filtrer par région si spécifiée
+        // Filtrer par rÃ©gion si spÃ©cifiÃ©e
         if (filters.region) {
           filteredPlanifications = this.applyRegionFilterToPlanifications(filteredPlanifications, filters.region);
           filteredVisits = this.applyRegionFilterToVisits(filteredVisits, filters.region);
@@ -824,13 +834,13 @@ export class KpiService {
     );
   }
 
-  // ✅ Méthodes de filtrage spécialisées
+  // âœ… MÃ©thodes de filtrage spÃ©cialisÃ©es
   private applyDateFilter<T extends { dateVisite?: string; heureArrivee?: string }>(items: T[], dateRange?: { startDate: string; endDate: string }): T[] {
     if (!dateRange || (!dateRange.startDate && !dateRange.endDate)) return items;
     
     const startDate = dateRange.startDate ? new Date(dateRange.startDate) : new Date('1900-01-01');
     const endDate = dateRange.endDate ? new Date(dateRange.endDate) : new Date();
-    endDate.setHours(23, 59, 59, 999); // Fin de journée
+    endDate.setHours(23, 59, 59, 999); // Fin de journÃ©e
     
     return items.filter(item => {
       const itemDate = new Date(item.dateVisite || item.heureArrivee || '');
@@ -876,7 +886,7 @@ export class KpiService {
     return planifications.filter(planification => planification.statut === status);
   }
 
-  // ✅ Méthodes mock simplifiées pour fallback quand l'API n'est pas disponible
+  // âœ… MÃ©thodes mock simplifiÃ©es pour fallback quand l'API n'est pas disponible
   private getMockPlanifications(): Planification[] {
     return [];
   }
@@ -897,7 +907,7 @@ export class KpiService {
     return [];
   }
 
-  // Méthodes publiques pour les filtres par région (maintenues pour compatibilité)
+  // MÃ©thodes publiques pour les filtres par rÃ©gion (maintenues pour compatibilitÃ©)
   getAssignmentTrackingByRegion(region: string): Observable<MerchandiserAssignmentTracking[]> {
     return this.getAllKpiDataWithFilters({ region }).pipe(
       map(data => data.assignmentTracking)
@@ -910,7 +920,7 @@ export class KpiService {
     );
   }
 
-  // ✅ Méthodes pour récupérer les données réelles depuis le backend
+  // âœ… MÃ©thodes pour rÃ©cupÃ©rer les donnÃ©es rÃ©elles depuis le backend
   getRealMagasinsData(): Observable<any[]> {
     const cacheKey = 'realMagasinsData';
     const cached = this.getCachedData<any[]>(cacheKey, 10 * 60 * 1000); // 10 minutes
@@ -921,11 +931,11 @@ export class KpiService {
 
     return this.http.get<any[]>(`${this.apiUrl}/magasins`).pipe(
       tap(data => {
-        console.log('✅ Données magasins réelles reçues:', data);
+        console.log('âœ… DonnÃ©es magasins rÃ©elles reÃ§ues:', data);
         this.setCachedData(cacheKey, data, 10 * 60 * 1000);
       }),
       catchError(error => {
-        console.warn('⚠️ Erreur récupération magasins:', error);
+        console.warn('âš ï¸ Erreur rÃ©cupÃ©ration magasins:', error);
         return of([]);
       })
     );
@@ -941,11 +951,11 @@ export class KpiService {
 
     return this.http.get<Planification[]>(`${this.apiUrl}/planifications`).pipe(
       tap(data => {
-        console.log('✅ Données planifications réelles reçues:', data);
+        console.log('âœ… DonnÃ©es planifications rÃ©elles reÃ§ues:', data);
         this.setCachedData(cacheKey, data, 5 * 60 * 1000);
       }),
       catchError(error => {
-        console.warn('⚠️ Erreur récupération planifications:', error);
+        console.warn('âš ï¸ Erreur rÃ©cupÃ©ration planifications:', error);
         return of([]);
       })
     );
@@ -961,11 +971,11 @@ export class KpiService {
 
     return this.http.get<VisitDTO[]>(`${this.apiUrl}/visits`).pipe(
       tap(data => {
-        console.log('✅ Données visites réelles reçues:', data);
+        console.log('âœ… DonnÃ©es visites rÃ©elles reÃ§ues:', data);
         this.setCachedData(cacheKey, data, 5 * 60 * 1000);
       }),
       catchError(error => {
-        console.warn('⚠️ Erreur récupération visites:', error);
+        console.warn('âš ï¸ Erreur rÃ©cupÃ©ration visites:', error);
         return of([]);
       })
     );
@@ -981,11 +991,11 @@ export class KpiService {
 
     return this.http.get<Merchendiseur[]>(`${this.apiUrl}/merchendiseurs`).pipe(
       tap(data => {
-        console.log('✅ Données merchandisers réelles reçues:', data);
+        console.log('âœ… DonnÃ©es merchandisers rÃ©elles reÃ§ues:', data);
         this.setCachedData(cacheKey, data, 30 * 60 * 1000);
       }),
       catchError(error => {
-        console.warn('⚠️ Erreur récupération merchandisers:', error);
+        console.warn('âš ï¸ Erreur rÃ©cupÃ©ration merchandisers:', error);
         return of([]);
       })
     );
@@ -1001,19 +1011,19 @@ export class KpiService {
 
     return this.http.get<User[]>(`${this.apiUrl}/users`).pipe(
       tap(data => {
-        console.log('✅ Données utilisateurs réelles reçues:', data);
+        console.log('âœ… DonnÃ©es utilisateurs rÃ©elles reÃ§ues:', data);
         this.setCachedData(cacheKey, data, 30 * 60 * 1000);
       }),
       catchError(error => {
-        console.warn('⚠️ Erreur récupération utilisateurs:', error);
+        console.warn('âš ï¸ Erreur rÃ©cupÃ©ration utilisateurs:', error);
         return of([]);
       })
     );
   }
 
-  // ✅ Méthode pour calculer les KPIs avec des données réelles
+  // âœ… MÃ©thode pour calculer les KPIs avec des donnÃ©es rÃ©elles
   calculateRealKpis(): Observable<KPIData> {
-    console.log('🔄 Calcul des KPIs avec données réelles...');
+    console.log('ðŸ”„ Calcul des KPIs avec donnÃ©es rÃ©elles...');
     
     return forkJoin({
       planifications: this.getRealPlanificationsData(),
@@ -1022,14 +1032,14 @@ export class KpiService {
       users: this.getRealUsersData()
     }).pipe(
       map(({ planifications, visits, merchandisers, users }) => {
-        console.log('📊 Données réelles reçues:', {
+        console.log('ðŸ“Š DonnÃ©es rÃ©elles reÃ§ues:', {
           planifications: planifications.length,
           visits: visits.length,
           merchandisers: merchandisers.length,
           users: users.length
         });
 
-        // Calculer les KPIs avec les vraies données
+        // Calculer les KPIs avec les vraies donnÃ©es
         const assignmentTracking = this.calculateAssignmentTracking(planifications, merchandisers);
         const appUsageStats = this.calculateAppUsageStats(users, [], merchandisers, planifications, visits);
         const reportCompletion = this.calculateReportCompletionStats(visits, merchandisers, planifications);
@@ -1043,3 +1053,4 @@ export class KpiService {
     );
   }
 }
+

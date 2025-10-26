@@ -1,8 +1,13 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { Region } from '../enum/Region';
+import { environment } from '../../environments/environment';
 import { Role } from '../enum/Role';
+import { environment } from '../../environments/environment';
 
 export interface ResponsableAnimateur {
   id?: number;
@@ -39,7 +44,7 @@ export interface ResponsableAnimateur {
   providedIn: 'root'
 })
 export class ResponsableAnimateurService {
-  private apiUrl = 'http://68.183.71.119:8080/api/api/responsable-animateur';
+  private apiUrl = `${environment.apiUrl}/responsable-animateur`;
 
   constructor(private http: HttpClient) {}
 
@@ -137,6 +142,7 @@ export class ResponsableAnimateurService {
     return this.http.get<number>(`${this.apiUrl}/count/status/${status}`);
   }
 }
+
 
 
 

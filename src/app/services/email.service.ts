@@ -1,8 +1,13 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import { VisitDTO } from './visit.service';
+import { environment } from '../../environments/environment';
 
 export interface EmailOptions {
   to: string;
@@ -28,7 +33,7 @@ export interface VisitReportEmailData {
   providedIn: 'root'
 })
 export class EmailService {
-  private apiUrl = 'http://68.183.71.119:8080/api/api/email';
+  private apiUrl = `${environment.apiUrl}/email`;
 
   constructor(private http: HttpClient) { }
 
@@ -42,13 +47,13 @@ export class EmailService {
 
     return this.http.post(`${this.apiUrl}/send`, emailOptions, { headers }).pipe(
       tap(response => {
-        console.log('Email envoyé avec succès:', response);
+        console.log('Email envoyÃ© avec succÃ¨s:', response);
       }),
       catchError(error => {
         console.error('Erreur lors de l\'envoi de l\'email:', error);
         return throwError(() => new Error(
           error.error?.message || 
-          'Erreur lors de l\'envoi de l\'email. Vérifiez votre connexion.'
+          'Erreur lors de l\'envoi de l\'email. VÃ©rifiez votre connexion.'
         ));
       })
     );
@@ -69,7 +74,7 @@ export class EmailService {
   }
 
   /**
-   * Génère le corps de l'email pour le rapport de visite
+   * GÃ©nÃ¨re le corps de l'email pour le rapport de visite
    */
   private generateVisitReportEmailBody(emailData: VisitReportEmailData): string {
     const visit = emailData.visit;
@@ -99,11 +104,11 @@ export class EmailService {
       <body>
         <div class="header">
           <h1>Rapport de Visite #${visit.id}</h1>
-          <p>Système de Gestion Richbond</p>
+          <p>SystÃ¨me de Gestion Richbond</p>
         </div>
         
         <div class="content">
-          ${customMessage ? `<div class="custom-message"><strong>Message personnalisé:</strong><br>${customMessage}</div>` : ''}
+          ${customMessage ? `<div class="custom-message"><strong>Message personnalisÃ©:</strong><br>${customMessage}</div>` : ''}
           
           <div class="visit-info">
             <h3>Informations de la visite</h3>
@@ -116,15 +121,15 @@ export class EmailService {
               <span class="value">${this.formatDate(visit.planning?.dateVisite)}</span>
             </div>
             <div class="info-row">
-              <span class="label">Heure d'arrivée:</span>
+              <span class="label">Heure d'arrivÃ©e:</span>
               <span class="value">${visit.heureArrivee || 'N/A'}</span>
             </div>
             <div class="info-row">
-              <span class="label">Heure de départ:</span>
+              <span class="label">Heure de dÃ©part:</span>
               <span class="value">${visit.heureDepart || 'N/A'}</span>
             </div>
             <div class="info-row">
-              <span class="label">Durée de visite:</span>
+              <span class="label">DurÃ©e de visite:</span>
               <span class="value">${this.calculateDuration(visit.heureArrivee, visit.heureDepart)}</span>
             </div>
           </div>
@@ -144,7 +149,7 @@ export class EmailService {
               <span class="value">${visit.planning?.magasin?.ville || 'N/A'}</span>
             </div>
             <div class="info-row">
-              <span class="label">Région:</span>
+              <span class="label">RÃ©gion:</span>
               <span class="value">${visit.planning?.magasin?.region || 'N/A'}</span>
             </div>
           </div>
@@ -162,7 +167,7 @@ export class EmailService {
           </div>
 
           <div class="visit-info">
-            <h3>Détails de la visite</h3>
+            <h3>DÃ©tails de la visite</h3>
             <div class="info-row">
               <span class="label">Nombre de facings:</span>
               <span class="value">${visit.nombreFacings || 0}</span>
@@ -184,11 +189,11 @@ export class EmailService {
               <span class="value">${visit.niveauStock || 'N/A'}</span>
             </div>
             <div class="info-row">
-              <span class="label">Nouveauté concurrente:</span>
+              <span class="label">NouveautÃ© concurrente:</span>
               <span class="value">${visit.nouveauteConcurrente || 'Aucune'}</span>
             </div>
             <div class="info-row">
-              <span class="label">Prix nouveauté:</span>
+              <span class="label">Prix nouveautÃ©:</span>
               <span class="value">${visit.prixNouveaute ? visit.prixNouveaute + ' MAD' : 'N/A'}</span>
             </div>
             <div class="info-row">
@@ -199,7 +204,7 @@ export class EmailService {
 
           ${visit.produits && visit.produits.length > 0 ? `
           <div class="visit-info">
-            <h3>Produits visités</h3>
+            <h3>Produits visitÃ©s</h3>
             ${visit.produits.map(produit => `
               <div class="info-row">
                 <span class="label">${produit.nom || 'Produit'}:</span>
@@ -226,15 +231,15 @@ export class EmailService {
           <div class="visit-info">
             <h3>Localisation</h3>
             <div class="info-row">
-              <span class="label">Coordonnées GPS:</span>
+              <span class="label">CoordonnÃ©es GPS:</span>
               <span class="value">${visit.latitude && visit.longitude ? `${visit.latitude}, ${visit.longitude}` : 'N/A'}</span>
             </div>
           </div>
         </div>
 
         <div class="footer">
-          <p>Ce rapport a été généré automatiquement par le système Richbond</p>
-          <p>Date de génération: ${new Date().toLocaleString('fr-FR')}</p>
+          <p>Ce rapport a Ã©tÃ© gÃ©nÃ©rÃ© automatiquement par le systÃ¨me Richbond</p>
+          <p>Date de gÃ©nÃ©ration: ${new Date().toLocaleString('fr-FR')}</p>
         </div>
       </body>
       </html>
@@ -244,13 +249,13 @@ export class EmailService {
   }
 
   /**
-   * Génère les pièces jointes pour le rapport de visite
+   * GÃ©nÃ¨re les piÃ¨ces jointes pour le rapport de visite
    */
   private generateVisitReportAttachments(emailData: VisitReportEmailData): EmailAttachment[] {
     const attachments: EmailAttachment[] = [];
     const visit = emailData.visit;
 
-    // Générer un fichier CSV avec les données de la visite
+    // GÃ©nÃ©rer un fichier CSV avec les donnÃ©es de la visite
     const csvContent = this.generateVisitReportCSV(visit);
     attachments.push({
       filename: `rapport_visite_${visit.id}.csv`,
@@ -258,7 +263,7 @@ export class EmailService {
       contentType: 'text/csv'
     });
 
-    // Ajouter les images si demandé
+    // Ajouter les images si demandÃ©
     if (emailData.includeImages && visit.images && visit.images.length > 0) {
       visit.images.forEach((image, index) => {
         attachments.push({
@@ -273,15 +278,15 @@ export class EmailService {
   }
 
   /**
-   * Génère un fichier CSV avec les données de la visite
+   * GÃ©nÃ¨re un fichier CSV avec les donnÃ©es de la visite
    */
   private generateVisitReportCSV(visit: VisitDTO): string {
     const headers = [
-      'ID Visite', 'Date Visite', 'Heure Arrivée', 'Heure Départ', 'Durée',
-      'Magasin', 'Adresse', 'Ville', 'Région',
+      'ID Visite', 'Date Visite', 'Heure ArrivÃ©e', 'Heure DÃ©part', 'DurÃ©e',
+      'Magasin', 'Adresse', 'Ville', 'RÃ©gion',
       'Merchandiser', 'Email Merchandiser',
       'Nombre Facings', 'Nombre Facings Total', 'Prix Normal', 'Prix Promotionnel',
-      'Niveau Stock', 'Nouveauté Concurrente', 'Prix Nouveauté', 'Photo Prise',
+      'Niveau Stock', 'NouveautÃ© Concurrente', 'Prix NouveautÃ©', 'Photo Prise',
       'Latitude', 'Longitude'
     ];
 
@@ -325,7 +330,7 @@ export class EmailService {
   }
 
   /**
-   * Calcule la durée entre deux heures
+   * Calcule la durÃ©e entre deux heures
    */
   private calculateDuration(startTime: string | undefined, endTime: string | undefined): string {
     if (!startTime || !endTime) return 'N/A';
@@ -372,7 +377,7 @@ export class EmailService {
   private getImageBase64(image: any): string {
     if (typeof image === 'string') {
       if (image.startsWith('data:image')) {
-        return image.split(',')[1]; // Retirer le préfixe data:image/...
+        return image.split(',')[1]; // Retirer le prÃ©fixe data:image/...
       }
       return image;
     }
@@ -387,3 +392,4 @@ export class EmailService {
     return emailRegex.test(email);
   }
 }
+

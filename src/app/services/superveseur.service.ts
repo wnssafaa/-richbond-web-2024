@@ -1,13 +1,18 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { Region } from '../enum/Region';
+import { environment } from '../../environments/environment';
 import { Merchendiseur } from './merchendiseur.service';
+import { environment } from '../../environments/environment';
 
 export interface Superviseur {
   id?: number;
   nom: string;
-   username?: string; // Optionnel si différent de l'email
+   username?: string; // Optionnel si diffÃ©rent de l'email
   password?: string;
   prenom: string;
   ville: string;
@@ -19,9 +24,9 @@ export interface Superviseur {
   merchendiseurs: Merchendiseur[];
   magasin: string;
   marquesCouvertes: string;
-  dateIntegration?: string; // 🆕 Date d'intégration du superviseur
+  dateIntegration?: string; // ðŸ†• Date d'intÃ©gration du superviseur
   dateSortie?: string;
-  imagePath?: string;      // 🆕 Date de sortie du superviseur
+  imagePath?: string;      // ðŸ†• Date de sortie du superviseur
 }
 
 @Injectable({
@@ -29,7 +34,7 @@ export interface Superviseur {
 })
 export class SuperveseurService {
 
-  private apiUrl = 'http://68.183.71.119:8080/api/api/superviseur';
+  private apiUrl = `${environment.apiUrl}/superviseur`;
 
   constructor(private http: HttpClient) { }
 
@@ -51,26 +56,26 @@ export class SuperveseurService {
   create(superviseur: Superviseur): Observable<Superviseur> {
     const currentTime = Date.now();
     
-    // Vérification statique pour éviter les appels multiples
+    // VÃ©rification statique pour Ã©viter les appels multiples
     if (SuperveseurService.createInProgress) {
-      console.log('🚫 APPEL API CREATE BLOQUÉ: Soumission déjà en cours');
+      console.log('ðŸš« APPEL API CREATE BLOQUÃ‰: Soumission dÃ©jÃ  en cours');
       return new Observable(observer => {
-        observer.error(new Error('Soumission déjà en cours'));
+        observer.error(new Error('Soumission dÃ©jÃ  en cours'));
       });
     }
     
-      // Vérification du délai minimum (30 secondes)
+      // VÃ©rification du dÃ©lai minimum (30 secondes)
       if (currentTime - SuperveseurService.lastCreateCall < 30000) {
-        console.log('🚫 APPEL API CREATE BLOQUÉ: Délai de protection (', currentTime - SuperveseurService.lastCreateCall, 'ms)');
+        console.log('ðŸš« APPEL API CREATE BLOQUÃ‰: DÃ©lai de protection (', currentTime - SuperveseurService.lastCreateCall, 'ms)');
         return new Observable(observer => {
-          observer.error(new Error('Délai de protection non respecté'));
+          observer.error(new Error('DÃ©lai de protection non respectÃ©'));
         });
       }
     
     SuperveseurService.createInProgress = true;
     SuperveseurService.lastCreateCall = currentTime;
     
-    console.log('🔄 APPEL API CREATE SUPERVISEUR AUTORISÉ:', new Date().toISOString(), superviseur);
+    console.log('ðŸ”„ APPEL API CREATE SUPERVISEUR AUTORISÃ‰:', new Date().toISOString(), superviseur);
     
     return new Observable(observer => {
       this.http.post<Superviseur>(`${this.apiUrl}/create`, superviseur).subscribe({
@@ -126,3 +131,4 @@ export class SuperveseurService {
     return this.http.delete<Superviseur>(`${this.apiUrl}/${superviseurId}/merchandiseurs/${merchendiseurId}`);
   }
 }
+
