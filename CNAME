@@ -1,0 +1,37 @@
+# Configuration pour Surge.sh
+# Ce fichier sera utilisé automatiquement par Surge
+
+# Redirection pour SPA
+# Toutes les routes non trouvées redirigent vers index.html
+# Cela permet au routing Angular de fonctionner correctement
+
+# Headers pour les fichiers statiques
+# Cache les assets statiques pour améliorer les performances
+*.js
+  Cache-Control: public, max-age=31536000
+
+*.css
+  Cache-Control: public, max-age=31536000
+
+*.png
+  Cache-Control: public, max-age=31536000
+
+*.jpg
+  Cache-Control: public, max-age=31536000
+
+*.jpeg
+  Cache-Control: public, max-age=31536000
+
+*.gif
+  Cache-Control: public, max-age=31536000
+
+*.svg
+  Cache-Control: public, max-age=31536000
+
+*.ico
+  Cache-Control: public, max-age=31536000
+
+# Redirection pour SPA
+# Toutes les routes non trouvées redirigent vers index.html
+# Cela permet au routing Angular de fonctionner correctement
+/*    /index.html   200

@@ -1,27 +1,37 @@
-# Richbond
+# Richbond Web Application
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.16.
+## Description
+Application web Angular pour la gestion des visites merchandising Richbond.
 
-## Development server
+## Technologies utilisées
+- Angular 17
+- Angular Material
+- Chart.js
+- Leaflet Maps
+- TypeScript
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Déploiement
 
-## Code scaffolding
+### Vercel (Recommandé)
+1. Connectez votre repository GitHub à Vercel
+2. Vercel détectera automatiquement Angular
+3. Le déploiement se fera automatiquement à chaque push
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Netlify
+1. Connectez votre repository GitHub à Netlify
+2. Build command: `npm run build --prod`
+3. Publish directory: `dist/richbond`
 
-## Build
+### GitHub Pages
+1. Activez GitHub Pages dans les settings du repository
+2. Sélectionnez la branche `main` comme source
+3. Le site sera disponible à `https://username.github.io/repository-name`
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Configuration Backend
+L'application se connecte au backend à l'adresse : `http://68.183.71.119:8080`
 
-## Running unit tests
+## Variables d'environnement
+Aucune variable d'environnement requise pour le déploiement frontend.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Support
+Pour toute question, contactez l'équipe de développement.
