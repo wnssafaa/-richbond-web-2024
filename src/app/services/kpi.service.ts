@@ -1,23 +1,20 @@
 ﻿import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { Observable, of, forkJoin, map, combineLatest, tap, catchError } from 'rxjs';
-import { environment } from '../../environments/environment';
+
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+
 import { PlanificationService, Planification, StatutVisite } from './planification.service';
-import { environment } from '../../environments/environment';
+
 import { MerchendiseurService, Merchendiseur } from './merchendiseur.service';
-import { environment } from '../../environments/environment';
+
 import { VisitService, VisitDTO } from './visit.service';
-import { environment } from '../../environments/environment';
-import { UserService, User } from './user.service';
-import { environment } from '../../environments/environment';
-import { SuperveseurService, Superviseur } from './superveseur.service';
+
+import { UserService, User } from './user.service';import { SuperveseurService, Superviseur } from './superveseur.service';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
-import { environment } from '../../environments/environment';
+
 import { Region } from '../enum/Region';
-import { environment } from '../../environments/environment';
+
 
 export interface MerchandiserAssignmentTracking {
   merchandiserId: number;

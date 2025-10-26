@@ -1,16 +1,14 @@
 ﻿import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Region } from '../enum/Region';
-import { environment } from '../../environments/environment';
-import { Magasin } from './magasin.service';
-import { environment } from '../../environments/environment';
-import { Role } from '../enum/Role';
-import { environment } from '../../environments/environment';
 
+import { Magasin } from './magasin.service';
+
+import { Role } from '../enum/Role';
 // âœ… Enum pour les statuts d'invitation
 export enum InviteStatus {
   EN_ATTENTE = 'EN_ATTENTE',

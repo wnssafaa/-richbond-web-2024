@@ -1,13 +1,13 @@
 ﻿import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+
 import { Observable, throwError } from 'rxjs';
-import { environment } from '../../environments/environment';
+
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { VisitDTO } from './visit.service';
-import { environment } from '../../environments/environment';
+
 
 export interface EmailOptions {
   to: string;
