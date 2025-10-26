@@ -39,7 +39,7 @@ export interface ResponsableAnimateur {
   providedIn: 'root'
 })
 export class ResponsableAnimateurService {
-  private apiUrl = 'http://localhost:8080/api/responsable-animateur';
+  private apiUrl = 'http://68.183.71.119:8080/api/api/responsable-animateur';
 
   constructor(private http: HttpClient) {}
 

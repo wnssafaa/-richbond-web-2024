@@ -109,13 +109,13 @@ export class UsersComponent implements OnInit {
   @ViewChild(MatDrawer) drawer!: MatDrawer;
   currentLanguage = 'fr';
   menuOpen = false;
-  selectedRole: string = '';
-  selectedStatus: string = '';
-  selectedRegion: string = '';
-  selectedCity: string = '';
-  selectedStore: string = '';
-  selectedBrand: string = '';
-  selectedEnseigne: string = '';
+  selectedRole: string | null = '';
+  selectedStatus: string | null = '';
+  selectedRegion: string | null = '';
+  selectedCity: string | null = '';
+  selectedStore: string | null = '';
+  selectedBrand: string | null = '';
+  selectedEnseigne: string | null = '';
   // showFilters = false;
 
   // Available options for filters
@@ -161,7 +161,7 @@ export class UsersComponent implements OnInit {
         this.avatarUrl = data.imagePath
           ? data.imagePath.startsWith('data:image')
             ? data.imagePath
-            : 'http://localhost:8080/uploads/' + data.imagePath
+            : 'http://68.183.71.119:8080/api/api/uploads/' + data.imagePath
           : 'assets/profil.webp';
         
         // Initialiser les permissions
@@ -527,13 +527,13 @@ export class UsersComponent implements OnInit {
   }
 
   clearAllFilters(): void {
-    this.selectedRole = '';
-    this.selectedStatus = '';
-    this.selectedRegion = '';
-    this.selectedCity = '';
-    this.selectedStore = '';
-    this.selectedBrand = '';
-    this.selectedEnseigne = '';
+    this.selectedRole = null;
+    this.selectedStatus = null;
+    this.selectedRegion = null;
+    this.selectedCity = null;
+    this.selectedStore = null;
+    this.selectedBrand = null;
+    this.selectedEnseigne = null;
     this.searchTerm = '';
     this.applyFilter();
   }

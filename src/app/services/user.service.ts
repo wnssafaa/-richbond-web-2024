@@ -25,7 +25,7 @@ export interface User {
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:8080/api/users';
+  private apiUrl = 'http://68.183.71.119:8080/api/api/users';
 
   constructor(private http: HttpClient) {}
 

@@ -77,7 +77,7 @@ export interface Produit {
 })
 export class ProduitService {
 
-  private apiUrl = 'http://localhost:8080/api/produits';
+  private apiUrl = 'http://68.183.71.119:8080/api/api/produits';
 
   constructor(private http: HttpClient) { }
 
@@ -219,7 +219,7 @@ export class ProduitService {
           
           if (premierProduit.imageData) {
             console.log('✅ Données d\'image trouvées:', premierProduit.imageData);
-            console.log('🔗 URL d\'image construite:', `http://localhost:8080/api/produits/${premierProduit.id}/images/${premierProduit.imageData.id}`);
+            console.log('🔗 URL d\'image construite:', `http://68.183.71.119:8080/api/api/produits/${premierProduit.id}/images/${premierProduit.imageData.id}`);
           } else {
             console.log('❌ Aucune donnée d\'image trouvée dans le premier produit');
           }
@@ -609,13 +609,13 @@ export class ProduitService {
     if (dto.imageData && dto.imageData.id && dto.id) {
       // Utiliser les URLs du backend si disponibles
       if (dto.imageUrl) {
-        produit.imageUrl = dto.imageUrl.startsWith('/api/') ? `http://localhost:8080${dto.imageUrl}` : dto.imageUrl;
+        produit.imageUrl = dto.imageUrl.startsWith('/api/') ? `http://68.183.71.119:8080/api/api${dto.imageUrl}` : dto.imageUrl;
       } else {
         produit.imageUrl = this.getImageUrl(dto.id, dto.imageData.id);
       }
       
       if (dto.thumbnailUrl) {
-        produit.thumbnailUrl = dto.thumbnailUrl.startsWith('/api/') ? `http://localhost:8080${dto.thumbnailUrl}` : dto.thumbnailUrl;
+        produit.thumbnailUrl = dto.thumbnailUrl.startsWith('/api/') ? `http://68.183.71.119:8080/api/api${dto.thumbnailUrl}` : dto.thumbnailUrl;
       } else {
         produit.thumbnailUrl = this.getThumbnailUrl(dto.id, dto.imageData.id);
       }

@@ -210,7 +210,7 @@ enseignes = [
          this.initializePermissions(this.role);
         this.avatarUrl = data.imagePath
 
-          ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
+          ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://68.183.71.119:8080/api/api/uploads/' + data.imagePath)
           : 'assets/profil.webp';
       },
       

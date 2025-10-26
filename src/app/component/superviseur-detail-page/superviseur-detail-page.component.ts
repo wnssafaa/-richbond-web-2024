@@ -123,7 +123,7 @@ export class SuperviseurDetailPageComponent implements OnInit {
         this.status = data.status ?? '';
         this.imagePath = data.imagePath ?? '';
         this.avatarUrl = data.imagePath
-          ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://localhost:8080/uploads/' + data.imagePath)
+          ? (data.imagePath.startsWith('data:image') ? data.imagePath : 'http://68.183.71.119:8080/api/api/uploads/' + data.imagePath)
           : 'assets/default-avatar.png';
       },
       error: (err) => {

@@ -73,7 +73,7 @@ export interface VisitDTO {
 })
 export class VisitService {
 
-  private apiUrl = 'http://localhost:8080/api/visits';
+  private apiUrl = 'http://68.183.71.119:8080/api/api/visits';
 
   constructor(private http: HttpClient) {}
 
@@ -161,14 +161,14 @@ export class VisitService {
 
   // ✅ Construire l'URL de l'image complète
   getVisitImageUrl(visitId: number, imageId: number): string {
-    const url = `http://localhost:8080/api/visits/${visitId}/images/${imageId}`;
+    const url = `http://68.183.71.119:8080/api/api/visits/${visitId}/images/${imageId}`;
     console.log(`🔗 Construction URL image complète: ${url}`);
     return url;
   }
 
   // ✅ Construire l'URL de la thumbnail
   getVisitImageThumbnailUrl(visitId: number, imageId: number): string {
-    const url = `http://localhost:8080/api/visits/${visitId}/images/${imageId}/thumbnail`;
+    const url = `http://68.183.71.119:8080/api/api/visits/${visitId}/images/${imageId}/thumbnail`;
     console.log(`🔗 Construction URL thumbnail: ${url}`);
     return url;
   }

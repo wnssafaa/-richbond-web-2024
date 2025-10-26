@@ -29,7 +29,7 @@ export interface Superviseur {
 })
 export class SuperveseurService {
 
-  private apiUrl = 'http://localhost:8080/api/superviseur';
+  private apiUrl = 'http://68.183.71.119:8080/api/api/superviseur';
 
   constructor(private http: HttpClient) { }
 

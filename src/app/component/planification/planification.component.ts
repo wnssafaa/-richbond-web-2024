@@ -1048,7 +1048,7 @@ export class PlanificationComponent {
         this.avatarUrl = data.imagePath
           ? data.imagePath.startsWith('data:image')
             ? data.imagePath
-            : 'http://localhost:8080/uploads/' + data.imagePath
+            : 'http://68.183.71.119:8080/api/uploads/' + data.imagePath
           : 'assets/default-avatar.png';
         
         // Initialiser les permissions
@@ -1182,7 +1182,7 @@ export class PlanificationComponent {
     const merchImage = merch?.imagePath
       ? merch.imagePath.startsWith('data:image')
         ? merch.imagePath
-        : 'http://localhost:8080/uploads/' + merch.imagePath
+        : 'http://68.183.71.119:8080/api/uploads/' + merch.imagePath
       : 'assets/default-avatar.png';
 
     const div = document.createElement('div');

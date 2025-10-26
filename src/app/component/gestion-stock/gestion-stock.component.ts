@@ -554,7 +554,7 @@ export class GestionStockComponent implements OnInit, AfterViewInit {
         this.avatarUrl = data.imagePath
           ? data.imagePath.startsWith('data:image')
             ? data.imagePath
-            : 'http://localhost:8080/uploads/' + data.imagePath
+            : 'http://68.183.71.119:8080/api/api/uploads/' + data.imagePath
           : 'assets/default-avatar.png';
       },
       error: (err) => {
