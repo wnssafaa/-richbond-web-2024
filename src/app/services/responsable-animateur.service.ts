@@ -44,7 +44,7 @@ export interface ResponsableAnimateur {
   providedIn: 'root'
 })
 export class ResponsableAnimateurService {
-  private apiUrl = `/api/api/responsable-animateur`;
+  private apiUrl = `${environment.apiUrl}/responsable-animateur`;
 
   constructor(private http: HttpClient) {}
 
@@ -142,6 +142,7 @@ export class ResponsableAnimateurService {
     return this.http.get<number>(`${this.apiUrl}/count/status/${status}`);
   }
 }
+
 
 
 

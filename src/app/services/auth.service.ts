@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
 
-  private apiUrl = `/api/api/auth`;
+  private apiUrl = `${environment.apiUrl}/auth`;
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -148,3 +148,4 @@ export class AuthService {
     });
   }
 }
+

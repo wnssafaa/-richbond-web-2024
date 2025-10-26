@@ -33,7 +33,7 @@ export interface VisitReportEmailData {
   providedIn: 'root'
 })
 export class EmailService {
-  private apiUrl = `/api/api/email`;
+  private apiUrl = `${environment.apiUrl}/email`;
 
   constructor(private http: HttpClient) { }
 
@@ -392,6 +392,7 @@ export class EmailService {
     return emailRegex.test(email);
   }
 }
+
 
 
 

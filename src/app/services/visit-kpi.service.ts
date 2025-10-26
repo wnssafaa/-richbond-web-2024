@@ -86,7 +86,7 @@ export interface VisitKpiFilters {
   providedIn: 'root'
 })
 export class VisitKpiService {
-  private apiUrl = `/api/api/visit-kpis`;
+  private apiUrl = `${environment.apiUrl}/visit-kpis`;
 
   constructor(
     private http: HttpClient,
@@ -634,6 +634,7 @@ export class VisitKpiService {
     );
   }
 }
+
 
 
 

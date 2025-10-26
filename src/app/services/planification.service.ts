@@ -53,7 +53,7 @@ export interface Planification {
   providedIn: 'root'
 })
 export class PlanificationService {
-  private apiUrl = `/api/api/planifications`;
+  private apiUrl = `${environment.apiUrl}/planifications`;
 
   constructor(private http: HttpClient) {}
 
@@ -130,6 +130,7 @@ checkDisponibilite(merchId: number, dateDebut: string, dateFin: string): Observa
 
 
 }
+
 
 
 
